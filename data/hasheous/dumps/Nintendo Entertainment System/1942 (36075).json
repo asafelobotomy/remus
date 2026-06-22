@@ -1,0 +1,1043 @@
+{
+  "Id": 36075,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "285479",
+      "Name": "1942",
+      "Year": "1987",
+      "Country": "",
+      "Platform": "Nintendo Famicom & Entertainment System",
+      "SourceId": "9137",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "272544",
+      "ImmutableId": "272544",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/1942--1",
+      "LastSearch": "2024-05-27T02:34:49",
+      "NextSearch": "2026-08-09T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "4178",
+      "ImmutableId": "4178",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=4178",
+      "LastSearch": "2024-12-12T15:29:14",
+      "NextSearch": "2026-08-09T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "1515",
+      "ImmutableId": "1515",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/1515",
+      "LastSearch": "2025-05-13T02:39:30",
+      "NextSearch": "2026-08-09T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "10466",
+      "ImmutableId": "10466",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-10466/",
+      "LastSearch": "2025-07-22T09:57:15",
+      "NextSearch": "2026-08-09T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:57:15",
+      "NextSearch": "2026-04-17T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:57:15",
+      "NextSearch": "2026-04-17T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:57:15",
+      "NextSearch": "2026-04-17T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/1942_(video_game)",
+      "ImmutableId": "https://en.wikipedia.org/wiki/1942_(video_game)",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/1942_(video_game)",
+      "LastSearch": "2025-06-21T22:57:41",
+      "NextSearch": "2026-07-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T11:09:54",
+      "NextSearch": "2026-04-17T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T20:04:59",
+      "NextSearch": "2026-03-03T20:04:59",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-26T03:56:16",
+      "NextSearch": "2026-04-26T03:56:16",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 760155,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 1942 (NES) - Synopsis\n\nExperience the thrill of aerial combat in *1942* for the Nintendo Entertainment System, Capcom’s breakout hit that took the arcade world by storm! Set in the Pacific Theater of World War II, this vertically scrolling shooter puts you in the cockpit of an American P-38 fighter plane, tasked with reaching Tokyo and crippling the Japanese air fleet. Loosely inspired by the pivotal Battle of Midway, the game blends historical context with exhilarating gameplay.\n\nNavigate through waves of enemy aircraft and challenging obstacles, collecting power-ups to enhance your firepower. A unique \"roll\" feature allows you to evade enemy fire, adding a layer of strategic depth to the action. Featuring both single-player and multiplayer modes, *1942* offers a cooperative experience for two players. \n\nThis classic title, part of the acclaimed *194X* series, sold over a million copies worldwide and remains a fondly remembered cornerstone of the NES library, showcasing Capcom’s early success in the console market. Prepare for intense dogfights and a nostalgic journey back to the skies of World War II!"
+    },
+    {
+      "Id": 428562,
+      "attributeType": "ShortString",
+      "attributeName": "VIMMManualId",
+      "attributeRelationType": "Game",
+      "Value": "613"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 72730,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "5599FCBBD112D490E8A189A4D410BC7C2F3A9673"
+    },
+    {
+      "Id": 72729,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 290,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "7630",
+            "Publisher": "Capcom"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "37",
+            "ImmutableId": "37",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/companies/capcom",
+            "LastSearch": "2025-06-24T06:25:17",
+            "NextSearch": "2026-12-22T19:23:23",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:25:17",
+            "NextSearch": "2026-07-04T19:23:23",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:25:17",
+            "NextSearch": "2026-07-04T19:23:23",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:25:17",
+            "NextSearch": "2026-07-04T19:23:23",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:25:17",
+            "NextSearch": "2026-07-04T19:23:23",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:25:17",
+            "NextSearch": "2026-07-04T19:23:23",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:25:17",
+            "NextSearch": "2026-07-04T19:23:23",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:25:17",
+            "NextSearch": "2026-07-04T19:23:23",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2025-04-23T07:07:01",
+            "NextSearch": "2026-07-04T19:23:23",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T13:05:53",
+            "NextSearch": "2026-03-03T13:05:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T09:49:25",
+            "NextSearch": "2026-04-24T09:49:25",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [],
+        "CreatedDate": "2024-05-14T13:25:55",
+        "UpdatedDate": "2026-01-31T19:29:27",
+        "Name": "Capcom"
+      }
+    },
+    {
+      "Id": 72728,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 68,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "769",
+            "Platform": "NES"
+          },
+          {
+            "SignatureId": "731",
+            "Platform": "NES/Famicom"
+          },
+          {
+            "SignatureId": "589",
+            "Platform": "Nintendo - Nintendo Entertainment System (Headered)"
+          },
+          {
+            "SignatureId": "1043",
+            "Platform": "Nintendo - Nintendo Entertainment System (Headered) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "590",
+            "Platform": "Nintendo - Nintendo Entertainment System (Headerless)"
+          },
+          {
+            "SignatureId": "1044",
+            "Platform": "Nintendo - Nintendo Entertainment System (Headerless) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "239",
+            "Platform": "Nintendo Famicom & Entertainment System"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "18",
+            "ImmutableId": "18",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/nes",
+            "LastSearch": "2024-04-29T04:15:22",
+            "NextSearch": "2024-05-29T04:15:22",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "7",
+            "ImmutableId": "7",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=7",
+            "LastSearch": "2024-12-12T01:24:04",
+            "NextSearch": "2025-01-12T01:24:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "7",
+            "ImmutableId": "7",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/7/games",
+            "LastSearch": "2025-05-12T23:58:47",
+            "NextSearch": "2025-06-12T23:58:47",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "21",
+            "ImmutableId": "21",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-21/",
+            "LastSearch": "2026-05-09T13:08:38",
+            "NextSearch": "2027-02-15T13:08:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:08:38",
+            "NextSearch": "2026-09-20T13:08:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:08:38",
+            "NextSearch": "2026-09-20T13:08:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:08:38",
+            "NextSearch": "2026-09-20T13:08:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Nintendo_Entertainment_System",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Nintendo_Entertainment_System",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Nintendo_Entertainment_System",
+            "LastSearch": "2025-12-21T10:26:36",
+            "NextSearch": "2026-01-21T10:26:36",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5321195",
+            "ImmutableId": "5321195",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5321195",
+            "LastSearch": "2026-05-09T13:08:38",
+            "NextSearch": "2027-02-15T13:08:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "3",
+            "ImmutableId": "3",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=3",
+            "LastSearch": "2026-05-09T13:08:38",
+            "NextSearch": "2027-02-15T13:08:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "27-nintendo-entertainment-system",
+            "ImmutableId": "27-nintendo-entertainment-system",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/27-nintendo-entertainment-system",
+            "LastSearch": "2026-02-24T09:49:06",
+            "NextSearch": "2026-04-24T09:49:06",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758304,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo Entertainment System (NES), initially released in Japan as the Family Computer (Famicom), revolutionized the home video game market after the 1983 crash. Developed by Nintendo, it succeeded their Color TV-Game line and competed with Sega's Master System. Designed with simplicity and affordability in mind, the NES featured detachable controllers and a distinctive front-loading cartridge design resembling a VCR, intended to distance it from the perception of a child's toy. \n\nThe system's success was fueled by a focus on third-party developer support and iconic games like *Super Mario Bros.*, *The Legend of Zelda*, *Dragon Quest*, and *Final Fantasy*, which became major franchises. While initially facing skepticism, the NES revitalized the American gaming industry and established Nintendo as a dominant force, pioneering a licensing model that continues to shape the industry today. A Disk System add-on was released in Japan, but ultimately proved less successful than cartridges."
+          },
+          {
+            "Id": 110862,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "NES"
+          },
+          {
+            "Id": 215,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "521F67C942121507F60119F23A531BACFB9ACE8C"
+          },
+          {
+            "Id": 51,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo Entertainment System, Nintendo-Entertainment-System"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 1419,
+                    "Text": "256 kb ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95306,
+                    "Text": "72-pin cartridge",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 62,
+                    "Text": "8-bit processor",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 30,
+                    "Text": "composite video",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 731,
+                    "Text": "rf output",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 13,
+                    "Text": "controller",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:15:22",
+        "UpdatedDate": "2026-05-25T00:36:26",
+        "Name": "Nintendo Entertainment System"
+      }
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "965953",
+          "Name": "1942 (1987)(Capcom)(PlayChoice-10).nes",
+          "Size": 49168,
+          "Crc": "be787290",
+          "Md5": "f582c19b228282a2228dba0c6e24809b",
+          "Sha1": "9093d1eadeb422534ab5bac752460d573d87aa2b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "NES"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "978051",
+          "Name": "1942 (1987)(Capcom)(PlayChoice-10)[a].nes",
+          "Size": 49168,
+          "Crc": "963f21ae",
+          "Md5": "988814af08f8ff38799c12181d013653",
+          "Sha1": "648ff0c2efa8dc79b92dde6ea5f7d021dae4f35b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "NES",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3738,
+              "Text": "scrolling shooter",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3737,
+              "Text": "vertical shooter",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 3752,
+              "Text": "high score system",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3747,
+              "Text": "percentage score",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3748,
+              "Text": "tip tow formation",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 2148,
+              "Text": "military conflict",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2149,
+              "Text": "pacific theater",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2147,
+              "Text": "world war ii",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 959,
+              "Text": "power-ups",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1097,
+              "Text": "single-player",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 813,
+              "Text": "overhead",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1030,
+              "Text": "side-scrolling",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "CreatedDate": "2024-05-27T02:34:48",
+  "UpdatedDate": "2026-01-27T06:04:02",
+  "Name": "1942"
+}

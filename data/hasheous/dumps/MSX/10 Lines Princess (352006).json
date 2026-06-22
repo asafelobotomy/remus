@@ -1,0 +1,826 @@
+{
+  "Id": 352006,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "638123",
+      "Name": "10 Lines Princess",
+      "Year": "",
+      "Country": "",
+      "Platform": "MSX",
+      "SourceId": "38276",
+      "MetadataSource": "7"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "296223",
+      "ImmutableId": "296223",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/10-lines-princess",
+      "LastSearch": "2026-04-12T18:54:03",
+      "NextSearch": "2026-12-29T18:54:03",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-04-12T18:54:03",
+      "NextSearch": "2026-06-16T18:54:03",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-04-12T18:54:03",
+      "NextSearch": "2026-06-16T18:54:03",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-04-12T18:54:03",
+      "NextSearch": "2026-06-16T18:54:03",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-04-12T18:54:03",
+      "NextSearch": "2026-06-16T18:54:03",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-04-12T18:54:03",
+      "NextSearch": "2026-06-16T18:54:03",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-04-12T18:54:03",
+      "NextSearch": "2026-06-16T18:54:03",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-04-12T18:54:03",
+      "NextSearch": "2026-06-16T18:54:03",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-04-12T18:54:03",
+      "NextSearch": "2026-06-16T18:54:03",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-04-12T18:54:03",
+      "NextSearch": "2026-04-12T23:15:35",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T16:24:30",
+      "NextSearch": "2026-04-24T16:24:30",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 758953,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 10 Lines Princess: A MSX Adventure\n\nStep into a captivating sequel to the acclaimed 10 Lines Hero! In *10 Lines Princess*, the roles are reversed. The hero, having previously rescued the princess, is now imprisoned, and it's up to her to embark on a perilous quest to save him. Developed for the BASIC 10Liner 2023 contest, this MSX game builds upon the foundation of its predecessor with enhanced gameplay and innovative mechanics.\n\nNavigate challenging levels filled with hazards and formidable enemies. A unique color-changing mechanic allows you to absorb enemy colors, granting immunity to specific dangers and boosting your healing abilities.  Expect a refined and more complex experience than the original, with new obstacles and strategic opportunities. \n\nCan the princess overcome the trials ahead and rescue her valiant savior?  Experience a compelling narrative, tight controls, and a rewarding sense of accomplishment in this cleverly designed, line-limited adventure for the MSX platform. Prepare for a fresh perspective on a beloved formula!"
+    },
+    {
+      "Id": 653466,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 53,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "527",
+            "Platform": "Microsoft - MSX"
+          },
+          {
+            "SignatureId": "983",
+            "Platform": "Microsoft - MSX (Parent-Clone)"
+          },
+          {
+            "SignatureId": "728",
+            "Platform": "MSX"
+          },
+          {
+            "SignatureId": "767",
+            "Platform": "MSX 1"
+          },
+          {
+            "SignatureId": "216",
+            "Platform": "MSX MSX"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "27",
+            "ImmutableId": "27",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/msx",
+            "LastSearch": "2024-04-29T04:01:05",
+            "NextSearch": "2024-05-29T04:01:05",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "4929",
+            "ImmutableId": "4929",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=4929",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2027-04-03T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "29",
+            "ImmutableId": "29",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/29/games",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2027-04-03T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-15/",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2027-04-03T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2026-07-18T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2026-07-18T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2026-07-18T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/MSX",
+            "ImmutableId": "https://en.wikipedia.org/wiki/MSX",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/MSX",
+            "LastSearch": "2025-12-21T10:26:05",
+            "NextSearch": "2026-01-21T10:26:05",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5511445",
+            "ImmutableId": "5511445",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5511445",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2026-07-18T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "113",
+            "ImmutableId": "113",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=113",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2027-04-03T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "82-microsoft-msx",
+            "ImmutableId": "82-microsoft-msx",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/82-microsoft-msx",
+            "LastSearch": "2026-02-24T09:57:21",
+            "NextSearch": "2026-04-24T09:57:21",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758293,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The MSX is a standardized home computer architecture, born from Microsoft's involvement but finding its greatest popularity outside the United States, particularly in Asia, South America, and Europe. Before the rise of the Nintendo Family Computer, it was a key platform for major Japanese game studios like Konami and Hudson Soft, hosting the original *Metal Gear* series. \n\nA diverse library of games flourished on the MSX, including classics like *Antarctic Adventure*, *Bomberman*, *Parodius*, and *Puyo Puyo*.  It also saw versions of popular titles such as *Castlevania*, *Contra*, *Dragon Quest*, and *Final Fantasy*.  Years later, efforts to revive the platform included the MSX Mini Replica, a faithful reproduction, and the official MSXPLAYer emulator.  Notably, Nintendo even brought MSX games to the Wii and Wii U Virtual Console in Japan."
+          },
+          {
+            "Id": 202,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "EA506AE84A6011CB1331D406791D866EF717E0D1"
+          },
+          {
+            "Id": 39,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 55,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "951",
+                  "Publisher": "Microsoft"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "128",
+                  "ImmutableId": "128",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/microsoft",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-08-23T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "10176",
+                  "ImmutableId": "10176",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-01-09T00:49:12",
+                  "NextSearch": "2025-02-09T00:49:12",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:13:21",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:11:42",
+                  "NextSearch": "2026-03-03T13:11:42",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:38",
+                  "NextSearch": "2026-04-24T09:49:38",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 436295,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "501B90AB65C9F9F9B37EE2E938F77AE0E59F4B37"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:02:56",
+              "UpdatedDate": "2026-01-31T09:59:54",
+              "Name": "Microsoft"
+            }
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 133,
+                    "Text": "early 1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 205,
+                    "Text": "cartridge input",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 125,
+                    "Text": "cartridge slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 410,
+                    "Text": "hdmi output",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 280,
+                    "Text": "usb ports",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 572,
+                    "Text": "computer platform",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 571,
+                    "Text": "standardized architecture",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 95267,
+                    "Text": "msx-dos",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 2136,
+                    "Text": "tms9918 graphics",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 154,
+                    "Text": "yamaha sound",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 56,
+                    "Text": "z80 cpu",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:01:05",
+        "UpdatedDate": "2026-05-24T16:24:40",
+        "Name": "MSX"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "10 Lines Princess, 10-Lines-Princess, X Lines Princess, X-Lines-Princess, Ten Lines Princess, Ten-Lines-Princess"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 12,
+          "Id": "2602318",
+          "Name": "10lines_princess_v100",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "e40432b864c4b7440f8b265ebfa0a7f5",
+          "Sha1": "",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "RetroAchievements"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 965,
+              "Text": "2d",
+              "AIGenerated": true
+            },
+            {
+              "Id": 849,
+              "Text": "fixed camera",
+              "AIGenerated": true
+            },
+            {
+              "Id": 861,
+              "Text": "side-view",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 789,
+              "Text": "adventure",
+              "AIGenerated": true
+            },
+            {
+              "Id": 956,
+              "Text": "platformer",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 2270,
+              "Text": "color change",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2271,
+              "Text": "hazard immunity",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2272,
+              "Text": "story progression",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 1950,
+              "Text": "combat system",
+              "AIGenerated": true
+            },
+            {
+              "Id": 957,
+              "Text": "side-scrolling",
+              "AIGenerated": true
+            },
+            {
+              "Id": 819,
+              "Text": "turn-based",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 927,
+              "Text": "heroic journey",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2273,
+              "Text": "rescue mission",
+              "AIGenerated": true
+            },
+            {
+              "Id": 812,
+              "Text": "survival",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "CreatedDate": "2025-10-12T12:13:46",
+  "UpdatedDate": "2026-04-12T22:15:37",
+  "Name": "10 Lines Princess"
+}

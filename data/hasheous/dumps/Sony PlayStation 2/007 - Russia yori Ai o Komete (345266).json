@@ -1,0 +1,732 @@
+{
+  "Id": 345266,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "610461",
+      "Name": "007 - Russia yori Ai o Komete",
+      "Year": "",
+      "Country": "JP",
+      "Platform": "Sony - PlayStation 2",
+      "SourceId": "38237",
+      "MetadataSource": "5"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-03-18T05:26:29",
+      "NextSearch": "2026-07-12T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-03-18T05:26:29",
+      "NextSearch": "2026-07-12T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-03-18T05:26:29",
+      "NextSearch": "2026-07-12T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-03-18T05:26:29",
+      "NextSearch": "2026-07-12T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-03-18T05:26:29",
+      "NextSearch": "2026-07-12T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-03-18T05:26:29",
+      "NextSearch": "2026-07-12T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-03-18T05:26:29",
+      "NextSearch": "2026-07-12T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-03-18T05:26:29",
+      "NextSearch": "2026-07-12T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-03-18T05:26:29",
+      "NextSearch": "2026-07-12T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T14:01:04",
+      "NextSearch": "2026-03-03T14:01:04",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T01:27:14",
+      "NextSearch": "2026-04-25T01:27:14",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 642202,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 101,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "741",
+            "Platform": "PlayStation 2"
+          },
+          {
+            "SignatureId": "692",
+            "Platform": "Sony - PlayStation 2"
+          },
+          {
+            "SignatureId": "328",
+            "Platform": "Sony PlayStation 2"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "8",
+            "ImmutableId": "8",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/ps2",
+            "LastSearch": "2024-04-29T11:20:12",
+            "NextSearch": "2024-05-29T11:20:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "11",
+            "ImmutableId": "11",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=11",
+            "LastSearch": "2024-12-12T01:25:34",
+            "NextSearch": "2025-01-12T01:25:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "21",
+            "ImmutableId": "21",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/21/games",
+            "LastSearch": "2025-05-06T21:46:02",
+            "NextSearch": "2025-06-06T21:46:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "19",
+            "ImmutableId": "19",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-19/",
+            "LastSearch": "2025-06-20T15:34:14",
+            "NextSearch": "2025-07-20T15:34:14",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2026-11-01T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2026-11-01T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2026-11-01T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/PlayStation_2",
+            "ImmutableId": "https://en.wikipedia.org/wiki/PlayStation_2",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/PlayStation_2",
+            "LastSearch": "2025-12-21T10:28:08",
+            "NextSearch": "2026-01-21T10:28:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327252",
+            "ImmutableId": "5327252",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327252",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2027-03-10T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "58",
+            "ImmutableId": "58",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=58",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2027-03-10T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "48-sony-playstation-2",
+            "ImmutableId": "48-sony-playstation-2",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/48-sony-playstation-2",
+            "LastSearch": "2026-02-24T09:49:44",
+            "NextSearch": "2026-04-24T09:49:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758493,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The PlayStation 2 (PS2) is a sixth-generation home video game console developed and marketed by Sony Computer Entertainment, released in Japan on March 4, 2000. It succeeded the original PlayStation and remains the best-selling video game console of all time, with over 160 million units sold worldwide. A key innovation was its integrated DVD drive, offering significant value compared to standalone players. \n\nThe PS2 boasted a custom-built Emotion Engine processor, delivering impressive graphics and performance, and was backward compatible with original PlayStation games. Popular titles include the *Grand Theft Auto*, *Final Fantasy*, *Silent Hill*, and *Metal Gear* series, alongside beloved exclusives like *God of War*, *Ratchet & Clank*, and *Jak and Daxter*. Its longevity was remarkable, with new games released until 2013, solidifying its place in gaming history."
+          },
+          {
+            "Id": 110866,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "PS2"
+          },
+          {
+            "Id": 237,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "A885A9E3E636FA92973918DB27D271BC5C890FC2"
+          },
+          {
+            "Id": 461507,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 19877,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "14855",
+                  "Publisher": "Sony"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "AutomaticTooManyMatches",
+                  "Source": "IGDB",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T14:40:50",
+                  "NextSearch": "2026-08-19T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:14:46",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:36",
+                  "NextSearch": "2026-03-03T13:05:36",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:32",
+                  "NextSearch": "2026-04-24T09:49:32",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [],
+              "CreatedDate": "2024-05-26T10:46:55",
+              "UpdatedDate": "2026-01-31T19:53:39",
+              "Name": "Sony"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sony PlayStation 2, Sony-PlayStation-2, Sony PlayStation II, Sony-PlayStation-II, Sony PlayStation Two, Sony-PlayStation-Two"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 94052,
+                    "Text": "40gb hdd",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 276,
+                    "Text": "dvd drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 738,
+                    "Text": "emotion engine",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 741,
+                    "Text": "dualshock 2",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 743,
+                    "Text": "dvd remote",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 742,
+                    "Text": "eyetoy",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 67,
+                    "Text": "retro gaming",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 80,
+                    "Text": "ethernet",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 281,
+                    "Text": "i.link",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 291,
+                    "Text": "usb 2.0",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T11:20:12",
+        "UpdatedDate": "2026-05-25T01:30:32",
+        "Name": "Sony PlayStation 2"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "007 - Russia yori Ai o Komete, 007-Russia yori Ai o Komete, 007 Russia yori Ai o Komete, 007: Russia yori Ai o Komete, VII - Russia yori Ai o Komete, VII-Russia yori Ai o Komete, VII Russia yori Ai o Komete, VII: Russia yori Ai o Komete, Seven - Russia yori Ai o Komete, Seven-Russia yori Ai o Komete, Seven Russia yori Ai o Komete, Seven: Russia yori Ai o Komete"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 12,
+          "Id": "3877556",
+          "Name": "007 - Russia yori Ai o Komete (Japan).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "b86a0739d5399414ea22a95b595fa9392cbdb051",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2415234",
+          "Name": "007 - Russia yori Ai o Komete (Japan).iso",
+          "Size": 4655939584,
+          "Crc": "bd3aa8a4",
+          "Md5": "1d40310a0260c3533b28dd0c8d2373c6",
+          "Sha1": "7a9b20329f3a193932c5559fe5292d77b69ca4bb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPM 66322"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {}
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Japan (JP)"
+    }
+  ],
+  "CreatedDate": "2025-09-28T06:49:38",
+  "UpdatedDate": "2026-03-18T07:55:55",
+  "Name": "007 - Russia yori Ai o Komete"
+}

@@ -1,0 +1,1079 @@
+{
+  "Id": 32027,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "300398",
+      "Name": "16 Zhang Mahjong",
+      "Year": "1992",
+      "Country": "TW",
+      "Platform": "Sega Mega Drive & Genesis",
+      "SourceId": "9221",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "128548",
+      "ImmutableId": "128548",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/16-zhang-mahjong",
+      "LastSearch": "2024-05-26T22:28:10",
+      "NextSearch": "2026-11-16T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "5581",
+      "ImmutableId": "5581",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=5581",
+      "LastSearch": "2024-12-12T15:27:21",
+      "NextSearch": "2026-11-16T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-07-07T00:21:40",
+      "NextSearch": "2026-05-27T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:57:01",
+      "NextSearch": "2026-05-27T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:57:01",
+      "NextSearch": "2026-05-27T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:57:01",
+      "NextSearch": "2026-05-27T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:57:01",
+      "NextSearch": "2026-05-27T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:57:01",
+      "NextSearch": "2026-05-27T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T07:27:15",
+      "NextSearch": "2026-05-27T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-04T04:54:24",
+      "NextSearch": "2026-03-04T04:54:24",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T17:06:37",
+      "NextSearch": "2026-04-24T17:06:37",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759834,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 16 Zhang Mahjong (Sega Mega Drive/Genesis) - Synopsis\n\n16 Zhang Mahjong is a notorious and controversial mahjong game released for the Sega Mega Drive/Genesis, developed by Gamtec. Unlike traditional mahjong, this title gained infamy for being one of several unlicensed games produced that incorporated pornographic imagery and themes. While gameplay fundamentally follows the rules of mahjong – matching tiles to clear your hand and be the first to declare a winning hand – the visual presentation is where the game deviates drastically.\n\nThe game features digitized sprites and backgrounds, often depicting suggestive or explicit scenes, a stark contrast to the typically serene and traditional aesthetic of mahjong. Players engage in a standard four-player mahjong match, strategically discarding and drawing tiles while navigating the distracting and provocative visuals. The game's notoriety stems from its exploitation of the console's capabilities to push boundaries and cater to a niche audience, making it a significant, albeit controversial, piece of Sega's history. It remains a rare and sought-after (or avoided) curiosity for collectors."
+    },
+    {
+      "Id": 64556,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 32026,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "39439",
+            "Publisher": "Sun Green"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "23609",
+            "ImmutableId": "23609",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/companies/sun-green",
+            "LastSearch": "2026-02-14T00:16:04",
+            "NextSearch": "2026-12-26T00:16:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2026-02-14T00:16:04",
+            "NextSearch": "2026-04-21T00:16:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2026-02-14T00:16:04",
+            "NextSearch": "2026-04-21T00:16:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2026-02-14T00:16:04",
+            "NextSearch": "2026-04-21T00:16:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-02-14T00:16:04",
+            "NextSearch": "2026-04-21T00:16:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-02-14T00:16:04",
+            "NextSearch": "2026-04-21T00:16:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-02-14T00:16:04",
+            "NextSearch": "2026-04-21T00:16:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2026-02-14T00:16:04",
+            "NextSearch": "2026-04-21T00:16:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2026-02-14T00:16:04",
+            "NextSearch": "2026-04-21T00:16:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T19:46:07",
+            "NextSearch": "2026-03-03T19:46:07",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T17:06:37",
+            "NextSearch": "2026-04-24T17:06:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sun Green, Sun-Green"
+          }
+        ],
+        "CreatedDate": "2024-05-26T22:28:09",
+        "UpdatedDate": "2026-02-14T00:16:51",
+        "Name": "Sun Green"
+      }
+    },
+    {
+      "Id": 64555,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 86,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "722",
+            "Platform": "Genesis/Mega Drive"
+          },
+          {
+            "SignatureId": "766",
+            "Platform": "Megadrive"
+          },
+          {
+            "SignatureId": "612",
+            "Platform": "Sega - Mega Drive - Genesis"
+          },
+          {
+            "SignatureId": "1067",
+            "Platform": "Sega - Mega Drive - Genesis (Parent-Clone)"
+          },
+          {
+            "SignatureId": "303",
+            "Platform": "Sega Mega Drive & Genesis"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "29",
+            "ImmutableId": "29",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/genesis-slash-megadrive",
+            "LastSearch": "2024-04-29T04:33:40",
+            "NextSearch": "2024-05-29T04:33:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "18",
+            "ImmutableId": "18",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=18",
+            "LastSearch": "2024-12-12T01:25:00",
+            "NextSearch": "2025-01-12T01:25:00",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "1",
+            "ImmutableId": "1",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/1/games",
+            "LastSearch": "2025-04-30T06:22:35",
+            "NextSearch": "2025-05-30T06:22:35",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "6",
+            "ImmutableId": "6",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-6/",
+            "LastSearch": "2025-06-20T15:29:46",
+            "NextSearch": "2025-07-20T15:29:46",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-04-03T14:11:16",
+            "NextSearch": "2026-09-22T14:11:16",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-04-03T14:11:16",
+            "NextSearch": "2026-09-22T14:11:16",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-04-03T14:11:16",
+            "NextSearch": "2026-09-22T14:11:16",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Sega_Genesis",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Sega_Genesis",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Sega_Genesis",
+            "LastSearch": "2025-12-21T10:27:46",
+            "NextSearch": "2026-01-21T10:27:46",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2026-04-03T14:11:16",
+            "NextSearch": "2026-09-22T14:11:16",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "1",
+            "ImmutableId": "1",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=1",
+            "LastSearch": "2026-04-03T14:11:16",
+            "NextSearch": "2026-10-11T14:11:16",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "42-sega-genesis",
+            "ImmutableId": "42-sega-genesis",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/42-sega-genesis",
+            "LastSearch": "2026-02-24T09:49:25",
+            "NextSearch": "2026-04-24T09:49:25",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758481,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Sega Genesis, known as the Mega Drive outside North America, was a 16-bit home video game console that sparked a fierce rivalry with Nintendo in the early 1990s. Released in 1988 in Japan and 1989 in North America, it boasted a Motorola 68000 processor and impressive graphics capabilities, quickly establishing itself as a powerhouse. Its aggressive marketing targeted adolescents, positioning it as the \"cool\" console. \n\nThe Genesis library was extensive, featuring arcade ports and iconic titles like *Sonic the Hedgehog*, *Ecco the Dolphin*, and *Street Fighter II*. Add-ons like the Sega CD and 32X expanded its capabilities, though ultimately proved unsuccessful. Despite initial struggles in Japan, the Genesis achieved significant success in North America, Brazil, Australia, and Europe, selling over 30 million units worldwide. Its legacy continues with rereleases and modern tributes, solidifying its place in gaming history."
+          },
+          {
+            "Id": 110859,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "Genesis"
+          },
+          {
+            "Id": 229,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "CE599B2E7A43FA6F0DF17E4A81A399BC00792857"
+          },
+          {
+            "Id": 67,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 79,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "2664",
+                  "Publisher": "Sega"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "112",
+                  "ImmutableId": "112",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/sega",
+                  "LastSearch": "2025-06-24T19:51:51",
+                  "NextSearch": "2026-09-03T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:34",
+                  "NextSearch": "2026-03-03T13:05:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:25",
+                  "NextSearch": "2026-04-24T09:49:25",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 297392,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "FA75F68C2F5C275E561FB3BDB99AC6D07BDC945B"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:26:49",
+              "UpdatedDate": "2026-01-31T13:46:36",
+              "Name": "Sega"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sega Mega Drive / Genesis, Sega-Mega-Drive-/-Genesis, Sega Mega Drive/Genesis, Sega Mega Drive Genesis, Sega Mega Drive - Genesis, Sega Mega Drive, Genesis"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 222,
+                    "Text": "16-bit",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88548,
+                    "Text": "cd support",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 89,
+                    "Text": "custom chipset",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 314,
+                    "Text": "early 90s",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 677,
+                    "Text": "composite",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 11,
+                    "Text": "s-video",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 12,
+                    "Text": "scart",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 338,
+                    "Text": "home",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88547,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 13,
+                    "Text": "controller",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:33:40",
+        "UpdatedDate": "2026-05-25T01:13:04",
+        "Name": "Sega Mega Drive / Genesis"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "16 Zhang Mahjong, 16-Zhang-Mahjong, XVI Zhang Mahjong, XVI-Zhang-Mahjong, Sixteen Zhang Mahjong, Sixteen-Zhang-Mahjong"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 33,
+          "Id": "997722",
+          "Name": "16 Zhang Mahjong (1992)(Sun Green)(TW)[h][p].bin",
+          "Size": 1048576,
+          "Crc": "6be25fd5",
+          "Md5": "13061097c8439fc571a2331e03501e85",
+          "Sha1": "d80d7a52cf5f38fe5db543f39b93bc2990e283c8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "TW": "Taiwan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "BIN",
+            "h": "",
+            "p": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "TW",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "997723",
+          "Name": "16 Zhang Mahjong (1992)(Sun Green)(TW)[p].bin",
+          "Size": 1048576,
+          "Crc": "36407c82",
+          "Md5": "eb73019e35862ba47adef684d60cba56",
+          "Sha1": "7857c797245b52641a3d1d4512089bccb0ed5359",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "TW": "Taiwan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "BIN",
+            "p": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "TW",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "997724",
+          "Name": "16 Zhang Mahjong (1992)(Sun Green)(TW)[p][b].bin",
+          "Size": 1048576,
+          "Crc": "de3f5089",
+          "Md5": "713a9722b02b8dbf9c707d1fda8a6210",
+          "Sha1": "bae7ef554a33817adc84d70bf112fa1b5a9bb48a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "TW": "Taiwan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "BIN",
+            "p": "",
+            "b": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "TW",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 877,
+              "Text": "arcade",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3427,
+              "Text": "mahjong",
+              "AIGenerated": true
+            },
+            {
+              "Id": 888,
+              "Text": "simulation",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 3431,
+              "Text": "casino",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3432,
+              "Text": "gambling",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1484,
+              "Text": "social interaction",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1634,
+              "Text": "tile matching",
+              "AIGenerated": true
+            },
+            {
+              "Id": 819,
+              "Text": "turn-based",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 3429,
+              "Text": "pornographic content",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3430,
+              "Text": "sega mega drive",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3428,
+              "Text": "unlicensed",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Taiwan (TW)"
+    }
+  ],
+  "CreatedDate": "2024-05-26T22:28:10",
+  "UpdatedDate": "2026-01-27T13:11:35",
+  "Name": "16 Zhang Mahjong"
+}

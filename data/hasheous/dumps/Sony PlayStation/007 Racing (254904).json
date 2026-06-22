@@ -1,0 +1,1260 @@
+{
+  "Id": 254904,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "988311",
+      "Name": "007 Racing",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Sony - PlayStation",
+      "SourceId": "38236",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "988313",
+      "Name": "007 Racing",
+      "Year": "",
+      "Country": "FR",
+      "Platform": "Sony - PlayStation",
+      "SourceId": "38236",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "598422",
+      "Name": "007 Racing",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Sony - PlayStation",
+      "SourceId": "38236",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "988312",
+      "Name": "007 Racing",
+      "Year": "",
+      "Country": "DE",
+      "Platform": "Sony - PlayStation",
+      "SourceId": "38236",
+      "MetadataSource": "5"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "1642",
+      "ImmutableId": "1642",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/007-racing",
+      "LastSearch": "2025-07-16T22:00:47",
+      "NextSearch": "2026-08-22T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "112732",
+      "ImmutableId": "112732",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=112732",
+      "LastSearch": "2025-07-16T22:00:47",
+      "NextSearch": "2026-08-22T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "14683",
+      "ImmutableId": "14683",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/14683",
+      "LastSearch": "2025-07-16T22:00:47",
+      "NextSearch": "2026-08-22T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-07-16T22:00:47",
+      "NextSearch": "2026-03-21T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-16T22:00:48",
+      "NextSearch": "2026-03-21T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-16T22:00:48",
+      "NextSearch": "2026-03-21T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-16T22:00:48",
+      "NextSearch": "2026-03-21T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/007_Racing",
+      "ImmutableId": "https://en.wikipedia.org/wiki/007_Racing",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/007_Racing",
+      "LastSearch": "2025-07-16T22:00:48",
+      "NextSearch": "2026-07-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T11:09:49",
+      "NextSearch": "2026-03-21T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T14:00:47",
+      "NextSearch": "2026-03-03T14:00:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T14:57:06",
+      "NextSearch": "2026-04-24T14:57:06",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 758586,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 007 Racing: Sony PlayStation - Synopsis\n\nStep into the iconic shoes of James Bond in *007 Racing* for PlayStation! Q-Branch has equipped your favorite vehicles – the Aston Martin DB5, Lotus Esprit, and BMW – with cutting-edge gadgets and firepower, ready for a thrilling mission to save the world.\n\nA sinister plot unfolds as a European diplomat and businessman conspires to hijack a shipment of NATO weapons, intending to arm international terrorists. As 007, you must race against time, navigating diverse locations from New York City to the Baltic Sea, thwarting the villain’s schemes and rescuing the captivating Cherise Litte.\n\nExperience a blend of high-octane racing and action-packed missions. Utilize smoke screens, stinger missiles, and other ingenious gadgets to outmaneuver dangerous assailants attacking from the air, sea, and ground. Engage in a solo campaign or challenge a friend in exhilarating 2-player action. Prepare for a pulse-pounding adventure where skill and gadgetry are your greatest allies. The fate of the free world rests in your hands – 007, your mission awaits!"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 496036,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "7C36CE7F08976415DD48C757406DFF0AF730A6A0"
+    },
+    {
+      "Id": 496035,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 100,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "743",
+            "Platform": "PlayStation"
+          },
+          {
+            "SignatureId": "683",
+            "Platform": "PlayStation GameShark Updates"
+          },
+          {
+            "SignatureId": "691",
+            "Platform": "Sony - PlayStation"
+          },
+          {
+            "SignatureId": "624",
+            "Platform": "Sony - PlayStation (PS one Classics) (PSN)"
+          },
+          {
+            "SignatureId": "1079",
+            "Platform": "Sony - PlayStation (PS one Classics) (PSN) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "327",
+            "Platform": "Sony PlayStation"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "7",
+            "ImmutableId": "7",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/ps",
+            "LastSearch": "2024-04-29T11:18:44",
+            "NextSearch": "2024-05-29T11:18:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "10",
+            "ImmutableId": "10",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=10",
+            "LastSearch": "2024-12-12T01:25:31",
+            "NextSearch": "2025-01-12T01:25:31",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "12",
+            "ImmutableId": "12",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/12/games",
+            "LastSearch": "2025-05-06T21:46:00",
+            "NextSearch": "2025-06-06T21:46:00",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "22",
+            "ImmutableId": "22",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-22/",
+            "LastSearch": "2025-06-20T15:32:12",
+            "NextSearch": "2025-07-20T15:32:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2026-10-30T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2026-10-30T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2026-10-30T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/PlayStation_(console)",
+            "ImmutableId": "https://en.wikipedia.org/wiki/PlayStation_(console)",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/PlayStation_(console)",
+            "LastSearch": "2025-12-21T10:28:07",
+            "NextSearch": "2026-01-21T10:28:07",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327251",
+            "ImmutableId": "5327251",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327251",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2027-02-02T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "57",
+            "ImmutableId": "57",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=57",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2027-02-02T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "47-sony-playstation",
+            "ImmutableId": "47-sony-playstation",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/47-sony-playstation",
+            "LastSearch": "2026-02-24T09:49:32",
+            "NextSearch": "2026-04-24T09:49:32",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758491,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The PlayStation (originally codenamed PSX) is a home video game console developed and marketed by Sony Computer Entertainment, released in Japan in 1994 and globally throughout 1995. It marked Sony's entry into the console market, challenging Nintendo and Sega. Designed with an emphasis on 3D polygon graphics and streamlined game development, the PlayStation fostered a vast and diverse game library, attracting numerous third-party developers. \n\nCritically acclaimed titles like *Final Fantasy VII*, *Crash Bandicoot*, *Spyro the Dragon*, *Metal Gear Solid*, *Tomb Raider*, and *Gran Turismo* became instant classics, with *Gran Turismo* becoming the console's best-selling game. The PlayStation revolutionized the industry by embracing CD-ROMs and appealing to a broader, more adult audience. Ultimately, it sold over 100 million units, paving the way for the PlayStation 2 and establishing Sony as a dominant force in gaming."
+          },
+          {
+            "Id": 110865,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "PS1"
+          },
+          {
+            "Id": 236,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "652D5596E86C59DBC04645370C13B92FD3F53CC7"
+          },
+          {
+            "Id": 461506,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 19877,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "14855",
+                  "Publisher": "Sony"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "AutomaticTooManyMatches",
+                  "Source": "IGDB",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T14:40:50",
+                  "NextSearch": "2026-08-19T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:14:46",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:36",
+                  "NextSearch": "2026-03-03T13:05:36",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:32",
+                  "NextSearch": "2026-04-24T09:49:32",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [],
+              "CreatedDate": "2024-05-26T10:46:55",
+              "UpdatedDate": "2026-01-31T19:53:39",
+              "Name": "Sony"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sony PlayStation, Sony-PlayStation"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 8,
+                    "Text": "32-bit processor",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 6,
+                    "Text": "cd-rom drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95325,
+                    "Text": "soundscope",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 342,
+                    "Text": "analog stick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95271,
+                    "Text": "digital pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88561,
+                    "Text": "dual analog controller",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 30,
+                    "Text": "composite video",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 12,
+                    "Text": "scart",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T11:18:44",
+        "UpdatedDate": "2026-05-25T01:27:05",
+        "Name": "Sony PlayStation"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "007 Racing, 007-Racing, VII Racing, VII-Racing, Seven Racing, Seven-Racing"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "7479733",
+          "Name": "007 Racing (Europe).bin",
+          "Size": 565672464,
+          "Crc": "2693623a",
+          "Md5": "9192da77d65952142b9b46f9862930fe",
+          "Sha1": "2b6802f8a7dcc28840d4e5e1369a5bd2e90fb5ae",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-03355, SLES-03355-P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7479731",
+          "Name": "007 Racing (Europe).cue",
+          "Size": 85,
+          "Crc": "74722fc6",
+          "Md5": "94239b716d59a53eb83330f7c90115b5",
+          "Sha1": "db19e66b47df3b885c8a43d177524eb72cbbb9e8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-03355, SLES-03355-P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7484325",
+          "Name": "007 Racing (France).bin",
+          "Size": 547510320,
+          "Crc": "f8500248",
+          "Md5": "cbbec2f35e7b09e879a8d1d70bcd443b",
+          "Sha1": "ca37e0995412d40cecec47c16db5bebf5e6e1b14",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "FR": "France"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-03356, SLES-03356-P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7484324",
+          "Name": "007 Racing (France).cue",
+          "Size": 85,
+          "Crc": "527a9ec3",
+          "Md5": "2ca7788ac9ce4bde07082519e3440955",
+          "Sha1": "6566b324e064957a31c7aacaeda10dc13957a626",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "FR": "France"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-03356, SLES-03356-P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2366269",
+          "Name": "007 Racing (Europe).bin",
+          "Size": 565672464,
+          "Crc": "2693623a",
+          "Md5": "9192da77d65952142b9b46f9862930fe",
+          "Sha1": "2b6802f8a7dcc28840d4e5e1369a5bd2e90fb5ae",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-03355, SLES-03355-P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3865872",
+          "Name": "007 Racing (Europe).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "ac3cd9c8e4e733c271977d479a4691f06dd27b48",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2366268",
+          "Name": "007 Racing (Europe).cue",
+          "Size": 85,
+          "Crc": "74722fc6",
+          "Md5": "94239b716d59a53eb83330f7c90115b5",
+          "Sha1": "db19e66b47df3b885c8a43d177524eb72cbbb9e8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-03355, SLES-03355-P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2380535",
+          "Name": "007 Racing (France).bin",
+          "Size": 547510320,
+          "Crc": "f8500248",
+          "Md5": "cbbec2f35e7b09e879a8d1d70bcd443b",
+          "Sha1": "ca37e0995412d40cecec47c16db5bebf5e6e1b14",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "FR": "France"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-03356, SLES-03356-P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3865873",
+          "Name": "007 Racing (France).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "abd3135dadc605c0f73ae50f81dacc8ae795d999",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "FR": "France"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2380534",
+          "Name": "007 Racing (France).cue",
+          "Size": 85,
+          "Crc": "527a9ec3",
+          "Md5": "2ca7788ac9ce4bde07082519e3440955",
+          "Sha1": "6566b324e064957a31c7aacaeda10dc13957a626",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "FR": "France"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-03356, SLES-03356-P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2379238",
+          "Name": "007 Racing (Germany).bin",
+          "Size": 552463632,
+          "Crc": "bbe6471e",
+          "Md5": "cbd238103dbcbf5bc26299f2db6e873a",
+          "Sha1": "f440f37ab90c78b022cdb3d8e73575b6f720ce69",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-03357"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3865874",
+          "Name": "007 Racing (Germany).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "44587b1a0cef32efab55ae12cedba3c6d2d90f84",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2379237",
+          "Name": "007 Racing (Germany).cue",
+          "Size": 86,
+          "Crc": "66c0c70d",
+          "Md5": "3888bda9c1ec724851753d1347d56902",
+          "Sha1": "b8f87935e390d87227779bac72443d20eb2fe5ed",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-03357"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2356176",
+          "Name": "007 Racing (USA).bin",
+          "Size": 565011552,
+          "Crc": "5a39ae64",
+          "Md5": "2a51a718419e8d16e20e0ac8b5e59d24",
+          "Sha1": "91c0c4b5c888f074a777f891be5432064678070e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLUS-01300, SLUS-01300CE"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3865875",
+          "Name": "007 Racing (USA).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "c0fffd6939c403a0b7a179b472ae768c06c05c26",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2356175",
+          "Name": "007 Racing (USA).cue",
+          "Size": 82,
+          "Crc": "5c58d484",
+          "Md5": "70ddb4b1c09a15423e95b8c32509e48d",
+          "Sha1": "f74c52098f149c91f066b17e9000d5a059ec4405",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLUS-01300, SLUS-01300CE"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7483942",
+          "Name": "007 Racing (Germany).bin",
+          "Size": 552463632,
+          "Crc": "bbe6471e",
+          "Md5": "cbd238103dbcbf5bc26299f2db6e873a",
+          "Sha1": "f440f37ab90c78b022cdb3d8e73575b6f720ce69",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-03357"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7483941",
+          "Name": "007 Racing (Germany).cue",
+          "Size": 86,
+          "Crc": "66c0c70d",
+          "Md5": "3888bda9c1ec724851753d1347d56902",
+          "Sha1": "b8f87935e390d87227779bac72443d20eb2fe5ed",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-03357"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 789,
+              "Text": "adventure",
+              "AIGenerated": true
+            },
+            {
+              "Id": 875,
+              "Text": "racing",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 1206,
+              "Text": "combat elements",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1113,
+              "Text": "mission based",
+              "AIGenerated": true
+            },
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 1178,
+              "Text": "gadget usage",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1208,
+              "Text": "two player action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1207,
+              "Text": "vehicle customization",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 887,
+              "Text": "isometric",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1056,
+              "Text": "james bond",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1138,
+              "Text": "mission-based",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1057,
+              "Text": "spy thriller",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU), France (FR), Germany (DE), United States (US)"
+    }
+  ],
+  "CreatedDate": "2025-07-16T22:00:47",
+  "UpdatedDate": "2026-01-27T04:34:04",
+  "Name": "007 Racing"
+}

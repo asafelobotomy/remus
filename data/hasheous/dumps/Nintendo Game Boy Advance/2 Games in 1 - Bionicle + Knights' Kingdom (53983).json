@@ -1,0 +1,923 @@
+{
+  "Id": 53983,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "839082",
+      "Name": "2 Games in 1 - Bionicle + Knights' Kingdom",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Game Boy Advance (Parent-Clone)",
+      "SourceId": "12416",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "469122",
+      "Name": "2 Games in 1 - Bionicle + Knights' Kingdom",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Game Boy Advance",
+      "SourceId": "12413",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "941618",
+      "Name": "2 Games In 1 - Bionicle + Knights' Kingdom",
+      "Year": "",
+      "Country": null,
+      "Platform": "Game Boy Advance",
+      "SourceId": "26666",
+      "MetadataSource": "98"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-05-08T12:52:59",
+      "NextSearch": "2026-09-06T12:52:59",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-05-08T12:52:59",
+      "NextSearch": "2026-09-06T12:52:59",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-05-08T12:52:59",
+      "NextSearch": "2026-09-06T12:52:59",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-05-08T12:52:59",
+      "NextSearch": "2026-09-06T12:52:59",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-05-08T12:52:59",
+      "NextSearch": "2026-09-06T12:52:59",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-05-08T12:52:59",
+      "NextSearch": "2026-09-06T12:52:59",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-05-08T12:52:59",
+      "NextSearch": "2026-09-06T12:52:59",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-05-08T12:52:59",
+      "NextSearch": "2026-09-06T12:52:59",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-05-08T12:52:59",
+      "NextSearch": "2026-09-06T12:52:59",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "83020",
+      "ImmutableId": "83020",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "ScreenScraper",
+      "Link": "https://www.screenscraper.fr/gameinfos.php?gameid=83020",
+      "LastSearch": "2026-05-08T12:52:59",
+      "NextSearch": "2027-02-02T12:52:59",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T12:06:10",
+      "NextSearch": "2026-04-24T12:06:10",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 109025,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 71,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "717",
+            "Platform": "Game Boy Advance"
+          },
+          {
+            "SignatureId": "558",
+            "Platform": "Nintendo - Game Boy Advance"
+          },
+          {
+            "SignatureId": "559",
+            "Platform": "Nintendo - Game Boy Advance (e-Reader)"
+          },
+          {
+            "SignatureId": "1012",
+            "Platform": "Nintendo - Game Boy Advance (e-Reader) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "560",
+            "Platform": "Nintendo - Game Boy Advance (Multiboot)"
+          },
+          {
+            "SignatureId": "1013",
+            "Platform": "Nintendo - Game Boy Advance (Multiboot) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "1014",
+            "Platform": "Nintendo - Game Boy Advance (Parent-Clone)"
+          },
+          {
+            "SignatureId": "561",
+            "Platform": "Nintendo - Game Boy Advance (Play-Yan)"
+          },
+          {
+            "SignatureId": "1015",
+            "Platform": "Nintendo - Game Boy Advance (Play-Yan) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "562",
+            "Platform": "Nintendo - Game Boy Advance (Video)"
+          },
+          {
+            "SignatureId": "1016",
+            "Platform": "Nintendo - Game Boy Advance (Video) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "242",
+            "Platform": "Nintendo Game Boy Advance"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "24",
+            "ImmutableId": "24",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/gba",
+            "LastSearch": "2024-04-29T04:18:55",
+            "NextSearch": "2024-05-29T04:18:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5",
+            "ImmutableId": "5",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=5",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2027-01-03T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5",
+            "ImmutableId": "5",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/5/games",
+            "LastSearch": "2025-05-13T03:04:02",
+            "NextSearch": "2025-06-13T03:04:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "4",
+            "ImmutableId": "4",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-4/",
+            "LastSearch": "2025-06-20T15:23:33",
+            "NextSearch": "2025-07-20T15:23:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2026-08-23T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2026-08-23T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2026-08-23T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Game_Boy_Advance",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Game_Boy_Advance",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Game_Boy_Advance",
+            "LastSearch": "2025-12-21T10:26:42",
+            "NextSearch": "2026-01-21T10:26:42",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5321240",
+            "ImmutableId": "5321240",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5321240",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2027-01-03T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "12",
+            "ImmutableId": "12",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=12",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2027-01-03T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "29-nintendo-game-boy-advance",
+            "ImmutableId": "29-nintendo-game-boy-advance",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/29-nintendo-game-boy-advance",
+            "LastSearch": "2026-02-24T09:49:26",
+            "NextSearch": "2026-04-24T09:49:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758308,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo Game Boy Advance (GBA), released in 2001, was a pivotal handheld console, succeeding the Game Boy Color and ushering in a new era of portable gaming. This 32-bit powerhouse boasted a more powerful ARM7 processor and improved graphics, while maintaining backward compatibility with older Game Boy titles. It quickly became a global phenomenon, selling over 81 million units. \n\nThe GBA’s library was diverse, ranging from platformers and SNES-like RPGs to ports of classic 8-bit and 16-bit games. Popular titles like *Pokémon Ruby and Sapphire* captivated players worldwide. Unique features like rumble, tilt, and solar sensors added innovative gameplay elements. Later models, including the SP and Micro, offered enhanced designs and features. The GBA’s legacy continues, with digital re-releases on Nintendo’s online services, ensuring its enduring appeal."
+          },
+          {
+            "Id": 110856,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "GBA"
+          },
+          {
+            "Id": 216,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "37EA6A2404729F2FAC848CE55A6C39715293C068"
+          },
+          {
+            "Id": 54,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo Game Boy Advance, Nintendo-Game-Boy-Advance"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 88481,
+                    "Text": "backward compatible",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 368,
+                    "Text": "battery powered",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 141,
+                    "Text": "monochrome display",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 132,
+                    "Text": "handheld",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 333,
+                    "Text": "portable",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 137,
+                    "Text": "d-pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95310,
+                    "Text": "game boy link cable",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88526,
+                    "Text": "shoulder buttons",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 95309,
+                    "Text": "e-reader support",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 626,
+                    "Text": "game link cable",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 627,
+                    "Text": "wireless adapter",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:18:55",
+        "UpdatedDate": "2026-05-25T00:39:57",
+        "Name": "Nintendo Game Boy Advance"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "2 Games in 1 - Bionicle + Knights' Kingdom, 2 Games in 1-Bionicle + Knights' Kingdom, 2 Games in 1 Bionicle + Knights' Kingdom, 2 Games in 1: Bionicle + Knights' Kingdom, II Games in I - Bionicle + Knights' Kingdom, II Games in I-Bionicle + Knights' Kingdom, II Games in I Bionicle + Knights' Kingdom, II Games in I: Bionicle + Knights' Kingdom, Two Games in One - Bionicle + Knights' Kingdom, Two Games in One-Bionicle + Knights' Kingdom, Two Games in One Bionicle + Knights' Kingdom, Two Games in One: Bionicle + Knights' Kingdom"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "3616860",
+          "Name": "2 Games in 1 - Bionicle + Knights' Kingdom (Europe) (En,Fr,De,Da+En,De).gba",
+          "Size": 16777216,
+          "Crc": "d720bdca",
+          "Md5": "15db64521ee01c3f0428fdb9798577c5",
+          "Sha1": "578ac431ae298b14d0b65d80fed09a47311cc597",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1479028",
+          "Name": "2 Games in 1 - Bionicle + Knights' Kingdom (Europe) (En,Fr,De,Da+En,De).gba",
+          "Size": 16777216,
+          "Crc": "d720bdca",
+          "Md5": "15db64521ee01c3f0428fdb9798577c5",
+          "Sha1": "578ac431ae298b14d0b65d80fed09a47311cc597",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 22,
+          "Id": "4107480",
+          "Name": "2 Games in 1 - Bionicle + Knights' Kingdom (Europe) (En,Fr,De,Da+En,De).zip",
+          "Size": 7921614,
+          "Crc": "fa4228f8",
+          "Md5": "23be55841d6c0386c74ba5b475039606",
+          "Sha1": "",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4107478",
+          "Name": "2 Games in 1 - Bionicle Knights' Kingdom (Europe) (En,Fr,De,Da En,De).gba",
+          "Size": 16777216,
+          "Crc": "d720bdca",
+          "Md5": "15db64521ee01c3f0428fdb9798577c5",
+          "Sha1": "578ac431ae298b14d0b65d80fed09a47311cc597",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4107479",
+          "Name": "2 Games in 1 - Bionicle Knights' Kingdom (Europe) (En,Fr,De,Da En,De).zip",
+          "Size": 7872042,
+          "Crc": "d69af71a",
+          "Md5": "d961811644e33f6e4b0f5005f3e57080",
+          "Sha1": "a8ed73eab81eb09c4cf57af1660b227475598402",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4107481",
+          "Name": "2 Games in 1 - Bionicle Knights' Kingdom (Europe) (En,Fr,De,Da En,De).zip",
+          "Size": 7911203,
+          "Crc": "fba10ef7",
+          "Md5": "641c598b2e51f25a2b929020f538efc3",
+          "Sha1": "83aa9a0c57e8b42616c011244019f9ed7d1395fb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {}
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU),  (ss)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, English, French, Spanish"
+    }
+  ],
+  "CreatedDate": "2024-09-02T10:04:16",
+  "UpdatedDate": "2026-05-08T12:53:26",
+  "Name": "2 Games in 1 - Bionicle + Knights' Kingdom"
+}

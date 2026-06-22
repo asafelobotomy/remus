@@ -1,0 +1,968 @@
+{
+  "Id": 52226,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "633512",
+      "Name": "1942",
+      "Year": "",
+      "Country": "",
+      "Platform": "Game Boy Color",
+      "SourceId": "38266",
+      "MetadataSource": "7"
+    },
+    {
+      "SignatureId": "474608",
+      "Name": "1942",
+      "Year": "",
+      "Country": "US, EU",
+      "Platform": "Nintendo - Game Boy Color",
+      "SourceId": "12419",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "760511",
+      "Name": "1942",
+      "Year": "2000-05-22",
+      "Country": "EU, US",
+      "Platform": "Nintendo Game Boy Color",
+      "SourceId": "9156",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "300045",
+      "ImmutableId": "300045",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/1942--2",
+      "LastSearch": "2024-09-02T07:41:59",
+      "NextSearch": "2026-10-19T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "21872",
+      "ImmutableId": "21872",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=21872",
+      "LastSearch": "2024-12-12T15:29:06",
+      "NextSearch": "2026-10-19T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "5062",
+      "ImmutableId": "5062",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/5062",
+      "LastSearch": "2025-06-06T23:35:09",
+      "NextSearch": "2026-10-19T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "10466",
+      "ImmutableId": "10466",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-10466/",
+      "LastSearch": "2025-07-06T09:53:30",
+      "NextSearch": "2026-10-19T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-06T09:53:30",
+      "NextSearch": "2026-05-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-06T09:53:30",
+      "NextSearch": "2026-05-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-06T09:53:30",
+      "NextSearch": "2026-05-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.m.wikipedia.org/wiki/1942_(video_game)",
+      "ImmutableId": "https://en.m.wikipedia.org/wiki/1942_(video_game)",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.m.wikipedia.org/wiki/1942_(video_game)",
+      "LastSearch": "2025-06-21T22:57:41",
+      "NextSearch": "2026-07-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T09:40:06",
+      "NextSearch": "2026-05-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:48:26",
+      "NextSearch": "2026-03-03T13:48:26",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T10:14:42",
+      "NextSearch": "2026-04-24T10:14:42",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 760182,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 1942 (Game Boy Color) - Synopsis\n\nRelive the classic arcade action in this faithful Game Boy Color port of Capcom's iconic 1984 shooter, *1942*. Set in the Pacific Theater of World War II, players take on the role of an American P-38 fighter pilot, tasked with battling against the Japanese air fleet and ultimately reaching Tokyo. Loosely based on the pivotal Battle of Midway, the game captures the intensity and challenge of the original.\n\nExperience vertical scrolling gameplay as you navigate through enemy formations, dodging bullets and collecting power-ups to enhance your firepower. The signature \"roll\" feature, allowing for brief invincibility and a change in direction, returns to help you survive the onslaught. \n\nThis handheld version brings the adrenaline-pumping action of the arcade to the Game Boy Color, offering a nostalgic trip for veterans and a thrilling introduction for new players. While a smaller screen, the core gameplay remains intact, delivering a classic scrolling shooter experience on the go. It's a piece of Capcom history, now available in vibrant, handheld format."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 104305,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "BD768EDEEB577BA303F22DFE163582DF11F41096"
+    },
+    {
+      "Id": 104300,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 72,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "718",
+            "Platform": "Game Boy Color"
+          },
+          {
+            "SignatureId": "563",
+            "Platform": "Nintendo - Game Boy Color"
+          },
+          {
+            "SignatureId": "1017",
+            "Platform": "Nintendo - Game Boy Color (Parent-Clone)"
+          },
+          {
+            "SignatureId": "243",
+            "Platform": "Nintendo Game Boy Color"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "22",
+            "ImmutableId": "22",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/gbc",
+            "LastSearch": "2024-04-29T04:20:13",
+            "NextSearch": "2024-05-29T04:20:13",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "41",
+            "ImmutableId": "41",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=41",
+            "LastSearch": "2026-05-09T13:12:32",
+            "NextSearch": "2027-03-22T13:12:32",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "6",
+            "ImmutableId": "6",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/6/games",
+            "LastSearch": "2025-05-06T21:45:12",
+            "NextSearch": "2025-06-06T21:45:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "57",
+            "ImmutableId": "57",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-57/",
+            "LastSearch": "2025-06-20T15:23:53",
+            "NextSearch": "2025-07-20T15:23:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:12:32",
+            "NextSearch": "2026-08-07T13:12:32",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:12:32",
+            "NextSearch": "2026-08-07T13:12:32",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:12:32",
+            "NextSearch": "2026-08-07T13:12:32",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Game_Boy_Color",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Game_Boy_Color",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Game_Boy_Color",
+            "LastSearch": "2025-12-21T10:26:43",
+            "NextSearch": "2026-01-21T10:26:43",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5331036",
+            "ImmutableId": "5331036",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5331036",
+            "LastSearch": "2026-05-09T13:12:32",
+            "NextSearch": "2026-08-07T13:12:32",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "10",
+            "ImmutableId": "10",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=10",
+            "LastSearch": "2026-05-09T13:12:32",
+            "NextSearch": "2027-03-22T13:12:32",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "30-nintendo-game-boy-color",
+            "ImmutableId": "30-nintendo-game-boy-color",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/30-nintendo-game-boy-color",
+            "LastSearch": "2026-02-24T09:49:26",
+            "NextSearch": "2026-04-24T09:49:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758309,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Game Boy Color, released in 1998, was Nintendo's evolution of the classic Game Boy, bringing vibrant color to a beloved handheld. Powered by a custom Nintendo CPU CGB and a Sharp SM83 processor (capable of dual-speed mode), it offered enhanced performance and four times the memory of its predecessor. The device featured a 2.3-inch TFT LCD screen displaying a 160x144 pixel resolution, and was backward compatible with original Game Boy titles. \n\nDevelopers were encouraged to create enhanced versions of existing games, often labeled \"Deluxe\" or \"DX,\" like *Tetris DX* and *The Legend of Zelda: Link's Awakening DX*. Popular titles like *Pokémon Gold and Silver* cemented its success, with over 23 million units sold. While short-lived, succeeded by the Game Boy Advance, the Game Boy Color sold 118.69 million units worldwide, solidifying its place in gaming history."
+          },
+          {
+            "Id": 110857,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "GBC"
+          },
+          {
+            "Id": 217,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "73A32CF1DD76EBEF104101704F16FE512E31FD7D"
+          },
+          {
+            "Id": 55,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo Game Boy Color, Nintendo-Game-Boy-Color"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 377,
+                    "Text": "160x144 resolution",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 34,
+                    "Text": "32 kb ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 334,
+                    "Text": "color display",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 147,
+                    "Text": "button controls",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 137,
+                    "Text": "d-pad",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 130,
+                    "Text": "cartridge only",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 132,
+                    "Text": "handheld",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:20:13",
+        "UpdatedDate": "2026-05-25T00:40:31",
+        "Name": "Nintendo Game Boy Color"
+      }
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 12,
+          "Id": "2596031",
+          "Name": "1942 (USA, Europe).gbc",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "a31652b6d1e7fc647c4af7b9dfe05ff5",
+          "Sha1": "",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "labels": "nointro"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "RetroAchievements"
+        },
+        {
+          "Score": 23,
+          "Id": "1487104",
+          "Name": "1942.gbc",
+          "Size": 1048576,
+          "Crc": "87431672",
+          "Md5": "a31652b6d1e7fc647c4af7b9dfe05ff5",
+          "Sha1": "d960e951b18d07e79d046313df49c18313664224",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States",
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "709",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2012-11-11",
+            "details.r_date": "2012-11-11",
+            "details.r_date_info": "0",
+            "details.region": "Europe",
+            "details.dumper": "hydr0x",
+            "details.project": "No-Intro",
+            "details.originalformat": "Default",
+            "details.tool": "retrode",
+            "serials.media_serial1": "CGB-AQ4P-EUR",
+            "file.format": "Default"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "3204967",
+          "Name": "1942 (2000-05-22)(Capcom)(EU-US).gbc",
+          "Size": 1048576,
+          "Crc": "87431672",
+          "Md5": "a31652b6d1e7fc647c4af7b9dfe05ff5",
+          "Sha1": "d960e951b18d07e79d046313df49c18313664224",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe",
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "GBC"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "EU-US",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3204968",
+          "Name": "1942 (2000-05-22)(Capcom)(EU-US)[tr el GreekRoms][v1.0].gbc",
+          "Size": 1048588,
+          "Crc": "8cc2d61a",
+          "Md5": "955dd45acb22383c728ee21feb351f66",
+          "Sha1": "b056ff1d35a6a6477919f1ebfc53ec283b08464b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe",
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "GBC",
+            "tr": "el GreekRoms"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "EU-US",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3204969",
+          "Name": "1942 (2000-05-22)(Capcom)(EU-US)[tr es Wave][v1.0].gbc",
+          "Size": 1048576,
+          "Crc": "e218d4bd",
+          "Md5": "df8e89a883f7a95d0288f6863836f83d",
+          "Sha1": "e4031a8f5785e5c9d2c8040026e546d51140f2c3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe",
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "GBC",
+            "tr": "es Wave"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "EU-US",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 965,
+              "Text": "2d",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1030,
+              "Text": "side-scrolling",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3738,
+              "Text": "scrolling shooter",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3737,
+              "Text": "vertical shooter",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 2256,
+              "Text": "high score",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3747,
+              "Text": "percentage score",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3748,
+              "Text": "tip tow formation",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1048,
+              "Text": "historical",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2149,
+              "Text": "pacific theater",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2147,
+              "Text": "world war ii",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 959,
+              "Text": "power-ups",
+              "AIGenerated": true
+            },
+            {
+              "Id": 820,
+              "Text": "single player",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU), United States (US)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "English"
+    }
+  ],
+  "CreatedDate": "2024-09-02T07:41:59",
+  "UpdatedDate": "2026-01-27T06:04:07",
+  "Name": "1942"
+}

@@ -1,0 +1,2430 @@
+{
+  "Id": 346100,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "596231",
+      "Name": "102 Dalmatians - Puppies to the Rescue",
+      "Year": "",
+      "Country": null,
+      "Platform": "Sega - Dreamcast",
+      "SourceId": "3676",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "932794",
+      "Name": "102 Dalmatians - Puppies To The Rescue",
+      "Year": "",
+      "Country": null,
+      "Platform": "Dreamcast",
+      "SourceId": "28322",
+      "MetadataSource": "98"
+    },
+    {
+      "SignatureId": "924238",
+      "Name": "102 Dalmatians - Puppies to the Rescue v1.000",
+      "Year": "2001-01-10",
+      "Country": "",
+      "Platform": "Sega Dreamcast",
+      "SourceId": "13151",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "925040",
+      "Name": "102 Dalmatians - Puppies to the Rescue v1.001",
+      "Year": "2000",
+      "Country": "US",
+      "Platform": "Sega Dreamcast",
+      "SourceId": "13155",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "987281",
+      "Name": "Disney's 102 Dalmatians - Puppies to the Rescue",
+      "Year": "",
+      "Country": "GB",
+      "Platform": "Sega - Dreamcast",
+      "SourceId": "38233",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "595612",
+      "Name": "Disney's 102 Dalmatians - Puppies to the Rescue",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Sega - Dreamcast",
+      "SourceId": "38233",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "987280",
+      "Name": "Disney's 102 Dalmatians - Puppies to the Rescue",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Sega - Dreamcast",
+      "SourceId": "38233",
+      "MetadataSource": "5"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "2361",
+      "ImmutableId": "2361",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/disneys-102-dalmatians-puppies-to-the-rescue",
+      "LastSearch": "2026-05-25T12:10:53",
+      "NextSearch": "2027-05-13T12:10:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-05-25T12:10:53",
+      "NextSearch": "2026-10-25T12:10:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "17750",
+      "ImmutableId": "17750",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/17750",
+      "LastSearch": "2026-05-25T12:10:53",
+      "NextSearch": "2027-05-13T12:10:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-05-25T12:10:53",
+      "NextSearch": "2026-10-25T12:10:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-05-25T12:10:53",
+      "NextSearch": "2026-10-25T12:10:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-05-25T12:10:53",
+      "NextSearch": "2026-10-25T12:10:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-05-25T12:10:53",
+      "NextSearch": "2026-10-25T12:10:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/102_Dalmatians:_Puppies_to_the_Rescue",
+      "ImmutableId": "https://en.wikipedia.org/wiki/102_Dalmatians:_Puppies_to_the_Rescue",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/102_Dalmatians:_Puppies_to_the_Rescue",
+      "LastSearch": "2026-05-25T12:10:53",
+      "NextSearch": "2026-11-25T12:10:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "36425",
+      "ImmutableId": "36425",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "SteamGridDb",
+      "Link": "https://www.steamgriddb.com/game/36425",
+      "LastSearch": "2026-05-25T12:10:53",
+      "NextSearch": "2027-05-13T12:10:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "13700",
+      "ImmutableId": "13700",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "ScreenScraper",
+      "Link": "https://www.screenscraper.fr/gameinfos.php?gameid=13700",
+      "LastSearch": "2026-05-25T12:10:53",
+      "NextSearch": "2026-05-25T13:12:43",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "3524",
+      "ImmutableId": "3524",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "LaunchBox",
+      "Link": "https://gamesdb.launchbox-app.com/games/dbid/3524",
+      "LastSearch": "2026-05-25T12:10:53",
+      "NextSearch": "2027-05-13T12:10:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759256,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## Disney's 102 Dalmatians: Puppies to the Rescue - Dreamcast Synopsis\n\nEmbark on a platforming adventure in *Disney's 102 Dalmatians: Puppies to the Rescue*, a 2000 action-adventure game loosely inspired by the live-action film. As either Oddball (voiced by Molly Marlette) or Domino (voiced by Frankie Muniz), players navigate vibrant, 3D environments to rescue kidnapped puppies from the clutches of Cruella De Vil. \n\nExplore iconic London landmarks like Regent's Park and Big Ben as you tumble through obstacles, solve puzzles, and evade enemy toys. Collect 'stickers' to fill a virtual sticker book, unlocking rewards and revealing a complete picture.  The game features adjustable camera angles for easier navigation and checkpoint parrots named Waddlesworth. \n\nEncounter Cruella’s henchmen, Jasper and Horace, and Le Pelt, requiring clever solutions guided by helpful 'spirit animal friends' to overcome.  Boss battles against Cruella unlock mini-games, adding variety to the gameplay. While praised for its voice acting and mini-games, some found the game's difficulty lacking. Experience a colorful and sparkly world in this charming Dreamcast"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 1262202,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "EE2CC2C9F90BF811787AB330B6693F29650F8629"
+    },
+    {
+      "Id": 643662,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 603738,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "712",
+            "Platform": "Dreamcast"
+          },
+          {
+            "SignatureId": "685",
+            "Platform": "Sega - Dreamcast"
+          },
+          {
+            "SignatureId": "608",
+            "Platform": "Sega - Dreamcast (Development Kit Hard Drives)"
+          },
+          {
+            "SignatureId": "1063",
+            "Platform": "Sega - Dreamcast (Development Kit Hard Drives) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "609",
+            "Platform": "Sega - Dreamcast (Visual Memory Unit)"
+          },
+          {
+            "SignatureId": "1064",
+            "Platform": "Sega - Dreamcast (Visual Memory Unit) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "1120",
+            "Platform": "Sega Dreamcast"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "23",
+            "ImmutableId": "23",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/dc",
+            "LastSearch": "2026-04-09T12:01:37",
+            "NextSearch": "2026-09-21T12:01:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "16",
+            "ImmutableId": "16",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=16",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2027-01-04T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40",
+            "ImmutableId": "40",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/40/games",
+            "LastSearch": "2026-04-09T12:01:37",
+            "NextSearch": "2026-09-21T12:01:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "37",
+            "ImmutableId": "37",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-37/",
+            "LastSearch": "2026-04-09T12:01:37",
+            "NextSearch": "2026-09-21T12:01:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2026-10-26T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2026-10-26T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2026-10-26T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Dreamcast",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Dreamcast",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Dreamcast",
+            "LastSearch": "2026-04-09T12:01:37",
+            "NextSearch": "2026-09-21T12:01:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327256",
+            "ImmutableId": "5327256",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327256",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2027-01-04T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "23",
+            "ImmutableId": "23",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=23",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2027-01-04T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40-sega-dreamcast",
+            "ImmutableId": "40-sega-dreamcast",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/40-sega-dreamcast",
+            "LastSearch": "2026-02-24T09:49:42",
+            "NextSearch": "2026-04-24T09:49:42",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 1230358,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Sega Dreamcast, released in Japan in 1998 and globally in 1999, marked Sega's final foray into home console hardware. As the first sixth-generation console, it innovated with features like a built-in modem for online play and the use of GD-ROM discs to reduce production costs. Sharing architecture with Sega's NAOMI arcade system board, the Dreamcast delivered authentic arcade experiences at home. While hampered by competition from the PlayStation 2 and limited third-party support, the Dreamcast left a lasting legacy. \n\nPopular titles like *Sonic Adventure*, *Crazy Taxi*, *Shenmue*, *Jet Set Radio*, and *Phantasy Star Online* showcased its capabilities. Despite selling 9.13 million units worldwide, Sega discontinued the Dreamcast in 2001, transitioning to a third-party developer role. Today, it's celebrated for its pioneering online features and innovative game design."
+          },
+          {
+            "Id": 1231570,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "Dreamcast"
+          },
+          {
+            "Id": 1231571,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "473BE7DB3057CD0628BB11170D262DE82CD713B1"
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sega Dreamcast, Sega-Dreamcast"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 88,
+                    "Text": "3d graphics",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 6,
+                    "Text": "cd-rom drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95365,
+                    "Text": "mpeg encoder",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 13,
+                    "Text": "controller",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 2947,
+                    "Text": "dial-up",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 248,
+                    "Text": "modem support",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 349,
+                    "Text": "online service",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2026-04-09T12:01:37",
+        "UpdatedDate": "2026-05-25T01:12:04",
+        "Name": "Sega Dreamcast"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "102 Dalmatians - Puppies to the Rescue, 102 Dalmatians-Puppies to the Rescue, 102 Dalmatians Puppies to the Rescue, 102 Dalmatians: Puppies to the Rescue"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "2315811",
+          "Name": "102 Dalmatians - Puppies to the Rescue (UK) (Track 1).bin",
+          "Size": 16073568,
+          "Crc": "cdcc8db8",
+          "Md5": "7d50f5fe87cc5e219e83ec7d47cfc6af",
+          "Sha1": "39cb321c2df71ce5196d8e09b0cf0bf7bca4b8d1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2315812",
+          "Name": "102 Dalmatians - Puppies to the Rescue (UK) (Track 2).bin",
+          "Size": 14347200,
+          "Crc": "49e43706",
+          "Md5": "9cca4624e62f04dc398aed22b5370a34",
+          "Sha1": "a34bdc73ac1e360b13d0592b501a388e0225e994",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2315813",
+          "Name": "102 Dalmatians - Puppies to the Rescue (UK) (Track 3).bin",
+          "Size": 520895088,
+          "Crc": "8abec210",
+          "Md5": "1e7a1d17ae1d0cae464b29bcb9b31ced",
+          "Sha1": "3fd090149748df3e13b4ae71137f55118f913629",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2315814",
+          "Name": "102 Dalmatians - Puppies to the Rescue (UK) (Track 4).bin",
+          "Size": 1764000,
+          "Crc": "be3c1526",
+          "Md5": "c4031ab6cdd2b740b0bab4a506800102",
+          "Sha1": "f690342608c6233e4a239a55ebe74bce63a7d52f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2315815",
+          "Name": "102 Dalmatians - Puppies to the Rescue (UK) (Track 5).bin",
+          "Size": 663101712,
+          "Crc": "a68a2029",
+          "Md5": "0d466d59b95f8793c089cea1d517d468",
+          "Sha1": "10d23ed52d1c96b52bab0161d448a32e50537d6b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2315810",
+          "Name": "102 Dalmatians - Puppies to the Rescue (UK).cue",
+          "Size": 702,
+          "Crc": "792a4bd7",
+          "Md5": "78914a9f77a1ed2f36547974bad1f2a0",
+          "Sha1": "2e4b803ab2f5f2d7e328de58fe7932b7ca4dd74f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "4035489",
+          "Name": "102 Dalmatians (USA).cdi",
+          "Size": 813622533,
+          "Crc": "267a475b",
+          "Md5": "dc07f4b5c03073c267cc5f484ad1e465",
+          "Sha1": "33284cbc85340a2154d0a467475016e8b8ea9c38",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "us": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035486",
+          "Name": "102 Dalmatians - Puppies to the Rescue (UK).chd",
+          "Size": 702,
+          "Crc": "792a4bd7",
+          "Md5": "78914a9f77a1ed2f36547974bad1f2a0",
+          "Sha1": "2e4b803ab2f5f2d7e328de58fe7932b7ca4dd74f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "uk": "UK"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035495",
+          "Name": "102 Dalmatians - Puppies to the Rescue v1.000 (2000)(EIDOS)(PAL)(GB)[!].gdi",
+          "Size": 150,
+          "Crc": "9c6b2c0e",
+          "Md5": "faf12b6ce13bae36d74542c6992798bc",
+          "Sha1": "9f65b5c0bd6832a3df482fa31b60b6e95b4b1dc2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 1,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035498",
+          "Name": "102 Dalmatians - Puppies to the Rescue v1.000 (2001)(Eidos)(PAL)(M4)[!].chd",
+          "Size": 557608169,
+          "Crc": "014b99a6",
+          "Md5": "4ded549545906b4698e4dd4ea51d698b",
+          "Sha1": "7a737c5d2ff7d52ec3d506a04ed57390844c778b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035493",
+          "Name": "102 Dalmatians - Puppies to the Rescue v1.000 (2001)(EIDOS)(PAL)(M4)[!].gdi",
+          "Size": 150,
+          "Crc": "c207a889",
+          "Md5": "b8346e38886d273164babd871f73881b",
+          "Sha1": "732313bc07c86b42314ca5278b9c4070825d3de2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 1,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035496",
+          "Name": "102 Dalmatians - Puppies to the Rescue v1.001 (2000)(EIDOS)(NTSC)(US)[!].chd",
+          "Size": 533448670,
+          "Crc": "afbfbfc1",
+          "Md5": "9a75f5ae3bf15f5b5ee79d29b75293e7",
+          "Sha1": "444a3aa0ca30750b8a52492c373666962250b6bf",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "us": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 1,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035491",
+          "Name": "102 Dalmatians - Puppies to the Rescue v1.001 (2000)(EIDOS)(NTSC)(US)[!].gdi",
+          "Size": 149,
+          "Crc": "f196cf72",
+          "Md5": "b57138b38dba3b1a49203f147d0a628c",
+          "Sha1": "835c04763275e53f04ca143108ecdbe036ac524d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "us": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 1,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035488",
+          "Name": "102 Dalmatians - Puppies to the Rescue v1.001 (2000)(Eidos)(US)[!].chd",
+          "Size": 424875963,
+          "Crc": "014ccb85",
+          "Md5": "4ea8d44841002620ef0ef4b406285edc",
+          "Sha1": "d3985ca7e1a38f8495da191f94f0d9a550535c17",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "us": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 22,
+          "Id": "4035492",
+          "Name": "102 Dalmatians, Disney's - Puppies to the Rescue (Europe).7z",
+          "Size": 615690359,
+          "Crc": "3aeb14b9",
+          "Md5": "927a0e18e00920478a2d1cf9ef3c60d8",
+          "Sha1": "",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035500",
+          "Name": "102 Dalmatians, Disney's - Puppies to the Rescue (Europe)[ALPAX].cdi",
+          "Size": 811660382,
+          "Crc": "f7b4e86f",
+          "Md5": "c8b08ad5532d6179ae0473965a325aad",
+          "Sha1": "022be2ebc907506230848f98c35764944ca3a2e0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035497",
+          "Name": "102 Dalmatians, Disney's - Puppies to the Rescue (United Kingdom).cdi",
+          "Size": 770081488,
+          "Crc": "13971d4f",
+          "Md5": "58ad0da823798ad3ddf4be0f39843b42",
+          "Sha1": "ffb6b9f4d2c14c50c2be9172c460b1de83fe72f3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "uk": "UK"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035499",
+          "Name": "102 Dalmatiens  (Fr, De,Esp,It)[102DALMATIANS_(ALPAX)](E).cdi",
+          "Size": 817212657,
+          "Crc": "c6206103",
+          "Md5": "b2bcc3d20bf9863936f643fd997d478c",
+          "Sha1": "4fb14a152a182375358c8e771d601a157c86ba52",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035494",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It).cue",
+          "Size": 837,
+          "Crc": "b953c2f1",
+          "Md5": "990e39d38b0bc75ff645f8efd38e73fe",
+          "Sha1": "ec846b757c74074ff33fd11e0eea554c8b5c2dd8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035487",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It).gdi",
+          "Size": 533,
+          "Crc": "b285097c",
+          "Md5": "eedf56db00547a97fb5ade41f459c04b",
+          "Sha1": "2770137843564b23113456f5c16c3cc022290438",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035501",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It).zip",
+          "Size": 693815926,
+          "Crc": "6b730eab",
+          "Md5": "5dd7ada9590d677d83b021c692bbc879",
+          "Sha1": "3bbfc0cb973127ad228125d8ccd8cf11f3cbaf74",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035490",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (USA).cue",
+          "Size": 752,
+          "Crc": "4834e1e4",
+          "Md5": "404a40f3ed5b7a3cce3c6f44d154b5f3",
+          "Sha1": "ba8c09364cff47839ecd7c7287708aa36e897383",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "us": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4035485",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (USA).gdi",
+          "Size": 448,
+          "Crc": "e0137c83",
+          "Md5": "df71d23acecac0d4ac154e43891efd9f",
+          "Sha1": "103ed89cc5331817f91202622b9387d29b9f5675",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "us": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 33,
+          "Id": "3949742",
+          "Name": "102 Dalmatians - Puppies to the Rescue v1.000 (2001-01-10)(Eidos)(PAL)(M4)[GD-R, 102 Dalmatien Test Plus 00-01-10 X14 label][data identical to retail].gdi",
+          "Size": 144,
+          "Crc": "dda6c4af",
+          "Md5": "a889724bf779e188977f755603e71a8c",
+          "Sha1": "9b0a511d41451f66800efd32ab2fe3084cfa7eee",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Dev Builds"
+            ],
+            "filetype": "ISO"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M4",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3949743",
+          "Name": "track01.iso",
+          "Size": 13996032,
+          "Crc": "3adf9ad8",
+          "Md5": "1a28cddfe3f3d5c09e7b50db6d6dbf64",
+          "Sha1": "d990070cead363f08549f0082bcf03f9ad1bac96",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Dev Builds"
+            ],
+            "filetype": "ISO"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M4",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3949744",
+          "Name": "track02.raw",
+          "Size": 13994400,
+          "Crc": "0023ac8b",
+          "Md5": "a55424800b9a45851b3670fa8afbf6a9",
+          "Sha1": "6cd6c33fc86f008d87f9d4385371e5df684c4c60",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Dev Builds"
+            ],
+            "filetype": "ISO"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M4",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3949745",
+          "Name": "track03.iso",
+          "Size": 303292416,
+          "Crc": "76735b79",
+          "Md5": "86714fdba67612c7bbd6462605e3785a",
+          "Sha1": "2ab86569f10c002402f1ddbbe1c10b6a7d239c0f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Dev Builds"
+            ],
+            "filetype": "ISO"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M4",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3949746",
+          "Name": "track04.raw",
+          "Size": 1587600,
+          "Crc": "a23a47b4",
+          "Md5": "9a9bce6b675b3f5116eb1bda0c7f9d96",
+          "Sha1": "1f92e618545f508179d419b724eae4ca637a9195",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Dev Builds"
+            ],
+            "filetype": "ISO"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M4",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3949747",
+          "Name": "track05.iso",
+          "Size": 727209984,
+          "Crc": "9cd73023",
+          "Md5": "8fce0eeeab8af651d3efbf8719a98a87",
+          "Sha1": "15914a725d366cde04b56c03aa897396372be508",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Dev Builds"
+            ],
+            "filetype": "ISO"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M4",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3957223",
+          "Name": "102 Dalmatians - Puppies to the Rescue v1.001 (2000)(Eidos)(US)[!].gdi",
+          "Size": 149,
+          "Crc": "f196cf72",
+          "Md5": "b57138b38dba3b1a49203f147d0a628c",
+          "Sha1": "835c04763275e53f04ca143108ecdbe036ac524d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "US"
+            ],
+            "!": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "US",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3957224",
+          "Name": "track01.bin",
+          "Size": 1422960,
+          "Crc": "61fa1a19",
+          "Md5": "06dfc57f65c3752208d3551ebd8f2338",
+          "Sha1": "9d89fcf9c24a09717de80f8b4cfb54fe3d339755",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "US"
+            ],
+            "!": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "US",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3957225",
+          "Name": "track02.raw",
+          "Size": 1237152,
+          "Crc": "c209038e",
+          "Md5": "67cbfd2a1856d5700588e73cce36c0b4",
+          "Sha1": "47d7803dff15e925283e3fd8c893e543ed0f6388",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "US"
+            ],
+            "!": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "US",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3957226",
+          "Name": "track03.bin",
+          "Size": 521671248,
+          "Crc": "6cd461d8",
+          "Md5": "d8fff9f04cab5705734adeb218ee5e43",
+          "Sha1": "f6b6309a02f7261356cb0ebdf4227170d005c517",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "US"
+            ],
+            "!": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "US",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3957227",
+          "Name": "track04.raw",
+          "Size": 1060752,
+          "Crc": "4dfb33f4",
+          "Md5": "57fece41cfdfb7c9172aabca38cb5278",
+          "Sha1": "a6be1066abe4d185a0307a0afd33dd926ccaca2d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "US"
+            ],
+            "!": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "US",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3957228",
+          "Name": "track05.bin",
+          "Size": 662323200,
+          "Crc": "99dac2be",
+          "Md5": "fb36522a7822549360ad46d4a88ecda9",
+          "Sha1": "07261649bd6e7958fd5d7d822e2c4e59880465a0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "US"
+            ],
+            "!": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "US",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "7468529",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (UK) (Track 1).bin",
+          "Size": 16073568,
+          "Crc": "cdcc8db8",
+          "Md5": "7d50f5fe87cc5e219e83ec7d47cfc6af",
+          "Sha1": "39cb321c2df71ce5196d8e09b0cf0bf7bca4b8d1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-05"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7468531",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (UK) (Track 2).bin",
+          "Size": 14347200,
+          "Crc": "49e43706",
+          "Md5": "9cca4624e62f04dc398aed22b5370a34",
+          "Sha1": "a34bdc73ac1e360b13d0592b501a388e0225e994",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-05"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7468533",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (UK) (Track 3).bin",
+          "Size": 520895088,
+          "Crc": "8abec210",
+          "Md5": "1e7a1d17ae1d0cae464b29bcb9b31ced",
+          "Sha1": "3fd090149748df3e13b4ae71137f55118f913629",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-05"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7468535",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (UK) (Track 4).bin",
+          "Size": 1764000,
+          "Crc": "be3c1526",
+          "Md5": "c4031ab6cdd2b740b0bab4a506800102",
+          "Sha1": "f690342608c6233e4a239a55ebe74bce63a7d52f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-05"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7468536",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (UK) (Track 5).bin",
+          "Size": 663101712,
+          "Crc": "a68a2029",
+          "Md5": "0d466d59b95f8793c089cea1d517d468",
+          "Sha1": "10d23ed52d1c96b52bab0161d448a32e50537d6b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-05"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7468527",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (UK).cue",
+          "Size": 747,
+          "Crc": "83cf0e62",
+          "Md5": "58818297422efacdd974c088d321d2ec",
+          "Sha1": "725517f273b212b640d1b5a03965cbc78d497730",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-05"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2311253",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It) (Track 1).bin",
+          "Size": 16073568,
+          "Crc": "c57b94a9",
+          "Md5": "bccf5af9494e1ee0b7e68c880fbf53e4",
+          "Sha1": "b741e707b000825f8eaced76c4112ea813aefaf2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-50"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2311255",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It) (Track 3).bin",
+          "Size": 348312384,
+          "Crc": "c58fc046",
+          "Md5": "171f5cb366cd1d773a915951d773bd2c",
+          "Sha1": "996cd23f51b40f8dc223e2f114aea1b4fc89e731",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-50"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2311257",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It) (Track 5).bin",
+          "Size": 835684416,
+          "Crc": "859036c4",
+          "Md5": "13db22b554d648027b9490320b36c280",
+          "Sha1": "d054f1a0f8919b6328fec2fe1c104a1454c6d029",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-50"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3858507",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "9695a6bb9a13d7cfdb37747fc305cc44d9efb164",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2311252",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It).cue",
+          "Size": 837,
+          "Crc": "b953c2f1",
+          "Md5": "990e39d38b0bc75ff645f8efd38e73fe",
+          "Sha1": "ec846b757c74074ff33fd11e0eea554c8b5c2dd8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-50"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "3242820",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (UK) (Track 1).bin",
+          "Size": 16073568,
+          "Crc": "cdcc8db8",
+          "Md5": "7d50f5fe87cc5e219e83ec7d47cfc6af",
+          "Sha1": "39cb321c2df71ce5196d8e09b0cf0bf7bca4b8d1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-05"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2311254",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (UK) (Track 2).bin",
+          "Size": 14347200,
+          "Crc": "49e43706",
+          "Md5": "9cca4624e62f04dc398aed22b5370a34",
+          "Sha1": "a34bdc73ac1e360b13d0592b501a388e0225e994",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-05"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "3242821",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (UK) (Track 3).bin",
+          "Size": 520895088,
+          "Crc": "8abec210",
+          "Md5": "1e7a1d17ae1d0cae464b29bcb9b31ced",
+          "Sha1": "3fd090149748df3e13b4ae71137f55118f913629",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-05"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2311256",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (UK) (Track 4).bin",
+          "Size": 1764000,
+          "Crc": "be3c1526",
+          "Md5": "c4031ab6cdd2b740b0bab4a506800102",
+          "Sha1": "f690342608c6233e4a239a55ebe74bce63a7d52f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-05"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "3242822",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (UK) (Track 5).bin",
+          "Size": 663101712,
+          "Crc": "a68a2029",
+          "Md5": "0d466d59b95f8793c089cea1d517d468",
+          "Sha1": "10d23ed52d1c96b52bab0161d448a32e50537d6b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-05"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3858508",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (UK).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "6af9a35e9cbea6c677543dc11d00da9dca6a972f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "3242819",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (UK).cue",
+          "Size": 747,
+          "Crc": "83cf0e62",
+          "Md5": "58818297422efacdd974c088d321d2ec",
+          "Sha1": "725517f273b212b640d1b5a03965cbc78d497730",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-05"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2309181",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (USA) (Track 1).bin",
+          "Size": 1422960,
+          "Crc": "61fa1a19",
+          "Md5": "06dfc57f65c3752208d3551ebd8f2338",
+          "Sha1": "9d89fcf9c24a09717de80f8b4cfb54fe3d339755",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36803N"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2309182",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (USA) (Track 2).bin",
+          "Size": 1589952,
+          "Crc": "8557fcaa",
+          "Md5": "824ff123fbce45b5883962eb3fa43cab",
+          "Sha1": "a3705cb0ce53c7adf906c5af76887406984de6a9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36803N"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2309183",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (USA) (Track 3).bin",
+          "Size": 521671248,
+          "Crc": "6cd461d8",
+          "Md5": "d8fff9f04cab5705734adeb218ee5e43",
+          "Sha1": "f6b6309a02f7261356cb0ebdf4227170d005c517",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36803N"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2309184",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (USA) (Track 4).bin",
+          "Size": 1237152,
+          "Crc": "95557332",
+          "Md5": "cb9f913312fff0782cd8c87568bcc047",
+          "Sha1": "cf9a3476b4886212c18868190f98d301f5205a09",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36803N"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2309185",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (USA) (Track 5).bin",
+          "Size": 662852400,
+          "Crc": "eeeef65f",
+          "Md5": "122ee7ffa74009393756aac00f96b612",
+          "Sha1": "0095695e796b95293e8b9826f04a67345f54afcc",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36803N"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3858509",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (USA).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "329e893f6714a57f9d5704ac2bd5fbcf208c873d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2309180",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (USA).cue",
+          "Size": 752,
+          "Crc": "4834e1e4",
+          "Md5": "404a40f3ed5b7a3cce3c6f44d154b5f3",
+          "Sha1": "ba8c09364cff47839ecd7c7287708aa36e897383",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36803N"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7466714",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It) (Track 1).bin",
+          "Size": 16073568,
+          "Crc": "c57b94a9",
+          "Md5": "bccf5af9494e1ee0b7e68c880fbf53e4",
+          "Sha1": "b741e707b000825f8eaced76c4112ea813aefaf2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-50"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7466716",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It) (Track 2).bin",
+          "Size": 14347200,
+          "Crc": "49e43706",
+          "Md5": "9cca4624e62f04dc398aed22b5370a34",
+          "Sha1": "a34bdc73ac1e360b13d0592b501a388e0225e994",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-50"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7466718",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It) (Track 3).bin",
+          "Size": 348312384,
+          "Crc": "c58fc046",
+          "Md5": "171f5cb366cd1d773a915951d773bd2c",
+          "Sha1": "996cd23f51b40f8dc223e2f114aea1b4fc89e731",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-50"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7466720",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It) (Track 4).bin",
+          "Size": 1764000,
+          "Crc": "be3c1526",
+          "Md5": "c4031ab6cdd2b740b0bab4a506800102",
+          "Sha1": "f690342608c6233e4a239a55ebe74bce63a7d52f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-50"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7466722",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It) (Track 5).bin",
+          "Size": 835684416,
+          "Crc": "859036c4",
+          "Md5": "13db22b554d648027b9490320b36c280",
+          "Sha1": "d054f1a0f8919b6328fec2fe1c104a1454c6d029",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-50"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7466712",
+          "Name": "Disney's 102 Dalmatians - Puppies to the Rescue (Europe) (Fr,De,Es,It).cue",
+          "Size": 837,
+          "Crc": "b953c2f1",
+          "Md5": "990e39d38b0bc75ff645f8efd38e73fe",
+          "Sha1": "ec846b757c74074ff33fd11e0eea554c8b5c2dd8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "T-36813D-50"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 2766,
+              "Text": "3d exploration",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1298,
+              "Text": "checkpoint system",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1044,
+              "Text": "mini games",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2753,
+              "Text": "sticker collection",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 976,
+              "Text": "action-adventure",
+              "AIGenerated": true
+            },
+            {
+              "Id": 956,
+              "Text": "platformer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 900,
+              "Text": "puzzle",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 972,
+              "Text": "boss battles",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1998,
+              "Text": "level completion",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2768,
+              "Text": "toy interaction",
+              "AIGenerated": true
+            },
+            {
+              "Id": 843,
+              "Text": "voice acting",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 3384,
+              "Text": "camera control",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 96417,
+              "Text": "cruella de vil",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2764,
+              "Text": "family bonding",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2273,
+              "Text": "rescue mission",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2754,
+              "Text": "toy factory",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "United Kingdom (UK), Germany (DE), Europe (EU), France (FR), Italy (IT), United States (US),  (ss),  (sp), United Kingdom (GB)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, English, Spanish, French, Italian, Portuguese"
+    }
+  ],
+  "CreatedDate": "2025-09-30T16:38:59",
+  "UpdatedDate": "2026-05-25T12:12:49",
+  "Name": "102 Dalmatians - Puppies to the Rescue"
+}

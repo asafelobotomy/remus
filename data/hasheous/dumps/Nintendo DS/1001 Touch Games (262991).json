@@ -1,0 +1,1117 @@
+{
+  "Id": 262991,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "490984",
+      "Name": "1001 Touch Games",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo DS (Encrypted)",
+      "SourceId": "12442",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "955380",
+      "Name": "1001 Touch Games",
+      "Year": "",
+      "Country": "DE",
+      "Platform": "Nintendo - Nintendo DS (Decrypted)",
+      "SourceId": "12440",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "485319",
+      "Name": "1001 Touch Games",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo DS (Decrypted)",
+      "SourceId": "12440",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "957027",
+      "Name": "1001 Touch Games",
+      "Year": "",
+      "Country": "DE",
+      "Platform": "Nintendo - Nintendo DS (Encrypted)",
+      "SourceId": "12442",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "955379",
+      "Name": "1001 Touch Games",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo DS (Decrypted)",
+      "SourceId": "12440",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "957026",
+      "Name": "1001 Touch Games",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo DS (Encrypted)",
+      "SourceId": "12442",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "204246",
+      "ImmutableId": "204246",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/1001-touch-games",
+      "LastSearch": "2025-07-21T11:45:56",
+      "NextSearch": "2026-12-22T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "46871",
+      "ImmutableId": "46871",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=46871",
+      "LastSearch": "2025-07-21T11:45:56",
+      "NextSearch": "2026-12-22T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "19464",
+      "ImmutableId": "19464",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/19464",
+      "LastSearch": "2025-07-21T11:45:56",
+      "NextSearch": "2026-12-22T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-07-21T11:45:56",
+      "NextSearch": "2026-07-08T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-21T11:46:01",
+      "NextSearch": "2026-07-08T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-21T11:46:01",
+      "NextSearch": "2026-07-08T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-21T11:46:01",
+      "NextSearch": "2026-07-08T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2025-07-21T11:46:01",
+      "NextSearch": "2026-07-08T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T17:46:11",
+      "NextSearch": "2026-07-08T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T17:37:08",
+      "NextSearch": "2026-03-03T17:37:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T11:15:43",
+      "NextSearch": "2026-04-24T11:15:43",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759231,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 1001 Touch Games: A Whirlwind of Interactive Fun for Nintendo DS\n\nDive into a massive collection of instantly accessible, \"pick-up-and-play\" games with *1001 Touch Games* for the Nintendo DS! This unique compilation offers a staggering variety of mini-games, catering to all ages and skill levels. Forget lengthy tutorials or complex controls – simply pick a game and start playing!\n\nFrom puzzle challenges and brain-teasers to arcade action and quirky simulations, *1001 Touch Games* provides endless entertainment. Utilize the DS's stylus for precise control and engaging interaction across a diverse range of experiences.  Whether you're looking for a quick distraction or a casual gaming session, this title delivers. \n\nThe games are designed for short bursts of fun, perfect for travel or when you have a few minutes to spare.  Experience a truly eclectic mix of gameplay styles, all within a single cartridge.  Prepare to be surprised by the sheer volume and variety of interactive fun packed into *1001 Touch Games*!"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 509671,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "94640360CA41AEB3429472598977A49E3E740AC7"
+    },
+    {
+      "Id": 509670,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 66,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "580",
+            "Platform": "Nintendo - Nintendo DS (Decrypted)"
+          },
+          {
+            "SignatureId": "1034",
+            "Platform": "Nintendo - Nintendo DS (Decrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "581",
+            "Platform": "Nintendo - Nintendo DS (Download Play)"
+          },
+          {
+            "SignatureId": "1035",
+            "Platform": "Nintendo - Nintendo DS (Download Play) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "582",
+            "Platform": "Nintendo - Nintendo DS (DSvision SD cards)"
+          },
+          {
+            "SignatureId": "1036",
+            "Platform": "Nintendo - Nintendo DS (DSvision SD cards) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "583",
+            "Platform": "Nintendo - Nintendo DS (Encrypted)"
+          },
+          {
+            "SignatureId": "1037",
+            "Platform": "Nintendo - Nintendo DS (Encrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "237",
+            "Platform": "Nintendo DS"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "20",
+            "ImmutableId": "20",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/nds",
+            "LastSearch": "2024-04-29T04:13:51",
+            "NextSearch": "2024-05-29T04:13:51",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "8",
+            "ImmutableId": "8",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=8",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "18",
+            "ImmutableId": "18",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/18/games",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "52",
+            "ImmutableId": "52",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-52/",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2026-10-03T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2026-10-03T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2026-10-03T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Nintendo_DS",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Nintendo_DS",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Nintendo_DS",
+            "LastSearch": "2025-12-21T10:26:34",
+            "NextSearch": "2026-01-21T10:26:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327260",
+            "ImmutableId": "5327260",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327260",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=15",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "26-nintendo-ds",
+            "ImmutableId": "26-nintendo-ds",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/26-nintendo-ds",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758312,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo DS, released in 2004, revolutionized handheld gaming with its innovative dual-screen design – a feature reflected in its name, standing for \"Dual Screen.\" This clamshell console, reminiscent of earlier Game Boy models, combined a traditional display with a responsive touchscreen, offering unique gameplay possibilities. Powered by dual processors, it boasted wireless connectivity for local and online multiplayer via the now-defunct Nintendo Wi-Fi Connection. \n\nA commercial success, the DS sold over 154 million units, becoming a cornerstone of Nintendo's lineup and surpassing the Game Boy Advance. Popular titles like *New Super Mario Bros.* captivated players, while its backward compatibility with Game Boy Advance games broadened its appeal. Later models, including the DS Lite and DSi, introduced enhancements like brighter screens, improved battery life, and digital cameras."
+          },
+          {
+            "Id": 110864,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "DS"
+          },
+          {
+            "Id": 213,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "D21178DAFE99B8EE877EC2B73185AE444175F9FD"
+          },
+          {
+            "Id": 49,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo DS, Nintendo-DS"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 95275,
+                    "Text": "256 kb vram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 94014,
+                    "Text": "320x240 resolution",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 604,
+                    "Text": "arm7/arm9",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 353,
+                    "Text": "dual screens",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 81,
+                    "Text": "bluetooth",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 272,
+                    "Text": "usb",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 79,
+                    "Text": "wi-fi",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 93,
+                    "Text": "button pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 137,
+                    "Text": "d-pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 358,
+                    "Text": "stylus",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 357,
+                    "Text": "touchscreen",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95274,
+                    "Text": "gamepad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 132,
+                    "Text": "handheld",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:13:51",
+        "UpdatedDate": "2026-05-24T16:31:35",
+        "Name": "Nintendo DS"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "1001 Touch Games, 1001-Touch-Games"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "1582430",
+          "Name": "1001 Touch Games (Europe) (En,Fr,It,Nl).nds",
+          "Size": 33554432,
+          "Crc": "6caf634a",
+          "Md5": "99f8eb524281c2d88731cfa19b250599",
+          "Sha1": "f8a6064b08ebf14d8725b07a6ba97d4ab27085e3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "3384034",
+          "Name": "1001 Touch Games (Europe) (En,Fr,It,Nl).nds",
+          "Size": 33554432,
+          "Crc": "6caf634a",
+          "Md5": "99f8eb524281c2d88731cfa19b250599",
+          "Sha1": "f8a6064b08ebf14d8725b07a6ba97d4ab27085e3",
+          "Sha256": "972f2b93246777febb5a07b1369e780ca5131bee865dcd7b19c06cbf995c1eb9",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1582429",
+          "Name": "1001 Touch Games (Europe).nds",
+          "Size": 33554432,
+          "Crc": "55cc2a90",
+          "Md5": "e55ffa322edeb4ef376f08c9553fb6e8",
+          "Sha1": "37134b350c3045496b61ebd13391980b1041f185",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1582431",
+          "Name": "1001 Touch Games (Germany).nds",
+          "Size": 33554432,
+          "Crc": "916c0250",
+          "Md5": "a1b020858b8d2d02255bbf76242fc731",
+          "Sha1": "359e031701e4441e1252cf2c9bcf67f060af8104",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1582428",
+          "Name": "1001 Touch Games (USA).nds",
+          "Size": 33554432,
+          "Crc": "bf8b70a3",
+          "Md5": "a3dbcc81b68e543600eb9bd39750fe31",
+          "Sha1": "4db89fe1d68951c3112c9007620bc5a31e09e201",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1573363",
+          "Name": "1001 Touch Games (Europe) (En,Fr,It,Nl).nds",
+          "Size": 33554432,
+          "Crc": "33ed73a4",
+          "Md5": "38c411283790e1de1126ed5376e207a2",
+          "Sha1": "e5ddcd11584f3582b55a45137c7cb289984fa2cf",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "3376192",
+          "Name": "1001 Touch Games (Europe) (En,Fr,It,Nl).nds",
+          "Size": 33554432,
+          "Crc": "33ed73a4",
+          "Md5": "38c411283790e1de1126ed5376e207a2",
+          "Sha1": "e5ddcd11584f3582b55a45137c7cb289984fa2cf",
+          "Sha256": "8f444df4b9203257b6b9b2e059eed62b14791ad7104fe389025b3bccba7d0e19",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1573362",
+          "Name": "1001 Touch Games (Europe).nds",
+          "Size": 33554432,
+          "Crc": "8b7f1306",
+          "Md5": "3b339beaa8d23cf124e9631769e40582",
+          "Sha1": "c3ed853b8c230226e38d2385d1a7aff7c145c758",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1573364",
+          "Name": "1001 Touch Games (Germany).nds",
+          "Size": 33554432,
+          "Crc": "cff1fbfa",
+          "Md5": "3c7e78ecfc528c301c8b8d476e9c9e94",
+          "Sha1": "17f06c925673b30cb37a3e35c1f85ed3b6fc2ef4",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1573361",
+          "Name": "1001 Touch Games (USA).nds",
+          "Size": 33554432,
+          "Crc": "1040e3d8",
+          "Md5": "81716af87ce5f9c2f9fe09b496d7dd96",
+          "Sha1": "561db2031723466363ec0ce9749411090ae6bbe0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 965,
+              "Text": "2d",
+              "AIGenerated": true
+            },
+            {
+              "Id": 887,
+              "Text": "isometric",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1293,
+              "Text": "casual",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1724,
+              "Text": "entertainment",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1294,
+              "Text": "relaxation",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 2684,
+              "Text": "collection",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2683,
+              "Text": "full control",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2682,
+              "Text": "touchscreen",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 2681,
+              "Text": "pick-up-and-play",
+              "AIGenerated": true
+            },
+            {
+              "Id": 820,
+              "Text": "single player",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1730,
+              "Text": "stylus control",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 900,
+              "Text": "puzzle",
+              "AIGenerated": true
+            },
+            {
+              "Id": 888,
+              "Text": "simulation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2680,
+              "Text": "touch game",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Germany (DE), Europe (EU), United States (US)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "English, French, Italian, Dutch"
+    }
+  ],
+  "CreatedDate": "2025-07-21T11:45:56",
+  "UpdatedDate": "2026-01-27T12:55:49",
+  "Name": "1001 Touch Games"
+}

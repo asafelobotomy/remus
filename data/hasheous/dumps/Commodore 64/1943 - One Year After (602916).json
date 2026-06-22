@@ -1,0 +1,2732 @@
+{
+  "Id": 602916,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "194401",
+      "Name": "1943 - One Year After",
+      "Year": "1987",
+      "Country": "",
+      "Platform": "Commodore C64",
+      "SourceId": "8834",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "145414",
+      "ImmutableId": "145414",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/1943-one-year-after",
+      "LastSearch": "2026-03-02T06:16:25",
+      "NextSearch": "2026-09-21T06:16:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "50235",
+      "ImmutableId": "50235",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=50235",
+      "LastSearch": "2026-03-02T06:16:25",
+      "NextSearch": "2026-09-21T06:16:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-03-02T06:16:25",
+      "NextSearch": "2026-08-23T06:16:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-03-02T06:16:25",
+      "NextSearch": "2026-08-23T06:16:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-03-02T06:16:25",
+      "NextSearch": "2026-08-23T06:16:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-03-02T06:16:25",
+      "NextSearch": "2026-08-23T06:16:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-03-02T06:16:25",
+      "NextSearch": "2026-08-23T06:16:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-03-02T06:16:25",
+      "NextSearch": "2026-08-23T06:16:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-03-02T06:16:25",
+      "NextSearch": "2026-08-23T06:16:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T23:51:03",
+      "NextSearch": "2026-03-03T23:51:03",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T11:02:28",
+      "NextSearch": "2026-04-24T11:02:28",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 1222960,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 1943 - One Year After (Commodore 64) - Synopsis\n\nRelive the intense aerial combat of World War II in *1943 - One Year After* for the Commodore 64! This thrilling vertical-scrolling shooter plunges you into the Pacific theater, one year after the events of the classic *1942*. Take control of a powerful Lockheed P-38 Lightning fighter and soar across a beautifully rendered landscape of Pacific islands, battling relentless waves of Japanese aircraft.\n\nInspired by its predecessor, *1943* delivers fast-paced, challenging gameplay. Collect power-ups to enhance your firepower and execute daring defensive loop maneuvers to evade enemy attacks (you only get three chances!). A strategic map displayed on the left side of the screen keeps track of your progress through the campaign. \n\nExperience the adrenaline rush of dogfights, the satisfaction of destroying enemy formations, and the constant threat of annihilation. With its vibrant graphics, intense action, and faithful homage to a beloved classic, *1943 - One Year After* is a must-have for any Commodore 64 enthusiast. Prepare for a relentless aerial assault!"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 1195584,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "BF0699E07F9E1E1C648A00293FE582173ECC89DF"
+    },
+    {
+      "Id": 1195580,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 265,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "417",
+            "Publisher": "Elite"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "AutomaticTooManyMatches",
+            "Source": "IGDB",
+            "Link": "",
+            "LastSearch": "2025-07-20T06:12:32",
+            "NextSearch": "2026-08-19T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-08-25T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-08-25T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-08-25T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-08-25T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-08-25T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-08-25T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-08-25T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "36001",
+            "ImmutableId": "36001",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2027-04-11T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-06-03T21:36:11",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-08-25T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [],
+        "CreatedDate": "2024-05-14T13:21:56",
+        "UpdatedDate": "2026-06-03T20:36:11",
+        "Name": "Elite"
+      }
+    },
+    {
+      "Id": 1195579,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 1,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "478",
+            "Platform": "Commodore - Commodore 64"
+          },
+          {
+            "SignatureId": "788",
+            "Platform": "Commodore - Commodore 64 (Headerless)"
+          },
+          {
+            "SignatureId": "935",
+            "Platform": "Commodore - Commodore 64 (Headerless) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "936",
+            "Platform": "Commodore - Commodore 64 (Parent-Clone)"
+          },
+          {
+            "SignatureId": "479",
+            "Platform": "Commodore - Commodore 64 (PP)"
+          },
+          {
+            "SignatureId": "937",
+            "Platform": "Commodore - Commodore 64 (PP) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "480",
+            "Platform": "Commodore - Commodore 64 (Tapes)"
+          },
+          {
+            "SignatureId": "938",
+            "Platform": "Commodore - Commodore 64 (Tapes) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "710",
+            "Platform": "Commodore 64"
+          },
+          {
+            "SignatureId": "80",
+            "Platform": "Commodore C64"
+          },
+          {
+            "SignatureId": "81",
+            "Platform": "Commodore C64DTV"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/c64",
+            "LastSearch": "2024-04-28T13:35:39",
+            "NextSearch": "2024-05-28T13:35:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40",
+            "ImmutableId": "40",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=40",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "30",
+            "ImmutableId": "30",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/30/games",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14",
+            "ImmutableId": "14",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-14/",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Commodore_64",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Commodore_64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Commodore_64",
+            "LastSearch": "2025-08-05T05:17:02",
+            "NextSearch": "2025-09-05T05:17:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5500690",
+            "ImmutableId": "5500690",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5500690",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "66",
+            "ImmutableId": "66",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=66",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14-commodore-64",
+            "ImmutableId": "14-commodore-64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/14-commodore-64",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758269,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Commodore 64, affectionately known as the C64, was an 8-bit home computer released in 1982 that became a cultural icon and the best-selling desktop computer of all time, with estimated sales between 12.5 and 17 million units. Boasting 64 kilobytes of RAM and impressive graphics and sound capabilities thanks to its VIC-II chip and SID sound chip, the C64 offered a significant leap in performance compared to its predecessors. It initially sold for $595, but its price later dropped, making it accessible to a wider audience.\n\nThe C64 dominated the home computer market throughout the 1980s, particularly in the US and UK, though it faced stiff competition from the ZX Spectrum and Amstrad CPC. Popular games like *Impossible Mission*, *The Last Ninja*, and *Elite* showcased its capabilities and cemented its legacy. Even today, emulators allow enthusiasts to relive the C64 experience."
+          },
+          {
+            "Id": 190,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "629CB9AB45447D77ECBE2C1F3AB8A3291E40052F"
+          },
+          {
+            "Id": 1,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 2,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "24910",
+                  "Publisher": "Commodore Business Machines"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "10999",
+                  "ImmutableId": "10999",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/commodore-business-machines-inc",
+                  "LastSearch": "2024-04-28T13:39:01",
+                  "NextSearch": "2024-05-28T13:39:01",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:35",
+                  "NextSearch": "2026-03-03T13:05:35",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:34",
+                  "NextSearch": "2026-04-24T09:49:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 173,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "9C5599A7B44D515191A2E5331213A99061CF2F31"
+                },
+                {
+                  "attributeType": "LongString",
+                  "attributeName": "SearchAliases",
+                  "attributeRelationType": "None",
+                  "Value": "Commodore Business Machines, Commodore-Business-Machines"
+                }
+              ],
+              "CreatedDate": "2024-04-28T13:39:01",
+              "UpdatedDate": "2026-01-31T09:01:22",
+              "Name": "Commodore Business Machines"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Commodore 64, Commodore-64"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 286,
+                    "Text": "classic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 96779,
+                    "Text": "64 kib ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 500,
+                    "Text": "6510 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96778,
+                    "Text": "sid sound chip",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 501,
+                    "Text": "vic-ii graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 26,
+                    "Text": "8-bit system",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96777,
+                    "Text": "video game platform",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 125,
+                    "Text": "cartridge slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 419,
+                    "Text": "cassette tape",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 165,
+                    "Text": "floppy disk",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-28T13:35:39",
+        "UpdatedDate": "2026-05-24T16:04:23",
+        "Name": "Commodore 64"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "1943 - One Year After, 1943-One Year After, 1943 One Year After, 1943: One Year After, 1943 - 1 Year After, 1943-1 Year After, 1943 1 Year After, 1943: 1 Year After"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "476294",
+          "Name": "1943 - One Year After (1987)(Elite).d64",
+          "Size": 174848,
+          "Crc": "907e7db2",
+          "Md5": "a46eef3e4183712029bfacc4bf2f5738",
+          "Sha1": "07a44fac99ec14fd18308fe9178fdf541ae0cec0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "576048",
+          "Name": "1943 - One Year After (1987)(Elite).p00",
+          "Size": 37567,
+          "Crc": "f3cd03e1",
+          "Md5": "767966e6646ae35f11d8d73a2a207901",
+          "Sha1": "3f17206650367c149a7ac410d4699ede39dac449",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "P00"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585765",
+          "Name": "1943 - One Year After (1987)(Elite).prg",
+          "Size": 23143,
+          "Crc": "324424cc",
+          "Md5": "c85e6c8c3b9da4f71ba06a4c7fc6a9cf",
+          "Sha1": "f16fe2712603c8a695a8331c28cecc5bfec9a66c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "PRG"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636248",
+          "Name": "1943 - One Year After (1987)(Elite).tap",
+          "Size": 620646,
+          "Crc": "fb457e8c",
+          "Md5": "a368e859e59b8ba8ed88c315716c852f",
+          "Sha1": "3805530e86f37a99cbf279b1d0dfaba9cae4814f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "TAP"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636250",
+          "Name": "1943 - One Year After (1987)(Elite)[a2].tap",
+          "Size": 620644,
+          "Crc": "cbb1a09d",
+          "Md5": "fe9342eaed3646cf21f7cadcedf33d66",
+          "Sha1": "4dbda8187e928e74fe52e8197abfa9889419cb86",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "TAP",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636251",
+          "Name": "1943 - One Year After (1987)(Elite)[a3].tap",
+          "Size": 620647,
+          "Crc": "b04ae315",
+          "Md5": "7bd9feb09478fd65414f3156478a68c2",
+          "Sha1": "b6682ca4722b7e81ab9f36cd8f1de748ff6d6f56",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "TAP",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636252",
+          "Name": "1943 - One Year After (1987)(Elite)[a4].tap",
+          "Size": 616550,
+          "Crc": "523d169e",
+          "Md5": "e53b17c1ef99bcadd76f2edc53db5f15",
+          "Sha1": "b474671043220bde7512cabc5845df1ca6eac3eb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "TAP",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636253",
+          "Name": "1943 - One Year After (1987)(Elite)[a5].tap",
+          "Size": 620647,
+          "Crc": "c2ce9b74",
+          "Md5": "7bb7cb46a233087c985f93588c35a49d",
+          "Sha1": "477a0debc26b3f5cb7f0575322db508aeb1e7b31",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "TAP",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585766",
+          "Name": "1943 - One Year After (1987)(Elite)[a].prg",
+          "Size": 37541,
+          "Crc": "09010a03",
+          "Md5": "a278acbefde4d448da168935a466d111",
+          "Sha1": "6c235bc60e78e006e25d3d88fc0432f4af403336",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "PRG",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636249",
+          "Name": "1943 - One Year After (1987)(Elite)[a].tap",
+          "Size": 616551,
+          "Crc": "a3d32fe6",
+          "Md5": "cc5a8ff121b30249dafd193fab0cc819",
+          "Sha1": "9741f1e8314f356bf540d6cc25900db0f8a61cbc",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "TAP",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476296",
+          "Name": "1943 - One Year After (1987)(Elite)[cr CCGG].d64",
+          "Size": 174848,
+          "Crc": "c64431ed",
+          "Md5": "6387b13356df7fb3c384967d323ac5b3",
+          "Sha1": "122857f2bf38daa93ff3c53584d4d25111af80c1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "CCGG"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "742268",
+          "Name": "1943 - One Year After (1987)(Elite)[cr CCGG].t64",
+          "Size": 49729,
+          "Crc": "80130ba6",
+          "Md5": "459b03b31b6f8c309727d5f3aadcc8f5",
+          "Sha1": "230a15bad7b223acbf5da6a2ac4cc37ff4271e14",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "CCGG"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476295",
+          "Name": "1943 - One Year After (1987)(Elite)[cr CCGG][a].d64",
+          "Size": 174848,
+          "Crc": "f735ffdd",
+          "Md5": "d0521ae0aef1f94ed47592844766aec5",
+          "Sha1": "bb9a645910814c4b8fc3d3f97bf595003a4e4c5b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "CCGG",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603030",
+          "Name": "1943 - One Year After (1987)(Elite)[cr CCGG][a].t64",
+          "Size": 46985,
+          "Crc": "af2f1c4e",
+          "Md5": "f8fc58bdb6e3d108a76e1184d16291f3",
+          "Sha1": "116d2d1de312f04eb9d932143578a1c21258f710",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "CCGG",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476297",
+          "Name": "1943 - One Year After (1987)(Elite)[cr LFK].d64",
+          "Size": 174848,
+          "Crc": "d704cc5f",
+          "Md5": "874a1c58077e7f826905cc27b2c90c16",
+          "Sha1": "f31854487f66c37d50fa2ac03182c2a39e47b16c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "LFK"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603031",
+          "Name": "1943 - One Year After (1987)(Elite)[cr LFK].t64",
+          "Size": 37681,
+          "Crc": "22bf6209",
+          "Md5": "91d733bed54ae187c00b2e2f04374bda",
+          "Sha1": "87e12828635befba9b548c5eebb052b7330e672c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "LFK"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476298",
+          "Name": "1943 - One Year After (1987)(Elite)[cr LFK][a].d64",
+          "Size": 174848,
+          "Crc": "9326c269",
+          "Md5": "e842b4b9d3e2f0add423ff4fe672aa8c",
+          "Sha1": "dea742c9088f1de44a6bae1c4049f0a338764f44",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "LFK",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476299",
+          "Name": "1943 - One Year After (1987)(Elite)[cr MHI].d64",
+          "Size": 174848,
+          "Crc": "4e312f8d",
+          "Md5": "1c7b94f8bba15747f053a30dae32eaf7",
+          "Sha1": "29513cc648d6cff1d2f897a739b1119a24a0e405",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "MHI"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585767",
+          "Name": "1943 - One Year After (1987)(Elite)[cr MHI].prg",
+          "Size": 23600,
+          "Crc": "ae6373ce",
+          "Md5": "22d03bae7c622111529b18005d839cc8",
+          "Sha1": "22f2ef582b80dc3756a33815e87579fbcfd1949b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "PRG",
+            "cr": "MHI"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476300",
+          "Name": "1943 - One Year After (1987)(Elite)[cr MHI][t +2 MHI].d64",
+          "Size": 174848,
+          "Crc": "2ebb00d8",
+          "Md5": "a98d7a0ffe31ed2f0f172f33ce1e5b9a",
+          "Sha1": "5d31c410c9480d36579cece3c57344f7205f6bfd",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "MHI",
+            "t": "+2 MHI"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603032",
+          "Name": "1943 - One Year After (1987)(Elite)[cr MHI][t +2 MHI].t64",
+          "Size": 24622,
+          "Crc": "d61ee16f",
+          "Md5": "5619522549f6ecf078c6c091315f80db",
+          "Sha1": "71bb599e0c62e5a859b72b62a464f4a28d986377",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "MHI",
+            "t": "+2 MHI"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476301",
+          "Name": "1943 - One Year After (1987)(Elite)[cr New Edition].d64",
+          "Size": 174848,
+          "Crc": "c8caae3e",
+          "Md5": "ed6b93d1b01e4fc4ed5abe2b41ac6841",
+          "Sha1": "8f92543dedf2e95287965767fa646b9b88180331",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "New Edition"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476302",
+          "Name": "1943 - One Year After (1987)(Elite)[cr New Edition][a].d64",
+          "Size": 174848,
+          "Crc": "40036bee",
+          "Md5": "0197bb3117147fa4324b33eb21c5fe65",
+          "Sha1": "6d994c762fc25dce9a93617996e0629a4f3576a0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "New Edition",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476305",
+          "Name": "1943 - One Year After (1987)(Elite)[cr TMC][a2][Docs].d64",
+          "Size": 174848,
+          "Crc": "84736d74",
+          "Md5": "7a4fb1fb9cb8b94558e5d76d1abb8417",
+          "Sha1": "f9915e35883a24838fc21dded628ced78fd0b195",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "TMC",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476306",
+          "Name": "1943 - One Year After (1987)(Elite)[cr TMC][a3][Docs].d64",
+          "Size": 174848,
+          "Crc": "d4fcd51c",
+          "Md5": "9a629515d0ccc07ef6ae852adb562262",
+          "Sha1": "768110ea4c696123dc4ad8c2778b01c1b74d0e93",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "TMC",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476304",
+          "Name": "1943 - One Year After (1987)(Elite)[cr TMC][a][Docs].d64",
+          "Size": 174848,
+          "Crc": "7e19377f",
+          "Md5": "f864e5ba7313dce0565a8d575c677b39",
+          "Sha1": "51c4d15572c650c38f7894679788d32cc8de83d7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "TMC",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476303",
+          "Name": "1943 - One Year After (1987)(Elite)[cr TMC][Docs].d64",
+          "Size": 174848,
+          "Crc": "ec9091b0",
+          "Md5": "667512e081b5f7cc50b860d7251afcb4",
+          "Sha1": "3bcf7d6c303c27206b5f6dd09d6c9c4a18e69e3b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "TMC"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476307",
+          "Name": "1943 - One Year After (1987)(Elite)[cr Triad - Sunrise][t +2 Triad - Sunrise].d64",
+          "Size": 174848,
+          "Crc": "d141435f",
+          "Md5": "2703a2623d89cff832d215a1d5a6d1e2",
+          "Sha1": "0e9021be3f2fb141e60a41131b67739dff08b23f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Triad - Sunrise",
+            "t": "+2 Triad - Sunrise"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476308",
+          "Name": "1943 - One Year After (1987)(Elite)[cr Triad - Sunrise][t +2 Triad - Sunrise][a].d64",
+          "Size": 174848,
+          "Crc": "2d12bfcb",
+          "Md5": "0f13005e50a83b1e3891eb0bf56da1c5",
+          "Sha1": "cf9727312cb5b45d595d55e4047a98b821e559ed",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Triad - Sunrise",
+            "t": "+2 Triad - Sunrise",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476309",
+          "Name": "1943 - One Year After (1987)(Elite)[cr Triad].d64",
+          "Size": 174848,
+          "Crc": "92167c32",
+          "Md5": "66dfa41a3d73408666d71f073fcbbd3b",
+          "Sha1": "f3f01399527debaf07e111ac6600079ab8d8d4cc",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Triad"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603033",
+          "Name": "1943 - One Year After (1987)(Elite)[cr Triad].t64",
+          "Size": 32943,
+          "Crc": "8df296dc",
+          "Md5": "dd6ed4e3f23ee0d5a8506135123291f8",
+          "Sha1": "62c025fa99dbc68951199c2f0a1064d85f1200b5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "Triad"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476311",
+          "Name": "1943 - One Year After (1987)(Elite)[cr Triad][a2].d64",
+          "Size": 174848,
+          "Crc": "73d6a691",
+          "Md5": "f7b6fb28b712fc325158811a7ce164c4",
+          "Sha1": "1df5a52594d511f09913d36e58a982070049b3a3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Triad",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603035",
+          "Name": "1943 - One Year After (1987)(Elite)[cr Triad][a2].t64",
+          "Size": 32943,
+          "Crc": "089e8e9d",
+          "Md5": "ab7b541c37eaa85316d6126d90353a02",
+          "Sha1": "1c614f3ddffe1965fd0ab0ce3d7bb8d20681dea8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "Triad",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603036",
+          "Name": "1943 - One Year After (1987)(Elite)[cr Triad][a3].t64",
+          "Size": 32015,
+          "Crc": "6c334499",
+          "Md5": "b430783b0cc00b7197f21c0ad6e042b3",
+          "Sha1": "a4070bc4153f4b85b401f4dece3b060cac6bf241",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "Triad",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603037",
+          "Name": "1943 - One Year After (1987)(Elite)[cr Triad][a4].t64",
+          "Size": 32943,
+          "Crc": "a16c5500",
+          "Md5": "5977714d9092dbbe82fec5e21cfd9d6c",
+          "Sha1": "95af8c4e95bb6992a2c0e3eec9b93011c57240ff",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "Triad",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603038",
+          "Name": "1943 - One Year After (1987)(Elite)[cr Triad][a5].t64",
+          "Size": 32015,
+          "Crc": "d141f25f",
+          "Md5": "dc75be4e57afc898a33bacb0b9673be0",
+          "Sha1": "18d99527ed38d99ed1f7cfe2bdc66615513e60cb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "Triad",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476310",
+          "Name": "1943 - One Year After (1987)(Elite)[cr Triad][a].d64",
+          "Size": 174848,
+          "Crc": "9b5e9b2e",
+          "Md5": "0e2b5180ae9a0b8807bf3d9b68a5d7f6",
+          "Sha1": "d6d2075e8f9cc5e063675c0b1ae75e44f23f5dfb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Triad",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603034",
+          "Name": "1943 - One Year After (1987)(Elite)[cr Triad][a].t64",
+          "Size": 32015,
+          "Crc": "e19eb394",
+          "Md5": "2cb85ddbfdade969afa6f68622c31fa4",
+          "Sha1": "70c28471021ec5f2b3b9e8c0756b097935c7e660",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "Triad",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476312",
+          "Name": "1943 - One Year After (1987)(Elite)[cr WCC - TUF].d64",
+          "Size": 174848,
+          "Crc": "7047b359",
+          "Md5": "56b0bf09e6b4b73de2257fb142cc23b8",
+          "Sha1": "49091788e296815743b7b14bd8c43dd9858bb858",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "WCC - TUF"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "742269",
+          "Name": "1943 - One Year After (1987)(Elite)[cr WCC - TUF].t64",
+          "Size": 42564,
+          "Crc": "216761c4",
+          "Md5": "e571c351f1041ba2044f7701485676f4",
+          "Sha1": "4804459c1329b63e460453f7fa3ae2b540798241",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "WCC - TUF"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "742270",
+          "Name": "1943 - One Year After (1987)(Elite)[cr WCC - TUF][a].t64",
+          "Size": 41636,
+          "Crc": "a199fa2d",
+          "Md5": "1971960d0ed8da0c8098363ab12358dc",
+          "Sha1": "f3dee5276b09aa68714368896a22530c602cbd4d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "WCC - TUF",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476313",
+          "Name": "1943 - One Year After (1987)(Elite)[cr WCC].d64",
+          "Size": 174848,
+          "Crc": "aeeca834",
+          "Md5": "b8b9ed2364c1e67263b4863fb1c7e67b",
+          "Sha1": "ecad3f0532a0cbb188823f71430f87cd75093a1d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "WCC"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585768",
+          "Name": "1943 - One Year After (1987)(Elite)[cr WCC].prg",
+          "Size": 37541,
+          "Crc": "c92c0a1e",
+          "Md5": "0a33ffb695663ce74ca486b48f65649a",
+          "Sha1": "43c5c4511d99172fa679b7e5f67faf097abec773",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "PRG",
+            "cr": "WCC"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603039",
+          "Name": "1943 - One Year After (1987)(Elite)[cr WCC].t64",
+          "Size": 37635,
+          "Crc": "f584c19b",
+          "Md5": "807db550e8887f88696c23264a03bfcb",
+          "Sha1": "18d79674383ea9697962b881461f21ec42112729",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "WCC"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476315",
+          "Name": "1943 - One Year After (1987)(Elite)[cr WCC][a2].d64",
+          "Size": 174848,
+          "Crc": "e76adce3",
+          "Md5": "51fc4224d3cd0995b2794258b507e720",
+          "Sha1": "ea19d2512266fe3f5947e643001c3b9774b09360",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "WCC",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476314",
+          "Name": "1943 - One Year After (1987)(Elite)[cr WCC][a].d64",
+          "Size": 174848,
+          "Crc": "acc99dde",
+          "Md5": "c65e4c2c2c369c6dca925dd52b99efe2",
+          "Sha1": "da41bf0204182124869753540fe6991c0c6de80f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "WCC",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603040",
+          "Name": "1943 - One Year After (1987)(Elite)[h TMC].t64",
+          "Size": 41031,
+          "Crc": "dae89909",
+          "Md5": "d95d7c17aaef1b46d2d27e4dd93ba92e",
+          "Sha1": "1f7ea53d3a2599bed2f578683ce0ed41baa2df54",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "h": "TMC"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476316",
+          "Name": "1943 - One Year After (1987)(Elite)[h Triad].d64",
+          "Size": 174848,
+          "Crc": "72b07089",
+          "Md5": "494729408f90aa0724483bd697ce4ce3",
+          "Sha1": "ad4fc53e1340ad07fc7eacecafd1276c428ab69f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "h": "Triad"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "576049",
+          "Name": "1943 - One Year After (1987)(Elite)[h Triad].p00",
+          "Size": 31947,
+          "Crc": "ec030ad4",
+          "Md5": "6c209366f0bf14b21604ff256c16017b",
+          "Sha1": "16d2757c83a920fc777ce95038bee95100591923",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "P00",
+            "h": "Triad"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585769",
+          "Name": "1943 - One Year After (1987)(Elite)[h Triad].prg",
+          "Size": 31921,
+          "Crc": "e188b44f",
+          "Md5": "931b593cafdc99c69306ec3fff82a785",
+          "Sha1": "e3e4e5e724ea2690b316b5cdbd1c4c86776b2d9a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "PRG",
+            "h": "Triad"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603041",
+          "Name": "1943 - One Year After (1987)(Elite)[h Triad].t64",
+          "Size": 32015,
+          "Crc": "4622e044",
+          "Md5": "8f140ecc4c4755e596802e638b0654f6",
+          "Sha1": "0b0de23e3d0b0a98e768024a3a8ba9a1b0a50f27",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "h": "Triad"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476318",
+          "Name": "1943 - One Year After (1987)(Elite)[h Triad][a2].d64",
+          "Size": 174848,
+          "Crc": "a6c75df9",
+          "Md5": "833da96a8ef9a34487376ef4b31e6b4d",
+          "Sha1": "85a9848078ee2f50ee3334336da4a6ef3e37c4d5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "h": "Triad",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603043",
+          "Name": "1943 - One Year After (1987)(Elite)[h Triad][a2].t64",
+          "Size": 32963,
+          "Crc": "bbd1a3bd",
+          "Md5": "3b43cd114eaf01d4d726d35d825173cb",
+          "Sha1": "4c5b58d87f9812f6286ccea3dc06de8b9a4a104d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "h": "Triad",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476319",
+          "Name": "1943 - One Year After (1987)(Elite)[h Triad][a3].d64",
+          "Size": 174848,
+          "Crc": "699804e2",
+          "Md5": "b88aee5c46af7440155a59a84786431a",
+          "Sha1": "2ff7db0b27d6e3e7c0ccae569278d8b0d567abec",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "h": "Triad",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "742271",
+          "Name": "1943 - One Year After (1987)(Elite)[h Triad][a3].t64",
+          "Size": 32015,
+          "Crc": "84cd61b4",
+          "Md5": "9be74f5af555d979a847d7b3bab9c83c",
+          "Sha1": "1af19fc5c47fd9dc6341662a4348bf82dac1172a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "h": "Triad",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476320",
+          "Name": "1943 - One Year After (1987)(Elite)[h Triad][a4].d64",
+          "Size": 174848,
+          "Crc": "23f0b213",
+          "Md5": "e4cc6230e52a8c40d846077848af059f",
+          "Sha1": "adb84878e6870c1972113d9e9e751cc92de4f1e2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "h": "Triad",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476317",
+          "Name": "1943 - One Year After (1987)(Elite)[h Triad][a].d64",
+          "Size": 174848,
+          "Crc": "0a3f9eab",
+          "Md5": "635c2dd8c25923a3e509e18cd366f22d",
+          "Sha1": "69b66258a4299343c5ec5061922e52170e828be7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "h": "Triad",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "576050",
+          "Name": "1943 - One Year After (1987)(Elite)[h Triad][a].p00",
+          "Size": 31947,
+          "Crc": "908c30fc",
+          "Md5": "b1ba03f796ca71ca9ce95af870443972",
+          "Sha1": "43d67a46337d0f66fe5978624b42dcc8f420cc12",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "P00",
+            "h": "Triad",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585770",
+          "Name": "1943 - One Year After (1987)(Elite)[h Triad][a].prg",
+          "Size": 32869,
+          "Crc": "80b727f2",
+          "Md5": "c7075474ae3193b39079e219a1ef3015",
+          "Sha1": "c0900c4fe2b7a801352cea0edb82382d2e763eeb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "PRG",
+            "h": "Triad",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603042",
+          "Name": "1943 - One Year After (1987)(Elite)[h Triad][a].t64",
+          "Size": 32943,
+          "Crc": "057a8efd",
+          "Md5": "e15573a3d494d9fe35a2b9f29feff5d7",
+          "Sha1": "d88d077be4d60696fa8e73e1b23c736d3f4cdc73",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "h": "Triad",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476321",
+          "Name": "1943 - One Year After (1987)(Elite)[h WCC].d64",
+          "Size": 174848,
+          "Crc": "d5aa2c08",
+          "Md5": "9a6ea9eae87f6bd220171cf26cc9bd2c",
+          "Sha1": "c174bc78f7d6b40c9c4308dfc5898fad34b9202f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "h": "WCC"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603044",
+          "Name": "1943 - One Year After (1987)(Elite)[h WCC].t64",
+          "Size": 38563,
+          "Crc": "7f08dc66",
+          "Md5": "c7ba81ff4157cd89df57b0e9e1683c39",
+          "Sha1": "d04f127c50fbe0c86cd3b51c6832565a46a6d802",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "h": "WCC"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 2150,
+              "Text": "2d view",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1030,
+              "Text": "side-scrolling",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 2146,
+              "Text": "carrier takeoff",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2194,
+              "Text": "enemy fire avoidance",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2145,
+              "Text": "progress tracking",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 2192,
+              "Text": "defensive loop",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2208,
+              "Text": "fixed lives",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2191,
+              "Text": "powerup collect",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 2148,
+              "Text": "military conflict",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2149,
+              "Text": "pacific theater",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2147,
+              "Text": "world war ii",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 1061,
+              "Text": "shoot 'em up",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1310,
+              "Text": "vertical scroll",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1657,
+              "Text": "war game",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "CreatedDate": "2026-03-02T06:16:24",
+  "UpdatedDate": "2026-03-02T06:16:51",
+  "Name": "1943 - One Year After"
+}

@@ -1,0 +1,1642 @@
+{
+  "Id": 262434,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "210688",
+      "Name": "007 - Spy Who Loved Me, The",
+      "Year": "1990",
+      "Country": null,
+      "Platform": "Commodore C64",
+      "SourceId": "1435",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "434068",
+      "Name": "007 - Spy Who Loved Me, The",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Commodore - Commodore 64 (Tapes)",
+      "SourceId": "5991",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "207442",
+      "Name": "Spy Who Loved Me, The",
+      "Year": "1990",
+      "Country": "",
+      "Platform": "Commodore C64",
+      "SourceId": "8834",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-05-25T15:24:57",
+      "NextSearch": "2026-08-03T15:24:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-05-25T15:24:57",
+      "NextSearch": "2026-08-03T15:24:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-05-25T15:24:57",
+      "NextSearch": "2026-08-03T15:24:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-05-25T15:24:57",
+      "NextSearch": "2026-08-03T15:24:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-05-25T15:24:57",
+      "NextSearch": "2026-08-03T15:24:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-05-25T15:24:57",
+      "NextSearch": "2026-08-03T15:24:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-05-25T15:24:57",
+      "NextSearch": "2026-08-03T15:24:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-05-25T15:24:57",
+      "NextSearch": "2026-08-03T15:24:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-05-25T15:24:57",
+      "NextSearch": "2026-08-03T15:24:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-05-25T15:24:57",
+      "NextSearch": "2026-05-26T19:01:00",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T12:11:14",
+      "NextSearch": "2026-04-25T12:11:14",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 508597,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 482,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "94",
+            "Publisher": "Domark"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "17194",
+            "ImmutableId": "17194",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/companies/domark",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-10-22T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2025-04-23T07:06:38",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T13:07:56",
+            "NextSearch": "2026-03-03T13:07:56",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T09:51:06",
+            "NextSearch": "2026-04-24T09:51:06",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [],
+        "CreatedDate": "2024-05-18T12:35:51",
+        "UpdatedDate": "2026-01-31T09:12:09",
+        "Name": "Domark"
+      }
+    },
+    {
+      "Id": 508596,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 1,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "478",
+            "Platform": "Commodore - Commodore 64"
+          },
+          {
+            "SignatureId": "788",
+            "Platform": "Commodore - Commodore 64 (Headerless)"
+          },
+          {
+            "SignatureId": "935",
+            "Platform": "Commodore - Commodore 64 (Headerless) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "936",
+            "Platform": "Commodore - Commodore 64 (Parent-Clone)"
+          },
+          {
+            "SignatureId": "479",
+            "Platform": "Commodore - Commodore 64 (PP)"
+          },
+          {
+            "SignatureId": "937",
+            "Platform": "Commodore - Commodore 64 (PP) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "480",
+            "Platform": "Commodore - Commodore 64 (Tapes)"
+          },
+          {
+            "SignatureId": "938",
+            "Platform": "Commodore - Commodore 64 (Tapes) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "710",
+            "Platform": "Commodore 64"
+          },
+          {
+            "SignatureId": "80",
+            "Platform": "Commodore C64"
+          },
+          {
+            "SignatureId": "81",
+            "Platform": "Commodore C64DTV"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/c64",
+            "LastSearch": "2024-04-28T13:35:39",
+            "NextSearch": "2024-05-28T13:35:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40",
+            "ImmutableId": "40",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=40",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "30",
+            "ImmutableId": "30",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/30/games",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14",
+            "ImmutableId": "14",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-14/",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Commodore_64",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Commodore_64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Commodore_64",
+            "LastSearch": "2025-08-05T05:17:02",
+            "NextSearch": "2025-09-05T05:17:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5500690",
+            "ImmutableId": "5500690",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5500690",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "66",
+            "ImmutableId": "66",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=66",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14-commodore-64",
+            "ImmutableId": "14-commodore-64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/14-commodore-64",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758269,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Commodore 64, affectionately known as the C64, was an 8-bit home computer released in 1982 that became a cultural icon and the best-selling desktop computer of all time, with estimated sales between 12.5 and 17 million units. Boasting 64 kilobytes of RAM and impressive graphics and sound capabilities thanks to its VIC-II chip and SID sound chip, the C64 offered a significant leap in performance compared to its predecessors. It initially sold for $595, but its price later dropped, making it accessible to a wider audience.\n\nThe C64 dominated the home computer market throughout the 1980s, particularly in the US and UK, though it faced stiff competition from the ZX Spectrum and Amstrad CPC. Popular games like *Impossible Mission*, *The Last Ninja*, and *Elite* showcased its capabilities and cemented its legacy. Even today, emulators allow enthusiasts to relive the C64 experience."
+          },
+          {
+            "Id": 190,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "629CB9AB45447D77ECBE2C1F3AB8A3291E40052F"
+          },
+          {
+            "Id": 1,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 2,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "24910",
+                  "Publisher": "Commodore Business Machines"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "10999",
+                  "ImmutableId": "10999",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/commodore-business-machines-inc",
+                  "LastSearch": "2024-04-28T13:39:01",
+                  "NextSearch": "2024-05-28T13:39:01",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:35",
+                  "NextSearch": "2026-03-03T13:05:35",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:34",
+                  "NextSearch": "2026-04-24T09:49:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 173,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "9C5599A7B44D515191A2E5331213A99061CF2F31"
+                },
+                {
+                  "attributeType": "LongString",
+                  "attributeName": "SearchAliases",
+                  "attributeRelationType": "None",
+                  "Value": "Commodore Business Machines, Commodore-Business-Machines"
+                }
+              ],
+              "CreatedDate": "2024-04-28T13:39:01",
+              "UpdatedDate": "2026-01-31T09:01:22",
+              "Name": "Commodore Business Machines"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Commodore 64, Commodore-64"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 286,
+                    "Text": "classic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 96779,
+                    "Text": "64 kib ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 500,
+                    "Text": "6510 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96778,
+                    "Text": "sid sound chip",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 501,
+                    "Text": "vic-ii graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 26,
+                    "Text": "8-bit system",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96777,
+                    "Text": "video game platform",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 125,
+                    "Text": "cartridge slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 419,
+                    "Text": "cassette tape",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 165,
+                    "Text": "floppy disk",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-28T13:35:39",
+        "UpdatedDate": "2026-05-24T16:04:23",
+        "Name": "Commodore 64"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "007 - Spy Who Loved Me, The, 007-Spy Who Loved Me, The, 007 Spy Who Loved Me, The, 007: Spy Who Loved Me, The, 007 - Spy Who Loved Me, The 007 - Spy Who Loved Me, VII - Spy Who Loved Me, The, VII-Spy Who Loved Me, The, VII Spy Who Loved Me, The, VII: Spy Who Loved Me, The, VII - Spy Who Loved Me, The VII - Spy Who Loved Me, Seven - Spy Who Loved Me, The, Seven-Spy Who Loved Me, The, Seven Spy Who Loved Me, The, Seven: Spy Who Loved Me, The, Seven - Spy Who Loved Me, The Seven - Spy Who Loved Me"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "636221",
+          "Name": "007 - Spy Who Loved Me, The (1990)(Domark).tap",
+          "Size": 639208,
+          "Crc": "857bdf47",
+          "Md5": "1541b819b160403f3a53f07051cd961d",
+          "Sha1": "5171dea66e3e6808bdc6acff4cc9a177fe2ef261",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "1309764",
+          "Name": "007 - Spy Who Loved Me, The.tap",
+          "Size": 639208,
+          "Crc": "857bdf47",
+          "Md5": "1541b819b160403f3a53f07051cd961d",
+          "Sha1": "5171dea66e3e6808bdc6acff4cc9a177fe2ef261",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "5",
+            "details.section": "Third Party",
+            "details.d_date": "!unknown",
+            "details.d_date_info": "0",
+            "details.region": "Unknown",
+            "details.dumper": "!unknown",
+            "details.project": "!unknown",
+            "details.originalformat": "Default",
+            "file.format": "Default"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "748559",
+          "Name": "Spy Who Loved Me, The (1990)(Domark).tap",
+          "Size": 639208,
+          "Crc": "857bdf47",
+          "Md5": "1541b819b160403f3a53f07051cd961d",
+          "Sha1": "5171dea66e3e6808bdc6acff4cc9a177fe2ef261",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "TAP"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "552602",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr DR].d64",
+          "Size": 174848,
+          "Crc": "90ad0cf7",
+          "Md5": "032855f272c86fab92cb026d16512159",
+          "Sha1": "78baa53835fbb90717def221ff9f3121286fd7db",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "DR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "631110",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr DR].t64",
+          "Size": 48481,
+          "Crc": "e012f067",
+          "Md5": "128503ec4e18a5e03167a2f122a60476",
+          "Sha1": "c6074b9ac94a3658f6c61c22035745d73de1fa95",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "DR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "552604",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr DR][a2].d64",
+          "Size": 174848,
+          "Crc": "1107415c",
+          "Md5": "0801d17697ee5e3253ba2225f5a1ec25",
+          "Sha1": "2a00d77918345384cb0c688039af3e0c7855d549",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "DR",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "552603",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr DR][a].d64",
+          "Size": 174848,
+          "Crc": "70a13d59",
+          "Md5": "a6323146fa2bd24b7409e4e7c8163769",
+          "Sha1": "798713b0ef31f88f6f82f6b666cf49ccf6c704f2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "DR",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "631109",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr DR][a].t64",
+          "Size": 40497,
+          "Crc": "7ca880c0",
+          "Md5": "2088035040916cbbe76318724c54dca0",
+          "Sha1": "e835af8afa3d6ac89bea39da93112f225a55a359",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "DR",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "552605",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Radical].d64",
+          "Size": 174848,
+          "Crc": "80ba90d4",
+          "Md5": "54129b7de45f2d4666ca7d707355cb71",
+          "Sha1": "db040a23a4d614457cd9f02c79bd5ee0403e69b5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Radical"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "552606",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triad][t +6 Triad].d64",
+          "Size": 174848,
+          "Crc": "15e61209",
+          "Md5": "bc4c5447793b52b89d07cb013af1e3a9",
+          "Sha1": "b4494b7ea0a0423df9ec9181a65e75242544d9a5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Triad",
+            "t": "+6 Triad"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "573490",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triad][t +6 Triad].lnx",
+          "Size": 40453,
+          "Crc": "11486d3d",
+          "Md5": "81b396feadb01ff9f6db129cc5b831cf",
+          "Sha1": "5a686e13e4a4f6c0e6e3e621e37532ce6186538b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "LNX",
+            "cr": "Triad",
+            "t": "+6 Triad"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "631111",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triad][t +6 Triad].t64",
+          "Size": 40110,
+          "Crc": "48e0bbee",
+          "Md5": "37e4a64cc97d4ecd24cb25b4a2bbc9b0",
+          "Sha1": "f59030bddc48db322ffeecd6ba77d366015f098f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "Triad",
+            "t": "+6 Triad"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "552608",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triad][t +6 Triad][a2].d64",
+          "Size": 174848,
+          "Crc": "ada52172",
+          "Md5": "27d4469e62fec6d2a01bd14dc1ecf1a7",
+          "Sha1": "ec051cffdcb799d86ea1b1af672c7c9e6e0028a6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Triad",
+            "t": "+6 Triad",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "552607",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triad][t +6 Triad][a].d64",
+          "Size": 174848,
+          "Crc": "b5cd888d",
+          "Md5": "bf7daa453db1ba723ec14ce46d6e7ef0",
+          "Sha1": "19d531eff6642bb09cd8f22959a369fc3e9951b6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Triad",
+            "t": "+6 Triad",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "552609",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triangle][t Triangle].d64",
+          "Size": 174848,
+          "Crc": "5f99ae92",
+          "Md5": "acebf88b7c1418673abc7d93651ff4b7",
+          "Sha1": "183c2633a9c501391326a043487f9e67219eec2f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Triangle",
+            "t": "Triangle"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "573491",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triangle][t Triangle].lnx",
+          "Size": 43434,
+          "Crc": "550f8d1d",
+          "Md5": "5b2c60fa266796fe722ca8b6f7c8f94b",
+          "Sha1": "e2b8ab7636e8debbe66ebe7c587256616b7fc215",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "LNX",
+            "cr": "Triangle",
+            "t": "Triangle"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "739595",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triangle][t Triangle].p00",
+          "Size": 34834,
+          "Crc": "0eeede8f",
+          "Md5": "6318139e4cd49917756ff89c003a9991",
+          "Sha1": "8e4a5663e2fe8e2b4965866baf4b060fafc35024",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "P00",
+            "cr": "Triangle",
+            "t": "Triangle"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "631112",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triangle][t Triangle].t64",
+          "Size": 43846,
+          "Crc": "febbc812",
+          "Md5": "7fc4546c895a9f644e4b839b8a09d3a6",
+          "Sha1": "366b7750f139e8eef8a33f9953b67fff5ab8a593",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "Triangle",
+            "t": "Triangle"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "552611",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triangle][t Triangle][a2].d64",
+          "Size": 174848,
+          "Crc": "e52aa4cb",
+          "Md5": "8c6005b475c7060162cfc6a3d6207cbf",
+          "Sha1": "097bd8c9ceb980a5951dda07b856a5af689c4242",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Triangle",
+            "t": "Triangle",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "631114",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triangle][t Triangle][a2].t64",
+          "Size": 43910,
+          "Crc": "6d9e9473",
+          "Md5": "3011b2060504ae1b33ef82f0655d265c",
+          "Sha1": "83c09e04aad33f095d95a88a14bd2ea710cf04c2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "Triangle",
+            "t": "Triangle",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "552612",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triangle][t Triangle][a3].d64",
+          "Size": 174848,
+          "Crc": "60a80348",
+          "Md5": "5764432850dc063209a2aedd28d927f5",
+          "Sha1": "2fc49b370a132865150ced552b6ecb20d88d2b1a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Triangle",
+            "t": "Triangle",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "746635",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triangle][t Triangle][a3].t64",
+          "Size": 35830,
+          "Crc": "eb54cdfb",
+          "Md5": "a70203df2800421deb5b374badef6938",
+          "Sha1": "f2cae5ea4dd06c5060c006c902c9fed7e99fb705",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "Triangle",
+            "t": "Triangle",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "552613",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triangle][t Triangle][a4].d64",
+          "Size": 174848,
+          "Crc": "de4733c0",
+          "Md5": "4a344da783416d38a8047178b0f53c04",
+          "Sha1": "cb5618359799b953b99ec49b8d8697bf4450b616",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Triangle",
+            "t": "Triangle",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "552610",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triangle][t Triangle][a].d64",
+          "Size": 174848,
+          "Crc": "1ce51006",
+          "Md5": "8c68a3e0de173e266949ab51b9f1522e",
+          "Sha1": "4603883c357ec053181e4a75d2e6b7ed8d8a63d6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "D64",
+            "cr": "Triangle",
+            "t": "Triangle",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "631113",
+          "Name": "Spy Who Loved Me, The (1990)(Domark)[cr Triangle][t Triangle][a].t64",
+          "Size": 42950,
+          "Crc": "bc02159e",
+          "Md5": "848d68c2c678b9091470b6fc8b295e58",
+          "Sha1": "dd2f2210086e434a9f8015f09963dfc3c13b1717",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Shoot'em Up"
+            ],
+            "filetype": "T64",
+            "cr": "Triangle",
+            "t": "Triangle",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {}
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "English"
+    }
+  ],
+  "CreatedDate": "2025-07-21T10:02:51",
+  "UpdatedDate": "2026-05-26T18:01:01",
+  "Name": "007 - Spy Who Loved Me, The"
+}

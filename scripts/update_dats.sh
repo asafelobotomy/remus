@@ -806,9 +806,9 @@ echo "Done: $copied DATs copied, $skipped skipped, $meta_copied metadata DATs co
 
 if [[ -x "$PROJECT_ROOT/scripts/update_hasheous_dumps.sh" ]]; then
     echo ""
-    echo "==> Hasheous offline dump check (local JSON only; no public ZIP download)"
-    bash "$PROJECT_ROOT/scripts/update_hasheous_dumps.sh" \
-        || echo "  warning: Hasheous dump check failed (see above)" >&2
+    echo "==> Hasheous offline dumps (public API ZIP download)"
+    bash "$PROJECT_ROOT/scripts/update_hasheous_dumps.sh" --all-core \
+        || echo "  warning: Hasheous dump download failed (see above)" >&2
 fi
 
 # ── OpenVGDB SQLite ────────────────────────────────────────────────────────────

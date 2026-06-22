@@ -1,0 +1,1281 @@
+{
+  "Id": 201023,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "739032",
+      "Name": "1990",
+      "Year": "1990",
+      "Country": "",
+      "Platform": "Commodore C64",
+      "SourceId": "8679",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "159349",
+      "Name": "1990",
+      "Year": "1990",
+      "Country": "",
+      "Platform": "Commodore C64",
+      "SourceId": "8686",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "739033",
+      "Name": "1990",
+      "Year": "1990",
+      "Country": "",
+      "Platform": "Commodore C64",
+      "SourceId": "8679",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-06-11T14:20:25",
+      "NextSearch": "2026-08-30T14:20:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-06-11T14:20:25",
+      "NextSearch": "2026-08-30T14:20:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-06-11T14:20:25",
+      "NextSearch": "2026-08-30T14:20:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-06-11T14:20:25",
+      "NextSearch": "2026-08-30T14:20:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-06-11T14:20:25",
+      "NextSearch": "2026-08-30T14:20:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-06-11T14:20:25",
+      "NextSearch": "2026-08-30T14:20:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-06-11T14:20:25",
+      "NextSearch": "2026-08-30T14:20:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-06-11T14:20:25",
+      "NextSearch": "2026-08-30T14:20:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "5352678",
+      "ImmutableId": "5352678",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "SteamGridDb",
+      "Link": "https://www.steamgriddb.com/game/5352678",
+      "LastSearch": "2026-06-11T14:20:25",
+      "NextSearch": "2027-05-11T14:20:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-06-11T14:20:25",
+      "NextSearch": "2026-08-30T14:20:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-28T10:06:33",
+      "NextSearch": "2026-04-28T10:06:33",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 371989,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 142773,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "17275",
+            "Publisher": "Alcoholics"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "IGDB",
+            "Link": "",
+            "LastSearch": "2025-07-20T05:56:37",
+            "NextSearch": "2026-06-07T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:20:44",
+            "NextSearch": "2026-06-07T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:20:44",
+            "NextSearch": "2026-06-07T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:20:44",
+            "NextSearch": "2026-06-07T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:20:44",
+            "NextSearch": "2026-06-07T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:20:44",
+            "NextSearch": "2026-06-07T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:20:44",
+            "NextSearch": "2026-06-07T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:20:44",
+            "NextSearch": "2026-06-07T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2025-04-23T16:08:53",
+            "NextSearch": "2026-06-07T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-04T12:12:45",
+            "NextSearch": "2026-03-04T12:12:45",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T16:58:32",
+            "NextSearch": "2026-04-24T16:58:32",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [],
+        "CreatedDate": "2024-11-28T12:17:39",
+        "UpdatedDate": "2026-01-27T12:53:09",
+        "Name": "Alcoholics"
+      }
+    },
+    {
+      "Id": 371988,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 1,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "478",
+            "Platform": "Commodore - Commodore 64"
+          },
+          {
+            "SignatureId": "788",
+            "Platform": "Commodore - Commodore 64 (Headerless)"
+          },
+          {
+            "SignatureId": "935",
+            "Platform": "Commodore - Commodore 64 (Headerless) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "936",
+            "Platform": "Commodore - Commodore 64 (Parent-Clone)"
+          },
+          {
+            "SignatureId": "479",
+            "Platform": "Commodore - Commodore 64 (PP)"
+          },
+          {
+            "SignatureId": "937",
+            "Platform": "Commodore - Commodore 64 (PP) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "480",
+            "Platform": "Commodore - Commodore 64 (Tapes)"
+          },
+          {
+            "SignatureId": "938",
+            "Platform": "Commodore - Commodore 64 (Tapes) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "710",
+            "Platform": "Commodore 64"
+          },
+          {
+            "SignatureId": "80",
+            "Platform": "Commodore C64"
+          },
+          {
+            "SignatureId": "81",
+            "Platform": "Commodore C64DTV"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/c64",
+            "LastSearch": "2024-04-28T13:35:39",
+            "NextSearch": "2024-05-28T13:35:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40",
+            "ImmutableId": "40",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=40",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "30",
+            "ImmutableId": "30",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/30/games",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14",
+            "ImmutableId": "14",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-14/",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Commodore_64",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Commodore_64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Commodore_64",
+            "LastSearch": "2025-08-05T05:17:02",
+            "NextSearch": "2025-09-05T05:17:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5500690",
+            "ImmutableId": "5500690",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5500690",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "66",
+            "ImmutableId": "66",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=66",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14-commodore-64",
+            "ImmutableId": "14-commodore-64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/14-commodore-64",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758269,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Commodore 64, affectionately known as the C64, was an 8-bit home computer released in 1982 that became a cultural icon and the best-selling desktop computer of all time, with estimated sales between 12.5 and 17 million units. Boasting 64 kilobytes of RAM and impressive graphics and sound capabilities thanks to its VIC-II chip and SID sound chip, the C64 offered a significant leap in performance compared to its predecessors. It initially sold for $595, but its price later dropped, making it accessible to a wider audience.\n\nThe C64 dominated the home computer market throughout the 1980s, particularly in the US and UK, though it faced stiff competition from the ZX Spectrum and Amstrad CPC. Popular games like *Impossible Mission*, *The Last Ninja*, and *Elite* showcased its capabilities and cemented its legacy. Even today, emulators allow enthusiasts to relive the C64 experience."
+          },
+          {
+            "Id": 190,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "629CB9AB45447D77ECBE2C1F3AB8A3291E40052F"
+          },
+          {
+            "Id": 1,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 2,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "24910",
+                  "Publisher": "Commodore Business Machines"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "10999",
+                  "ImmutableId": "10999",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/commodore-business-machines-inc",
+                  "LastSearch": "2024-04-28T13:39:01",
+                  "NextSearch": "2024-05-28T13:39:01",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:35",
+                  "NextSearch": "2026-03-03T13:05:35",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:34",
+                  "NextSearch": "2026-04-24T09:49:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 173,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "9C5599A7B44D515191A2E5331213A99061CF2F31"
+                },
+                {
+                  "attributeType": "LongString",
+                  "attributeName": "SearchAliases",
+                  "attributeRelationType": "None",
+                  "Value": "Commodore Business Machines, Commodore-Business-Machines"
+                }
+              ],
+              "CreatedDate": "2024-04-28T13:39:01",
+              "UpdatedDate": "2026-01-31T09:01:22",
+              "Name": "Commodore Business Machines"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Commodore 64, Commodore-64"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 286,
+                    "Text": "classic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 96779,
+                    "Text": "64 kib ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 500,
+                    "Text": "6510 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96778,
+                    "Text": "sid sound chip",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 501,
+                    "Text": "vic-ii graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 26,
+                    "Text": "8-bit system",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96777,
+                    "Text": "video game platform",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 125,
+                    "Text": "cartridge slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 419,
+                    "Text": "cassette tape",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 165,
+                    "Text": "floppy disk",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-28T13:35:39",
+        "UpdatedDate": "2026-05-24T16:04:23",
+        "Name": "Commodore 64"
+      }
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "3140416",
+          "Name": "1990 (1990)(Coyote).d64",
+          "Size": 174848,
+          "Crc": "bd26b316",
+          "Md5": "e475c850a494c9703b1b95b27fb2ec02",
+          "Sha1": "2151b19d70604bb06bf43633e7be331911ab8da8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "D64"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "312893",
+          "Name": "1990 (1990)(Alcoholics).d64",
+          "Size": 174848,
+          "Crc": "628ecb5d",
+          "Md5": "02ca5eb80230dfcb4017c56da92df5cb",
+          "Sha1": "debb1b029d7e3e37f4dc090033991e2e7db8c4c5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "D64"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "368334",
+          "Name": "1990 (1990)(Alcoholics).prg",
+          "Size": 49448,
+          "Crc": "14024625",
+          "Md5": "3eca07e2a685ea21cad92c0174707e04",
+          "Sha1": "99709f86eba20ad758b27349848e7d1f7e3f0b31",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "PRG"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "386680",
+          "Name": "1990 (1990)(Alcoholics).t64",
+          "Size": 49542,
+          "Crc": "f880022e",
+          "Md5": "f1c664e5ef15122121c08b293323f035",
+          "Sha1": "a4c4746fa07a827dd118ec086a7320baa31df193",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "T64"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "312895",
+          "Name": "1990 (1990)(Alcoholics)[a2].d64",
+          "Size": 174848,
+          "Crc": "76daf842",
+          "Md5": "874795a718debb7586cb05f437d687f3",
+          "Sha1": "ab274c9a66b9f49f660b1abf3ccc6e14682949b6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "D64",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "386682",
+          "Name": "1990 (1990)(Alcoholics)[a2].t64",
+          "Size": 49542,
+          "Crc": "c43d8da1",
+          "Md5": "a416ba07eff1b552beacf259380ffc31",
+          "Sha1": "1b993db43dd89878c441c698ea713c1308c90643",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "T64",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "312896",
+          "Name": "1990 (1990)(Alcoholics)[a3].d64",
+          "Size": 174848,
+          "Crc": "e2b3df5c",
+          "Md5": "7276ffbae4ec091ec8e2e1fcaa2a9e7b",
+          "Sha1": "270baceb930850274c5bafa73c6615ed79aea2e3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "D64",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "386683",
+          "Name": "1990 (1990)(Alcoholics)[a3].t64",
+          "Size": 49542,
+          "Crc": "62822aeb",
+          "Md5": "f5cef25ee0870748830daf8af37b2906",
+          "Sha1": "1c2d633522b4b78949d47af33961819e1d0960dd",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "T64",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "312897",
+          "Name": "1990 (1990)(Alcoholics)[a4].d64",
+          "Size": 174848,
+          "Crc": "a67f9387",
+          "Md5": "149051ff5f2f78805afe9d2b26759472",
+          "Sha1": "9486afd3a77123270e4c81a38cedd5e6dcdc3cd2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "D64",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "411698",
+          "Name": "1990 (1990)(Alcoholics)[a4].t64",
+          "Size": 50471,
+          "Crc": "ff6d6110",
+          "Md5": "43de4780b07ef130c329adfe5d1117a8",
+          "Sha1": "81496982f3b7cfa90d58a8eb0cf18bf6c53f121a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "T64",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "359238",
+          "Name": "1990 (1990)(Alcoholics)[a5].d64",
+          "Size": 174848,
+          "Crc": "15e71a22",
+          "Md5": "4227d42a155e626610009edf2957bc80",
+          "Sha1": "14efbe6adb50ce27351f99039caf2c44d417dd1b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "D64",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "312894",
+          "Name": "1990 (1990)(Alcoholics)[a].d64",
+          "Size": 174848,
+          "Crc": "d68a2a5b",
+          "Md5": "443d78e8c21d422d9e8fee6f6b5ad04c",
+          "Sha1": "f97053f544b5757aadc6603c1a7cd4d91ea3b324",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "D64",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "386681",
+          "Name": "1990 (1990)(Alcoholics)[a].t64",
+          "Size": 49542,
+          "Crc": "3b2c6282",
+          "Md5": "06f7b0982800523c749153b0cdab9237",
+          "Sha1": "0ef0387cccb67ac3e78e89d2db36deef736d83c4",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "T64",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "3140417",
+          "Name": "1990 (1990)(Network).d64",
+          "Size": 174848,
+          "Crc": "6e24341c",
+          "Md5": "0312d349f0153dbdf1cdb688118df5a0",
+          "Sha1": "cc0087a010f81086e7b922bb009ac66b7ab40998",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "D64"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {}
+    }
+  ],
+  "CreatedDate": "2024-12-03T18:48:19",
+  "UpdatedDate": "2026-06-12T08:06:06",
+  "Name": "1990"
+}

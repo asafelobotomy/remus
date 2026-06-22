@@ -1,0 +1,1048 @@
+{
+  "Id": 282523,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "482267",
+      "Name": "10-in-1 - Arcade Collection",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo 3DS (Digital) (Deprecated)",
+      "SourceId": "6080",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "953765",
+      "Name": "10-in-1 - Arcade Collection",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo 3DS (Digital) (Deprecated)",
+      "SourceId": "6080",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "477752",
+      "Name": "10-In-1 - Arcade Collection",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo 3DS (Digital) (CDN)",
+      "SourceId": "12429",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "951387",
+      "Name": "10-In-1 - Arcade Collection",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo 3DS (Digital) (CDN)",
+      "SourceId": "12429",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "84612",
+      "ImmutableId": "84612",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/10-in-1-arcade-collection",
+      "LastSearch": "2025-07-26T04:56:37",
+      "NextSearch": "2027-01-01T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "37110",
+      "ImmutableId": "37110",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=37110",
+      "LastSearch": "2025-07-26T04:57:17",
+      "NextSearch": "2027-01-01T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-07-26T04:57:17",
+      "NextSearch": "2026-03-11T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-07-26T04:57:17",
+      "NextSearch": "2026-03-11T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-26T04:57:18",
+      "NextSearch": "2026-03-11T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-26T04:57:18",
+      "NextSearch": "2026-03-11T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-26T04:57:18",
+      "NextSearch": "2026-03-11T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2025-07-26T04:57:18",
+      "NextSearch": "2026-03-11T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-07-26T04:57:18",
+      "NextSearch": "2026-03-11T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:43:39",
+      "NextSearch": "2026-03-03T13:43:39",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T16:30:20",
+      "NextSearch": "2026-04-24T16:30:20",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759106,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 10-in-1 - Arcade Collection (Nintendo 3DS)\n\nRelive the golden age of gaming with the 10-in-1 Arcade Collection for Nintendo 3DS! This vibrant compilation transports you back to the era of simple graphics and boundless imagination, offering ten unique and thrilling minigames inspired by classic arcade titles. \n\nPrepare for a nostalgic journey filled with retro art, catchy music, and iconic sound effects. Battle against the clock and hordes of enemies across one hundred challenging levels, collecting power-ups and items to boost your score. Each minigame receives a fresh, modern 3D makeover while retaining the charm and addictive gameplay of the originals. \n\nWhether you're a seasoned veteran of the arcade scene or a newcomer eager to experience gaming history, this collection delivers hours of fun. Test your skills, compete for high scores, and rediscover the joy of classic arcade action – all in one convenient package! Get ready to unleash your inner gamer and celebrate the roots of video game entertainment."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 541780,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "9CE121FDDD3EF9AD3C4DC262DC2AF1833DCC82BC"
+    },
+    {
+      "Id": 541778,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 62,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "570",
+            "Platform": "Nintendo - Nintendo 3DS (Decrypted)"
+          },
+          {
+            "SignatureId": "1024",
+            "Platform": "Nintendo - Nintendo 3DS (Decrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "571",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (CDN)"
+          },
+          {
+            "SignatureId": "572",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Deprecated)"
+          },
+          {
+            "SignatureId": "1025",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Deprecated) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "573",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Dev ROMs)"
+          },
+          {
+            "SignatureId": "1026",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Dev ROMs) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "574",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Pre-Install)"
+          },
+          {
+            "SignatureId": "1027",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Pre-Install) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "790",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (SpotPass)"
+          },
+          {
+            "SignatureId": "1028",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (SpotPass) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "575",
+            "Platform": "Nintendo - Nintendo 3DS (Encrypted)"
+          },
+          {
+            "SignatureId": "1029",
+            "Platform": "Nintendo - Nintendo 3DS (Encrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "234",
+            "Platform": "Nintendo 3DS"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "37",
+            "ImmutableId": "37",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/3ds",
+            "LastSearch": "2024-04-29T04:10:51",
+            "NextSearch": "2024-05-29T04:10:51",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "4912",
+            "ImmutableId": "4912",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=4912",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "62",
+            "ImmutableId": "62",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/62/games",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "117",
+            "ImmutableId": "117",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-117/",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2026-07-18T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2026-07-18T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2026-07-18T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Nintendo_3DS",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Nintendo_3DS",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Nintendo_3DS",
+            "LastSearch": "2025-12-21T10:26:30",
+            "NextSearch": "2026-01-21T10:26:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5283557",
+            "ImmutableId": "5283557",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5283557",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "17",
+            "ImmutableId": "17",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=17",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "24-nintendo-3ds",
+            "ImmutableId": "24-nintendo-3ds",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/24-nintendo-3ds",
+            "LastSearch": "2026-02-24T09:49:38",
+            "NextSearch": "2026-04-24T09:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758303,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo 3DS is a foldable, dual-screen handheld game console that succeeded the Nintendo DS and DSi, released in 2011. A defining feature is its autostereoscopic 3D visuals, eliminating the need for special glasses. It retains backward compatibility with Nintendo DS software. Initially priced at $249.99, a subsequent price reduction and free game promotion significantly boosted its popularity. \n\nHardware revisions included the 3DS XL with larger screens, the 2DS (a non-folding model), and the New 3DS with upgraded hardware. The console boasts a virtual console library, Miis, an Activity Log, and the innovative StreetPass and SpotPass features. Popular titles include *Mario Kart 7*, which sold nearly 19 million units, alongside *Animal Crossing: New Leaf*, *The Legend of Zelda: Ocarina of Time 3D*, and *Super Street Fighter IV 3D Edition*. Discontinued in 2020, the 3DS remains a beloved handheld."
+          },
+          {
+            "Id": 210,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "4FF887C52E6CEE3024D97CC8AE1EB6FF55AFB1C8"
+          },
+          {
+            "Id": 45,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo 3DS, Nintendo-3DS"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 354,
+                    "Text": "3d display",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88506,
+                    "Text": "autostereoscopic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 94011,
+                    "Text": "dual-core cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 355,
+                    "Text": "touchscreen",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 88509,
+                    "Text": "3d slider",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 93,
+                    "Text": "button pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88508,
+                    "Text": "motion sensor",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 357,
+                    "Text": "touchscreen",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 132,
+                    "Text": "handheld",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 394,
+                    "Text": "infrared",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 79,
+                    "Text": "wi-fi",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 74,
+                    "Text": "modern",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:10:51",
+        "UpdatedDate": "2026-05-24T16:30:34",
+        "Name": "Nintendo 3DS"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "10-in-1 - Arcade Collection, 10-in-1-Arcade Collection, 10 - in - 1 - Arcade Collection, 10 in 1 Arcade Collection, 10: in: 1: Arcade Collection, X-in-I - Arcade Collection, X-in-I-Arcade Collection, X - in - I - Arcade Collection, X in I Arcade Collection, X: in: I: Arcade Collection, Ten-in-One - Arcade Collection, Ten-in-One-Arcade Collection, Ten - in - One - Arcade Collection, Ten in One Arcade Collection, Ten: in: One: Arcade Collection"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "1567921",
+          "Name": "10-in-1 - Arcade Collection (Europe) (eShop).3ds",
+          "Size": 134217728,
+          "Crc": "fee720ab",
+          "Md5": "3c70cf4e1a04b2ee855c2c1052b8e0e2",
+          "Sha1": "e212f5194eee437614c8d49df992cdcf80ca8d03",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1567920",
+          "Name": "10-in-1 - Arcade Collection (USA) (eShop).3ds",
+          "Size": 134217728,
+          "Crc": "d94a6a86",
+          "Md5": "a3af7d8828dd89616292029a07074de6",
+          "Sha1": "5ed68aacc30ccac03374ee68aa92330a4c92af36",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497734",
+          "Name": "00000000",
+          "Size": 36356096,
+          "Crc": "9863a735",
+          "Md5": "7d8c571b554be186d30fb77264611844",
+          "Sha1": "f7230c7b31f8b076592a27b2bf1bedb64e9911e6",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497737",
+          "Name": "00000000",
+          "Size": 36356096,
+          "Crc": "62f7d450",
+          "Md5": "2ad400d8ca7df7b252d94f0497d9919e",
+          "Sha1": "58928cf66daec7ee6b686275ad01b9b4b6c3d016",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497735",
+          "Name": "00000001",
+          "Size": 294912,
+          "Crc": "1e38df00",
+          "Md5": "04879db78be9fff78da115456fa557c1",
+          "Sha1": "2bbfbb3122ce395656c15f954d7f59eea8d88e1e",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497738",
+          "Name": "00000001",
+          "Size": 401408,
+          "Crc": "445bb5b0",
+          "Md5": "54adafb97fff00b76a60e9a7d5842f7f",
+          "Sha1": "adb35a0d15ac345936283c11960078e6fd7cf04a",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497736",
+          "Name": "tmd.0",
+          "Size": 4708,
+          "Crc": "5e1c0fa8",
+          "Md5": "bd309b53b4243309a67b13a8ddbe7df8",
+          "Sha1": "a7ddf33709e36e352da768c2358972f7ea67de54",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497739",
+          "Name": "tmd.0",
+          "Size": 4708,
+          "Crc": "d9951887",
+          "Md5": "40d5edd7a2a045695ab3a4e45796c445",
+          "Sha1": "941022c20b530f9df985b4d3f7ee6b5bdb9a299d",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 877,
+              "Text": "arcade",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1263,
+              "Text": "retro",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1281,
+              "Text": "classic",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1457,
+              "Text": "nostalgia",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1244,
+              "Text": "retro",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 960,
+              "Text": "collectibles",
+              "AIGenerated": true
+            },
+            {
+              "Id": 944,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 881,
+              "Text": "power-ups",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 887,
+              "Text": "isometric",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2473,
+              "Text": "side scroll",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1451,
+              "Text": "top down",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 1144,
+              "Text": "level based",
+              "AIGenerated": true
+            },
+            {
+              "Id": 943,
+              "Text": "time attack",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2472,
+              "Text": "top down",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU), United States (US)"
+    }
+  ],
+  "CreatedDate": "2025-07-26T04:56:37",
+  "UpdatedDate": "2026-01-27T05:11:57",
+  "Name": "10-in-1 - Arcade Collection"
+}

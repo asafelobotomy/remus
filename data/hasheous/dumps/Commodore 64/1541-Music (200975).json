@@ -1,0 +1,1165 @@
+{
+  "Id": 200975,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "159310",
+      "Name": "1541-Music",
+      "Year": "1987-05-19",
+      "Country": "",
+      "Platform": "Commodore C64",
+      "SourceId": "8686",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "57587",
+      "ImmutableId": "57587",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/music-construction-set",
+      "LastSearch": "2025-06-22T22:17:20",
+      "NextSearch": "2026-10-09T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2025-07-07T00:21:39",
+      "NextSearch": "2026-06-04T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-07-07T00:21:39",
+      "NextSearch": "2026-06-04T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-06-22T22:17:31",
+      "NextSearch": "2026-06-04T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-06-22T22:17:33",
+      "NextSearch": "2026-06-04T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-06-22T22:17:33",
+      "NextSearch": "2026-06-04T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-06-22T22:17:33",
+      "NextSearch": "2026-06-04T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/Music_Construction_Set",
+      "ImmutableId": "https://en.wikipedia.org/wiki/Music_Construction_Set",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/Music_Construction_Set",
+      "LastSearch": "2025-06-22T22:17:33",
+      "NextSearch": "2026-07-27T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T11:09:53",
+      "NextSearch": "2026-06-04T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-10T10:38:47",
+      "NextSearch": "2026-03-10T10:38:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-28T10:04:48",
+      "NextSearch": "2026-04-28T10:04:48",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759795,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## Music Construction Set for Commodore 64: Compose Your Own Soundtrack!\n\nStep back in time and unleash your inner composer with Music Construction Set for the Commodore 64! This groundbreaking 1983 program, originally designed for the Apple II, revolutionized music creation with its intuitive graphical user interface – a truly novel concept for the era. Forget complex notation; simply drag and drop notes onto the musical staff to build your own melodies and harmonies. Play back your creations through the C64’s built-in sound hardware, and even print your compositions.\n\nWhile joystick control is required for note-by-note creation, the payoff is immense: the ability to craft original music without needing formal training. The program even includes sample songs to inspire your own creations.  For an enhanced experience, consider connecting external hardware for richer sound.  Music Construction Set for the C64 is a powerful and enjoyable tool, suitable for both budding songwriters and seasoned musicians alike, proving to be a joy to use and a testament to the creative possibilities of early home computing."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 478263,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "86A42E4D4141C099104D42EF17B45B774F095ECA"
+    },
+    {
+      "Id": 371909,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 200974,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "21138",
+            "Publisher": "Alpha-170"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "IGDB",
+            "Link": "",
+            "LastSearch": "2026-04-04T15:54:08",
+            "NextSearch": "2026-06-16T15:54:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2026-04-04T15:54:08",
+            "NextSearch": "2026-06-16T15:54:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2026-04-04T15:54:08",
+            "NextSearch": "2026-06-16T15:54:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2026-04-04T15:54:08",
+            "NextSearch": "2026-06-16T15:54:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-04-04T15:54:08",
+            "NextSearch": "2026-06-16T15:54:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-04-04T15:54:08",
+            "NextSearch": "2026-06-16T15:54:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-04-04T15:54:08",
+            "NextSearch": "2026-06-16T15:54:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2026-04-04T15:54:08",
+            "NextSearch": "2026-06-16T15:54:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2026-04-04T15:54:08",
+            "NextSearch": "2026-06-16T15:54:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-04-04T15:54:08",
+            "NextSearch": "2026-04-04T16:56:14",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-25T10:18:43",
+            "NextSearch": "2026-04-25T10:18:43",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Alpha-170, Alpha - 170, Alpha 170, Alpha: 170"
+          }
+        ],
+        "CreatedDate": "2024-12-03T18:45:07",
+        "UpdatedDate": "2026-04-04T15:56:14",
+        "Name": "Alpha-170"
+      }
+    },
+    {
+      "Id": 371908,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 1,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "478",
+            "Platform": "Commodore - Commodore 64"
+          },
+          {
+            "SignatureId": "788",
+            "Platform": "Commodore - Commodore 64 (Headerless)"
+          },
+          {
+            "SignatureId": "935",
+            "Platform": "Commodore - Commodore 64 (Headerless) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "936",
+            "Platform": "Commodore - Commodore 64 (Parent-Clone)"
+          },
+          {
+            "SignatureId": "479",
+            "Platform": "Commodore - Commodore 64 (PP)"
+          },
+          {
+            "SignatureId": "937",
+            "Platform": "Commodore - Commodore 64 (PP) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "480",
+            "Platform": "Commodore - Commodore 64 (Tapes)"
+          },
+          {
+            "SignatureId": "938",
+            "Platform": "Commodore - Commodore 64 (Tapes) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "710",
+            "Platform": "Commodore 64"
+          },
+          {
+            "SignatureId": "80",
+            "Platform": "Commodore C64"
+          },
+          {
+            "SignatureId": "81",
+            "Platform": "Commodore C64DTV"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/c64",
+            "LastSearch": "2024-04-28T13:35:39",
+            "NextSearch": "2024-05-28T13:35:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40",
+            "ImmutableId": "40",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=40",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "30",
+            "ImmutableId": "30",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/30/games",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14",
+            "ImmutableId": "14",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-14/",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Commodore_64",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Commodore_64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Commodore_64",
+            "LastSearch": "2025-08-05T05:17:02",
+            "NextSearch": "2025-09-05T05:17:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5500690",
+            "ImmutableId": "5500690",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5500690",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "66",
+            "ImmutableId": "66",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=66",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14-commodore-64",
+            "ImmutableId": "14-commodore-64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/14-commodore-64",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758269,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Commodore 64, affectionately known as the C64, was an 8-bit home computer released in 1982 that became a cultural icon and the best-selling desktop computer of all time, with estimated sales between 12.5 and 17 million units. Boasting 64 kilobytes of RAM and impressive graphics and sound capabilities thanks to its VIC-II chip and SID sound chip, the C64 offered a significant leap in performance compared to its predecessors. It initially sold for $595, but its price later dropped, making it accessible to a wider audience.\n\nThe C64 dominated the home computer market throughout the 1980s, particularly in the US and UK, though it faced stiff competition from the ZX Spectrum and Amstrad CPC. Popular games like *Impossible Mission*, *The Last Ninja*, and *Elite* showcased its capabilities and cemented its legacy. Even today, emulators allow enthusiasts to relive the C64 experience."
+          },
+          {
+            "Id": 190,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "629CB9AB45447D77ECBE2C1F3AB8A3291E40052F"
+          },
+          {
+            "Id": 1,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 2,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "24910",
+                  "Publisher": "Commodore Business Machines"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "10999",
+                  "ImmutableId": "10999",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/commodore-business-machines-inc",
+                  "LastSearch": "2024-04-28T13:39:01",
+                  "NextSearch": "2024-05-28T13:39:01",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:35",
+                  "NextSearch": "2026-03-03T13:05:35",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:34",
+                  "NextSearch": "2026-04-24T09:49:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 173,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "9C5599A7B44D515191A2E5331213A99061CF2F31"
+                },
+                {
+                  "attributeType": "LongString",
+                  "attributeName": "SearchAliases",
+                  "attributeRelationType": "None",
+                  "Value": "Commodore Business Machines, Commodore-Business-Machines"
+                }
+              ],
+              "CreatedDate": "2024-04-28T13:39:01",
+              "UpdatedDate": "2026-01-31T09:01:22",
+              "Name": "Commodore Business Machines"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Commodore 64, Commodore-64"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 286,
+                    "Text": "classic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 96779,
+                    "Text": "64 kib ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 500,
+                    "Text": "6510 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96778,
+                    "Text": "sid sound chip",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 501,
+                    "Text": "vic-ii graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 26,
+                    "Text": "8-bit system",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96777,
+                    "Text": "video game platform",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 125,
+                    "Text": "cartridge slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 419,
+                    "Text": "cassette tape",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 165,
+                    "Text": "floppy disk",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-28T13:35:39",
+        "UpdatedDate": "2026-05-24T16:04:23",
+        "Name": "Commodore 64"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "1541-Music, 1541 - Music, 1541 Music, 1541: Music"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 33,
+          "Id": "312810",
+          "Name": "1541-Music (1987-05-19)(Alpha-170).d64",
+          "Size": 174848,
+          "Crc": "f3fe35ca",
+          "Md5": "e85396a2816b53d19b3c770e3129140e",
+          "Sha1": "846be1b2e5aa25694df3f9a1e8f8ec83e225bba1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "alpha",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "D64"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "368299",
+          "Name": "1541-Music (1987-05-19)(Alpha-170).prg",
+          "Size": 2003,
+          "Crc": "30bb208b",
+          "Md5": "9c6e53691edcc2a89fdef147c43501d4",
+          "Sha1": "38c73860d1a1af0ec540c9bb26a66ea7cf288331",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "alpha",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "PRG"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "386617",
+          "Name": "1541-Music (1987-05-19)(Alpha-170).t64",
+          "Size": 3025,
+          "Crc": "c604d5f6",
+          "Md5": "8e62366395fe421c77e276a7234cb69f",
+          "Sha1": "74c24925c9fffa03479f26ba57472b76fa5ff332",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "alpha",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "T64"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "312811",
+          "Name": "1541-Music (1987-05-19)(Alpha-170)[a].d64",
+          "Size": 174848,
+          "Crc": "cbb02762",
+          "Md5": "1bde181a061672e28a8eaa52f11b1df3",
+          "Sha1": "9661b793655fe7d2880fac37da0c0843e151263f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "alpha",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "D64",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "386618",
+          "Name": "1541-Music (1987-05-19)(Alpha-170)[a].t64",
+          "Size": 2097,
+          "Crc": "96c0966b",
+          "Md5": "b1be6f4a770a2aa1091aaa9f41e84d47",
+          "Sha1": "f9eb1cede62e1381afa3bec88e907240707693c3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "alpha",
+          "Attributes": {
+            "categories": [
+              "Demos"
+            ],
+            "filetype": "T64",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 965,
+              "Text": "2d",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3375,
+              "Text": "direct manipulation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1224,
+              "Text": "artistic expression",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1278,
+              "Text": "learning",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2978,
+              "Text": "music creation",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 2024,
+              "Text": "drag and drop",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2857,
+              "Text": "joystick control",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2974,
+              "Text": "note input",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 817,
+              "Text": "educational",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2973,
+              "Text": "music composition",
+              "AIGenerated": true
+            },
+            {
+              "Id": 910,
+              "Text": "utility",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 3373,
+              "Text": "print support",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3374,
+              "Text": "sample music",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2976,
+              "Text": "sound playback",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "CreatedDate": "2024-12-03T18:45:09",
+  "UpdatedDate": "2026-01-27T13:10:12",
+  "Name": "1541-Music"
+}

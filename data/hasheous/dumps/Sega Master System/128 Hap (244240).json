@@ -1,0 +1,759 @@
+{
+  "Id": 244240,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "763265",
+      "Name": "128 Hap",
+      "Year": "19xx",
+      "Country": "KR",
+      "Platform": "Sega Mark III & Master System",
+      "SourceId": "9217",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "510973",
+      "Name": "128 Hap",
+      "Year": "",
+      "Country": "",
+      "Platform": "Sega - Master System - Mark III",
+      "SourceId": "12470",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2025-07-18T05:02:46",
+      "NextSearch": "2026-07-22T12:37:56",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2025-07-03T00:25:11",
+      "NextSearch": "2026-07-22T12:37:56",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-07-03T00:25:11",
+      "NextSearch": "2026-07-22T12:37:56",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-06-22T21:56:45",
+      "NextSearch": "2026-07-22T12:37:56",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-06-22T21:56:45",
+      "NextSearch": "2026-07-22T12:37:56",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-06-22T21:56:45",
+      "NextSearch": "2026-07-22T12:37:56",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-06-22T21:56:45",
+      "NextSearch": "2026-07-22T12:37:56",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2025-06-22T21:56:45",
+      "NextSearch": "2026-07-22T12:37:56",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T11:09:52",
+      "NextSearch": "2026-07-22T12:37:56",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:56:42",
+      "NextSearch": "2026-03-03T13:56:42",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T01:13:48",
+      "NextSearch": "2026-04-25T01:13:48",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 463069,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 85,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "726",
+            "Platform": "Master System"
+          },
+          {
+            "SignatureId": "611",
+            "Platform": "Sega - Master System - Mark III"
+          },
+          {
+            "SignatureId": "1066",
+            "Platform": "Sega - Master System - Mark III (Parent-Clone)"
+          },
+          {
+            "SignatureId": "302",
+            "Platform": "Sega Mark III & Master System"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "64",
+            "ImmutableId": "64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/sms",
+            "LastSearch": "2024-04-29T04:32:31",
+            "NextSearch": "2024-05-29T04:32:31",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "35",
+            "ImmutableId": "35",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=35",
+            "LastSearch": "2026-05-09T13:17:29",
+            "NextSearch": "2026-11-28T13:17:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "11",
+            "ImmutableId": "11",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/11/games",
+            "LastSearch": "2025-05-13T04:21:33",
+            "NextSearch": "2025-06-13T04:21:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "8",
+            "ImmutableId": "8",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-8/",
+            "LastSearch": "2026-05-09T13:17:29",
+            "NextSearch": "2026-11-28T13:17:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:17:29",
+            "NextSearch": "2026-08-11T13:17:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:17:29",
+            "NextSearch": "2026-08-11T13:17:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:17:29",
+            "NextSearch": "2026-08-11T13:17:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Master_System",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Master_System",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Master_System",
+            "LastSearch": "2025-12-21T10:27:43",
+            "NextSearch": "2026-01-21T10:27:43",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5450226",
+            "ImmutableId": "5450226",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5450226",
+            "LastSearch": "2026-05-09T13:17:29",
+            "NextSearch": "2026-11-28T13:17:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "2",
+            "ImmutableId": "2",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=2",
+            "LastSearch": "2026-05-09T13:17:29",
+            "NextSearch": "2026-11-28T13:17:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "43-sega-master-system",
+            "ImmutableId": "43-sega-master-system",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/43-sega-master-system",
+            "LastSearch": "2026-02-24T09:57:22",
+            "NextSearch": "2026-04-24T09:57:22",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758473,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Sega Master System, initially released in Japan as the Sega Mark III, is an 8-bit home video game console that marked Sega's resurgence in the console market. Launched in 1986, it featured a Zilog Z80A processor and a custom graphics chip enabling a resolution of 256x192 pixels and a palette of 64 colors. Games were distributed via ROM cartridges (up to 4MB) and smaller Sega Cards (32KB). While initially struggling against Nintendo's NES, the Master System found significant success in Europe and Brazil, boasting a larger game library than its North American counterpart, including ports of Genesis titles and exclusive titles like *Streets of Rage* and *The Lucky Dime Caper*. In Brazil, Tectoy localized many games, creating unique versions tied to popular local franchises. A successor to the SG-1000, the Master System laid the groundwork for Sega's future console dominance."
+          },
+          {
+            "Id": 228,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "35E22DFFE19BCF3F2F1BBE341EE50A36FD360008"
+          },
+          {
+            "Id": 66,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 79,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "2664",
+                  "Publisher": "Sega"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "112",
+                  "ImmutableId": "112",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/sega",
+                  "LastSearch": "2025-06-24T19:51:51",
+                  "NextSearch": "2026-09-03T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:34",
+                  "NextSearch": "2026-03-03T13:05:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:25",
+                  "NextSearch": "2026-04-24T09:49:25",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 297392,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "FA75F68C2F5C275E561FB3BDB99AC6D07BDC945B"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:26:49",
+              "UpdatedDate": "2026-01-31T13:46:36",
+              "Name": "Sega"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sega Master System, Sega-Master-System"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 175,
+                    "Text": "256x192 resolution",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88545,
+                    "Text": "32 colors",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 62,
+                    "Text": "8-bit processor",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 97,
+                    "Text": "z80a cpu",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 699,
+                    "Text": "3d glasses",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 13,
+                    "Text": "controller",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 46,
+                    "Text": "light gun",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 64,
+                    "Text": "no built-in networking",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:32:31",
+        "UpdatedDate": "2026-05-25T01:14:03",
+        "Name": "Sega Master System"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "128 Hap, 128-Hap"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 33,
+          "Id": "3215433",
+          "Name": "128 Hap (19xx)(-)(KR).bin",
+          "Size": 1048576,
+          "Crc": "ba5ec0e3",
+          "Md5": "6dddeb0bb21622b6ee1deb4c4870f801",
+          "Sha1": "07d4be0635bab0a6523019c8ce2c23d9cd3b3e1d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "KR": "South Korea"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "KR",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 24,
+          "Id": "1687882",
+          "Name": "128 Hap.sms",
+          "Size": 1048576,
+          "Crc": "ba5ec0e3",
+          "Md5": "6dddeb0bb21622b6ee1deb4c4870f801",
+          "Sha1": "07d4be0635bab0a6523019c8ce2c23d9cd3b3e1d",
+          "Sha256": "d398fff1599211711d037a073db02b131c7d00bbdd13e64abbd816545c3b4dee",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "ko": "Korean"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "3180",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2020-04-12",
+            "details.r_date": "2023-09-09",
+            "details.region": "Korea",
+            "details.dumper": "bsittler",
+            "details.project": "smspower.org",
+            "details.originalformat": "Default",
+            "file.format": "Default"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {}
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Korea (KR)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "Korean"
+    }
+  ],
+  "CreatedDate": "2025-06-02T17:39:12",
+  "UpdatedDate": "2026-01-27T12:47:58",
+  "Name": "128 Hap"
+}

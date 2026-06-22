@@ -1,0 +1,1522 @@
+{
+  "Id": 307679,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "962619",
+      "Name": "1942",
+      "Year": "",
+      "Country": "JP",
+      "Platform": "Nintendo - Wii (Digital) (CDN)",
+      "SourceId": "12460",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "506402",
+      "Name": "1942",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Wii (Digital) (CDN)",
+      "SourceId": "12460",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "962620",
+      "Name": "1942",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Wii (Digital) (CDN)",
+      "SourceId": "12460",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "6075",
+      "ImmutableId": "6075",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/1942",
+      "LastSearch": "2025-08-02T01:48:55",
+      "NextSearch": "2026-10-03T21:08:50",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2025-08-02T01:48:55",
+      "NextSearch": "2026-03-21T21:08:50",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-08-02T01:48:55",
+      "NextSearch": "2026-03-21T21:08:50",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-08-02T01:48:55",
+      "NextSearch": "2026-03-21T21:08:50",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-08-02T01:48:55",
+      "NextSearch": "2026-03-21T21:08:50",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-08-02T01:48:55",
+      "NextSearch": "2026-03-21T21:08:50",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-08-02T01:48:55",
+      "NextSearch": "2026-03-21T21:08:50",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/1942_(video_game)",
+      "ImmutableId": "https://en.wikipedia.org/wiki/1942_(video_game)",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/1942_(video_game)",
+      "LastSearch": "2025-08-02T01:48:55",
+      "NextSearch": "2026-08-02T21:08:50",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-08-02T01:48:55",
+      "NextSearch": "2026-03-21T21:08:50",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:52:13",
+      "NextSearch": "2026-03-03T13:52:13",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T00:55:37",
+      "NextSearch": "2026-04-25T00:55:37",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 760198,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 1942 for Nintendo Wii: Relive a Classic Arcade Shooter\n\nExperience the thrill of Capcom’s iconic 1984 arcade hit, *1942*, now available on the Wii Virtual Console! Step into the cockpit of an American P-38 fighter plane and embark on a perilous mission through the Pacific Theater of World War II. Loosely based on the pivotal Battle of Midway, your objective is to reach Tokyo and dismantle the Japanese air fleet – a bold move reflecting the game’s pioneering design for Western audiences.\n\nThis vertically scrolling shooter delivers fast-paced, addictive gameplay. Blast through waves of enemy aircraft, dodging their fire and collecting power-ups to enhance your firepower. Master the \"loop-the-loop\" maneuver to evade danger and, occasionally, benefit from a \"Tip Tow\" formation where you're escorted by smaller fighter planes. \n\n*1942* is a true arcade classic, renowned for its challenging difficulty and engaging gameplay. Now, bring the nostalgia home and test your skills against the Japanese air force on your Wii!"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 577361,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "8DE21325AB0D4D15A462F9A2BD5BE823263D4EF4"
+    },
+    {
+      "Id": 577360,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 76,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "678",
+            "Platform": "Nintendo - Wii"
+          },
+          {
+            "SignatureId": "598",
+            "Platform": "Nintendo - Wii (Development Kit Hard Drives)"
+          },
+          {
+            "SignatureId": "1052",
+            "Platform": "Nintendo - Wii (Development Kit Hard Drives) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "599",
+            "Platform": "Nintendo - Wii (Digital) (CDN)"
+          },
+          {
+            "SignatureId": "792",
+            "Platform": "Nintendo - Wii (Starlight Fun Center)"
+          },
+          {
+            "SignatureId": "1053",
+            "Platform": "Nintendo - Wii (Starlight Fun Center) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "251",
+            "Platform": "Nintendo Wii"
+          },
+          {
+            "SignatureId": "759",
+            "Platform": "Wii"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "5",
+            "ImmutableId": "5",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/wii",
+            "LastSearch": "2024-04-29T04:24:08",
+            "NextSearch": "2024-05-29T04:24:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "9",
+            "ImmutableId": "9",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=9",
+            "LastSearch": "2026-05-09T13:14:58",
+            "NextSearch": "2026-12-24T13:14:58",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "19",
+            "ImmutableId": "19",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/19/games",
+            "LastSearch": "2025-07-20T16:48:53",
+            "NextSearch": "2025-08-20T16:48:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "36",
+            "ImmutableId": "36",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-36/",
+            "LastSearch": "2025-06-20T15:27:01",
+            "NextSearch": "2025-07-20T15:27:01",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:14:58",
+            "NextSearch": "2026-10-25T13:14:58",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:14:58",
+            "NextSearch": "2026-10-25T13:14:58",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:14:58",
+            "NextSearch": "2026-10-25T13:14:58",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Wii",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Wii",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Wii",
+            "LastSearch": "2026-01-05T10:52:47",
+            "NextSearch": "2026-02-05T10:52:47",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5299128",
+            "ImmutableId": "5299128",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5299128",
+            "LastSearch": "2026-05-09T13:14:58",
+            "NextSearch": "2026-12-24T13:14:58",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "16",
+            "ImmutableId": "16",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=16",
+            "LastSearch": "2026-05-09T13:14:58",
+            "NextSearch": "2026-12-24T13:14:58",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "33-nintendo-wii",
+            "ImmutableId": "33-nintendo-wii",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/33-nintendo-wii",
+            "LastSearch": "2026-02-24T09:51:23",
+            "NextSearch": "2026-04-24T09:51:23",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758461,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo Wii, released in 2006, revolutionized the video game console landscape with its innovative motion-tracking controls and focus on accessibility. Developed by Nintendo, it aimed to broaden the gaming audience beyond traditional core gamers, prioritizing engaging gameplay over raw processing power. The Wii Remote, a wireless controller, became its defining feature, allowing for intuitive, gesture-based interaction. \n\nThe console boasted native internet connectivity and supported wireless connectivity with the Nintendo DS. Early models offered GameCube compatibility, though later versions like the Wii Mini streamlined the design. Blockbuster titles like *Wii Sports*, *The Legend of Zelda: Twilight Princess*, and *Super Mario* series drove its immense popularity, leading to over 101 million units sold and establishing it as a social phenomenon. WiiWare further expanded the platform with digital distribution, supporting independent developers."
+          },
+          {
+            "Id": 110873,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "WII"
+          },
+          {
+            "Id": 222,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "93E300320CE87BA6CD07F454B7591C4A6127DD34"
+          },
+          {
+            "Id": 59,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo Wii, Nintendo-Wii"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 664,
+                    "Text": "512mb nand",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 663,
+                    "Text": "88mb ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 662,
+                    "Text": "ati graphics",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 661,
+                    "Text": "powerpc processor",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 80,
+                    "Text": "ethernet",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 665,
+                    "Text": "gamecube compatibility",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 272,
+                    "Text": "usb",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 79,
+                    "Text": "wi-fi",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 667,
+                    "Text": "mii avatar",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 411,
+                    "Text": "motion controls",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 666,
+                    "Text": "sensor bar",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 283,
+                    "Text": "wireless controller",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:24:08",
+        "UpdatedDate": "2026-05-25T00:55:49",
+        "Name": "Nintendo Wii"
+      }
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "1631516",
+          "Name": "00000000",
+          "Size": 206784,
+          "Crc": "b6acd306",
+          "Md5": "368339ba51829dee3552cac3c77e779d",
+          "Sha1": "fa732732cb79223e1acaecc24bd126ed75b8164a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631527",
+          "Name": "00000000",
+          "Size": 210496,
+          "Crc": "95ba6057",
+          "Md5": "8265563b9fa5d7d43338678fa3526578",
+          "Sha1": "b7be1e0f7ccf50a4af85feb80206b88941ac2344",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631517",
+          "Name": "00000001",
+          "Size": 1914656,
+          "Crc": "4b1a7d25",
+          "Md5": "183a070da6ea9da0f6b43f6c022f0fd0",
+          "Sha1": "bb5a2cbfd81820f73dbba0f606488e9f91bc4599",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631528",
+          "Name": "00000001",
+          "Size": 1914912,
+          "Crc": "0e957ff3",
+          "Md5": "e6e8cd6ea670de07bd5e4429f3034006",
+          "Sha1": "3cda092aa9da9607127ecb5a8b1a2ac2e1960504",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631505",
+          "Name": "00000002",
+          "Size": 4559888,
+          "Crc": "672a9475",
+          "Md5": "c32aabb15b19219960acf3b432ebe4fa",
+          "Sha1": "6ae8920fb3b371a0303cce41fc355c26ffb2b24b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631518",
+          "Name": "00000002",
+          "Size": 4559888,
+          "Crc": "05b24951",
+          "Md5": "c43f2960f0ce29cad406171d7ad2bd8e",
+          "Sha1": "cb0414b9c4824ef665fa6db5909cf09d0ce7bafb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631529",
+          "Name": "00000002",
+          "Size": 4559888,
+          "Crc": "29fd9e79",
+          "Md5": "3842a17655f10705d214e6a4b649cd10",
+          "Sha1": "9ca41b81fe44b139245bb311c7a2511bca881005",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631506",
+          "Name": "00000003",
+          "Size": 2676864,
+          "Crc": "764f2334",
+          "Md5": "2a487f3ec504e902e068ccabd5bd6c62",
+          "Sha1": "16430c111ed95de25b6c2ae23046617591dc049e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631519",
+          "Name": "00000003",
+          "Size": 2676864,
+          "Crc": "8b12886d",
+          "Md5": "508bf1b6beb3936aa5bf89bdda49af49",
+          "Sha1": "0610131a909c4fd3bab0a8acaead3a2a51966d69",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631530",
+          "Name": "00000003",
+          "Size": 2676864,
+          "Crc": "3414d6b6",
+          "Md5": "f9399db11491c97fa70691e89b881f08",
+          "Sha1": "69ef660fcb33a71925933aa9c4c3042ad8521e5c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631507",
+          "Name": "00000004",
+          "Size": 2156800,
+          "Crc": "ec109697",
+          "Md5": "7fc14f66cd73b18491600ccccd07c313",
+          "Sha1": "90fb87e1c9f214cc757b65a3324216cd11eeb31f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631520",
+          "Name": "00000004",
+          "Size": 2156800,
+          "Crc": "12555d6f",
+          "Md5": "d8f4fa2b5d2dab0d8bbcea1695a2eb22",
+          "Sha1": "a914b1667924979ae332ce421e1ae24ea1229e42",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631531",
+          "Name": "00000004",
+          "Size": 2156800,
+          "Crc": "6020efaf",
+          "Md5": "f14ea62460e5e7c3e3e99d609fb2c8a3",
+          "Sha1": "cbfe1dc061069b051c2b19bee3aae40bfc9f888c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631515",
+          "Name": "00000005",
+          "Size": 2126560,
+          "Crc": "373753d2",
+          "Md5": "430f0086fd2194f8d2d6bf31750c3189",
+          "Sha1": "e84b2cd56a9163b78e2aa7f8dbfb9961eb108321",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631521",
+          "Name": "00000005",
+          "Size": 681440,
+          "Crc": "3db6f8a1",
+          "Md5": "d7f200f2d26a38935d30f65f7df88d51",
+          "Sha1": "3a21059d60637aa9d317a468765d831a30e03d28",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631532",
+          "Name": "00000005",
+          "Size": 3102784,
+          "Crc": "d82c2561",
+          "Md5": "75e4f911ae8d95be38ea86800664defb",
+          "Sha1": "4027dad6bcd3477c20270eaa09eda06c78f9bd7e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631508",
+          "Name": "00000006",
+          "Size": 370880,
+          "Crc": "214a7580",
+          "Md5": "222b8ad724342dd1c740d60a2fe167d5",
+          "Sha1": "51d4faf9e9e37c18319420670ace56783e427e8f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631522",
+          "Name": "00000006",
+          "Size": 370880,
+          "Crc": "db88f412",
+          "Md5": "a984b6e08ebd3cf62df1cf97aa32c3f7",
+          "Sha1": "5e6d2fa9972a3ae8b697fe72edcc1e97fb4c856c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631533",
+          "Name": "00000006",
+          "Size": 370880,
+          "Crc": "2e7224f4",
+          "Md5": "db6f191547ebc9f81c316c559893bdce",
+          "Sha1": "31caebcd94bd261b2f0f8893fb2f51a4649f0f14",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631509",
+          "Name": "00000007",
+          "Size": 3649024,
+          "Crc": "98c63db7",
+          "Md5": "8d695da5dad3f1bddf907854c7bed4ee",
+          "Sha1": "7e6620fd79676e4db718284d56b357a59e3c86e7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631523",
+          "Name": "00000007",
+          "Size": 3649024,
+          "Crc": "fe74d839",
+          "Md5": "3a5e336539d561c742bca75ceaf7a587",
+          "Sha1": "15ca197da9114c84869fcdac0d9d001fe1a5564d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631534",
+          "Name": "00000007",
+          "Size": 3649024,
+          "Crc": "c11fc17f",
+          "Md5": "ea0380213db2ea2bfae53336a1daf921",
+          "Sha1": "866b8faba47e1948d8e1a4078b364726561bfc65",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631510",
+          "Name": "00000008",
+          "Size": 1015440,
+          "Crc": "34455bf0",
+          "Md5": "84a4d3a919fe70a338df99a8ab9a8f44",
+          "Sha1": "78b25ac5cc7652fc67eab088c74f5f364a2d5899",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631524",
+          "Name": "00000008",
+          "Size": 1015440,
+          "Crc": "40c24067",
+          "Md5": "e5e890594ec69083db6836d750188912",
+          "Sha1": "0fee3fedd91f247d31a04d2b1c7aad0cbf45b776",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631535",
+          "Name": "00000008",
+          "Size": 1015440,
+          "Crc": "757a323e",
+          "Md5": "111a3f2dd48cab183895b17cb66bd0b3",
+          "Sha1": "a05c126c48d54678267742fa8447e3a1bd6307da",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631511",
+          "Name": "00000009",
+          "Size": 328960,
+          "Crc": "884ebe22",
+          "Md5": "54b9d6400ddb44601c59375f878ab807",
+          "Sha1": "86bd4383f912b66760630de8e4e6f45dcbd445f2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631525",
+          "Name": "00000009",
+          "Size": 328960,
+          "Crc": "786694ad",
+          "Md5": "5186573d43e35b5aebdd7f4c2df7f9c2",
+          "Sha1": "03405184d86d36a65403b87ec583588d02541320",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631536",
+          "Name": "00000009",
+          "Size": 328960,
+          "Crc": "88a3eb67",
+          "Md5": "83d98b86dd493f80028e47173a5d9d68",
+          "Sha1": "00bef26eeefceafe5e4013401f68eb4d2e190311",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631512",
+          "Name": "0000000a",
+          "Size": 207488,
+          "Crc": "a752d422",
+          "Md5": "51f02eb40501246d5427ee3f3c254cdd",
+          "Sha1": "4e9ebfc6d52345d3fca60ec37563a5364303b378",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631513",
+          "Name": "0000000b",
+          "Size": 1915584,
+          "Crc": "5eab16d5",
+          "Md5": "2acf7e8a0a4a85f7f5b4c982e0d370fb",
+          "Sha1": "66106b066b745f107d4d006775335c9d5b42c197",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631537",
+          "Name": "tmd.0",
+          "Size": 2636,
+          "Crc": "503aa138",
+          "Md5": "03595ee10268e117ce0de57ff167abda",
+          "Sha1": "4c2db691b2721e7beffac572daf751b6e4044ae5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631514",
+          "Name": "tmd.1",
+          "Size": 2636,
+          "Crc": "f9a40aa5",
+          "Md5": "9924eed85565498dec526c160c339c5f",
+          "Sha1": "9fd9851c502ece85196dcf363b24c7b75575d338",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1631526",
+          "Name": "tmd.1",
+          "Size": 2636,
+          "Crc": "4fbdfa1e",
+          "Md5": "9d7533c1df103bcba4a6696769f8bbb3",
+          "Sha1": "9837dd6cb0187ddf665c83a18e838476fee2bdcd",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3738,
+              "Text": "scrolling shooter",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3737,
+              "Text": "vertical shooter",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 2148,
+              "Text": "military conflict",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2149,
+              "Text": "pacific theater",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2147,
+              "Text": "world war ii",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 3770,
+              "Text": "multiplayer support",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1454,
+              "Text": "power-up collecting",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3769,
+              "Text": "rolling mechanics",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 3771,
+              "Text": "percentage high score",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3772,
+              "Text": "special roll button",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3748,
+              "Text": "tip tow formation",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 1030,
+              "Text": "side-scrolling",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU), Japan (JP), United States (US)"
+    }
+  ],
+  "CreatedDate": "2025-08-02T01:48:54",
+  "UpdatedDate": "2026-02-02T21:10:44",
+  "Name": "1942"
+}

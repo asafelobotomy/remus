@@ -1,0 +1,846 @@
+{
+  "Id": 318915,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "710935",
+      "Name": "16 BIT XMAS 2012: Snowball Fight",
+      "Year": "",
+      "Country": "World",
+      "Platform": "SNES/Super Famicom",
+      "SourceId": "38303",
+      "MetadataSource": "7"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "134472",
+      "ImmutableId": "134472",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/16-bit-xmas-2011",
+      "LastSearch": "2026-02-17T00:22:57",
+      "NextSearch": "2026-08-22T00:22:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "113049",
+      "ImmutableId": "113049",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=113049",
+      "LastSearch": "2026-02-17T00:22:57",
+      "NextSearch": "2026-08-22T00:22:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-02-17T00:22:57",
+      "NextSearch": "2026-04-17T00:22:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-02-17T00:22:57",
+      "NextSearch": "2026-04-17T00:22:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-02-17T00:22:57",
+      "NextSearch": "2026-04-17T00:22:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-02-17T00:22:57",
+      "NextSearch": "2026-04-17T00:22:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-02-17T00:22:57",
+      "NextSearch": "2026-04-17T00:22:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-02-17T00:22:57",
+      "NextSearch": "2026-04-17T00:22:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-02-17T00:22:57",
+      "NextSearch": "2026-04-17T00:22:57",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:49:55",
+      "NextSearch": "2026-03-03T13:49:55",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T16:47:16",
+      "NextSearch": "2026-04-24T16:47:16",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759825,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 16 BIT XMAS 2012: Snowball Fight - Super Nintendo Entertainment System\n\nEmbrace the holiday spirit with *Snowball Fight*, a frantic and festive four-player battle for Super Nintendo supremacy! Developed by RetroZone, this game captures the joy and playful chaos of a winter wonderland snowball fight. Gather your three best friends and prepare for a blizzard blast of laughter and friendly competition.\n\nForget peaceful caroling – this is a full-on snowball war! Dodge incoming snowballs, strategically target your opponents, and revel in the satisfying sting of a perfectly aimed hit. Experience the cozy warmth of the holiday season juxtaposed with the exhilarating thrill of a snowball ambush. \n\n*Snowball Fight* delivers vibrant, colorful graphics and playful sound effects, perfectly evoking the magic of Christmas. Whether you're dodging aliens and collecting presents (a nod to RetroZone's earlier *Christmas Craze*) or simply enjoying the thrill of payback against a \"freckle-faced neighbor,\" *Snowball Fight* is the ultimate holiday gaming experience. Prepare for a flurry of fun!"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 597143,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "6780075E642EBE2030D1D92A574533931CBFD8BE"
+    },
+    {
+      "Id": 597142,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 74,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "595",
+            "Platform": "Nintendo - Super Nintendo Entertainment System"
+          },
+          {
+            "SignatureId": "1049",
+            "Platform": "Nintendo - Super Nintendo Entertainment System (Parent-Clone)"
+          },
+          {
+            "SignatureId": "249",
+            "Platform": "Nintendo Super Famicom & Super Entertainment System"
+          },
+          {
+            "SignatureId": "772",
+            "Platform": "SNES"
+          },
+          {
+            "SignatureId": "748",
+            "Platform": "SNES/Super Famicom"
+          },
+          {
+            "SignatureId": "1130",
+            "Platform": "Super Nintendo"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "19",
+            "ImmutableId": "19",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/snes",
+            "LastSearch": "2024-04-29T04:22:33",
+            "NextSearch": "2024-05-29T04:22:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "6",
+            "ImmutableId": "6",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=6",
+            "LastSearch": "2024-12-12T01:25:50",
+            "NextSearch": "2025-01-12T01:25:50",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "3",
+            "ImmutableId": "3",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/3/games",
+            "LastSearch": "2025-05-13T04:26:19",
+            "NextSearch": "2025-06-13T04:26:19",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:14:15",
+            "NextSearch": "2026-06-26T13:14:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:14:15",
+            "NextSearch": "2026-06-26T13:14:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:14:15",
+            "NextSearch": "2026-06-26T13:14:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:14:15",
+            "NextSearch": "2026-06-26T13:14:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Super_Nintendo_Entertainment_System",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Super_Nintendo_Entertainment_System",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Super_Nintendo_Entertainment_System",
+            "LastSearch": "2025-12-21T10:26:49",
+            "NextSearch": "2026-01-21T10:26:49",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5321369",
+            "ImmutableId": "5321369",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5321369",
+            "LastSearch": "2026-05-09T13:14:15",
+            "NextSearch": "2027-04-20T13:14:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "4",
+            "ImmutableId": "4",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=4",
+            "LastSearch": "2026-04-03T13:49:56",
+            "NextSearch": "2026-08-28T13:49:56",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "53-super-nintendo-entertainment-system",
+            "ImmutableId": "53-super-nintendo-entertainment-system",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/53-super-nintendo-entertainment-system",
+            "LastSearch": "2026-02-24T09:48:43",
+            "NextSearch": "2026-04-24T09:48:43",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758315,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Super Nintendo Entertainment System (SNES), also known as the Super NES or simply SNES, is a 16-bit home video game console developed and marketed by Nintendo. Released as the Super Famicom in Japan in 1990, it arrived in North America in 1991 and internationally throughout 1992. A successor to the NES, the SNES engaged in a fierce \"console war\" with Sega's Genesis, pushing the boundaries of graphics and sound with features like Mode 7 and ADPCM audio. \n\nThe SNES boasted advanced capabilities, including compatibility with enhancement chips like Super FX, and a controller with added buttons. It achieved immense success, selling over 49 million units and delivering iconic titles such as *Super Mario World*, *The Legend of Zelda: A Link to the Past*, *EarthBound*, *Super Metroid*, and *Chrono Trigger*.  Even today, it remains popular among collectors and retro gamers, with numerous rereleases and emulations available."
+          },
+          {
+            "Id": 110871,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "SNES"
+          },
+          {
+            "Id": 240,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "BFE7B3BE6C05CEE34316CA70284C62E3EBBE919C"
+          },
+          {
+            "Id": 57,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo Super Nintendo Entertainment System, Nintendo-Super-Nintendo-Entertainment-System"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 28,
+                    "Text": "128 kb ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88533,
+                    "Text": "ricoh 5a22 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88534,
+                    "Text": "s-ppu graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 125,
+                    "Text": "cartridge slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 3161,
+                    "Text": "satellaview",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 94026,
+                    "Text": "xband",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 13,
+                    "Text": "controller",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 46,
+                    "Text": "light gun",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:22:33",
+        "UpdatedDate": "2026-05-25T01:34:50",
+        "Name": "Nintendo Super Nintendo Entertainment System"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "16 BIT XMAS 2012: Snowball Fight, 16-BIT-XMAS-2012:-Snowball-Fight, 16 BIT XMAS 2012 Snowball Fight, 16 BIT XMAS 2012 - Snowball Fight, XVI BIT XMAS 2012: Snowball Fight, XVI-BIT-XMAS-2012:-Snowball-Fight, XVI BIT XMAS 2012 Snowball Fight, XVI BIT XMAS 2012 - Snowball Fight, Sixteen BIT XMAS 2012: Snowball Fight, Sixteen-BIT-XMAS-2012:-Snowball-Fight, Sixteen BIT XMAS 2012 Snowball Fight, Sixteen BIT XMAS 2012 - Snowball Fight"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 12,
+          "Id": "3085252",
+          "Name": "16 BIT XMAS 2012 - Snowball Fight (World) (Aftermarket) (Unl).sfc",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "a3fb44ee8547ecc51b5d5fb890ce0eef",
+          "Sha1": "",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "World": "Worldwide"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "labels": "nointro"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "RetroAchievements"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 955,
+              "Text": "comedy",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1690,
+              "Text": "party",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 3411,
+              "Text": "christmas",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3410,
+              "Text": "holiday",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1603,
+              "Text": "winter",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 3418,
+              "Text": "four player",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1364,
+              "Text": "sound effects",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1279,
+              "Text": "two player",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 3414,
+              "Text": "local play",
+              "AIGenerated": true
+            },
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3417,
+              "Text": "snowball fight",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 861,
+              "Text": "side-view",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Worldwide (World)"
+    }
+  ],
+  "CreatedDate": "2025-08-16T14:02:53",
+  "UpdatedDate": "2026-02-17T00:38:49",
+  "Name": "16 BIT XMAS 2012: Snowball Fight"
+}

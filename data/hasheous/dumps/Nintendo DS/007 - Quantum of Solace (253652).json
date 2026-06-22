@@ -1,0 +1,1114 @@
+{
+  "Id": 253652,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "490970",
+      "Name": "007 - Quantum of Solace",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo DS (Encrypted)",
+      "SourceId": "12442",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "957024",
+      "Name": "007 - Quantum of Solace",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo DS (Encrypted)",
+      "SourceId": "12442",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "955376",
+      "Name": "007 - Quantum of Solace",
+      "Year": "",
+      "Country": "",
+      "Platform": "Nintendo - Nintendo DS (Decrypted)",
+      "SourceId": "12440",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "485305",
+      "Name": "007 - Quantum of Solace",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo DS (Decrypted)",
+      "SourceId": "12440",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "957023",
+      "Name": "007 - Quantum of Solace",
+      "Year": "",
+      "Country": "",
+      "Platform": "Nintendo - Nintendo DS (Encrypted)",
+      "SourceId": "12442",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "758736",
+      "Name": "007 - Quantum of Solace",
+      "Year": "2008",
+      "Country": "EU",
+      "Platform": "Nintendo DS",
+      "SourceId": "9131",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "955377",
+      "Name": "007 - Quantum of Solace",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo DS (Decrypted)",
+      "SourceId": "12440",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "156079",
+      "ImmutableId": "156079",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/007-quantum-of-solace--3",
+      "LastSearch": "2025-07-15T13:17:42",
+      "NextSearch": "2026-10-12T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "26999",
+      "ImmutableId": "26999",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=26999",
+      "LastSearch": "2025-07-15T13:18:01",
+      "NextSearch": "2026-10-12T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "19901",
+      "ImmutableId": "19901",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/19901",
+      "LastSearch": "2025-07-15T13:18:01",
+      "NextSearch": "2026-10-12T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-07-15T13:18:01",
+      "NextSearch": "2026-07-20T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-15T13:18:05",
+      "NextSearch": "2026-07-20T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-15T13:18:05",
+      "NextSearch": "2026-07-20T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-15T13:18:05",
+      "NextSearch": "2026-07-20T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/007:_Quantum_of_Solace",
+      "ImmutableId": "https://en.wikipedia.org/wiki/007:_Quantum_of_Solace",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/007:_Quantum_of_Solace",
+      "LastSearch": "2025-07-15T13:18:05",
+      "NextSearch": "2026-07-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T11:09:49",
+      "NextSearch": "2026-07-20T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:44:58",
+      "NextSearch": "2026-03-03T13:44:58",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T13:16:48",
+      "NextSearch": "2026-04-24T13:16:48",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 758555,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 007: Quantum of Solace - Nintendo DS Synopsis\n\nStep into the world of espionage with 007: Quantum of Solace on the Nintendo DS, a thrilling third-person shooter experience based on the James Bond films *Casino Royale* and *Quantum of Solace*. Assume the role of the iconic 007 as he unravels a conspiracy involving the shadowy organization Quantum, beginning with the kidnapping of Mr. White.\n\nThe DS version delivers a unique gameplay experience, blending stealth, action, and gadgetry. Utilize Bond’s signature tools and skills to infiltrate enemy bases, engage in intense firefights, and uncover the truth behind Quantum’s sinister plans. The storyline weaves together events from both films, though players should be aware that the narrative jumps between timelines, requiring familiarity with the source material to fully grasp the plot.\n\nExperience familiar faces like Judi Dench as M and relive key moments from *Casino Royale* alongside new adventures in Bolivia. With a focus on tactical combat and a distinctive third-person perspective, 007: Quantum of Solace on DS offers a portable dose of Bond action and intrigue."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 493993,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "5ECB34640A5C68A83EFB2064FD3AB96F801FAEF5"
+    },
+    {
+      "Id": 493992,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 66,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "580",
+            "Platform": "Nintendo - Nintendo DS (Decrypted)"
+          },
+          {
+            "SignatureId": "1034",
+            "Platform": "Nintendo - Nintendo DS (Decrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "581",
+            "Platform": "Nintendo - Nintendo DS (Download Play)"
+          },
+          {
+            "SignatureId": "1035",
+            "Platform": "Nintendo - Nintendo DS (Download Play) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "582",
+            "Platform": "Nintendo - Nintendo DS (DSvision SD cards)"
+          },
+          {
+            "SignatureId": "1036",
+            "Platform": "Nintendo - Nintendo DS (DSvision SD cards) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "583",
+            "Platform": "Nintendo - Nintendo DS (Encrypted)"
+          },
+          {
+            "SignatureId": "1037",
+            "Platform": "Nintendo - Nintendo DS (Encrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "237",
+            "Platform": "Nintendo DS"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "20",
+            "ImmutableId": "20",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/nds",
+            "LastSearch": "2024-04-29T04:13:51",
+            "NextSearch": "2024-05-29T04:13:51",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "8",
+            "ImmutableId": "8",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=8",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "18",
+            "ImmutableId": "18",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/18/games",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "52",
+            "ImmutableId": "52",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-52/",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2026-10-03T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2026-10-03T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2026-10-03T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Nintendo_DS",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Nintendo_DS",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Nintendo_DS",
+            "LastSearch": "2025-12-21T10:26:34",
+            "NextSearch": "2026-01-21T10:26:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327260",
+            "ImmutableId": "5327260",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327260",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=15",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "26-nintendo-ds",
+            "ImmutableId": "26-nintendo-ds",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/26-nintendo-ds",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758312,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo DS, released in 2004, revolutionized handheld gaming with its innovative dual-screen design – a feature reflected in its name, standing for \"Dual Screen.\" This clamshell console, reminiscent of earlier Game Boy models, combined a traditional display with a responsive touchscreen, offering unique gameplay possibilities. Powered by dual processors, it boasted wireless connectivity for local and online multiplayer via the now-defunct Nintendo Wi-Fi Connection. \n\nA commercial success, the DS sold over 154 million units, becoming a cornerstone of Nintendo's lineup and surpassing the Game Boy Advance. Popular titles like *New Super Mario Bros.* captivated players, while its backward compatibility with Game Boy Advance games broadened its appeal. Later models, including the DS Lite and DSi, introduced enhancements like brighter screens, improved battery life, and digital cameras."
+          },
+          {
+            "Id": 110864,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "DS"
+          },
+          {
+            "Id": 213,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "D21178DAFE99B8EE877EC2B73185AE444175F9FD"
+          },
+          {
+            "Id": 49,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo DS, Nintendo-DS"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 95275,
+                    "Text": "256 kb vram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 94014,
+                    "Text": "320x240 resolution",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 604,
+                    "Text": "arm7/arm9",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 353,
+                    "Text": "dual screens",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 81,
+                    "Text": "bluetooth",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 272,
+                    "Text": "usb",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 79,
+                    "Text": "wi-fi",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 93,
+                    "Text": "button pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 137,
+                    "Text": "d-pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 358,
+                    "Text": "stylus",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 357,
+                    "Text": "touchscreen",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95274,
+                    "Text": "gamepad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 132,
+                    "Text": "handheld",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:13:51",
+        "UpdatedDate": "2026-05-24T16:31:35",
+        "Name": "Nintendo DS"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "007 - Quantum of Solace, 007-Quantum of Solace, 007 Quantum of Solace, 007: Quantum of Solace, VII - Quantum of Solace, VII-Quantum of Solace, VII Quantum of Solace, VII: Quantum of Solace, Seven - Quantum of Solace, Seven-Quantum of Solace, Seven Quantum of Solace, Seven: Quantum of Solace"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 25,
+          "Id": "1582411",
+          "Name": "007 - Quantum of Solace (Europe) (En,Fr).nds",
+          "Size": 33554432,
+          "Crc": "92e72ef2",
+          "Md5": "cd16e00933c791a9c289754ded700314",
+          "Sha1": "3c5b9106c4940496916f2c71fd85b2ba4ca6d972",
+          "Sha256": "e47a5a07cdf458c297bffcf21833007c4a4a0a0caa7663cc9c0caea7481ac043",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1582409",
+          "Name": "007 - Quantum of Solace (Europe) (Es,It).nds",
+          "Size": 33554432,
+          "Crc": "e804509b",
+          "Md5": "07bc7005a23dbabe8f7398109f238802",
+          "Sha1": "27bc9bfed453b9b4cd8d89e0875d487fb418d221",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1582410",
+          "Name": "007 - Quantum of Solace (Korea).nds",
+          "Size": 33554432,
+          "Crc": "871bdc43",
+          "Md5": "756c6a5b4e83cbd152519624a11ac118",
+          "Sha1": "f441ff929ffd76227aa9acfac0733c6c1ce70c67",
+          "Sha256": "06b50022ee473af83b9d96b88d2b949a2a84ff77db7e12e9e0778e5dd9a8481c",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1582412",
+          "Name": "007 - Quantum of Solace (USA) (En,Fr).nds",
+          "Size": 33554432,
+          "Crc": "67f2b05f",
+          "Md5": "23d8012fa0374a06214072156eb4fc28",
+          "Sha1": "d2a7729c02f5b409ea5032e0a1dd6416816eeb10",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 25,
+          "Id": "1573344",
+          "Name": "007 - Quantum of Solace (Europe) (En,Fr).nds",
+          "Size": 33554432,
+          "Crc": "06b361c3",
+          "Md5": "407a71d4d2167c0b4e42c53b4e440981",
+          "Sha1": "a1a860f2b7f4df1dd1a4aeab70f294494351f736",
+          "Sha256": "8f00c9f394f2d7cf1288b5ddc26c4a236e5c46e09b8ca1cdb83948dcadefefe3",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1573342",
+          "Name": "007 - Quantum of Solace (Europe) (Es,It).nds",
+          "Size": 33554432,
+          "Crc": "50501c02",
+          "Md5": "fc59502f8f2e4cbd6b4a1291da962715",
+          "Sha1": "0ab236810ef7e31d97ccd85d53a7a26020fd5a6f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1573343",
+          "Name": "007 - Quantum of Solace (Korea).nds",
+          "Size": 33554432,
+          "Crc": "6967847a",
+          "Md5": "8b1fe8ecf1e4f03ae49d434ea7c7dcf7",
+          "Sha1": "64bc4e0f64100172f2612f532e73999b9a1cbc77",
+          "Sha256": "32508feb6cd2ab55133ed5fa1019c83db93c9fdfcf2a52a27d598ef77777f9c1",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1573345",
+          "Name": "007 - Quantum of Solace (USA) (En,Fr).nds",
+          "Size": 33554432,
+          "Crc": "283013fa",
+          "Md5": "ed77d9951a61e1b2aebbdc3c3edd7f07",
+          "Sha1": "c2d2434d0323312f4fc2680d8ff9659be7e38201",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "3202569",
+          "Name": "007 - Quantum of Solace (2008)(Activision)(EU)(M5).nds",
+          "Size": 33554432,
+          "Crc": "6850b2d3",
+          "Md5": "7de8426d18bf164cc5e289fa2ba7b065",
+          "Sha1": "35ddd30454e800867c5c81cbfbf93d84a1d55bcd",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M5",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 789,
+              "Text": "adventure",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1073,
+              "Text": "shooter",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1092,
+              "Text": "action-adventure",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1078,
+              "Text": "espionage",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1068,
+              "Text": "spy",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 1107,
+              "Text": "hand-to-hand",
+              "AIGenerated": true
+            },
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1106,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 1109,
+              "Text": "local multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1108,
+              "Text": "touchscreen controls",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1110,
+              "Text": "upgrade system",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU), United States (US)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "English, Spanish, French, Italian"
+    }
+  ],
+  "CreatedDate": "2025-07-15T13:17:42",
+  "UpdatedDate": "2026-01-27T04:31:50",
+  "Name": "007 - Quantum of Solace"
+}

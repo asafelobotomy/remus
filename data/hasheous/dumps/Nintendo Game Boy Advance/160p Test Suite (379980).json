@@ -1,0 +1,1321 @@
+{
+  "Id": 379980,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "759753",
+      "Name": "160p Test Suite v0.01",
+      "Year": "2018-06-19",
+      "Country": "",
+      "Platform": "Nintendo Game Boy Advance",
+      "SourceId": "9148",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "759754",
+      "Name": "160p Test Suite v0.02",
+      "Year": "2018-06-22",
+      "Country": "",
+      "Platform": "Nintendo Game Boy Advance",
+      "SourceId": "9148",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "759755",
+      "Name": "160p Test Suite v0.17",
+      "Year": "2018-06-30",
+      "Country": "",
+      "Platform": "Nintendo Game Boy Advance",
+      "SourceId": "9148",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "759756",
+      "Name": "160p Test Suite v0.18",
+      "Year": "2019-05-02",
+      "Country": "",
+      "Platform": "Nintendo Game Boy Advance",
+      "SourceId": "9148",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "759757",
+      "Name": "160p Test Suite v0.19",
+      "Year": "2019-09-12",
+      "Country": "",
+      "Platform": "Nintendo Game Boy Advance",
+      "SourceId": "9148",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "759758",
+      "Name": "160p Test Suite v0.20",
+      "Year": "2020-01-30",
+      "Country": "",
+      "Platform": "Nintendo Game Boy Advance",
+      "SourceId": "9148",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "759759",
+      "Name": "160p Test Suite v0.21",
+      "Year": "2020-06-02",
+      "Country": "",
+      "Platform": "Nintendo Game Boy Advance",
+      "SourceId": "9148",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "759760",
+      "Name": "160p Test Suite v0.22",
+      "Year": "2020-11-05",
+      "Country": "",
+      "Platform": "Nintendo Game Boy Advance",
+      "SourceId": "9148",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "759761",
+      "Name": "160p Test Suite v0.23",
+      "Year": "2023-03-03",
+      "Country": "",
+      "Platform": "Nintendo Game Boy Advance",
+      "SourceId": "9148",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "77883",
+      "ImmutableId": "77883",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/the-suite-life-of-zack-and-cody-tipton-caper",
+      "LastSearch": "2026-05-06T17:58:19",
+      "NextSearch": "2026-11-05T17:58:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-05-06T17:58:19",
+      "NextSearch": "2026-09-10T17:58:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-05-06T17:58:19",
+      "NextSearch": "2026-09-10T17:58:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-05-06T17:58:19",
+      "NextSearch": "2026-09-10T17:58:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-05-06T17:58:19",
+      "NextSearch": "2026-09-10T17:58:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-05-06T17:58:19",
+      "NextSearch": "2026-09-10T17:58:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-05-06T17:58:19",
+      "NextSearch": "2026-09-10T17:58:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-05-06T17:58:19",
+      "NextSearch": "2026-09-10T17:58:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-05-06T17:58:19",
+      "NextSearch": "2026-09-10T17:58:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-05-06T17:58:19",
+      "NextSearch": "2026-05-08T17:05:20",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T00:37:47",
+      "NextSearch": "2026-04-25T00:37:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759873,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 160p Test Suite: A GBA Technical Showcase\n\nStep into a bizarre and fascinating world with *160p Test Suite*, a unique and experimental title for the Nintendo Game Boy Advance. This isn't your typical game; it's a technical demonstration pushing the GBA's capabilities to their absolute limit. Presented as a series of interconnected vignettes, *160p Test Suite* showcases the console's graphical prowess within the severely constrained 160x144 resolution – a fraction of what most GBA games utilize.\n\nExplore surreal landscapes, interact with abstract characters, and experience a dreamlike narrative that defies traditional storytelling. Gameplay revolves around navigating these environments, solving simple puzzles, and appreciating the ingenuity of the developers in creating compelling visuals and atmosphere within such tight limitations. \n\nExpect a minimalist aesthetic, experimental music, and a focus on artistic expression over conventional gameplay. *160p Test Suite* is a must-see for GBA enthusiasts, developers, and anyone interested in the boundaries of retro game design – a truly one-of-a-kind experience."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 697575,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "F2681CEC8C2C991EA7495C9F1ED60B2CBA7175D3"
+    },
+    {
+      "Id": 697574,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 21126,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "36839",
+            "Publisher": "Yerrick, Damian"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "IGDB",
+            "Link": "",
+            "LastSearch": "2025-07-20T14:52:57",
+            "NextSearch": "2026-06-04T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2025-06-24T21:43:06",
+            "NextSearch": "2026-06-04T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2025-06-24T21:43:06",
+            "NextSearch": "2026-06-04T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2025-06-24T21:43:06",
+            "NextSearch": "2026-06-04T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2025-06-24T21:43:06",
+            "NextSearch": "2026-06-04T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2025-06-24T21:43:06",
+            "NextSearch": "2026-06-04T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2025-06-24T21:43:06",
+            "NextSearch": "2026-06-04T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2025-06-24T21:43:06",
+            "NextSearch": "2026-06-04T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2025-04-23T11:54:03",
+            "NextSearch": "2026-06-04T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T13:47:25",
+            "NextSearch": "2026-03-03T13:47:25",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T17:25:09",
+            "NextSearch": "2026-04-24T17:25:09",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Yerrick, Damian, Yerrick,-Damian"
+          }
+        ],
+        "CreatedDate": "2024-05-26T11:47:30",
+        "UpdatedDate": "2026-01-31T10:57:50",
+        "Name": "Yerrick, Damian"
+      }
+    },
+    {
+      "Id": 697573,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 71,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "717",
+            "Platform": "Game Boy Advance"
+          },
+          {
+            "SignatureId": "558",
+            "Platform": "Nintendo - Game Boy Advance"
+          },
+          {
+            "SignatureId": "559",
+            "Platform": "Nintendo - Game Boy Advance (e-Reader)"
+          },
+          {
+            "SignatureId": "1012",
+            "Platform": "Nintendo - Game Boy Advance (e-Reader) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "560",
+            "Platform": "Nintendo - Game Boy Advance (Multiboot)"
+          },
+          {
+            "SignatureId": "1013",
+            "Platform": "Nintendo - Game Boy Advance (Multiboot) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "1014",
+            "Platform": "Nintendo - Game Boy Advance (Parent-Clone)"
+          },
+          {
+            "SignatureId": "561",
+            "Platform": "Nintendo - Game Boy Advance (Play-Yan)"
+          },
+          {
+            "SignatureId": "1015",
+            "Platform": "Nintendo - Game Boy Advance (Play-Yan) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "562",
+            "Platform": "Nintendo - Game Boy Advance (Video)"
+          },
+          {
+            "SignatureId": "1016",
+            "Platform": "Nintendo - Game Boy Advance (Video) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "242",
+            "Platform": "Nintendo Game Boy Advance"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "24",
+            "ImmutableId": "24",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/gba",
+            "LastSearch": "2024-04-29T04:18:55",
+            "NextSearch": "2024-05-29T04:18:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5",
+            "ImmutableId": "5",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=5",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2027-01-03T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5",
+            "ImmutableId": "5",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/5/games",
+            "LastSearch": "2025-05-13T03:04:02",
+            "NextSearch": "2025-06-13T03:04:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "4",
+            "ImmutableId": "4",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-4/",
+            "LastSearch": "2025-06-20T15:23:33",
+            "NextSearch": "2025-07-20T15:23:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2026-08-23T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2026-08-23T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2026-08-23T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Game_Boy_Advance",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Game_Boy_Advance",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Game_Boy_Advance",
+            "LastSearch": "2025-12-21T10:26:42",
+            "NextSearch": "2026-01-21T10:26:42",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5321240",
+            "ImmutableId": "5321240",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5321240",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2027-01-03T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "12",
+            "ImmutableId": "12",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=12",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2027-01-03T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "29-nintendo-game-boy-advance",
+            "ImmutableId": "29-nintendo-game-boy-advance",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/29-nintendo-game-boy-advance",
+            "LastSearch": "2026-02-24T09:49:26",
+            "NextSearch": "2026-04-24T09:49:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758308,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo Game Boy Advance (GBA), released in 2001, was a pivotal handheld console, succeeding the Game Boy Color and ushering in a new era of portable gaming. This 32-bit powerhouse boasted a more powerful ARM7 processor and improved graphics, while maintaining backward compatibility with older Game Boy titles. It quickly became a global phenomenon, selling over 81 million units. \n\nThe GBA’s library was diverse, ranging from platformers and SNES-like RPGs to ports of classic 8-bit and 16-bit games. Popular titles like *Pokémon Ruby and Sapphire* captivated players worldwide. Unique features like rumble, tilt, and solar sensors added innovative gameplay elements. Later models, including the SP and Micro, offered enhanced designs and features. The GBA’s legacy continues, with digital re-releases on Nintendo’s online services, ensuring its enduring appeal."
+          },
+          {
+            "Id": 110856,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "GBA"
+          },
+          {
+            "Id": 216,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "37EA6A2404729F2FAC848CE55A6C39715293C068"
+          },
+          {
+            "Id": 54,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo Game Boy Advance, Nintendo-Game-Boy-Advance"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 88481,
+                    "Text": "backward compatible",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 368,
+                    "Text": "battery powered",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 141,
+                    "Text": "monochrome display",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 132,
+                    "Text": "handheld",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 333,
+                    "Text": "portable",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 137,
+                    "Text": "d-pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95310,
+                    "Text": "game boy link cable",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88526,
+                    "Text": "shoulder buttons",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 95309,
+                    "Text": "e-reader support",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 626,
+                    "Text": "game link cable",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 627,
+                    "Text": "wireless adapter",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:18:55",
+        "UpdatedDate": "2026-05-25T00:39:57",
+        "Name": "Nintendo Game Boy Advance"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "160p Test Suite, 160p-Test-Suite"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 33,
+          "Id": "3204156",
+          "Name": "160p Test Suite v0.01 (2018-06-19)(Yerrick, Damian)(GPLv2).gba",
+          "Size": 33712,
+          "Crc": "22754ba1",
+          "Md5": "2294f70d8d81b161bd59f1b48b3d67f7",
+          "Sha1": "f2a0ef19e8fd9c7be1818d2e6e512cb5c0a4f886",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Applications"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "GPLv2",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3204157",
+          "Name": "160p Test Suite v0.02 (2018-06-22)(Yerrick, Damian)(GPLv2).gba",
+          "Size": 46444,
+          "Crc": "aaae2a4f",
+          "Md5": "0c0697f5d2b35eb4a83566fae567644b",
+          "Sha1": "3ad9aac52cf5afeeb90057face5f4a12d37152d1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Applications"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "GPLv2",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3204158",
+          "Name": "160p Test Suite v0.17 (2018-06-30)(Yerrick, Damian)(GPLv2).gba",
+          "Size": 46640,
+          "Crc": "7830fad4",
+          "Md5": "048d5473c10f52d2264e4d2705fbb5c1",
+          "Sha1": "8c8191a9786a39d0afd71bf677ed52f26eb124a0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Applications"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "GPLv2",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3204159",
+          "Name": "160p Test Suite v0.18 (2019-05-02)(Yerrick, Damian)(GPLv2).gba",
+          "Size": 47548,
+          "Crc": "3eb8823f",
+          "Md5": "c76881a4c125a3f95fee7f25922afdff",
+          "Sha1": "66a9c5f86c2d3f941e3625daef1536535adde930",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Applications"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "GPLv2",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3204160",
+          "Name": "160p Test Suite v0.19 (2019-09-12)(Yerrick, Damian)(GPLv2).gba",
+          "Size": 50760,
+          "Crc": "5925ac98",
+          "Md5": "2c4d5b278f1c7755033cd8663761b326",
+          "Sha1": "ba919966ca577aa8b2a75bdc3defad6644d808cb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Applications"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "GPLv2",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3204161",
+          "Name": "160p Test Suite v0.20 (2020-01-30)(Yerrick, Damian)(GPLv2).gba",
+          "Size": 51748,
+          "Crc": "6a5b01c3",
+          "Md5": "0f0fdfca9fdfe1225892ff7831a2b683",
+          "Sha1": "ebac34235588ff81f6882477cb5a6939e8beaca8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Applications"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "GPLv2",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3204162",
+          "Name": "160p Test Suite v0.21 (2020-06-02)(Yerrick, Damian)(GPLv2).gba",
+          "Size": 51744,
+          "Crc": "3a3408ac",
+          "Md5": "b7ca49ce84e66b386c41da9a22516fdb",
+          "Sha1": "8964b3210c76f92c87fca89eb7dc3cdf323af088",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Applications"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "GPLv2",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3204163",
+          "Name": "160p Test Suite v0.22 (2020-11-05)(Yerrick, Damian)(GPLv2).gba",
+          "Size": 51932,
+          "Crc": "fb7b1287",
+          "Md5": "f7de869eb868800d627acdb4d02c958f",
+          "Sha1": "9daec3031aa6cb728aebbb51a6657e5138ebd542",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Applications"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "GPLv2",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3204164",
+          "Name": "160p Test Suite v0.23 (2023-03-03)(Yerrick, Damian)(GPLv2).gba",
+          "Size": 61104,
+          "Crc": "87c789d9",
+          "Md5": "94d6536b885d27877bdb86229a41a477",
+          "Sha1": "15522a94a979599fed9995780564ccf673276b26",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Applications"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "GPLv2",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 3476,
+              "Text": "benchmarking",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3478,
+              "Text": "performance analysis",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3477,
+              "Text": "system testing",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 3479,
+              "Text": "compatibility check",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3480,
+              "Text": "gameplay analysis",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3481,
+              "Text": "technical evaluation",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 3483,
+              "Text": "game development",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3484,
+              "Text": "hardware analysis",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3482,
+              "Text": "software testing",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 3475,
+              "Text": "game development",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3473,
+              "Text": "testing tool",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3474,
+              "Text": "utility software",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 1059,
+              "Text": "overhead view",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3485,
+              "Text": "system monitoring",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "CreatedDate": "2025-11-04T09:46:28",
+  "UpdatedDate": "2026-05-08T16:05:22",
+  "Name": "160p Test Suite"
+}

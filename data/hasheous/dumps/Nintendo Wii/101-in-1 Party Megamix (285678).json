@@ -1,0 +1,910 @@
+{
+  "Id": 285678,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "591963",
+      "Name": "101-in-1 Party Megamix",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Wii",
+      "SourceId": "38229",
+      "MetadataSource": "5"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "4632",
+      "ImmutableId": "4632",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/101-in-1-party-megamix",
+      "LastSearch": "2025-07-27T22:23:30",
+      "NextSearch": "2026-09-13T01:58:26",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "9120",
+      "ImmutableId": "9120",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=9120",
+      "LastSearch": "2025-07-27T22:23:30",
+      "NextSearch": "2026-09-13T01:58:26",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-07-27T22:23:30",
+      "NextSearch": "2026-06-24T01:58:26",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "26829",
+      "ImmutableId": "26829",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-26829/",
+      "LastSearch": "2025-07-27T22:23:30",
+      "NextSearch": "2026-09-13T01:58:26",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-27T22:23:31",
+      "NextSearch": "2026-06-24T01:58:26",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-27T22:23:31",
+      "NextSearch": "2026-06-24T01:58:26",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-27T22:23:31",
+      "NextSearch": "2026-06-24T01:58:26",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/101-in-1_Party_Megamix",
+      "ImmutableId": "https://en.wikipedia.org/wiki/101-in-1_Party_Megamix",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/101-in-1_Party_Megamix",
+      "LastSearch": "2025-07-27T22:23:31",
+      "NextSearch": "2026-07-28T01:58:26",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-07-27T22:23:31",
+      "NextSearch": "2026-06-24T01:58:26",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:52:13",
+      "NextSearch": "2026-03-03T13:52:13",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T00:55:37",
+      "NextSearch": "2026-04-25T00:55:37",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759252,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 101-in-1 Party Megamix - Nintendo Wii\n\nGet ready for a non-stop party with *101-in-1 Party Megamix*! This Wii extravaganza delivers a massive collection of 101 mini-games, offering endless entertainment for players of all ages. From classic favorites like Snake and Sudoku to exciting jigsaw puzzles and a variety of other challenges, there's something for everyone.\n\nDive into eight differently-themed channels, competing for high scores to unlock new games and earn bonus prizes to personalize your player profiles. The \"Zapping\" mode provides instant access to any unlocked game, while \"Marathon\" mode lets up to four players battle it out in a series of five randomly selected games. \n\nWhether you’re tackling the challenges solo or engaging in a family competition, *101-in-1 Party Megamix* guarantees hours of laughter and excitement. With the ability to save up to four player profiles, everyone can track their individual progress and strive to unlock every last game in this ultimate party collection."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 546889,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "8FFBCFB9C6E47A6F6CE8D69A8310CBBE84B7A223"
+    },
+    {
+      "Id": 546888,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 76,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "678",
+            "Platform": "Nintendo - Wii"
+          },
+          {
+            "SignatureId": "598",
+            "Platform": "Nintendo - Wii (Development Kit Hard Drives)"
+          },
+          {
+            "SignatureId": "1052",
+            "Platform": "Nintendo - Wii (Development Kit Hard Drives) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "599",
+            "Platform": "Nintendo - Wii (Digital) (CDN)"
+          },
+          {
+            "SignatureId": "792",
+            "Platform": "Nintendo - Wii (Starlight Fun Center)"
+          },
+          {
+            "SignatureId": "1053",
+            "Platform": "Nintendo - Wii (Starlight Fun Center) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "251",
+            "Platform": "Nintendo Wii"
+          },
+          {
+            "SignatureId": "759",
+            "Platform": "Wii"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "5",
+            "ImmutableId": "5",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/wii",
+            "LastSearch": "2024-04-29T04:24:08",
+            "NextSearch": "2024-05-29T04:24:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "9",
+            "ImmutableId": "9",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=9",
+            "LastSearch": "2026-05-09T13:14:58",
+            "NextSearch": "2026-12-24T13:14:58",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "19",
+            "ImmutableId": "19",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/19/games",
+            "LastSearch": "2025-07-20T16:48:53",
+            "NextSearch": "2025-08-20T16:48:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "36",
+            "ImmutableId": "36",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-36/",
+            "LastSearch": "2025-06-20T15:27:01",
+            "NextSearch": "2025-07-20T15:27:01",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:14:58",
+            "NextSearch": "2026-10-25T13:14:58",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:14:58",
+            "NextSearch": "2026-10-25T13:14:58",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:14:58",
+            "NextSearch": "2026-10-25T13:14:58",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Wii",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Wii",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Wii",
+            "LastSearch": "2026-01-05T10:52:47",
+            "NextSearch": "2026-02-05T10:52:47",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5299128",
+            "ImmutableId": "5299128",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5299128",
+            "LastSearch": "2026-05-09T13:14:58",
+            "NextSearch": "2026-12-24T13:14:58",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "16",
+            "ImmutableId": "16",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=16",
+            "LastSearch": "2026-05-09T13:14:58",
+            "NextSearch": "2026-12-24T13:14:58",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "33-nintendo-wii",
+            "ImmutableId": "33-nintendo-wii",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/33-nintendo-wii",
+            "LastSearch": "2026-02-24T09:51:23",
+            "NextSearch": "2026-04-24T09:51:23",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758461,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo Wii, released in 2006, revolutionized the video game console landscape with its innovative motion-tracking controls and focus on accessibility. Developed by Nintendo, it aimed to broaden the gaming audience beyond traditional core gamers, prioritizing engaging gameplay over raw processing power. The Wii Remote, a wireless controller, became its defining feature, allowing for intuitive, gesture-based interaction. \n\nThe console boasted native internet connectivity and supported wireless connectivity with the Nintendo DS. Early models offered GameCube compatibility, though later versions like the Wii Mini streamlined the design. Blockbuster titles like *Wii Sports*, *The Legend of Zelda: Twilight Princess*, and *Super Mario* series drove its immense popularity, leading to over 101 million units sold and establishing it as a social phenomenon. WiiWare further expanded the platform with digital distribution, supporting independent developers."
+          },
+          {
+            "Id": 110873,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "WII"
+          },
+          {
+            "Id": 222,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "93E300320CE87BA6CD07F454B7591C4A6127DD34"
+          },
+          {
+            "Id": 59,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo Wii, Nintendo-Wii"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 664,
+                    "Text": "512mb nand",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 663,
+                    "Text": "88mb ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 662,
+                    "Text": "ati graphics",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 661,
+                    "Text": "powerpc processor",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 80,
+                    "Text": "ethernet",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 665,
+                    "Text": "gamecube compatibility",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 272,
+                    "Text": "usb",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 79,
+                    "Text": "wi-fi",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 667,
+                    "Text": "mii avatar",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 411,
+                    "Text": "motion controls",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 666,
+                    "Text": "sensor bar",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 283,
+                    "Text": "wireless controller",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:24:08",
+        "UpdatedDate": "2026-05-25T00:55:49",
+        "Name": "Nintendo Wii"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "101-in-1 Party Megamix, 101 - in - 1 Party Megamix, 101 in 1 Party Megamix, 101: in: 1 Party Megamix, 101-in-I Party Megamix, 101 - in - I Party Megamix, 101 in I Party Megamix, 101: in: I Party Megamix, 101-in-One Party Megamix, 101 - in - One Party Megamix, 101 in One Party Megamix, 101: in: One Party Megamix"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "2294272",
+          "Name": "101-in-1 Party Megamix (USA) (En,Fr,Es).iso",
+          "Size": 4699979776,
+          "Crc": "aca4cffc",
+          "Md5": "1ab6e5b1840fa5a82b290cbb55ddc811",
+          "Sha1": "69c8eb01482c5e58a0e0a07fa202b19aa3cd87c3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "RVL-RYEE-USA-B0"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 22,
+          "Id": "3925552",
+          "Name": "101-in-1 Party Megamix (USA) (En,Fr,Es).rvz",
+          "Size": 1519298780,
+          "Crc": "50460b4e",
+          "Md5": "",
+          "Sha1": "0cb85e01502a16574dfb82cd705f42f20f2f61fe",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 2748,
+              "Text": "bonus prizes",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1000,
+              "Text": "score tracking",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2497,
+              "Text": "unlockable content",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1293,
+              "Text": "casual",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1724,
+              "Text": "entertainment",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2395,
+              "Text": "social",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 2572,
+              "Text": "collection",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2747,
+              "Text": "mini games",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1008,
+              "Text": "party game",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 887,
+              "Text": "isometric",
+              "AIGenerated": true
+            },
+            {
+              "Id": 813,
+              "Text": "overhead",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1451,
+              "Text": "top down",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 1044,
+              "Text": "mini games",
+              "AIGenerated": true
+            },
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2729,
+              "Text": "score based",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "United States (US)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "English, Spanish, French"
+    }
+  ],
+  "CreatedDate": "2025-07-27T22:23:30",
+  "UpdatedDate": "2026-01-28T01:59:06",
+  "Name": "101-in-1 Party Megamix"
+}

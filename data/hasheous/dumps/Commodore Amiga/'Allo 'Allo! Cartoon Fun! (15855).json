@@ -1,0 +1,1271 @@
+{
+  "Id": 15855,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "87891",
+      "Name": "'Allo 'Allo! Cartoon Fun!",
+      "Year": "1993",
+      "Country": "",
+      "Platform": "Commodore Amiga",
+      "SourceId": "8606",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "14249",
+      "ImmutableId": "14249",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/allo-allo-cartoon-fun",
+      "LastSearch": "2026-01-16T11:13:58",
+      "NextSearch": "2026-07-16T11:13:58",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "24489",
+      "ImmutableId": "24489",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=24489",
+      "LastSearch": "2026-01-16T11:13:58",
+      "NextSearch": "2026-07-16T11:13:58",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-01-16T11:13:58",
+      "NextSearch": "2026-07-16T11:13:58",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-01-16T11:13:58",
+      "NextSearch": "2026-07-16T11:13:58",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-01-16T11:13:58",
+      "NextSearch": "2026-02-16T11:13:58",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-01-16T11:13:58",
+      "NextSearch": "2026-02-16T11:13:58",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-01-16T11:13:58",
+      "NextSearch": "2026-02-16T11:13:58",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-01-16T11:13:58",
+      "NextSearch": "2026-02-16T11:13:58",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-01-16T11:13:58",
+      "NextSearch": "2026-02-16T11:13:58",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:24:01",
+      "NextSearch": "2026-03-03T13:24:01",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T16:04:32",
+      "NextSearch": "2026-04-24T16:04:32",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 845738,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "'Allo 'Allo! Cartoon Fun! transports players to occupied France during World War II, based on the beloved BBC comedy series. This vibrant platform arcade romp delivers a hilarious and addictive experience. Join our heroes on a wacky quest to recover both genuine and fake lost art treasures, navigating through huge, multi-level environments with full 360-degree scrolling.\n\nPrepare to be captivated by fully animated backgrounds featuring impressive 8-layer parallax effects and a spacious stereo soundtrack boasting over 900K of music and sound effects. The game supports both single-player and simultaneous two-player action, alongside engaging difference game variations. Encounter a cast of cartoon characters, each brimming with unique and humorous styles, all brought to life with stunning graphics exceeding one megabyte.  Experience madcap humour, thrilling action, and addictive gameplay in this unforgettable cartoon caper!"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 756372,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "73960A476D650BE241AA00721E8D505BE187979E"
+    },
+    {
+      "Id": 31257,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 11231,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "514",
+            "Publisher": "Alternative"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "57286",
+            "ImmutableId": "57286",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/companies/team-alternative",
+            "LastSearch": "2025-06-24T06:21:01",
+            "NextSearch": "2026-08-13T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:01",
+            "NextSearch": "2026-05-17T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:01",
+            "NextSearch": "2026-05-17T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:01",
+            "NextSearch": "2026-05-17T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:01",
+            "NextSearch": "2026-05-17T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:01",
+            "NextSearch": "2026-05-17T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:01",
+            "NextSearch": "2026-05-17T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:01",
+            "NextSearch": "2026-05-17T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2025-04-23T07:22:01",
+            "NextSearch": "2026-05-17T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T13:24:01",
+            "NextSearch": "2026-03-03T13:24:01",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T11:32:39",
+            "NextSearch": "2026-04-24T11:32:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [],
+        "CreatedDate": "2024-05-26T04:27:36",
+        "UpdatedDate": "2026-01-31T12:20:14",
+        "Name": "Alternative"
+      }
+    },
+    {
+      "Id": 31256,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 3,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "703",
+            "Platform": "Amiga"
+          },
+          {
+            "SignatureId": "1142",
+            "Platform": "Amiga (AGA)"
+          },
+          {
+            "SignatureId": "1156",
+            "Platform": "Amiga CD"
+          },
+          {
+            "SignatureId": "475",
+            "Platform": "Commodore - Amiga"
+          },
+          {
+            "SignatureId": "476",
+            "Platform": "Commodore - Amiga (Bitstream)"
+          },
+          {
+            "SignatureId": "932",
+            "Platform": "Commodore - Amiga (Bitstream) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "477",
+            "Platform": "Commodore - Amiga (Flux)"
+          },
+          {
+            "SignatureId": "933",
+            "Platform": "Commodore - Amiga (Flux) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "934",
+            "Platform": "Commodore - Amiga (Parent-Clone)"
+          },
+          {
+            "SignatureId": "662",
+            "Platform": "Commodore - Amiga CD"
+          },
+          {
+            "SignatureId": "76",
+            "Platform": "Commodore Amiga"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "16",
+            "ImmutableId": "16",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/amiga",
+            "LastSearch": "2024-04-28T13:40:21",
+            "NextSearch": "2024-05-28T13:40:21",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "4911",
+            "ImmutableId": "4911",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=4911",
+            "LastSearch": "2024-12-12T01:22:38",
+            "NextSearch": "2025-01-12T01:22:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "35",
+            "ImmutableId": "35",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/35/games",
+            "LastSearch": "2025-04-06T16:50:11",
+            "NextSearch": "2025-05-06T16:50:11",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "1",
+            "ImmutableId": "1",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-1/",
+            "LastSearch": "2025-06-20T15:10:46",
+            "NextSearch": "2025-07-20T15:10:46",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2026-10-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2026-10-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2026-10-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Amiga",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Amiga",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Amiga",
+            "LastSearch": "2026-01-05T10:52:06",
+            "NextSearch": "2026-02-05T10:52:06",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5249407",
+            "ImmutableId": "5249407",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5249407",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2026-10-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "64",
+            "ImmutableId": "64",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=64",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2027-02-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "2-commodore-amiga",
+            "ImmutableId": "2-commodore-amiga",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/2-commodore-amiga",
+            "LastSearch": "2026-02-24T09:50:39",
+            "NextSearch": "2026-04-24T09:50:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758273,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Commodore Amiga was a family of personal computers produced from 1985 to 1994, and later by other companies, leaving a lasting legacy in computing. Distinguished by its custom hardware accelerating graphics and sound – including sprites, a blitter, and four channels of audio – the Amiga offered capabilities unmatched by its contemporaries like the Atari ST and Macintosh. It ran AmigaOS, a pioneering preemptive multitasking operating system with a graphical user interface called Workbench. \n\nInitially marketed as a business machine, the Amiga found its niche as a home computer, becoming a hub for gaming and creative software, including early 3D rendering and music creation tools like LightWave 3D and tracker music editors. Popular games like *Populous* and *Lemmings* originated on the platform. Despite its innovations, the Amiga eventually lost market share, but remains fondly remembered for its technical advancements and vibrant community."
+          },
+          {
+            "Id": 192,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "868B0D6B8BA0ED5881DEC2783B20D9F01E6B8976"
+          },
+          {
+            "Id": 2,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 2,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "24910",
+                  "Publisher": "Commodore Business Machines"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "10999",
+                  "ImmutableId": "10999",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/commodore-business-machines-inc",
+                  "LastSearch": "2024-04-28T13:39:01",
+                  "NextSearch": "2024-05-28T13:39:01",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:35",
+                  "NextSearch": "2026-03-03T13:05:35",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:34",
+                  "NextSearch": "2026-04-24T09:49:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 173,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "9C5599A7B44D515191A2E5331213A99061CF2F31"
+                },
+                {
+                  "attributeType": "LongString",
+                  "attributeName": "SearchAliases",
+                  "attributeRelationType": "None",
+                  "Value": "Commodore Business Machines, Commodore-Business-Machines"
+                }
+              ],
+              "CreatedDate": "2024-04-28T13:39:01",
+              "UpdatedDate": "2026-01-31T09:01:22",
+              "Name": "Commodore Business Machines"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Commodore Amiga, Commodore-Amiga"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 152,
+                    "Text": "68000 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95249,
+                    "Text": "custom sound chips",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88484,
+                    "Text": "ega graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 30,
+                    "Text": "composite video",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 58,
+                    "Text": "parallel port",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 57,
+                    "Text": "serial port",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 16,
+                    "Text": "personal computer",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-28T13:40:21",
+        "UpdatedDate": "2026-05-28T14:48:27",
+        "Name": "Commodore Amiga"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "'Allo 'Allo! Cartoon Fun!, 'Allo-'Allo!-Cartoon-Fun!"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 33,
+          "Id": "171493",
+          "Name": "'Allo 'Allo! Cartoon Fun! (1993)(Alternative)(Disk 1 of 2)[cr CSL].adf",
+          "Size": 901120,
+          "Crc": "643923de",
+          "Md5": "3fa0d476c0947d71cbeb8664b81a39f8",
+          "Sha1": "5a887d2a5edfaaab257b4398ec97ed17985dba74",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "CSL"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "171494",
+          "Name": "'Allo 'Allo! Cartoon Fun! (1993)(Alternative)(Disk 1 of 2)[cr CSL][b doscopy].adf",
+          "Size": 901120,
+          "Crc": "8b0e8699",
+          "Md5": "a19bfd70fecad9b531f836ce3bb32b88",
+          "Sha1": "256a6403898c259dbe6989845419d95225d3cdd3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "CSL",
+            "b": "doscopy"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "171495",
+          "Name": "'Allo 'Allo! Cartoon Fun! (1993)(Alternative)(Disk 1 of 2)[cr CSL][t +12 GOD].adf",
+          "Size": 901120,
+          "Crc": "7b253653",
+          "Md5": "83ea10af7853cf0bb6e64c31cec66ca3",
+          "Sha1": "bd95ec1a5c38ada6ce0b6c48aa9980920bc0f9b6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "CSL",
+            "t": "+12 GOD"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "171496",
+          "Name": "'Allo 'Allo! Cartoon Fun! (1993)(Alternative)(Disk 2 of 2)[cr CSL].adf",
+          "Size": 901120,
+          "Crc": "d91926fc",
+          "Md5": "baee76443ecc6d34abb482e2a5218bf6",
+          "Sha1": "776072153d3b3b68a04797c329548d039331b713",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "CSL"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 2 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 2,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "171497",
+          "Name": "'Allo 'Allo! Cartoon Fun! (1993)(Alternative)(Disk 2 of 2)[cr CSL][b doscopy].adf",
+          "Size": 901120,
+          "Crc": "f9f985e1",
+          "Md5": "57b5d0a48d288a131dcf4517e898d8ba",
+          "Sha1": "efc6b653f56f311af8bce8bd6bec1e0b1627c8c7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "CSL",
+            "b": "doscopy"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 2 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 2,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "211616",
+          "Name": "AlloAlloCartoonFun_1.ipf",
+          "Size": 1049612,
+          "Crc": "2b0c4f2d",
+          "Md5": "3217c39a7e9e8137a7afdf129f2994e2",
+          "Sha1": "df1d604f828dede0e69e9b7a678daf4f5345ffc8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "SPS"
+            ],
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "211617",
+          "Name": "AlloAlloCartoonFun_2.ipf",
+          "Size": 1049612,
+          "Crc": "18850b9d",
+          "Md5": "a55421be01eb15f823bc435534345d8e",
+          "Sha1": "b682d16b20289351dabd85ea1f9e7e4ee595ba23",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "SPS"
+            ],
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "211614",
+          "Name": "AlloAlloCartoonFun_Disk1of2.ipf",
+          "Size": 688636,
+          "Crc": "bf7d2884",
+          "Md5": "631e857caa7a7bac2e3db60784187703",
+          "Sha1": "a9a5f64e8975e49a074cab3d91750a70e29141b6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "SPS"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "211615",
+          "Name": "AlloAlloCartoonFun_Disk2of2.ipf",
+          "Size": 804664,
+          "Crc": "8a4eb759",
+          "Md5": "b7e74fdeb8a3927ab2c67a5c59f3d257",
+          "Sha1": "f5a15479170fe0741d41bb5b42e06f4f1bc25e83",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "SPS"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 965,
+              "Text": "2d",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1030,
+              "Text": "side-scrolling",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 976,
+              "Text": "action-adventure",
+              "AIGenerated": true
+            },
+            {
+              "Id": 955,
+              "Text": "comedy",
+              "AIGenerated": true
+            },
+            {
+              "Id": 956,
+              "Text": "platformer",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 39663,
+              "Text": "action-packed",
+              "AIGenerated": true
+            },
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 5093,
+              "Text": "scrolling",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 2384,
+              "Text": "cartoon",
+              "AIGenerated": true
+            },
+            {
+              "Id": 974,
+              "Text": "comedy",
+              "AIGenerated": true
+            },
+            {
+              "Id": 952,
+              "Text": "war",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 944,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 9114,
+              "Text": "parallax scrolling",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2258,
+              "Text": "soundtrack",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "CreatedDate": "2024-05-26T07:45:33",
+  "UpdatedDate": "2026-01-26T20:18:41",
+  "Name": "'Allo 'Allo! Cartoon Fun!"
+}

@@ -1,0 +1,1466 @@
+{
+  "Id": 13259,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "616613",
+      "Name": "1st Division Manager",
+      "Year": "",
+      "Country": "",
+      "Platform": "Commodore Amiga",
+      "SourceId": "12666",
+      "MetadataSource": "6"
+    },
+    {
+      "SignatureId": "87904",
+      "Name": "1st Division Manager",
+      "Year": "1992",
+      "Country": "",
+      "Platform": "Commodore Amiga",
+      "SourceId": "8606",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "11871",
+      "ImmutableId": "11871",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/1st-division-manager",
+      "LastSearch": "2024-05-26T05:52:18",
+      "NextSearch": "2026-12-30T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "29255",
+      "ImmutableId": "29255",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=29255",
+      "LastSearch": "2024-12-12T15:31:08",
+      "NextSearch": "2026-12-30T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-07-07T00:21:45",
+      "NextSearch": "2026-05-14T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "6372",
+      "ImmutableId": "6372",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-6372/",
+      "LastSearch": "2025-06-21T22:58:12",
+      "NextSearch": "2026-12-30T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:58:20",
+      "NextSearch": "2026-05-14T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:58:20",
+      "NextSearch": "2026-05-14T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:58:20",
+      "NextSearch": "2026-05-14T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:58:20",
+      "NextSearch": "2026-05-14T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T11:09:55",
+      "NextSearch": "2026-05-14T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:50:16",
+      "NextSearch": "2026-03-03T13:50:16",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T17:56:30",
+      "NextSearch": "2026-04-24T17:56:30",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 760350,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 1st Division Manager: Take the Helm of English Football!\n\nStep into the boots of a manager in *1st Division Manager*, a captivating football management simulation for the Commodore Amiga. Choose your club from any of England's top four leagues and embark on a journey to glory!  \n\nThe game’s intuitive interface presents key information like your league position, rating, and finances right from the main menu.  Dive deep into team management via the database menu, where you can meticulously plan player training, analyze upcoming fixtures, and even edit your squad.  Negotiate transfers and secure vital loans through the telephone function, connecting you directly to the transfer market and the bank. Stay informed with detailed league tables accessible via the notebook icon. \n\nPrepare your squad and witness the action unfold in thrilling top-down match highlights.  Post-match, receive comprehensive reports detailing player injuries, results from rival games, and your club's weekly finances. Can you lead your team to victory and dominate the English football landscape?"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 26030,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "DA9B7723928E4014DAA06CEF7D0E029E35AD0695"
+    },
+    {
+      "Id": 26029,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 469,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "578",
+            "Publisher": "Codemasters"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "115",
+            "ImmutableId": "115",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/companies/codemasters",
+            "LastSearch": "2025-06-24T06:26:18",
+            "NextSearch": "2026-11-15T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:26:19",
+            "NextSearch": "2026-04-19T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:26:19",
+            "NextSearch": "2026-04-19T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:26:19",
+            "NextSearch": "2026-04-19T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:26:19",
+            "NextSearch": "2026-04-19T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:26:19",
+            "NextSearch": "2026-04-19T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:26:19",
+            "NextSearch": "2026-04-19T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:26:19",
+            "NextSearch": "2026-04-19T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2025-04-23T07:09:54",
+            "NextSearch": "2026-04-19T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T13:08:15",
+            "NextSearch": "2026-03-03T13:08:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T09:50:31",
+            "NextSearch": "2026-04-24T09:50:31",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [],
+        "CreatedDate": "2024-05-18T12:35:09",
+        "UpdatedDate": "2026-01-31T09:00:29",
+        "Name": "Codemasters"
+      }
+    },
+    {
+      "Id": 26028,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 3,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "703",
+            "Platform": "Amiga"
+          },
+          {
+            "SignatureId": "1142",
+            "Platform": "Amiga (AGA)"
+          },
+          {
+            "SignatureId": "1156",
+            "Platform": "Amiga CD"
+          },
+          {
+            "SignatureId": "475",
+            "Platform": "Commodore - Amiga"
+          },
+          {
+            "SignatureId": "476",
+            "Platform": "Commodore - Amiga (Bitstream)"
+          },
+          {
+            "SignatureId": "932",
+            "Platform": "Commodore - Amiga (Bitstream) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "477",
+            "Platform": "Commodore - Amiga (Flux)"
+          },
+          {
+            "SignatureId": "933",
+            "Platform": "Commodore - Amiga (Flux) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "934",
+            "Platform": "Commodore - Amiga (Parent-Clone)"
+          },
+          {
+            "SignatureId": "662",
+            "Platform": "Commodore - Amiga CD"
+          },
+          {
+            "SignatureId": "76",
+            "Platform": "Commodore Amiga"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "16",
+            "ImmutableId": "16",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/amiga",
+            "LastSearch": "2024-04-28T13:40:21",
+            "NextSearch": "2024-05-28T13:40:21",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "4911",
+            "ImmutableId": "4911",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=4911",
+            "LastSearch": "2024-12-12T01:22:38",
+            "NextSearch": "2025-01-12T01:22:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "35",
+            "ImmutableId": "35",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/35/games",
+            "LastSearch": "2025-04-06T16:50:11",
+            "NextSearch": "2025-05-06T16:50:11",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "1",
+            "ImmutableId": "1",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-1/",
+            "LastSearch": "2025-06-20T15:10:46",
+            "NextSearch": "2025-07-20T15:10:46",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2026-10-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2026-10-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2026-10-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Amiga",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Amiga",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Amiga",
+            "LastSearch": "2026-01-05T10:52:06",
+            "NextSearch": "2026-02-05T10:52:06",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5249407",
+            "ImmutableId": "5249407",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5249407",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2026-10-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "64",
+            "ImmutableId": "64",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=64",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2027-02-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "2-commodore-amiga",
+            "ImmutableId": "2-commodore-amiga",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/2-commodore-amiga",
+            "LastSearch": "2026-02-24T09:50:39",
+            "NextSearch": "2026-04-24T09:50:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758273,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Commodore Amiga was a family of personal computers produced from 1985 to 1994, and later by other companies, leaving a lasting legacy in computing. Distinguished by its custom hardware accelerating graphics and sound – including sprites, a blitter, and four channels of audio – the Amiga offered capabilities unmatched by its contemporaries like the Atari ST and Macintosh. It ran AmigaOS, a pioneering preemptive multitasking operating system with a graphical user interface called Workbench. \n\nInitially marketed as a business machine, the Amiga found its niche as a home computer, becoming a hub for gaming and creative software, including early 3D rendering and music creation tools like LightWave 3D and tracker music editors. Popular games like *Populous* and *Lemmings* originated on the platform. Despite its innovations, the Amiga eventually lost market share, but remains fondly remembered for its technical advancements and vibrant community."
+          },
+          {
+            "Id": 192,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "868B0D6B8BA0ED5881DEC2783B20D9F01E6B8976"
+          },
+          {
+            "Id": 2,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 2,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "24910",
+                  "Publisher": "Commodore Business Machines"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "10999",
+                  "ImmutableId": "10999",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/commodore-business-machines-inc",
+                  "LastSearch": "2024-04-28T13:39:01",
+                  "NextSearch": "2024-05-28T13:39:01",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:35",
+                  "NextSearch": "2026-03-03T13:05:35",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:34",
+                  "NextSearch": "2026-04-24T09:49:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 173,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "9C5599A7B44D515191A2E5331213A99061CF2F31"
+                },
+                {
+                  "attributeType": "LongString",
+                  "attributeName": "SearchAliases",
+                  "attributeRelationType": "None",
+                  "Value": "Commodore Business Machines, Commodore-Business-Machines"
+                }
+              ],
+              "CreatedDate": "2024-04-28T13:39:01",
+              "UpdatedDate": "2026-01-31T09:01:22",
+              "Name": "Commodore Business Machines"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Commodore Amiga, Commodore-Amiga"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 152,
+                    "Text": "68000 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95249,
+                    "Text": "custom sound chips",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88484,
+                    "Text": "ega graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 30,
+                    "Text": "composite video",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 58,
+                    "Text": "parallel port",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 57,
+                    "Text": "serial port",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 16,
+                    "Text": "personal computer",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-28T13:40:21",
+        "UpdatedDate": "2026-05-28T14:48:27",
+        "Name": "Commodore Amiga"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "1st Division Manager, 1st-Division-Manager"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 12,
+          "Id": "2426111",
+          "Name": "1stDivisionManager_v1.0_1800",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "793cde4e8984c86b64c11eb754f6f9f6f65fe4ba",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "variant_uuid": "362a5487-3d26-5615-8319-e47f7c5142ff",
+            "slave_count": "1",
+            "slave_default": "1stDivisionManager.Slave",
+            "slave_libraries": "False",
+            "slave.1.filename": "1stDivisionManager.Slave",
+            "slave.1.datapath": "data",
+            "hardware": "\n\t\t\tPRIMARY_CONTROL=JOYSTICK\n\t\t\tPORT0=JOY\n\t\t\tPORT1=JOY\n\t\t\tSCREEN_AUTOHEIGHT=TRUE\n\t\t\tSCREEN_CENTERH=SMART\n\t\t\tSCREEN_CENTERV=SMART\n\t\t"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "WHDLoad"
+        },
+        {
+          "Score": 23,
+          "Id": "171577",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS].adf",
+          "Size": 901120,
+          "Crc": "7aa91e6a",
+          "Md5": "fffc07875ab91991b79ccc03e330564e",
+          "Sha1": "d8dd1f356ea88fe66c460147c9eeb128ec898561",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "199905",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][h Astor].adf",
+          "Size": 901120,
+          "Crc": "26d0af08",
+          "Md5": "0e6e618fa216949cacd53cccec0138ea",
+          "Sha1": "cb3d0c42b1e22bbd1f1cf1f3b2d74330e0bd3bde",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS",
+            "h": "Astor"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "171590",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][h KTS].adf",
+          "Size": 901120,
+          "Crc": "4830a846",
+          "Md5": "ed676513ec731463d1cdac08df496d5f",
+          "Sha1": "4ec06eee4d8e7b8eb02c4e4387d0918df1a9542d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS",
+            "h": "KTS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "171587",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][m10].adf",
+          "Size": 901120,
+          "Crc": "25096f21",
+          "Md5": "7ad7d786af73e9aa7b2034aa9d6e47ad",
+          "Sha1": "84b313fca84c0831bcbb01877dcfa4f22d875a0f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "171585",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][m11].adf",
+          "Size": 901120,
+          "Crc": "58e07de5",
+          "Md5": "8d966b87da67289da72a586e03477760",
+          "Sha1": "116e03ccadf7478d10dfbcb3b69480ffc36f7b94",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "171581",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][m12].adf",
+          "Size": 901120,
+          "Crc": "40067ae1",
+          "Md5": "973178b3a3af31ce2cebca28de8f6983",
+          "Sha1": "17845e92a014a289e1a53f8e8136869b369a7abf",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "171580",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][m2].adf",
+          "Size": 901120,
+          "Crc": "e1431465",
+          "Md5": "95f1242dd07ad500b651fac16b4354b1",
+          "Sha1": "536970764f1549372aa60c232a548436025dfaea",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "171583",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][m3].adf",
+          "Size": 901120,
+          "Crc": "b9d4a5ef",
+          "Md5": "ef1395300c8c4a468120de7a7e61ec01",
+          "Sha1": "5086b12e12904172356b23ef6113b50bb3a391cc",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "171582",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][m4].adf",
+          "Size": 901120,
+          "Crc": "983f94fd",
+          "Md5": "60a0687c500ceff7cdb9effdd627a771",
+          "Sha1": "3c362ab72776a341ec8af3b7d3949211d03d81f1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "171578",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][m5].adf",
+          "Size": 901120,
+          "Crc": "06f17965",
+          "Md5": "90dd1904bf7185baf70a4922e4feb470",
+          "Sha1": "10219d0ed1de5b18ef35805d6428d711803c0221",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "171588",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][m6].adf",
+          "Size": 901120,
+          "Crc": "ce77647c",
+          "Md5": "1852e613d912d8ec9a40a3370e74112d",
+          "Sha1": "9a561a5989979fee008651f114004289f53dd38a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "171589",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][m7].adf",
+          "Size": 901120,
+          "Crc": "f639ac2b",
+          "Md5": "4a7818bc1cc6309eed2b31c71de1bf6d",
+          "Sha1": "f81360dc0b1e15105d23e92e18dfe97bc18a92ed",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "171586",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][m8].adf",
+          "Size": 901120,
+          "Crc": "b792cdf6",
+          "Md5": "ca236854494edca28ec28c2c191e2350",
+          "Sha1": "e48f8f060617dfc085061a807efafecde90fb1ff",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "171579",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][m9].adf",
+          "Size": 901120,
+          "Crc": "8d9b5aff",
+          "Md5": "9ed266f118545c4d62988c5ff4be84ca",
+          "Sha1": "ebdf51a85f2a16954f8a52cc7c613966cbdf5f16",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "171584",
+          "Name": "1st Division Manager (1992)(Codemasters)[cr NMS][m].adf",
+          "Size": 901120,
+          "Crc": "6499e046",
+          "Md5": "28b01161cf76fdf5c759df46d2f67185",
+          "Sha1": "72b7fa417f36e02a456477e9a9a4634f3c9fb8fa",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "cr": "NMS",
+            "m": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "211627",
+          "Name": "1stDivisionManager.ipf",
+          "Size": 1049304,
+          "Crc": "480cc674",
+          "Md5": "8fb9ed024396d469bcdee32f39d94c85",
+          "Sha1": "9a2959116eeb43bf7b47bd4f01e679a2e15c928d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "SPS"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 885,
+              "Text": "competition",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3962,
+              "Text": "league management",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2494,
+              "Text": "sports",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 3975,
+              "Text": "fixture planning",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3976,
+              "Text": "loan system",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3974,
+              "Text": "player training",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 3963,
+              "Text": "football management",
+              "AIGenerated": true
+            },
+            {
+              "Id": 888,
+              "Text": "simulation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 929,
+              "Text": "strategy",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 887,
+              "Text": "isometric",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 3964,
+              "Text": "match simulation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2376,
+              "Text": "team management",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3973,
+              "Text": "transfer market",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "CreatedDate": "2024-05-26T05:52:18",
+  "UpdatedDate": "2026-01-27T06:09:03",
+  "Name": "1st Division Manager"
+}

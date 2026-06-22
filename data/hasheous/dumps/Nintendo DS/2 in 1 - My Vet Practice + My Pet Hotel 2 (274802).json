@@ -1,0 +1,905 @@
+{
+  "Id": 274802,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "491022",
+      "Name": "2 in 1 - My Vet Practice + My Pet Hotel 2",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo DS (Encrypted)",
+      "SourceId": "12442",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "485357",
+      "Name": "2 in 1 - My Vet Practice + My Pet Hotel 2",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo DS (Decrypted)",
+      "SourceId": "12440",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2025-07-23T18:27:06",
+      "NextSearch": "2026-07-01T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "104699",
+      "ImmutableId": "104699",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=104699",
+      "LastSearch": "2025-07-23T18:28:15",
+      "NextSearch": "2026-08-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-07-23T18:28:15",
+      "NextSearch": "2026-07-01T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-07-23T18:28:15",
+      "NextSearch": "2026-07-01T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-23T18:28:18",
+      "NextSearch": "2026-07-01T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-23T18:28:18",
+      "NextSearch": "2026-07-01T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-23T18:28:18",
+      "NextSearch": "2026-07-01T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2025-07-23T18:28:18",
+      "NextSearch": "2026-07-01T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-07-23T18:28:18",
+      "NextSearch": "2026-07-01T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T18:12:44",
+      "NextSearch": "2026-03-03T18:12:44",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T04:10:08",
+      "NextSearch": "2026-04-25T04:10:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 760387,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 2 in 1 - My Vet Practice + My Pet Hotel 2: Nintendo DS\n\n**Experience the heartwarming world of animal care with this delightful double game for your Nintendo DS!**\n\nFirst, step into the role of a budding veterinarian in *My Vet Practice*. Build and expand your own veterinary clinic, diagnosing and treating a wide variety of adorable animals. From common colds to more complex conditions, your skills and dedication are crucial to their recovery. Advance your studies to unlock new species and specialized treatments, becoming the go-to vet in town!\n\nThen, transition to *My Pet Hotel 2*, where you’ll manage a luxurious haven for furry, feathered, and scaled guests. Cater to their every whim, providing top-notch care, stylish decorations, and engaging activities. Nurture playful baby animals, teach them tricks, and strive to create a world-class pet hotel experience. \n\nWith two unique and engaging gameplay styles, *2 in 1 - My Vet Practice + My Pet Hotel 2* offers hours of charming fun for animal lovers of all ages!"
+    },
+    {
+      "Id": 528726,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 66,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "580",
+            "Platform": "Nintendo - Nintendo DS (Decrypted)"
+          },
+          {
+            "SignatureId": "1034",
+            "Platform": "Nintendo - Nintendo DS (Decrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "581",
+            "Platform": "Nintendo - Nintendo DS (Download Play)"
+          },
+          {
+            "SignatureId": "1035",
+            "Platform": "Nintendo - Nintendo DS (Download Play) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "582",
+            "Platform": "Nintendo - Nintendo DS (DSvision SD cards)"
+          },
+          {
+            "SignatureId": "1036",
+            "Platform": "Nintendo - Nintendo DS (DSvision SD cards) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "583",
+            "Platform": "Nintendo - Nintendo DS (Encrypted)"
+          },
+          {
+            "SignatureId": "1037",
+            "Platform": "Nintendo - Nintendo DS (Encrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "237",
+            "Platform": "Nintendo DS"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "20",
+            "ImmutableId": "20",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/nds",
+            "LastSearch": "2024-04-29T04:13:51",
+            "NextSearch": "2024-05-29T04:13:51",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "8",
+            "ImmutableId": "8",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=8",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "18",
+            "ImmutableId": "18",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/18/games",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "52",
+            "ImmutableId": "52",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-52/",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2026-10-03T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2026-10-03T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2026-10-03T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Nintendo_DS",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Nintendo_DS",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Nintendo_DS",
+            "LastSearch": "2025-12-21T10:26:34",
+            "NextSearch": "2026-01-21T10:26:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327260",
+            "ImmutableId": "5327260",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327260",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=15",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "26-nintendo-ds",
+            "ImmutableId": "26-nintendo-ds",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/26-nintendo-ds",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758312,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo DS, released in 2004, revolutionized handheld gaming with its innovative dual-screen design – a feature reflected in its name, standing for \"Dual Screen.\" This clamshell console, reminiscent of earlier Game Boy models, combined a traditional display with a responsive touchscreen, offering unique gameplay possibilities. Powered by dual processors, it boasted wireless connectivity for local and online multiplayer via the now-defunct Nintendo Wi-Fi Connection. \n\nA commercial success, the DS sold over 154 million units, becoming a cornerstone of Nintendo's lineup and surpassing the Game Boy Advance. Popular titles like *New Super Mario Bros.* captivated players, while its backward compatibility with Game Boy Advance games broadened its appeal. Later models, including the DS Lite and DSi, introduced enhancements like brighter screens, improved battery life, and digital cameras."
+          },
+          {
+            "Id": 110864,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "DS"
+          },
+          {
+            "Id": 213,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "D21178DAFE99B8EE877EC2B73185AE444175F9FD"
+          },
+          {
+            "Id": 49,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo DS, Nintendo-DS"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 95275,
+                    "Text": "256 kb vram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 94014,
+                    "Text": "320x240 resolution",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 604,
+                    "Text": "arm7/arm9",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 353,
+                    "Text": "dual screens",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 81,
+                    "Text": "bluetooth",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 272,
+                    "Text": "usb",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 79,
+                    "Text": "wi-fi",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 93,
+                    "Text": "button pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 137,
+                    "Text": "d-pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 358,
+                    "Text": "stylus",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 357,
+                    "Text": "touchscreen",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95274,
+                    "Text": "gamepad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 132,
+                    "Text": "handheld",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:13:51",
+        "UpdatedDate": "2026-05-24T16:31:35",
+        "Name": "Nintendo DS"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "2 in 1 - My Vet Practice + My Pet Hotel 2, 2 in 1-My Vet Practice + My Pet Hotel 2, 2 in 1 My Vet Practice + My Pet Hotel 2, 2 in 1: My Vet Practice + My Pet Hotel 2, II in I - My Vet Practice + My Pet Hotel II, II in I-My Vet Practice + My Pet Hotel II, II in I My Vet Practice + My Pet Hotel II, II in I: My Vet Practice + My Pet Hotel II, Two in One - My Vet Practice + My Pet Hotel Two, Two in One-My Vet Practice + My Pet Hotel Two, Two in One My Vet Practice + My Pet Hotel Two, Two in One: My Vet Practice + My Pet Hotel Two"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "1582473",
+          "Name": "2 in 1 - My Vet Practice + My Pet Hotel 2 (Europe) (En,Fr,De,Es,It).nds",
+          "Size": 67108864,
+          "Crc": "952aa163",
+          "Md5": "5e0887400a866b2f85e62e1e6cce0d1b",
+          "Sha1": "26a337bfa874c4ce0196c1aae9280a241d114513",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1573406",
+          "Name": "2 in 1 - My Vet Practice + My Pet Hotel 2 (Europe) (En,Fr,De,Es,It).nds",
+          "Size": 67108864,
+          "Crc": "84177a46",
+          "Md5": "14c0a9880e325e8253ca8265837c6a8f",
+          "Sha1": "58e0c6ece14e0e56bc04cab31a461f9f975f1bab",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 2707,
+              "Text": "animal care",
+              "AIGenerated": true
+            },
+            {
+              "Id": 4053,
+              "Text": "pet hotel",
+              "AIGenerated": true
+            },
+            {
+              "Id": 4052,
+              "Text": "vet practice",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 4047,
+              "Text": "building",
+              "AIGenerated": true
+            },
+            {
+              "Id": 4048,
+              "Text": "care",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1095,
+              "Text": "customization",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 4051,
+              "Text": "decorating",
+              "AIGenerated": true
+            },
+            {
+              "Id": 4050,
+              "Text": "hospital management",
+              "AIGenerated": true
+            },
+            {
+              "Id": 4049,
+              "Text": "pet care",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 887,
+              "Text": "isometric",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 4046,
+              "Text": "life",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1889,
+              "Text": "management",
+              "AIGenerated": true
+            },
+            {
+              "Id": 888,
+              "Text": "simulation",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, English, Spanish, French, Italian"
+    }
+  ],
+  "CreatedDate": "2025-07-23T18:27:05",
+  "UpdatedDate": "2026-01-27T06:14:02",
+  "Name": "2 in 1 - My Vet Practice + My Pet Hotel 2"
+}

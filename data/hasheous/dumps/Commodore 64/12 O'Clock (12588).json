@@ -1,0 +1,2768 @@
+{
+  "Id": 12588,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "190456",
+      "Name": "12 O'Clock",
+      "Year": "1991",
+      "Country": "",
+      "Platform": "Commodore C64",
+      "SourceId": "8722",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-05-16T13:51:41",
+      "NextSearch": "2026-11-06T13:51:41",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-05-16T13:51:41",
+      "NextSearch": "2026-11-06T13:51:41",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-05-16T13:51:41",
+      "NextSearch": "2026-11-06T13:51:41",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-05-16T13:51:41",
+      "NextSearch": "2026-11-06T13:51:41",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-05-16T13:51:41",
+      "NextSearch": "2026-11-06T13:51:41",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-05-16T13:51:41",
+      "NextSearch": "2026-11-06T13:51:41",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-05-16T13:51:41",
+      "NextSearch": "2026-11-06T13:51:41",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-05-16T13:51:41",
+      "NextSearch": "2026-11-06T13:51:41",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "5272491",
+      "ImmutableId": "5272491",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "SteamGridDb",
+      "Link": "https://www.steamgriddb.com/game/5272491",
+      "LastSearch": "2026-05-16T13:51:41",
+      "NextSearch": "2027-02-07T13:51:41",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "122864",
+      "ImmutableId": "122864",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "ScreenScraper",
+      "Link": "https://www.screenscraper.fr/gameinfos.php?gameid=122864",
+      "LastSearch": "2026-05-16T13:51:41",
+      "NextSearch": "2027-02-07T13:51:41",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T10:48:59",
+      "NextSearch": "2026-04-24T10:48:59",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 475792,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "BE60C36785B7D4B62D736A8EF1A08B99E8F60C56"
+    },
+    {
+      "Id": 24628,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 7565,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "16792",
+            "Publisher": "CP Verlag"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "42383",
+            "ImmutableId": "42383",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/companies/cp-verlag",
+            "LastSearch": "2025-06-24T06:27:04",
+            "NextSearch": "2026-09-14T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:27:04",
+            "NextSearch": "2026-04-29T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:27:04",
+            "NextSearch": "2026-04-29T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:27:04",
+            "NextSearch": "2026-04-29T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:27:04",
+            "NextSearch": "2026-04-29T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:27:04",
+            "NextSearch": "2026-04-29T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:27:04",
+            "NextSearch": "2026-04-29T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:27:04",
+            "NextSearch": "2026-04-29T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2025-04-23T07:07:39",
+            "NextSearch": "2026-04-29T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T13:06:22",
+            "NextSearch": "2026-03-03T13:06:22",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T09:56:13",
+            "NextSearch": "2026-04-24T09:56:13",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "CP Verlag, CP-Verlag"
+          }
+        ],
+        "CreatedDate": "2024-05-26T01:38:00",
+        "UpdatedDate": "2026-01-31T12:34:27",
+        "Name": "CP Verlag"
+      }
+    },
+    {
+      "Id": 24627,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 1,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "478",
+            "Platform": "Commodore - Commodore 64"
+          },
+          {
+            "SignatureId": "788",
+            "Platform": "Commodore - Commodore 64 (Headerless)"
+          },
+          {
+            "SignatureId": "935",
+            "Platform": "Commodore - Commodore 64 (Headerless) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "936",
+            "Platform": "Commodore - Commodore 64 (Parent-Clone)"
+          },
+          {
+            "SignatureId": "479",
+            "Platform": "Commodore - Commodore 64 (PP)"
+          },
+          {
+            "SignatureId": "937",
+            "Platform": "Commodore - Commodore 64 (PP) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "480",
+            "Platform": "Commodore - Commodore 64 (Tapes)"
+          },
+          {
+            "SignatureId": "938",
+            "Platform": "Commodore - Commodore 64 (Tapes) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "710",
+            "Platform": "Commodore 64"
+          },
+          {
+            "SignatureId": "80",
+            "Platform": "Commodore C64"
+          },
+          {
+            "SignatureId": "81",
+            "Platform": "Commodore C64DTV"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/c64",
+            "LastSearch": "2024-04-28T13:35:39",
+            "NextSearch": "2024-05-28T13:35:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40",
+            "ImmutableId": "40",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=40",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "30",
+            "ImmutableId": "30",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/30/games",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14",
+            "ImmutableId": "14",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-14/",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Commodore_64",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Commodore_64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Commodore_64",
+            "LastSearch": "2025-08-05T05:17:02",
+            "NextSearch": "2025-09-05T05:17:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5500690",
+            "ImmutableId": "5500690",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5500690",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "66",
+            "ImmutableId": "66",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=66",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14-commodore-64",
+            "ImmutableId": "14-commodore-64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/14-commodore-64",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758269,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Commodore 64, affectionately known as the C64, was an 8-bit home computer released in 1982 that became a cultural icon and the best-selling desktop computer of all time, with estimated sales between 12.5 and 17 million units. Boasting 64 kilobytes of RAM and impressive graphics and sound capabilities thanks to its VIC-II chip and SID sound chip, the C64 offered a significant leap in performance compared to its predecessors. It initially sold for $595, but its price later dropped, making it accessible to a wider audience.\n\nThe C64 dominated the home computer market throughout the 1980s, particularly in the US and UK, though it faced stiff competition from the ZX Spectrum and Amstrad CPC. Popular games like *Impossible Mission*, *The Last Ninja*, and *Elite* showcased its capabilities and cemented its legacy. Even today, emulators allow enthusiasts to relive the C64 experience."
+          },
+          {
+            "Id": 190,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "629CB9AB45447D77ECBE2C1F3AB8A3291E40052F"
+          },
+          {
+            "Id": 1,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 2,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "24910",
+                  "Publisher": "Commodore Business Machines"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "10999",
+                  "ImmutableId": "10999",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/commodore-business-machines-inc",
+                  "LastSearch": "2024-04-28T13:39:01",
+                  "NextSearch": "2024-05-28T13:39:01",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:35",
+                  "NextSearch": "2026-03-03T13:05:35",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:34",
+                  "NextSearch": "2026-04-24T09:49:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 173,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "9C5599A7B44D515191A2E5331213A99061CF2F31"
+                },
+                {
+                  "attributeType": "LongString",
+                  "attributeName": "SearchAliases",
+                  "attributeRelationType": "None",
+                  "Value": "Commodore Business Machines, Commodore-Business-Machines"
+                }
+              ],
+              "CreatedDate": "2024-04-28T13:39:01",
+              "UpdatedDate": "2026-01-31T09:01:22",
+              "Name": "Commodore Business Machines"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Commodore 64, Commodore-64"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 286,
+                    "Text": "classic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 96779,
+                    "Text": "64 kib ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 500,
+                    "Text": "6510 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96778,
+                    "Text": "sid sound chip",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 501,
+                    "Text": "vic-ii graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 26,
+                    "Text": "8-bit system",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96777,
+                    "Text": "video game platform",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 125,
+                    "Text": "cartridge slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 419,
+                    "Text": "cassette tape",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 165,
+                    "Text": "floppy disk",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-28T13:35:39",
+        "UpdatedDate": "2026-05-24T16:04:23",
+        "Name": "Commodore 64"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "12 O'Clock, 12-O'Clock, XII O'Clock, XII-O'Clock, Twelve O'Clock, Twelve-O'Clock"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "455884",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Ability].d64",
+          "Size": 174848,
+          "Crc": "c0f1a291",
+          "Md5": "bbbb61aad82c46a978750f05348a848b",
+          "Sha1": "a96a97d6e2f70c21c10a69731b229ef307e6a1dc",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Ability"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "466770",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Ability].p00",
+          "Size": 22995,
+          "Crc": "4fc0a0f6",
+          "Md5": "9827d49efabc138fe5cbbec32517de01",
+          "Sha1": "f20b062091f19913b3c57ddc0f3a2719ddb67ae6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "P00",
+            "cr": "Ability"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468130",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Ability].prg",
+          "Size": 22969,
+          "Crc": "abe41710",
+          "Md5": "9a5fad1b2079198aa2921d334ab00d4b",
+          "Sha1": "b6a5ac15b3238ca33354767eb651046653e8bcf5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "Ability"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470769",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Ability].t64",
+          "Size": 24023,
+          "Crc": "8b297a59",
+          "Md5": "3ae9e16f6385ccf27c58f062b6b2c37f",
+          "Sha1": "834bede3a8830971819fb799fa8158d91a7944c8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "Ability"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455886",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Ability][a2].d64",
+          "Size": 174848,
+          "Crc": "a41ced61",
+          "Md5": "0aa626fc86040f7b19457f4b982ca412",
+          "Sha1": "56b7143b20776dcbb24bf5278da5027c48d448a5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Ability",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455885",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Ability][a].d64",
+          "Size": 174848,
+          "Crc": "55512171",
+          "Md5": "675f4036088abef181851e0645fbdaf2",
+          "Sha1": "ac8eee5bda99ac2fed78e511c89f16eaad38a647",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Ability",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470770",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Ability][a].t64",
+          "Size": 23991,
+          "Crc": "736d529e",
+          "Md5": "0c837f3f12d0862a530172c994307dbf",
+          "Sha1": "5ad9854d5752325b3dede4b2976557138888ebec",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "Ability",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455887",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Accuracy][t].d64",
+          "Size": 174848,
+          "Crc": "e9772813",
+          "Md5": "a4709987d4ef5ffe151faf99e8d9fa2c",
+          "Sha1": "c163ac59d056ffa32debd7910abf3f5eee7d57ff",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Accuracy",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455888",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Bassline][t +2].d64",
+          "Size": 174848,
+          "Crc": "9905fbcf",
+          "Md5": "b9bac4929e427f81d31f3064131d257a",
+          "Sha1": "bc437b6bf7165f6777ab72df46c472edd01d8129",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Bassline",
+            "t": "+2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455889",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Bronx][t].d64",
+          "Size": 174848,
+          "Crc": "fefbaf98",
+          "Md5": "1a2b246050e815edd040d5e7350d735b",
+          "Sha1": "6f6ba22bf0cecba72eac7378db7caa20bc59ac04",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Bronx",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455890",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Brutal][t].d64",
+          "Size": 174848,
+          "Crc": "52f4e511",
+          "Md5": "e5e75052df0269b7fba0acbcac0132f1",
+          "Sha1": "8b0c8d797fcd9603ce302abba181c7a9fc2307ba",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Brutal",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455894",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Chromance][t].d64",
+          "Size": 174848,
+          "Crc": "e76a313b",
+          "Md5": "310364394d1ca8d0b4a8fa9ee383adc4",
+          "Sha1": "23030c434b70e5e7343ad2e38ab61a3426047f90",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Chromance",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455891",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr CHR].d64",
+          "Size": 174848,
+          "Crc": "062fe116",
+          "Md5": "396cd848e02adf3124122b33ff611855",
+          "Sha1": "43e24c6e2d5aa78b5a62997e94b24c78352b7672",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "465520",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr CHR].lnx",
+          "Size": 28045,
+          "Crc": "b8cb5f7d",
+          "Md5": "e327c5e713bb88809eb7d2aaa3071e27",
+          "Sha1": "0ead62312b95d30f70497d4943ccd34fccf7930a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "LNX",
+            "cr": "CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "466771",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr CHR].p00",
+          "Size": 27817,
+          "Crc": "383dd83e",
+          "Md5": "ca684a0a13411812d30fad69d1efbb4f",
+          "Sha1": "a3ea05446bb343540b54dc13aa64de5c20834c5a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "P00",
+            "cr": "CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468131",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr CHR].prg",
+          "Size": 27791,
+          "Crc": "f4f7cdf4",
+          "Md5": "83307eb1690aa4dac6b33c41d1179828",
+          "Sha1": "b32d55541e730ac18bd615ddfc4e627e7b308fa0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470771",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr CHR].t64",
+          "Size": 27885,
+          "Crc": "80ddcc8a",
+          "Md5": "96f85d8cf813f143c346171f065304b8",
+          "Sha1": "e2a4a03baac223a346a65e847f1897e4fa4f96d0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455892",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr CHR][t +1 CHR].d64",
+          "Size": 174848,
+          "Crc": "d8699ccc",
+          "Md5": "e88857c9e0b550eb2b3282c49ed29640",
+          "Sha1": "1ce89450720e1027cda1e6e7f03f01a5ac03ba41",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "CHR",
+            "t": "+1 CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470772",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr CHR][t +1 CHR].t64",
+          "Size": 31559,
+          "Crc": "cf0f176c",
+          "Md5": "c001e150a50245b118eebfa3d4547777",
+          "Sha1": "37243182872289aae1d97cc7196363668ef8037c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "CHR",
+            "t": "+1 CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455893",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr CHR][t +1 CHR][a].d64",
+          "Size": 174848,
+          "Crc": "b3685f44",
+          "Md5": "3fc6b6566bea8d8b02c4151b783a9f20",
+          "Sha1": "9f2180e7b5b27b0b2ed08f48bb94061af3b7abf1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "CHR",
+            "t": "+1 CHR",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470773",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr CHR][t +1 CHR][a].t64",
+          "Size": 32519,
+          "Crc": "6e8da20b",
+          "Md5": "9dfd29ca1f35434f0d88d9a3f8c631c1",
+          "Sha1": "90d0c90e63f70adb8aa74a2435201789cea59812",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "CHR",
+            "t": "+1 CHR",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455895",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Death][t].d64",
+          "Size": 174848,
+          "Crc": "a67afd5e",
+          "Md5": "321de5db60a757b077ca141dc3e7a6cc",
+          "Sha1": "dc58494e9f3c25f21c1f2ab7c756b727e7711d99",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Death",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455896",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr DTC][t +1 DTC].d64",
+          "Size": 174848,
+          "Crc": "b5bac05f",
+          "Md5": "14bdfa4efcd1b8943a50b06159d4bee4",
+          "Sha1": "11056567a6d0cb2170bf7cf4f16e72f1f3efc680",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "DTC",
+            "t": "+1 DTC"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "466772",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr DTC][t +1 DTC].p00",
+          "Size": 28232,
+          "Crc": "ec3797c9",
+          "Md5": "a1b044da4be8737e3174ccd493cc0f6e",
+          "Sha1": "ff2c6630a35c7567a3a35650728c46b4acf42a32",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "P00",
+            "cr": "DTC",
+            "t": "+1 DTC"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468132",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr DTC][t +1 DTC].prg",
+          "Size": 28206,
+          "Crc": "fccd3bc7",
+          "Md5": "86b1822fe83095d97a0d608017b34caf",
+          "Sha1": "da8362e14409a460ae9b1946c422f917b60fc3bd",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "DTC",
+            "t": "+1 DTC"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470774",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr DTC][t +1 DTC].t64",
+          "Size": 28300,
+          "Crc": "c6e26556",
+          "Md5": "79cd2e604d22266b19dd0b262df23de2",
+          "Sha1": "1c5e631afb1dddb7aa237239542b820772965535",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "DTC",
+            "t": "+1 DTC"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455898",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr DTC][t +1 DTC][a2].d64",
+          "Size": 174848,
+          "Crc": "0c4ae1bf",
+          "Md5": "12504547ffd233048bf310f798803c18",
+          "Sha1": "e2163eb093df2569dd9adb0c388bae17e7a67ff2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "DTC",
+            "t": "+1 DTC",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470776",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr DTC][t +1 DTC][a2].t64",
+          "Size": 29228,
+          "Crc": "a5a1b952",
+          "Md5": "7e1c4a1cbe193716ae6443477f6aa726",
+          "Sha1": "c12a47a21249fe7bb475872a9add52d8941795a4",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "DTC",
+            "t": "+1 DTC",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455899",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr DTC][t +1 DTC][a3].d64",
+          "Size": 174848,
+          "Crc": "46f34fd6",
+          "Md5": "a73f4349ec8c4d8a1a358ef31672bf20",
+          "Sha1": "65e3018989321fab6703aeed741d8e91713a4ef6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "DTC",
+            "t": "+1 DTC",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455900",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr DTC][t +1 DTC][a4].d64",
+          "Size": 174848,
+          "Crc": "5cc8216f",
+          "Md5": "a14f0a9b714512316654685b6d525081",
+          "Sha1": "cff1aac61d57777b7fa9dccce8a8b7729a81ebd0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "DTC",
+            "t": "+1 DTC",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455897",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr DTC][t +1 DTC][a].d64",
+          "Size": 174848,
+          "Crc": "c744ae77",
+          "Md5": "1aabbc37588f90f791b0d6793664a027",
+          "Sha1": "dba83581e0d035a2f5b1570f3fdb1171d0e7bf5b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "DTC",
+            "t": "+1 DTC",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470775",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr DTC][t +1 DTC][a].t64",
+          "Size": 29228,
+          "Crc": "46bbf49b",
+          "Md5": "89943d2281882be061750b899d6569f6",
+          "Sha1": "5fca268d1601da9110d609f1bef41c0e7f771d4c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "DTC",
+            "t": "+1 DTC",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455901",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr EMP - ARC][t EMP].d64",
+          "Size": 174848,
+          "Crc": "7da74bd9",
+          "Md5": "a441edf58275a9173dba087de5a77030",
+          "Sha1": "a32ae6cc2d021d4fbf27be03327ebba55ec0b7bc",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "EMP - ARC",
+            "t": "EMP"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "465521",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr EMP - ARC][t EMP].lnx",
+          "Size": 42599,
+          "Crc": "46d187e7",
+          "Md5": "626435125ae855b22ee3e6d9090c5774",
+          "Sha1": "698a0dc01b1683d6032bdda0ac31935c42186364",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "LNX",
+            "cr": "EMP - ARC",
+            "t": "EMP"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468133",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr EMP - ARC][t EMP].prg",
+          "Size": 42345,
+          "Crc": "0f92a267",
+          "Md5": "986fefce98e67a94c173d290d6b47fe2",
+          "Sha1": "4f2eb8c1b958448b4a6480b0518745215884e00b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "EMP - ARC",
+            "t": "EMP"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470777",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr EMP - ARC][t EMP].t64",
+          "Size": 42439,
+          "Crc": "0523dea7",
+          "Md5": "8c8631daf93e3903880fb3de40f3a33f",
+          "Sha1": "08e44df3d5c2f5b622438bebbe64d60adea54242",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "EMP - ARC",
+            "t": "EMP"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455903",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr EMP - ARC][t EMP][a2].d64",
+          "Size": 174848,
+          "Crc": "75302335",
+          "Md5": "65e5731ab2a1261623e2bb02e3e74929",
+          "Sha1": "3dec9681496604a0dfd963ca9a24906bc37c6c58",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "EMP - ARC",
+            "t": "EMP",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455902",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr EMP - ARC][t EMP][a].d64",
+          "Size": 174848,
+          "Crc": "00dba27c",
+          "Md5": "d7ad111086edcf954f0101634c3a8dd9",
+          "Sha1": "7fe533d8c8e8619a5d138e6f898727c7f27d6f20",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "EMP - ARC",
+            "t": "EMP",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470778",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr EMP - ARC][t EMP][a].t64",
+          "Size": 43367,
+          "Crc": "2af3cc74",
+          "Md5": "dd1f197e43ad75dd2d942e68fa8958af",
+          "Sha1": "884e1a3d1b81a0fc9d6c2534b77879c9a8c255ad",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "EMP - ARC",
+            "t": "EMP",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455904",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Excess].d64",
+          "Size": 174848,
+          "Crc": "aa5c97ec",
+          "Md5": "625bc2130b9c130e259b0ac7befdbcc0",
+          "Sha1": "e08a1a2a08bd7ee2375dafc545d97ceb0f28f259",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Excess"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455905",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr F4CG][t].d64",
+          "Size": 174848,
+          "Crc": "d409cea5",
+          "Md5": "2ea860e45b81618a683ff7bd5fb315c3",
+          "Sha1": "204100da240f97961098fa65ba430ce54b34c04d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "F4CG",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455906",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Fairlight][t Fairlight].d64",
+          "Size": 174848,
+          "Crc": "e9e403d9",
+          "Md5": "73ed6d0ac6ec2f19c67efe6c9a37f936",
+          "Sha1": "4c94e276f1f05b72b6cd41f31db2ca10c1df0fe0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Fairlight",
+            "t": "Fairlight"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470779",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Fairlight][t Fairlight].t64",
+          "Size": 23252,
+          "Crc": "706662ae",
+          "Md5": "6e34b021c695d8b69b4e077265e92059",
+          "Sha1": "e23c0b2a434c27d92ea3932cefd970854cbabb8c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "Fairlight",
+            "t": "Fairlight"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455908",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Fairlight][t Fairlight][a2].d64",
+          "Size": 174848,
+          "Crc": "625ad029",
+          "Md5": "10a33d919dd7a974c33fcf91624cd5f2",
+          "Sha1": "bf0e33a05b0700eae0c1ccaf0656359ae86e709b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Fairlight",
+            "t": "Fairlight",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455907",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Fairlight][t Fairlight][a].d64",
+          "Size": 174848,
+          "Crc": "538ff0a6",
+          "Md5": "18136a0eb932adf4498a1a2147a9a99c",
+          "Sha1": "363b8c9886c3cec29fe99c39e8bbbfb77da15844",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Fairlight",
+            "t": "Fairlight",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455909",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Fantasia][t +2].d64",
+          "Size": 174848,
+          "Crc": "e96244e6",
+          "Md5": "cae80e710fba8316c4839325e31bd9d2",
+          "Sha1": "c3fa9679433249a00f0de2ccec7a943fcc6d59ee",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Fantasia",
+            "t": "+2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455910",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Heartbeat][t +2].d64",
+          "Size": 174848,
+          "Crc": "68543888",
+          "Md5": "cad2ebcf9404976c26c86eb81608fa1d",
+          "Sha1": "00e533f5d6db6ef7e20275c77f30947d281a510e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Heartbeat",
+            "t": "+2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455911",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Illusion][t].d64",
+          "Size": 174848,
+          "Crc": "88640c41",
+          "Md5": "58c551fe4b022720477d63f09d6532fd",
+          "Sha1": "d661baac1ce7a51960f1e0db6953fa8e89ef2daa",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Illusion",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455912",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Image][t +2].d64",
+          "Size": 174848,
+          "Crc": "5b3c6a7f",
+          "Md5": "77b1e8b19677f54a9445b478c42121dc",
+          "Sha1": "aa1e83a4d497a318764879aad53661d4a4be7cf6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Image",
+            "t": "+2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455913",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Mayhem][t +1 Mayhem].d64",
+          "Size": 174848,
+          "Crc": "ef495228",
+          "Md5": "2bacc57ac1ff5145323fb1891c59c7c2",
+          "Sha1": "f119feec783fcb773b6b916061526606afb2cc58",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Mayhem",
+            "t": "+1 Mayhem"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468134",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Mayhem][t +1 Mayhem].prg",
+          "Size": 29066,
+          "Crc": "8b29ba82",
+          "Md5": "be5cfbed57cb6322d8d936f9276630be",
+          "Sha1": "685c6ac94e54aa74328d46838ac5c5a1c7f952b8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "Mayhem",
+            "t": "+1 Mayhem"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470780",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Mayhem][t +1 Mayhem].t64",
+          "Size": 29160,
+          "Crc": "84bf77be",
+          "Md5": "7e9147ff56e75dba1365afc604ba5762",
+          "Sha1": "b844aeb89049796dd0838e4d10231507873de55a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "Mayhem",
+            "t": "+1 Mayhem"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455914",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Mayhem][t +1 Mayhem][a].d64",
+          "Size": 174848,
+          "Crc": "cf755d12",
+          "Md5": "70ff8e40efcaea5b360b3f080435ff58",
+          "Sha1": "790ff7842fdf0f3b8d936c891250170967babb73",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Mayhem",
+            "t": "+1 Mayhem",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470781",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Mayhem][t +1 Mayhem][a].t64",
+          "Size": 30088,
+          "Crc": "6f71a2ba",
+          "Md5": "318942f0f397ab9f849db8adeb266695",
+          "Sha1": "e654e0fa8fc40dd6836d4c6a2d95d8195c0c40d4",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "Mayhem",
+            "t": "+1 Mayhem",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455915",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Megaunit][t].d64",
+          "Size": 174848,
+          "Crc": "18e63074",
+          "Md5": "2ea2cb873efe18a544df24478787813a",
+          "Sha1": "cae1b0fa7cf47abf780954f6404a610679e6c542",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Megaunit",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455916",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Offence][t].d64",
+          "Size": 174848,
+          "Crc": "0af2738b",
+          "Md5": "6be49fbd994ef893b61362bfaf979541",
+          "Sha1": "b9c8e61050767519c7e486c1220b04eae13145ff",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Offence",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455917",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Rush - WOW][t].d64",
+          "Size": 174848,
+          "Crc": "c20dce6c",
+          "Md5": "06f05090241ac4c558d718db3c600e9b",
+          "Sha1": "2385f606c596584e5e952b2b6f961d0f12dcd782",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Rush - WOW",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455918",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Silicon Ltd][t +2].d64",
+          "Size": 174848,
+          "Crc": "e83b8730",
+          "Md5": "53ee7d24dbf3b8a0787d4806e78fb89d",
+          "Sha1": "5d3185bd2957c38f500443c08e9e780ee7103923",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Silicon Ltd",
+            "t": "+2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455919",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr TRC][t +2].d64",
+          "Size": 174848,
+          "Crc": "a9187349",
+          "Md5": "a4659ac865e1d595a0dc74047458989e",
+          "Sha1": "2010445a5ab347c6592fd417cd278a401409d5e3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "TRC",
+            "t": "+2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455920",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Tropic][t].d64",
+          "Size": 174848,
+          "Crc": "40de3eac",
+          "Md5": "505f0af93b57534dff07ab1b55809242",
+          "Sha1": "90aab2a56a40f8d325b71eb93919363178b462f5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Tropic",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455921",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr Vagabonds][t +3].d64",
+          "Size": 174848,
+          "Crc": "aa56837b",
+          "Md5": "2b5bac8ac38032a9cf1828d7d5b51db0",
+          "Sha1": "db5a0c9c9079b25e271435295da13b8f566f15e9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Vagabonds",
+            "t": "+3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455922",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr WOW].d64",
+          "Size": 174848,
+          "Crc": "c9720df2",
+          "Md5": "6bcae8dce7750b618428940035452ed3",
+          "Sha1": "70bae4b00a6fb6a80df299818b045f1a64a4302d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "WOW"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468135",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr WOW].prg",
+          "Size": 27107,
+          "Crc": "f0df1f45",
+          "Md5": "0629f9f21ef959e00f4c21310aa8582a",
+          "Sha1": "2edc7034f006e53969b404c129fa4cb78e4d20b5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "WOW"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470782",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr WOW].t64",
+          "Size": 27201,
+          "Crc": "f8cebdae",
+          "Md5": "5541e22ca0a5b22ca938f02725d0be76",
+          "Sha1": "108f904ad13ad4a1109236fea58ae6b4189b4495",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "WOW"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455924",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr WOW][a2].d64",
+          "Size": 174848,
+          "Crc": "71eb3877",
+          "Md5": "fce9f487a54590f30a95e7e498da9468",
+          "Sha1": "d18af6c37fb97377fa4722c8870e70993b267427",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "WOW",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455923",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr WOW][a].d64",
+          "Size": 174848,
+          "Crc": "bc092c50",
+          "Md5": "1ddd9f78ad362bd8e2cc6436563eba50",
+          "Sha1": "43f2960223d11ae2c4cf309ce326a2179e4cd558",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "WOW",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470783",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr WOW][a].t64",
+          "Size": 28129,
+          "Crc": "5c30c4b1",
+          "Md5": "efae33badea2f4d898448bb7c69ceaac",
+          "Sha1": "e5e69b13ad9a2bf7f6b954fc56852fb4965f97f1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "WOW",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455925",
+          "Name": "12 O'Clock (1991)(CP Verlag)[cr X-Rated][t +2].d64",
+          "Size": 174848,
+          "Crc": "80df17c8",
+          "Md5": "3ac816404f74fb7d331570df44f83de2",
+          "Sha1": "ad57cd9b2eed3c39730fbf79393ae444c86f9ed9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "X-Rated",
+            "t": "+2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {}
+    }
+  ],
+  "CreatedDate": "2024-05-26T05:24:52",
+  "UpdatedDate": "2026-05-16T14:20:10",
+  "Name": "12 O'Clock"
+}

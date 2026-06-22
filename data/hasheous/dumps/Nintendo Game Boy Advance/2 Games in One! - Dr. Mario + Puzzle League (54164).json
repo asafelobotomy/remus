@@ -1,0 +1,1430 @@
+{
+  "Id": 54164,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "839092",
+      "Name": "2 Games in 1 - Dr. Mario + Puzzle League",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Game Boy Advance (Parent-Clone)",
+      "SourceId": "12416",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "469139",
+      "Name": "2 Games in 1 - Dr. Mario + Puzzle League",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Game Boy Advance",
+      "SourceId": "12413",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "469177",
+      "Name": "2 Games in One! - Dr. Mario + Puzzle League",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Game Boy Advance",
+      "SourceId": "12413",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "1006023",
+      "Name": "2 Games In One! - Dr. Mario + Puzzle League",
+      "Year": "",
+      "Country": "SS, JP, EU",
+      "Platform": "Game Boy Advance",
+      "SourceId": "31776",
+      "MetadataSource": "98"
+    },
+    {
+      "SignatureId": "632211",
+      "Name": "Dr. Mario & Puzzle League",
+      "Year": "",
+      "Country": "US, EU",
+      "Platform": "Game Boy Advance",
+      "SourceId": "38265",
+      "MetadataSource": "7"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-05-24T23:57:47",
+      "NextSearch": "2026-09-12T23:57:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-05-24T23:57:47",
+      "NextSearch": "2026-09-12T23:57:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-05-24T23:57:47",
+      "NextSearch": "2026-09-12T23:57:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-05-24T23:57:47",
+      "NextSearch": "2026-09-12T23:57:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-05-24T23:57:47",
+      "NextSearch": "2026-09-12T23:57:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-05-24T23:57:47",
+      "NextSearch": "2026-09-12T23:57:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-05-24T23:57:47",
+      "NextSearch": "2026-09-12T23:57:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-05-24T23:57:47",
+      "NextSearch": "2026-09-12T23:57:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-05-24T23:57:47",
+      "NextSearch": "2026-09-12T23:57:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "83080",
+      "ImmutableId": "83080",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "ScreenScraper",
+      "Link": "https://www.screenscraper.fr/gameinfos.php?gameid=83080",
+      "LastSearch": "2026-05-24T23:57:47",
+      "NextSearch": "2027-04-20T23:57:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-05-24T23:57:47",
+      "NextSearch": "2026-09-12T23:57:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 109529,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 71,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "717",
+            "Platform": "Game Boy Advance"
+          },
+          {
+            "SignatureId": "558",
+            "Platform": "Nintendo - Game Boy Advance"
+          },
+          {
+            "SignatureId": "559",
+            "Platform": "Nintendo - Game Boy Advance (e-Reader)"
+          },
+          {
+            "SignatureId": "1012",
+            "Platform": "Nintendo - Game Boy Advance (e-Reader) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "560",
+            "Platform": "Nintendo - Game Boy Advance (Multiboot)"
+          },
+          {
+            "SignatureId": "1013",
+            "Platform": "Nintendo - Game Boy Advance (Multiboot) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "1014",
+            "Platform": "Nintendo - Game Boy Advance (Parent-Clone)"
+          },
+          {
+            "SignatureId": "561",
+            "Platform": "Nintendo - Game Boy Advance (Play-Yan)"
+          },
+          {
+            "SignatureId": "1015",
+            "Platform": "Nintendo - Game Boy Advance (Play-Yan) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "562",
+            "Platform": "Nintendo - Game Boy Advance (Video)"
+          },
+          {
+            "SignatureId": "1016",
+            "Platform": "Nintendo - Game Boy Advance (Video) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "242",
+            "Platform": "Nintendo Game Boy Advance"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "24",
+            "ImmutableId": "24",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/gba",
+            "LastSearch": "2024-04-29T04:18:55",
+            "NextSearch": "2024-05-29T04:18:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5",
+            "ImmutableId": "5",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=5",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2027-01-03T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5",
+            "ImmutableId": "5",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/5/games",
+            "LastSearch": "2025-05-13T03:04:02",
+            "NextSearch": "2025-06-13T03:04:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "4",
+            "ImmutableId": "4",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-4/",
+            "LastSearch": "2025-06-20T15:23:33",
+            "NextSearch": "2025-07-20T15:23:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2026-08-23T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2026-08-23T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2026-08-23T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Game_Boy_Advance",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Game_Boy_Advance",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Game_Boy_Advance",
+            "LastSearch": "2025-12-21T10:26:42",
+            "NextSearch": "2026-01-21T10:26:42",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5321240",
+            "ImmutableId": "5321240",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5321240",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2027-01-03T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "12",
+            "ImmutableId": "12",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=12",
+            "LastSearch": "2026-05-09T13:11:28",
+            "NextSearch": "2027-01-03T13:11:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "29-nintendo-game-boy-advance",
+            "ImmutableId": "29-nintendo-game-boy-advance",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/29-nintendo-game-boy-advance",
+            "LastSearch": "2026-02-24T09:49:26",
+            "NextSearch": "2026-04-24T09:49:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758308,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo Game Boy Advance (GBA), released in 2001, was a pivotal handheld console, succeeding the Game Boy Color and ushering in a new era of portable gaming. This 32-bit powerhouse boasted a more powerful ARM7 processor and improved graphics, while maintaining backward compatibility with older Game Boy titles. It quickly became a global phenomenon, selling over 81 million units. \n\nThe GBA’s library was diverse, ranging from platformers and SNES-like RPGs to ports of classic 8-bit and 16-bit games. Popular titles like *Pokémon Ruby and Sapphire* captivated players worldwide. Unique features like rumble, tilt, and solar sensors added innovative gameplay elements. Later models, including the SP and Micro, offered enhanced designs and features. The GBA’s legacy continues, with digital re-releases on Nintendo’s online services, ensuring its enduring appeal."
+          },
+          {
+            "Id": 110856,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "GBA"
+          },
+          {
+            "Id": 216,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "37EA6A2404729F2FAC848CE55A6C39715293C068"
+          },
+          {
+            "Id": 54,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo Game Boy Advance, Nintendo-Game-Boy-Advance"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 88481,
+                    "Text": "backward compatible",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 368,
+                    "Text": "battery powered",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 141,
+                    "Text": "monochrome display",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 132,
+                    "Text": "handheld",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 333,
+                    "Text": "portable",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 137,
+                    "Text": "d-pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95310,
+                    "Text": "game boy link cable",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88526,
+                    "Text": "shoulder buttons",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 95309,
+                    "Text": "e-reader support",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 626,
+                    "Text": "game link cable",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 627,
+                    "Text": "wireless adapter",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:18:55",
+        "UpdatedDate": "2026-05-25T00:39:57",
+        "Name": "Nintendo Game Boy Advance"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "2 Games in One! - Dr. Mario + Puzzle League, 2 Games in One!-Dr. Mario + Puzzle League, 2 Games in One! Dr. Mario + Puzzle League, 2 Games in One!: Dr. Mario + Puzzle League, II Games in One! - Dr. Mario + Puzzle League, II Games in One!-Dr. Mario + Puzzle League, II Games in One! Dr. Mario + Puzzle League, II Games in One!: Dr. Mario + Puzzle League, Two Games in One! - Dr. Mario + Puzzle League, 2 Games in 1! - Dr. Mario + Puzzle League, Two Games in One!-Dr. Mario + Puzzle League, 2 Games in 1!-Dr. Mario + Puzzle League, Two Games in One! Dr. Mario + Puzzle League, 2 Games in 1! Dr. Mario + Puzzle League, Two Games in One!: Dr. Mario + Puzzle League, 2 Games in 1!: Dr. Mario + Puzzle League, II Games in 1! - Dr. Mario + Puzzle League, II Games in 1!-Dr. Mario + Puzzle League, II Games in 1! Dr. Mario + Puzzle League, II Games in 1!: Dr. Mario + Puzzle League"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "3616870",
+          "Name": "2 Games in 1 - Dr. Mario + Puzzle League (Europe) (En,Fr,De,Es,It).gba",
+          "Size": 8388608,
+          "Crc": "fb7a7567",
+          "Md5": "ec06f494be2a51170d7fd439bee5a057",
+          "Sha1": "df2918198ee3a5dd4a36b8cc28269e958de5e1ee",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1479045",
+          "Name": "2 Games in 1 - Dr. Mario + Puzzle League (Europe) (En,Fr,De,Es,It).gba",
+          "Size": 8388608,
+          "Crc": "fb7a7567",
+          "Md5": "ec06f494be2a51170d7fd439bee5a057",
+          "Sha1": "df2918198ee3a5dd4a36b8cc28269e958de5e1ee",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "3362536",
+          "Name": "2 Games in 1 - Dr. Mario + Puzzle League.gba",
+          "Size": 8388608,
+          "Crc": "fb7a7567",
+          "Md5": "ec06f494be2a51170d7fd439bee5a057",
+          "Sha1": "df2918198ee3a5dd4a36b8cc28269e958de5e1ee",
+          "Sha256": "d4f2161b051b37403e5fbf41de03e572d7b1c707842877a0887a6ed27847a6d9",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "4911",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2025-10-21",
+            "details.region": "Europe",
+            "details.dumper": "Elmotus",
+            "details.project": "No-Intro",
+            "details.originalformat": "Default",
+            "details.tool": "Dumped with GBA Backup Tool",
+            "details.link1": "https://forum.no-intro.org/viewtopic.php?p=40349#p40349",
+            "serials.media_serial1": "AGB-BZPP-EUR",
+            "serials.pcb_serial": "AGB-E03-21",
+            "serials.romchip_serial1": "AGB-BZPP-0",
+            "serials.mediastamp": "11; E3",
+            "file.serial": "BZPP",
+            "file.format": "Default"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1479094",
+          "Name": "2 Games in One! - Dr. Mario + Puzzle League.gba",
+          "Size": 8388608,
+          "Crc": "4c2b7349",
+          "Md5": "279297081bab92bdc469f3b9127ab4fc",
+          "Sha1": "af6fdad72d3f4777338b77971f488c0f75b080c1",
+          "Sha256": "aa5326dd9110b3309e5e19408e2c4d5cbb15899292d502d4976bbe56f12ede07",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "4184",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2023-09-07",
+            "details.region": "USA",
+            "details.dumper": "tabor62gb",
+            "details.project": "No-Intro",
+            "details.originalformat": "Default",
+            "details.tool": "GBA Backup Tool v0.21",
+            "details.link1": "https://forum.no-intro.org/viewtopic.php?p=34453#p34453",
+            "serials.media_serial1": "AGB-BZPE-USA",
+            "serials.pcb_serial": "AGB-E03-21",
+            "serials.romchip_serial1": "AGB-BZPE-0",
+            "serials.box_serial": "AGB-BZPE USA, AGB P BZPE",
+            "serials.mediastamp": "11; E3",
+            "serials.box_barcode": "0 45496 73672 9",
+            "file.serial": "BZPE",
+            "file.format": "Default"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "4136818",
+          "Name": "2 Games in 1 - Dr. Mario   Puzzle League (Europe) (En,Fr,De,Es,It).gba",
+          "Size": 8388608,
+          "Crc": "fb7a7567",
+          "Md5": "ec06f494be2a51170d7fd439bee5a057",
+          "Sha1": "df2918198ee3a5dd4a36b8cc28269e958de5e1ee",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4136825",
+          "Name": "2 Games in 1 - Dr. Mario   Puzzle League (Europe) (En,Fr,De,Es,It).zip",
+          "Size": 3390923,
+          "Crc": "b4f34592",
+          "Md5": "94d2f27754143fa018dfa3efede83ef4",
+          "Sha1": "d1ff7b4f99e014bcabb07cf01c365efb7f1495c8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4136828",
+          "Name": "2 Games in 1 - Dr. Mario   Puzzle League (Europe) (En,Fr,De,Es,It).zip",
+          "Size": 3403899,
+          "Crc": "8c5f1096",
+          "Md5": "fb2b88511dddd5bdd4b0d70dedd30b0d",
+          "Sha1": "d162bf54b8fa2156fafbedde8d93c99f4098918d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4136826",
+          "Name": "2 Games in 1 - Dr. Mario & Puzzle League.zip",
+          "Size": 2345822,
+          "Crc": "3c529c37",
+          "Md5": "0458c698f33f39398ef041e069ce21fe",
+          "Sha1": "fbc0db059212ea183034b9dc201c7c8312d7da75",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 22,
+          "Id": "4136833",
+          "Name": "2 Games in 1 - Dr. Mario + Puzzle League (Europe) (En,Fr,De,Es,It).zip",
+          "Size": 3411622,
+          "Crc": "f167c753",
+          "Md5": "3269a578de41e31d19fd2c55aeb02126",
+          "Sha1": "",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4136831",
+          "Name": "2 Games in 1 - Dr. Mario Puzzle League (Europe) (En,Fr,De,Es,It).zip",
+          "Size": 3414597,
+          "Crc": "1653975f",
+          "Md5": "e00547654a91dccd9f2702ba6db58bc9",
+          "Sha1": "a7a60c4e3ee4aa68caab9f637ca07f7da980abcf",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4136817",
+          "Name": "2 Games in One! - Dr. Mario   Puzzle League (USA).gba",
+          "Size": 8388608,
+          "Crc": "4c2b7349",
+          "Md5": "279297081bab92bdc469f3b9127ab4fc",
+          "Sha1": "af6fdad72d3f4777338b77971f488c0f75b080c1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "us": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 22,
+          "Id": "4136827",
+          "Name": "2 Games in One! - Dr. Mario   Puzzle League (USA).zip",
+          "Size": 2276447,
+          "Crc": "7b338f38",
+          "Md5": "b882a06e6952d81e7882242e6d67e14f",
+          "Sha1": "",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "us": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4136829",
+          "Name": "2 Games in One! - Dr. Mario   Puzzle League (USA).zip",
+          "Size": 2346357,
+          "Crc": "d71f5ef4",
+          "Md5": "ed6f3765b0d582487ffc620f0c952073",
+          "Sha1": "5cb8927b50717eafa8f3c9ff6fb449c1ecfd84eb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "us": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4136823",
+          "Name": "2 Games in One! - Dr. Mario   Puzzle League (USA, Australia).zip",
+          "Size": 2331234,
+          "Crc": "c1d47af6",
+          "Md5": "51c855b40d811ee35d75583a64a54a51",
+          "Sha1": "badc63a663457f618e85e63207e686478141654e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "us": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4136819",
+          "Name": "Dr. Mario & Panel de Pon (Japan).gba",
+          "Size": 8388608,
+          "Crc": "129bf78f",
+          "Md5": "2705c33d0c7cf9b0aff99c1b64d4465d",
+          "Sha1": "fc4371a6e16116182c70eee6e8a1b53df0fc693c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "jp": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4136821",
+          "Name": "Dr. Mario & Panel de Pon (Japan).zip",
+          "Size": 1918251,
+          "Crc": "ae657477",
+          "Md5": "dd780c9e801eb3b15d552857d25c68cd",
+          "Sha1": "f73052af5aae9f68f59be0f8c6892859e478bc60",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "jp": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4136830",
+          "Name": "Dr. Mario & Panel de Pon (Japan).zip",
+          "Size": 1928927,
+          "Crc": "1a92df34",
+          "Md5": "b2eba2f5c1d6972ce38bdc3df2a982f2",
+          "Sha1": "c5bfc6814170d3461a0b9fe167b50869771e6cbf",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "jp": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 22,
+          "Id": "4136832",
+          "Name": "Dr. Mario & Panel de Pon (Japan).zip",
+          "Size": 1927947,
+          "Crc": "fc4208b3",
+          "Md5": "3e9c5df43fbb884f37c1388206b37e12",
+          "Sha1": "",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "jp": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4136824",
+          "Name": "Dr. Mario & Puzzle League # GBA.GBA",
+          "Size": 2345804,
+          "Crc": "d154eee4",
+          "Md5": "ea182fa4f9d0f91c926e1e9d6bb8753d",
+          "Sha1": "047a1390b23f45bd7aaeec45ec6ca5626129d01e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4136820",
+          "Name": "Dr. Mario & Puzzle League (U).gba",
+          "Size": 2340352,
+          "Crc": "825272f6",
+          "Md5": "563602f3660d5bf0ebae48dcb4ef3ce2",
+          "Sha1": "191d6d157b4c44061a9fece16ca46e93dc8e0639",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "us": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4136822",
+          "Name": "Dr. Mario (USA) (Kiosk, GameCube).gba",
+          "Size": 49404,
+          "Crc": "5e81043e",
+          "Md5": "c36a37f4dab0cde8e666dcafe54892e3",
+          "Sha1": "0eb2c5b584d072f7cd1d837ceb2b1222fcec441b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "us": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 12,
+          "Id": "2594327",
+          "Name": "2 Games in 1 - Dr. Mario + Puzzle League (Europe) (En,Fr,De,Es,It).gba",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "ec06f494be2a51170d7fd439bee5a057",
+          "Sha1": "",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "labels": "nointro"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "RetroAchievements"
+        },
+        {
+          "Score": 12,
+          "Id": "2594326",
+          "Name": "2 Games in One! - Dr. Mario + Puzzle League (USA).gba",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "279297081bab92bdc469f3b9127ab4fc",
+          "Sha1": "",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "labels": "nointro"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "RetroAchievements"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {}
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU), United States (US), Japan (JP),  (ss)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, English, Spanish, French, Italian"
+    }
+  ],
+  "CreatedDate": "2024-09-02T10:39:42",
+  "UpdatedDate": "2026-05-24T23:58:31",
+  "Name": "2 Games in One! - Dr. Mario + Puzzle League"
+}

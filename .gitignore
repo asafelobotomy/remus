@@ -71,6 +71,7 @@ credentials.json
 *.pem
 .env
 .env.*
+.env.local
 !.env.local.example
 *.credentials
 secrets.yml

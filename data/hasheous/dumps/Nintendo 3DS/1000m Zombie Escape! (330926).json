@@ -1,0 +1,912 @@
+{
+  "Id": 330926,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "477754",
+      "Name": "1000m Zombie Escape!",
+      "Year": "",
+      "Country": "JP",
+      "Platform": "Nintendo - Nintendo 3DS (Digital) (CDN)",
+      "SourceId": "12429",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "222202",
+      "ImmutableId": "222202",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/1000m-zombie-escape",
+      "LastSearch": "2025-08-29T01:33:18",
+      "NextSearch": "2026-12-07T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "98227",
+      "ImmutableId": "98227",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=98227",
+      "LastSearch": "2025-08-29T01:33:19",
+      "NextSearch": "2026-12-07T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-08-29T01:33:19",
+      "NextSearch": "2026-04-04T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-08-29T01:33:19",
+      "NextSearch": "2026-04-04T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-08-29T01:33:19",
+      "NextSearch": "2026-04-04T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-08-29T01:33:19",
+      "NextSearch": "2026-04-04T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-08-29T01:33:19",
+      "NextSearch": "2026-04-04T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2025-08-29T01:33:19",
+      "NextSearch": "2026-04-04T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-08-29T01:33:19",
+      "NextSearch": "2026-04-04T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:43:40",
+      "NextSearch": "2026-03-03T13:43:40",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T16:30:20",
+      "NextSearch": "2026-04-24T16:30:20",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759207,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 1000m Zombie Escape! - Nintendo 3DS\n\n**Can you outrun the undead?**\n\nA night out takes a terrifying turn when a zombie outbreak sweeps through the city! In *1000m Zombie Escape!*, you must guide a desperately frightened character across a harrowing 1000-meter journey to reach the rescue helicopter. But there's a catch: your character is paralyzed with fear and can only rotate!\n\nNavigate the treacherous town, dodging hordes of wandering zombies in this unique and challenging action game. Initially, precise screen taps are your only means of control, demanding perfect timing to avoid becoming zombie chow. As you master the mechanics, unlock the ability to freely move your character, allowing for more skillful dodges and strategic escapes.\n\nUtilize the 3D screen to enhance the sense of depth and urgency as the relentless undead close in.  *1000m Zombie Escape!* offers a frantic, pulse-pounding experience that will test your reflexes and courage.  Will you make it to the helicopter, or become another victim of the zombie horde?"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 758366,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "34DB189688C8DEE88CC30529680169233A0CFEBA"
+    },
+    {
+      "Id": 617812,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 62,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "570",
+            "Platform": "Nintendo - Nintendo 3DS (Decrypted)"
+          },
+          {
+            "SignatureId": "1024",
+            "Platform": "Nintendo - Nintendo 3DS (Decrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "571",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (CDN)"
+          },
+          {
+            "SignatureId": "572",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Deprecated)"
+          },
+          {
+            "SignatureId": "1025",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Deprecated) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "573",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Dev ROMs)"
+          },
+          {
+            "SignatureId": "1026",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Dev ROMs) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "574",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Pre-Install)"
+          },
+          {
+            "SignatureId": "1027",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Pre-Install) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "790",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (SpotPass)"
+          },
+          {
+            "SignatureId": "1028",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (SpotPass) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "575",
+            "Platform": "Nintendo - Nintendo 3DS (Encrypted)"
+          },
+          {
+            "SignatureId": "1029",
+            "Platform": "Nintendo - Nintendo 3DS (Encrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "234",
+            "Platform": "Nintendo 3DS"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "37",
+            "ImmutableId": "37",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/3ds",
+            "LastSearch": "2024-04-29T04:10:51",
+            "NextSearch": "2024-05-29T04:10:51",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "4912",
+            "ImmutableId": "4912",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=4912",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "62",
+            "ImmutableId": "62",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/62/games",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "117",
+            "ImmutableId": "117",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-117/",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2026-07-18T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2026-07-18T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2026-07-18T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Nintendo_3DS",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Nintendo_3DS",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Nintendo_3DS",
+            "LastSearch": "2025-12-21T10:26:30",
+            "NextSearch": "2026-01-21T10:26:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5283557",
+            "ImmutableId": "5283557",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5283557",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "17",
+            "ImmutableId": "17",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=17",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "24-nintendo-3ds",
+            "ImmutableId": "24-nintendo-3ds",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/24-nintendo-3ds",
+            "LastSearch": "2026-02-24T09:49:38",
+            "NextSearch": "2026-04-24T09:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758303,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo 3DS is a foldable, dual-screen handheld game console that succeeded the Nintendo DS and DSi, released in 2011. A defining feature is its autostereoscopic 3D visuals, eliminating the need for special glasses. It retains backward compatibility with Nintendo DS software. Initially priced at $249.99, a subsequent price reduction and free game promotion significantly boosted its popularity. \n\nHardware revisions included the 3DS XL with larger screens, the 2DS (a non-folding model), and the New 3DS with upgraded hardware. The console boasts a virtual console library, Miis, an Activity Log, and the innovative StreetPass and SpotPass features. Popular titles include *Mario Kart 7*, which sold nearly 19 million units, alongside *Animal Crossing: New Leaf*, *The Legend of Zelda: Ocarina of Time 3D*, and *Super Street Fighter IV 3D Edition*. Discontinued in 2020, the 3DS remains a beloved handheld."
+          },
+          {
+            "Id": 210,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "4FF887C52E6CEE3024D97CC8AE1EB6FF55AFB1C8"
+          },
+          {
+            "Id": 45,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo 3DS, Nintendo-3DS"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 354,
+                    "Text": "3d display",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88506,
+                    "Text": "autostereoscopic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 94011,
+                    "Text": "dual-core cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 355,
+                    "Text": "touchscreen",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 88509,
+                    "Text": "3d slider",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 93,
+                    "Text": "button pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88508,
+                    "Text": "motion sensor",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 357,
+                    "Text": "touchscreen",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 132,
+                    "Text": "handheld",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 394,
+                    "Text": "infrared",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 79,
+                    "Text": "wi-fi",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 74,
+                    "Text": "modern",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:10:51",
+        "UpdatedDate": "2026-05-24T16:30:34",
+        "Name": "Nintendo 3DS"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "1000m Zombie Escape!, 1000m-Zombie-Escape!"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 24,
+          "Id": "1497755",
+          "Name": "00000001",
+          "Size": 270336,
+          "Crc": "d28f1149",
+          "Md5": "bff38e5613baf009aefef21ba6b403bf",
+          "Sha1": "b90974bdb10a2c473ae0e17c43c0255025feba1c",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497756",
+          "Name": "00000002",
+          "Size": 79351808,
+          "Crc": "44b382a9",
+          "Md5": "438fa86fc9ca4f47bdfeb0f197c692e4",
+          "Sha1": "04cba993536d96720b8c3dbbd9fa15d93d3798c9",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497757",
+          "Name": "tmd.16",
+          "Size": 4708,
+          "Crc": "c8bb7997",
+          "Md5": "d0e775184adeba9d7db3c07e327bd251",
+          "Sha1": "bd99bddb9ec396695c79bbe613e8c531bb3a2de3",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2650,
+              "Text": "running",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1665,
+              "Text": "survival",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 810,
+              "Text": "apocalyptic",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1578,
+              "Text": "escape",
+              "AIGenerated": true
+            },
+            {
+              "Id": 812,
+              "Text": "survival",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 2652,
+              "Text": "dodging",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2651,
+              "Text": "tap to move",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1703,
+              "Text": "timing based",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 1699,
+              "Text": "progression",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2653,
+              "Text": "rescue helicopter",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2654,
+              "Text": "zombie avoidance",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 861,
+              "Text": "side-view",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Japan (JP)"
+    }
+  ],
+  "CreatedDate": "2025-08-29T01:33:18",
+  "UpdatedDate": "2026-01-27T10:34:19",
+  "Name": "1000m Zombie Escape!"
+}

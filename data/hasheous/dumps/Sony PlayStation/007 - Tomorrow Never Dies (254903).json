@@ -1,0 +1,1140 @@
+{
+  "Id": 254903,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "988414",
+      "Name": "007 - Tomorrow Never Dies",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Sony - PlayStation",
+      "SourceId": "38236",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "598510",
+      "Name": "007 - Tomorrow Never Dies",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Sony - PlayStation",
+      "SourceId": "38236",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "988415",
+      "Name": "007 - Tomorrow Never Dies",
+      "Year": "",
+      "Country": "JP",
+      "Platform": "Sony - PlayStation",
+      "SourceId": "38236",
+      "MetadataSource": "5"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "1640",
+      "ImmutableId": "1640",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/james-bond-007-tomorrow-never-dies",
+      "LastSearch": "2026-03-08T10:03:21",
+      "NextSearch": "2026-11-16T10:03:21",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "11555",
+      "ImmutableId": "11555",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=11555",
+      "LastSearch": "2026-03-08T10:03:21",
+      "NextSearch": "2026-11-16T10:03:21",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "11417",
+      "ImmutableId": "11417",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/11417",
+      "LastSearch": "2026-03-08T10:03:21",
+      "NextSearch": "2026-11-16T10:03:21",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "6383",
+      "ImmutableId": "6383",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-6383/",
+      "LastSearch": "2026-03-08T10:03:21",
+      "NextSearch": "2026-11-16T10:03:21",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-03-08T10:03:21",
+      "NextSearch": "2026-04-16T10:03:21",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-03-08T10:03:21",
+      "NextSearch": "2026-04-16T10:03:21",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-03-08T10:03:21",
+      "NextSearch": "2026-04-16T10:03:21",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/Tomorrow_Never_Dies_(video_game)",
+      "ImmutableId": "https://en.wikipedia.org/wiki/Tomorrow_Never_Dies_(video_game)",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/Tomorrow_Never_Dies_(video_game)",
+      "LastSearch": "2026-03-08T10:03:21",
+      "NextSearch": "2026-09-08T10:03:21",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-03-08T10:03:21",
+      "NextSearch": "2026-04-16T10:03:21",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T14:00:47",
+      "NextSearch": "2026-03-03T14:00:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T01:12:07",
+      "NextSearch": "2026-04-25T01:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 758574,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "Step into the shoes of the iconic James Bond in *007: Tomorrow Never Dies* for PlayStation, a thrilling action-adventure based on the 1997 film. As 007, you must thwart Elliot Carver’s nefarious plot to instigate a war between Britain and China for ratings dominance. The game expands upon the film's storyline, taking you on a globe-trotting mission filled with espionage, danger, and high-tech gadgets.\n\nExperience a unique blend of gameplay with third-person shooting, exhilarating driving sequences, and challenging skiing levels – features designed to distinguish it from the groundbreaking *GoldenEye*. Utilize Bond’s signature weaponry, including laser cufflinks and infrared cameras, and master combat techniques like tuck-and-rolls to overcome formidable foes.\n\nExplore familiar scenes from the film, enhanced with in-game cinematics and movie footage, while uncovering a conspiracy that leads you from a Russian radar base to a luxurious Hamburg party and ultimately, to a showdown in the Swiss Alps. While the film’s actors aren’t present, a memorable soundtrack by Tommy Tallarico elevates the experience."
+    },
+    {
+      "Id": 751889,
+      "attributeType": "ShortString",
+      "attributeName": "VIMMManualId",
+      "attributeRelationType": "Game",
+      "Value": "9201"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 1207121,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "DFDDD49CD24975F7CFDAA5CBF97225A10DDD8A57"
+    },
+    {
+      "Id": 496033,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 100,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "743",
+            "Platform": "PlayStation"
+          },
+          {
+            "SignatureId": "683",
+            "Platform": "PlayStation GameShark Updates"
+          },
+          {
+            "SignatureId": "691",
+            "Platform": "Sony - PlayStation"
+          },
+          {
+            "SignatureId": "624",
+            "Platform": "Sony - PlayStation (PS one Classics) (PSN)"
+          },
+          {
+            "SignatureId": "1079",
+            "Platform": "Sony - PlayStation (PS one Classics) (PSN) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "327",
+            "Platform": "Sony PlayStation"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "7",
+            "ImmutableId": "7",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/ps",
+            "LastSearch": "2024-04-29T11:18:44",
+            "NextSearch": "2024-05-29T11:18:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "10",
+            "ImmutableId": "10",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=10",
+            "LastSearch": "2024-12-12T01:25:31",
+            "NextSearch": "2025-01-12T01:25:31",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "12",
+            "ImmutableId": "12",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/12/games",
+            "LastSearch": "2025-05-06T21:46:00",
+            "NextSearch": "2025-06-06T21:46:00",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "22",
+            "ImmutableId": "22",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-22/",
+            "LastSearch": "2025-06-20T15:32:12",
+            "NextSearch": "2025-07-20T15:32:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2026-10-30T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2026-10-30T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2026-10-30T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/PlayStation_(console)",
+            "ImmutableId": "https://en.wikipedia.org/wiki/PlayStation_(console)",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/PlayStation_(console)",
+            "LastSearch": "2025-12-21T10:28:07",
+            "NextSearch": "2026-01-21T10:28:07",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327251",
+            "ImmutableId": "5327251",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327251",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2027-02-02T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "57",
+            "ImmutableId": "57",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=57",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2027-02-02T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "47-sony-playstation",
+            "ImmutableId": "47-sony-playstation",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/47-sony-playstation",
+            "LastSearch": "2026-02-24T09:49:32",
+            "NextSearch": "2026-04-24T09:49:32",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758491,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The PlayStation (originally codenamed PSX) is a home video game console developed and marketed by Sony Computer Entertainment, released in Japan in 1994 and globally throughout 1995. It marked Sony's entry into the console market, challenging Nintendo and Sega. Designed with an emphasis on 3D polygon graphics and streamlined game development, the PlayStation fostered a vast and diverse game library, attracting numerous third-party developers. \n\nCritically acclaimed titles like *Final Fantasy VII*, *Crash Bandicoot*, *Spyro the Dragon*, *Metal Gear Solid*, *Tomb Raider*, and *Gran Turismo* became instant classics, with *Gran Turismo* becoming the console's best-selling game. The PlayStation revolutionized the industry by embracing CD-ROMs and appealing to a broader, more adult audience. Ultimately, it sold over 100 million units, paving the way for the PlayStation 2 and establishing Sony as a dominant force in gaming."
+          },
+          {
+            "Id": 110865,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "PS1"
+          },
+          {
+            "Id": 236,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "652D5596E86C59DBC04645370C13B92FD3F53CC7"
+          },
+          {
+            "Id": 461506,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 19877,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "14855",
+                  "Publisher": "Sony"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "AutomaticTooManyMatches",
+                  "Source": "IGDB",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T14:40:50",
+                  "NextSearch": "2026-08-19T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:14:46",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:36",
+                  "NextSearch": "2026-03-03T13:05:36",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:32",
+                  "NextSearch": "2026-04-24T09:49:32",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [],
+              "CreatedDate": "2024-05-26T10:46:55",
+              "UpdatedDate": "2026-01-31T19:53:39",
+              "Name": "Sony"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sony PlayStation, Sony-PlayStation"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 8,
+                    "Text": "32-bit processor",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 6,
+                    "Text": "cd-rom drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95325,
+                    "Text": "soundscope",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 342,
+                    "Text": "analog stick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95271,
+                    "Text": "digital pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88561,
+                    "Text": "dual analog controller",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 30,
+                    "Text": "composite video",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 12,
+                    "Text": "scart",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T11:18:44",
+        "UpdatedDate": "2026-05-25T01:27:05",
+        "Name": "Sony PlayStation"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "007 - Tomorrow Never Dies, 007-Tomorrow Never Dies, 007 Tomorrow Never Dies, 007: Tomorrow Never Dies, VII - Tomorrow Never Dies, VII-Tomorrow Never Dies, VII Tomorrow Never Dies, VII: Tomorrow Never Dies, Seven - Tomorrow Never Dies, Seven-Tomorrow Never Dies, Seven Tomorrow Never Dies, Seven: Tomorrow Never Dies"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "7477475",
+          "Name": "007 - Tomorrow Never Dies (Europe).bin",
+          "Size": 572408592,
+          "Crc": "763e4df9",
+          "Md5": "99e49671ee69aafda867d3eede2a3c00",
+          "Sha1": "c7022a564fa7d839f6a84c09c2ec47c96778b7c8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-01324, SLES-01324-T, SLES-01324/P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7477474",
+          "Name": "007 - Tomorrow Never Dies (Europe).cue",
+          "Size": 100,
+          "Crc": "765606dd",
+          "Md5": "09760da1bf8b0665221e942de724abdf",
+          "Sha1": "fd5f043ce416db55a16a72ea4cd7b408aef20f2f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-01324, SLES-01324-T, SLES-01324/P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2357604",
+          "Name": "007 - Tomorrow Never Dies (Europe).bin",
+          "Size": 572408592,
+          "Crc": "763e4df9",
+          "Md5": "99e49671ee69aafda867d3eede2a3c00",
+          "Sha1": "c7022a564fa7d839f6a84c09c2ec47c96778b7c8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-01324, SLES-01324-T, SLES-01324/P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3865869",
+          "Name": "007 - Tomorrow Never Dies (Europe).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "0d341a0e7b704eaa1d44d4450666c4a8a95ce158",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2357603",
+          "Name": "007 - Tomorrow Never Dies (Europe).cue",
+          "Size": 100,
+          "Crc": "765606dd",
+          "Md5": "09760da1bf8b0665221e942de724abdf",
+          "Sha1": "fd5f043ce416db55a16a72ea4cd7b408aef20f2f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-01324, SLES-01324-T, SLES-01324/P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2382051",
+          "Name": "007 - Tomorrow Never Dies (Japan).bin",
+          "Size": 564764592,
+          "Crc": "da5649d7",
+          "Md5": "c29c76010d733417139bc2b41d701cff",
+          "Sha1": "b189c39cde5e35cd1d4f20c912de4aa0e2fc5897",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 02604"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3865870",
+          "Name": "007 - Tomorrow Never Dies (Japan).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "7ee3f0181a623f760884417eadd070a02b59d605",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2382050",
+          "Name": "007 - Tomorrow Never Dies (Japan).cue",
+          "Size": 99,
+          "Crc": "424cea74",
+          "Md5": "5b8d0cd434bd790b73d64907f0f31b16",
+          "Sha1": "a87f7a645cb57ae467656682773ea1e7a926adec",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 02604"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2356835",
+          "Name": "007 - Tomorrow Never Dies (USA).bin",
+          "Size": 573594000,
+          "Crc": "02f976df",
+          "Md5": "cd844bb94308eff3dda5e3ecb4a3c907",
+          "Sha1": "5c635e990dc77c481eb177dc86deb7a198f17cf8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLUS-00975, SLUS-00975CE, SLUS-00975GH"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3865871",
+          "Name": "007 - Tomorrow Never Dies (USA).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "603abd8d718ddb72cf34a0d8eece062c03463dc5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2356834",
+          "Name": "007 - Tomorrow Never Dies (USA).cue",
+          "Size": 97,
+          "Crc": "dc22c9e3",
+          "Md5": "e62fc718e96dd1d3ad0a477cf5b65e06",
+          "Sha1": "55b145bd5563c4b62cf3fadeda704340824c7b55",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLUS-00975, SLUS-00975CE, SLUS-00975GH"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7484806",
+          "Name": "007 - Tomorrow Never Dies (Japan).bin",
+          "Size": 564764592,
+          "Crc": "da5649d7",
+          "Md5": "c29c76010d733417139bc2b41d701cff",
+          "Sha1": "b189c39cde5e35cd1d4f20c912de4aa0e2fc5897",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 02604"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7484805",
+          "Name": "007 - Tomorrow Never Dies (Japan).cue",
+          "Size": 99,
+          "Crc": "424cea74",
+          "Md5": "5b8d0cd434bd790b73d64907f0f31b16",
+          "Sha1": "a87f7a645cb57ae467656682773ea1e7a926adec",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 02604"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 13214,
+              "Text": "bond series",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1175,
+              "Text": "stealth action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1174,
+              "Text": "third-person shooter",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1078,
+              "Text": "espionage",
+              "AIGenerated": true
+            },
+            {
+              "Id": 9322,
+              "Text": "international conflict",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1056,
+              "Text": "james bond",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 79839,
+              "Text": "first-person shooting",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 79838,
+              "Text": "gadgets included",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1177,
+              "Text": "movie footage",
+              "AIGenerated": true
+            },
+            {
+              "Id": 999,
+              "Text": "multiple levels",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 1089,
+              "Text": "mission-based",
+              "AIGenerated": true
+            },
+            {
+              "Id": 79837,
+              "Text": "single-player only",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1176,
+              "Text": "third-person controls",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU), Japan (JP), United States (US)"
+    }
+  ],
+  "CreatedDate": "2025-07-16T21:59:33",
+  "UpdatedDate": "2026-03-08T10:04:01",
+  "Name": "007 - Tomorrow Never Dies"
+}

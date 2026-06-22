@@ -1,0 +1,2261 @@
+{
+  "Id": 262427,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "210687",
+      "Name": "007 - Living Daylights, The",
+      "Year": "1987",
+      "Country": null,
+      "Platform": "Commodore C64",
+      "SourceId": "1435",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "434067",
+      "Name": "007 - Living Daylights, The",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Commodore - Commodore 64 (Tapes)",
+      "SourceId": "5991",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "203099",
+      "Name": "Living Daylights, The",
+      "Year": "1987",
+      "Country": "",
+      "Platform": "Commodore C64",
+      "SourceId": "8755",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-06T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-06T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-06T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-06T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-06T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-06T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-06T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-06T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "5285155",
+      "ImmutableId": "5285155",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "SteamGridDb",
+      "Link": "https://www.steamgriddb.com/game/5285155",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2027-03-23T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "106819",
+      "ImmutableId": "106819",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "ScreenScraper",
+      "Link": "https://www.screenscraper.fr/gameinfos.php?gameid=106819",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2027-03-23T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T02:10:51",
+      "NextSearch": "2026-04-25T02:10:51",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 508581,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 482,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "94",
+            "Publisher": "Domark"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "17194",
+            "ImmutableId": "17194",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/companies/domark",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-10-22T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2025-04-23T07:06:38",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T13:07:56",
+            "NextSearch": "2026-03-03T13:07:56",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T09:51:06",
+            "NextSearch": "2026-04-24T09:51:06",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [],
+        "CreatedDate": "2024-05-18T12:35:51",
+        "UpdatedDate": "2026-01-31T09:12:09",
+        "Name": "Domark"
+      }
+    },
+    {
+      "Id": 508580,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 1,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "478",
+            "Platform": "Commodore - Commodore 64"
+          },
+          {
+            "SignatureId": "788",
+            "Platform": "Commodore - Commodore 64 (Headerless)"
+          },
+          {
+            "SignatureId": "935",
+            "Platform": "Commodore - Commodore 64 (Headerless) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "936",
+            "Platform": "Commodore - Commodore 64 (Parent-Clone)"
+          },
+          {
+            "SignatureId": "479",
+            "Platform": "Commodore - Commodore 64 (PP)"
+          },
+          {
+            "SignatureId": "937",
+            "Platform": "Commodore - Commodore 64 (PP) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "480",
+            "Platform": "Commodore - Commodore 64 (Tapes)"
+          },
+          {
+            "SignatureId": "938",
+            "Platform": "Commodore - Commodore 64 (Tapes) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "710",
+            "Platform": "Commodore 64"
+          },
+          {
+            "SignatureId": "80",
+            "Platform": "Commodore C64"
+          },
+          {
+            "SignatureId": "81",
+            "Platform": "Commodore C64DTV"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/c64",
+            "LastSearch": "2024-04-28T13:35:39",
+            "NextSearch": "2024-05-28T13:35:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40",
+            "ImmutableId": "40",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=40",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "30",
+            "ImmutableId": "30",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/30/games",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14",
+            "ImmutableId": "14",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-14/",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Commodore_64",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Commodore_64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Commodore_64",
+            "LastSearch": "2025-08-05T05:17:02",
+            "NextSearch": "2025-09-05T05:17:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5500690",
+            "ImmutableId": "5500690",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5500690",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "66",
+            "ImmutableId": "66",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=66",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14-commodore-64",
+            "ImmutableId": "14-commodore-64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/14-commodore-64",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758269,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Commodore 64, affectionately known as the C64, was an 8-bit home computer released in 1982 that became a cultural icon and the best-selling desktop computer of all time, with estimated sales between 12.5 and 17 million units. Boasting 64 kilobytes of RAM and impressive graphics and sound capabilities thanks to its VIC-II chip and SID sound chip, the C64 offered a significant leap in performance compared to its predecessors. It initially sold for $595, but its price later dropped, making it accessible to a wider audience.\n\nThe C64 dominated the home computer market throughout the 1980s, particularly in the US and UK, though it faced stiff competition from the ZX Spectrum and Amstrad CPC. Popular games like *Impossible Mission*, *The Last Ninja*, and *Elite* showcased its capabilities and cemented its legacy. Even today, emulators allow enthusiasts to relive the C64 experience."
+          },
+          {
+            "Id": 190,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "629CB9AB45447D77ECBE2C1F3AB8A3291E40052F"
+          },
+          {
+            "Id": 1,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 2,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "24910",
+                  "Publisher": "Commodore Business Machines"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "10999",
+                  "ImmutableId": "10999",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/commodore-business-machines-inc",
+                  "LastSearch": "2024-04-28T13:39:01",
+                  "NextSearch": "2024-05-28T13:39:01",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:35",
+                  "NextSearch": "2026-03-03T13:05:35",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:34",
+                  "NextSearch": "2026-04-24T09:49:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 173,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "9C5599A7B44D515191A2E5331213A99061CF2F31"
+                },
+                {
+                  "attributeType": "LongString",
+                  "attributeName": "SearchAliases",
+                  "attributeRelationType": "None",
+                  "Value": "Commodore Business Machines, Commodore-Business-Machines"
+                }
+              ],
+              "CreatedDate": "2024-04-28T13:39:01",
+              "UpdatedDate": "2026-01-31T09:01:22",
+              "Name": "Commodore Business Machines"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Commodore 64, Commodore-64"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 286,
+                    "Text": "classic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 96779,
+                    "Text": "64 kib ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 500,
+                    "Text": "6510 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96778,
+                    "Text": "sid sound chip",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 501,
+                    "Text": "vic-ii graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 26,
+                    "Text": "8-bit system",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96777,
+                    "Text": "video game platform",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 125,
+                    "Text": "cartridge slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 419,
+                    "Text": "cassette tape",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 165,
+                    "Text": "floppy disk",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-28T13:35:39",
+        "UpdatedDate": "2026-05-24T16:04:23",
+        "Name": "Commodore 64"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "007 - Living Daylights, The, 007-Living Daylights, The, 007 Living Daylights, The, 007: Living Daylights, The, 007 - Living Daylights, The 007 - Living Daylights, VII - Living Daylights, The, VII-Living Daylights, The, VII Living Daylights, The, VII: Living Daylights, The, VII - Living Daylights, The VII - Living Daylights, Seven - Living Daylights, The, Seven-Living Daylights, The, Seven Living Daylights, The, Seven: Living Daylights, The, Seven - Living Daylights, The Seven - Living Daylights"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "636220",
+          "Name": "007 - Living Daylights, The (1987)(Domark).tap",
+          "Size": 579610,
+          "Crc": "ae0610de",
+          "Md5": "b2c6fbd29213e5c2ff3fef1a07631b47",
+          "Sha1": "f26d18b378807d4e4e07d51222747f8c23f2df73",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "1309763",
+          "Name": "007 - Living Daylights, The.tap",
+          "Size": 579610,
+          "Crc": "ae0610de",
+          "Md5": "b2c6fbd29213e5c2ff3fef1a07631b47",
+          "Sha1": "f26d18b378807d4e4e07d51222747f8c23f2df73",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "4",
+            "details.section": "Third Party",
+            "details.d_date": "!unknown",
+            "details.d_date_info": "0",
+            "details.region": "Unknown",
+            "details.dumper": "!unknown",
+            "details.project": "!unknown",
+            "details.originalformat": "Default",
+            "file.format": "Default"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "640728",
+          "Name": "Living Daylights, The (1987)(Domark).tap",
+          "Size": 577226,
+          "Crc": "47481c05",
+          "Md5": "48e489e5748d442c75f700584bd3d286",
+          "Sha1": "7c0b5f1aaff0b1c4808787677bfd110796eab575",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "640730",
+          "Name": "Living Daylights, The (1987)(Domark)[a2].tap",
+          "Size": 573397,
+          "Crc": "a38c2cf4",
+          "Md5": "a5bfda44c22f33dc1427cecca3e926fe",
+          "Sha1": "5299414471fca47bd63bbc314b4d9394d18b7b61",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "640731",
+          "Name": "Living Daylights, The (1987)(Domark)[a3].tap",
+          "Size": 579775,
+          "Crc": "c8b291d8",
+          "Md5": "63ddda16d6eb692e49e295b609a3562e",
+          "Sha1": "df6b5022f93b44e709959cea04bb44571066474e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "694314",
+          "Name": "Living Daylights, The (1987)(Domark)[a4].tap",
+          "Size": 579610,
+          "Crc": "ae0610de",
+          "Md5": "b2c6fbd29213e5c2ff3fef1a07631b47",
+          "Sha1": "f26d18b378807d4e4e07d51222747f8c23f2df73",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "640729",
+          "Name": "Living Daylights, The (1987)(Domark)[a].tap",
+          "Size": 579774,
+          "Crc": "d6f93b67",
+          "Md5": "22ce37797e68c3cc03cbb7505380faeb",
+          "Sha1": "b0cb878a5706b66f5146fa5fc4aaa89afd83968f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "3157514",
+          "Name": "Living Daylights, The (1987)(Domark)[b].tap",
+          "Size": 579774,
+          "Crc": "2e8eea46",
+          "Md5": "6cc93f150036b2da28c64555a50957e6",
+          "Sha1": "5e7fb282b89f8255e6673dc88765d046e92fc6b0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "b": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "3157516",
+          "Name": "Living Daylights, The (1987)(Domark)[b][a2].tap",
+          "Size": 573397,
+          "Crc": "ea123a44",
+          "Md5": "f45dd319c749b749098f69f6e8d9b468",
+          "Sha1": "909441d81dcfb87c9f04beabbe0f19782dda181a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "b": "",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "3157515",
+          "Name": "Living Daylights, The (1987)(Domark)[b][a].tap",
+          "Size": 577226,
+          "Crc": "ae5cbeaa",
+          "Md5": "e03dd490bc257f0a9f779b684561b676",
+          "Sha1": "abc70b432c8d7ad00dc54d6b7a7502c4c9f41f70",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "b": "",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527133",
+          "Name": "Living Daylights, The (1987)(Domark)[cr CMM].d64",
+          "Size": 174848,
+          "Crc": "b5307e0a",
+          "Md5": "11fcec313c1533992e4d79f4de375816",
+          "Sha1": "54526845b06f84e59465ec833813201ee7851225",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CMM"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "594913",
+          "Name": "Living Daylights, The (1987)(Domark)[cr CMM].prg",
+          "Size": 48988,
+          "Crc": "8821525a",
+          "Md5": "01690bd3840c120ec51e695a6fb4a24d",
+          "Sha1": "68660f633cd355ba686f3ab5b5235fa45d561ec6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "PRG",
+            "cr": "CMM"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "621861",
+          "Name": "Living Daylights, The (1987)(Domark)[cr CMM].t64",
+          "Size": 49114,
+          "Crc": "d23bc969",
+          "Md5": "9e6b0eaa2b803fd19c51c3751fef6d62",
+          "Sha1": "498e0ad70ad584f70feec37992ec355deba1ae2f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "CMM"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527135",
+          "Name": "Living Daylights, The (1987)(Domark)[cr CMM][a2].d64",
+          "Size": 174848,
+          "Crc": "538d085d",
+          "Md5": "04bb3464bd315ba93b988d618a8b9b79",
+          "Sha1": "b256fa537b84ab558668a63b6735126e1632442b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CMM",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "621863",
+          "Name": "Living Daylights, The (1987)(Domark)[cr CMM][a2].t64",
+          "Size": 49082,
+          "Crc": "66add08f",
+          "Md5": "fd646a76af082bf1cf86cb2aafe8dab2",
+          "Sha1": "64b222723318806908f7e1bfd9aab498eea1b01a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "CMM",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527136",
+          "Name": "Living Daylights, The (1987)(Domark)[cr CMM][a3].d64",
+          "Size": 174848,
+          "Crc": "d01f2b9b",
+          "Md5": "22ce52077143345e19df130bf1dfd93f",
+          "Sha1": "b6a58011205c9b4894bff4dac0dcc17997ba4eb4",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CMM",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527134",
+          "Name": "Living Daylights, The (1987)(Domark)[cr CMM][a].d64",
+          "Size": 174848,
+          "Crc": "975e6024",
+          "Md5": "f7617f1fb2167b647010a7ca648554dc",
+          "Sha1": "a24c2fc5a51bd4e1cfdb122b0fafe4ef6527addb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CMM",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "621862",
+          "Name": "Living Daylights, The (1987)(Domark)[cr CMM][a].t64",
+          "Size": 49082,
+          "Crc": "e02a2acf",
+          "Md5": "a78ebd70490351294edc5e1288f18783",
+          "Sha1": "ed05ae4a43bac9ed133bc15ad33aaeb91d5a6ba2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "CMM",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527137",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT].d64",
+          "Size": 174848,
+          "Crc": "8b214527",
+          "Md5": "ab97c6c7f34edf51b8002580c96865a0",
+          "Sha1": "168062675ac691750313ee4249950e19d38784be",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "FLT",
+            "t": "+2 FLT"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "572820",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT].lnx",
+          "Size": 49595,
+          "Crc": "73fd57d4",
+          "Md5": "7f0431a5f881f871f3a2b71abaa7d141",
+          "Sha1": "f9cf918ee357634252e7f31e2dd7dda6d8141f7f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "LNX",
+            "cr": "FLT",
+            "t": "+2 FLT"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "580723",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT].p00",
+          "Size": 49367,
+          "Crc": "48bb8362",
+          "Md5": "62a8f33988be98b5fefaae7380150ba2",
+          "Sha1": "336e6362e1fb28f0548ec72a74a3f69417c2a10c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "P00",
+            "cr": "FLT",
+            "t": "+2 FLT"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "594914",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT].prg",
+          "Size": 49341,
+          "Crc": "90c05f25",
+          "Md5": "3ecd4ecaaacc4985d463232245ffabd3",
+          "Sha1": "f0f2fe7b633fd822b59ca32f5da1b33d3fee93b0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "PRG",
+            "cr": "FLT",
+            "t": "+2 FLT"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "621864",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT].t64",
+          "Size": 50363,
+          "Crc": "f8b45022",
+          "Md5": "46b3f3aae35d4e5dc55e8434cbcd6211",
+          "Sha1": "b61c0a362977d13e9874e4474a27d99e41f36a58",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "FLT",
+            "t": "+2 FLT"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "671969",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a10].d64",
+          "Size": 174848,
+          "Crc": "fc846172",
+          "Md5": "02b7e0b6fff75523036a9ba7835e973f",
+          "Sha1": "0e779245d07bd889392c975e395dde145e76e63d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a10"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "671970",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a2].d64",
+          "Size": 174848,
+          "Crc": "232d6c3a",
+          "Md5": "b8ac37b6ec69927e2be4733fb1dcc66f",
+          "Sha1": "b2cfd8af34b556fa5bab5fb13b6aa45619f702c9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "621866",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a2].t64",
+          "Size": 50363,
+          "Crc": "38a70eb2",
+          "Md5": "c43420a056b111d1750eba0e6ab4dc9c",
+          "Sha1": "b547f37e0ea07c9e79d248300643e7974a9a70b7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527139",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a3].d64",
+          "Size": 174848,
+          "Crc": "d5371b0d",
+          "Md5": "099db8050db9b29da65c1e03dce48d86",
+          "Sha1": "8b8a8c392d64a4123965cb1354011d0f66e24653",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "621867",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a3].t64",
+          "Size": 49435,
+          "Crc": "0f009c7f",
+          "Md5": "d7305b4ec6012db7e9439f0a98ada795",
+          "Sha1": "a99c1eac1dd3bed755a5e227e5b204b82a5d23a2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527140",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a4].d64",
+          "Size": 174848,
+          "Crc": "9979bd82",
+          "Md5": "5cbd94aa6518fd62064729cd3821b034",
+          "Sha1": "596346e92c565472baa531abdc26bcd3e0a82e79",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "621868",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a4].t64",
+          "Size": 49435,
+          "Crc": "b6506fec",
+          "Md5": "16850034e85edbf8c0a6d2e6ed32d162",
+          "Sha1": "6683f2ead7e5e11598a3dc501520e23f385cc23a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527141",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a5].d64",
+          "Size": 174848,
+          "Crc": "076f3ce7",
+          "Md5": "8f57ee314f4c6e04e7abcbc457cc08d6",
+          "Sha1": "b803ef8d65293d8b28e238cfad46f533fc00eccd",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "621869",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a5].t64",
+          "Size": 49435,
+          "Crc": "6db8e45d",
+          "Md5": "1d5c1510278168f3a0deec310629f1bc",
+          "Sha1": "8f693c99117a80f21c039b151edb95b65d42ce1b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527142",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a6].d64",
+          "Size": 174848,
+          "Crc": "6883ca57",
+          "Md5": "83f0855ffe58bbe98d83070cdbc61b0d",
+          "Sha1": "9dae86927ff9f8f9fb4c590fe1a976248a413852",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a6"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "621870",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a6].t64",
+          "Size": 50363,
+          "Crc": "130f7667",
+          "Md5": "17999cadfa72afbf379084d00e9a8554",
+          "Sha1": "daf258ba608c195cc22b49e9c86b16430fc7057f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a6"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527143",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a7].d64",
+          "Size": 174848,
+          "Crc": "62a5c790",
+          "Md5": "16d4b05c84e6342d12d9e53f17685e1b",
+          "Sha1": "3a19d57b7ff13e949c7f8be6ef19f9bfa87d4b62",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a7"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "621871",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a7].t64",
+          "Size": 49435,
+          "Crc": "acdddcc9",
+          "Md5": "bb90f650c081f5c3b893b6e800976439",
+          "Sha1": "0b8727216c8e2e6d7f30f82904a828853f8c194c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a7"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527144",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a8].d64",
+          "Size": 174848,
+          "Crc": "896ab722",
+          "Md5": "2ef5b9e299dad40227f00ec337e333e9",
+          "Sha1": "1aff952548600bae627d1092eace428f23c26203",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a8"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527145",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a9].d64",
+          "Size": 174848,
+          "Crc": "fa41887a",
+          "Md5": "5ac630e7dfce93022f4f3976f1eaee0a",
+          "Sha1": "0a69414cdc26f9d448e5c0ce08832c4848f96d5e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a9"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527138",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a].d64",
+          "Size": 174848,
+          "Crc": "9208e00b",
+          "Md5": "eda3dc5592422496ab1e7ba6ac9d0cfa",
+          "Sha1": "3bb9ac4f7a739bbf85b35047e8b7327ea54fe0d6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "594915",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a].prg",
+          "Size": 49341,
+          "Crc": "fec6924f",
+          "Md5": "6ed2e9b66c5a963b36ffa064de7ed4d6",
+          "Sha1": "f24683375d62b1b1c932053200b3640ac12dcbfe",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "PRG",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "621865",
+          "Name": "Living Daylights, The (1987)(Domark)[cr FLT][t +2 FLT][a].t64",
+          "Size": 49435,
+          "Crc": "86ae24dd",
+          "Md5": "08568aedcb0763178f18adafb016fe4b",
+          "Sha1": "67f5fc114759ea9889c090073bb59f421bc1d73b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "FLT",
+            "t": "+2 FLT",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "3152229",
+          "Name": "Living Daylights, The (1987)(Domark)[cr Hotline][t +2].d64",
+          "Size": 174848,
+          "Crc": "f3119c32",
+          "Md5": "f1088fda8959dd509a616e8d651186c3",
+          "Sha1": "40464fd10dcd8f15b360d79e202464d7bd2e6115",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Hotline",
+            "t": "+2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527146",
+          "Name": "Living Daylights, The (1987)(Domark)[cr NewMen].d64",
+          "Size": 174848,
+          "Crc": "5be0951f",
+          "Md5": "c734965c8db79f876632a63478a925d9",
+          "Sha1": "2ac3eeef5fc4fd5c9bc145acb8433c39def9c01c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "NewMen"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "527147",
+          "Name": "Living Daylights, The (1987)(Domark)[cr NewMen][a].d64",
+          "Size": 174848,
+          "Crc": "bc2ff9c4",
+          "Md5": "3857cf45b7382eb493a7ae2bf4f2f377",
+          "Sha1": "05c4de704db88ae413e640669ddb61d32e348337",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "NewMen",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "3152230",
+          "Name": "Living Daylights, The (1987)(Domark)[cr SCG][t].d64",
+          "Size": 174848,
+          "Crc": "95065ac3",
+          "Md5": "c5c40336e41fc9cb431acfd14d2b14a3",
+          "Sha1": "32ca2b3371fdbf9a1837603f4b73bdb691aae364",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "SCG",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "3152231",
+          "Name": "Living Daylights, The (1987)(Domark)[cr Softkiller Crew][t].d64",
+          "Size": 174848,
+          "Crc": "f2f2954c",
+          "Md5": "f506fc6c5179b041054150597da07487",
+          "Sha1": "1c18e795e66d7b6a5570621a4a9030ebb03e3f29",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Softkiller Crew",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "3152232",
+          "Name": "Living Daylights, The (1987)(Domark)[cr Triad][t +2].d64",
+          "Size": 174848,
+          "Crc": "12ef10b1",
+          "Md5": "bb0cec56bd0b45531b437cd49358afd7",
+          "Sha1": "9cd60e8ad9f50e72311ed0c9003ffd98180f2a8b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Triad",
+            "t": "+2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {}
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "English"
+    }
+  ],
+  "CreatedDate": "2025-07-21T10:01:08",
+  "UpdatedDate": "2026-05-29T16:37:39",
+  "Name": "007 - Living Daylights, The"
+}

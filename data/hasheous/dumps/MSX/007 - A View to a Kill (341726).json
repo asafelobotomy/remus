@@ -1,0 +1,1083 @@
+{
+  "Id": 341726,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "277583",
+      "Name": "007 - A View to a Kill",
+      "Year": "1986",
+      "Country": "GB",
+      "Platform": "MSX MSX",
+      "SourceId": "9082",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "26117",
+      "ImmutableId": "26117",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/a-view-to-a-kill-the-computer-game",
+      "LastSearch": "2026-01-17T11:17:51",
+      "NextSearch": "2026-07-17T11:17:52",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:17:52",
+      "NextSearch": "2026-07-17T11:17:52",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:17:52",
+      "NextSearch": "2026-07-17T11:17:52",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:17:52",
+      "NextSearch": "2026-07-17T11:17:52",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:17:52",
+      "NextSearch": "2026-02-17T11:17:52",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:17:52",
+      "NextSearch": "2026-02-17T11:17:52",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:17:52",
+      "NextSearch": "2026-02-17T11:17:52",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/A_View_to_a_Kill_(video_game)",
+      "ImmutableId": "https://en.wikipedia.org/wiki/A_View_to_a_Kill_(video_game)",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/A_View_to_a_Kill_(video_game)",
+      "LastSearch": "2026-01-17T11:17:52",
+      "NextSearch": "2026-02-17T11:17:52",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:17:52",
+      "NextSearch": "2026-02-17T11:17:52",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:38:03",
+      "NextSearch": "2026-03-03T13:38:03",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T16:24:30",
+      "NextSearch": "2026-04-24T16:24:30",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 845811,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## James Bond 007: A View to a Kill (MSX) - Synopsis\n\nExperience the thrills of James Bond in *A View to a Kill* for the MSX! This action-packed game, inspired by the iconic film, plunges you into a race against time to thwart Zorin's nefarious plot. The game is divided into three distinct sections, each offering unique gameplay challenges.\n\nThe adventure begins in Paris, where you commandeer a taxi to pursue May Day after her daring parachute jump from the Eiffel Tower, navigating roadblocks and police cars in a frantic chase. Next, assist Stacey Sutton in escaping the burning San Francisco City Hall, collecting vital items like keys and water to overcome obstacles. Finally, delve into Zorin’s mine, dodging rockfalls and perilous drops while searching for the code to disarm his deadly bomb.\n\nFeaturing a moving gunsight intro sequence and a scanner displaying May Day's height, the MSX version delivers a visually engaging experience. While the MSX version omits the first two sections of the original action game, it still provides a compelling Bond adventure."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 756930,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "C166F7825E3C5C6EF82459C9BA31F550E866453F"
+    },
+    {
+      "Id": 636314,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 482,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "94",
+            "Publisher": "Domark"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "17194",
+            "ImmutableId": "17194",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/companies/domark",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-10-22T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:29:30",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2025-04-23T07:06:38",
+            "NextSearch": "2026-04-07T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T13:07:56",
+            "NextSearch": "2026-03-03T13:07:56",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T09:51:06",
+            "NextSearch": "2026-04-24T09:51:06",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [],
+        "CreatedDate": "2024-05-18T12:35:51",
+        "UpdatedDate": "2026-01-31T09:12:09",
+        "Name": "Domark"
+      }
+    },
+    {
+      "Id": 636313,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 53,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "527",
+            "Platform": "Microsoft - MSX"
+          },
+          {
+            "SignatureId": "983",
+            "Platform": "Microsoft - MSX (Parent-Clone)"
+          },
+          {
+            "SignatureId": "728",
+            "Platform": "MSX"
+          },
+          {
+            "SignatureId": "767",
+            "Platform": "MSX 1"
+          },
+          {
+            "SignatureId": "216",
+            "Platform": "MSX MSX"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "27",
+            "ImmutableId": "27",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/msx",
+            "LastSearch": "2024-04-29T04:01:05",
+            "NextSearch": "2024-05-29T04:01:05",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "4929",
+            "ImmutableId": "4929",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=4929",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2027-04-03T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "29",
+            "ImmutableId": "29",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/29/games",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2027-04-03T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-15/",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2027-04-03T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2026-07-18T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2026-07-18T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2026-07-18T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/MSX",
+            "ImmutableId": "https://en.wikipedia.org/wiki/MSX",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/MSX",
+            "LastSearch": "2025-12-21T10:26:05",
+            "NextSearch": "2026-01-21T10:26:05",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5511445",
+            "ImmutableId": "5511445",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5511445",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2026-07-18T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "113",
+            "ImmutableId": "113",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=113",
+            "LastSearch": "2026-05-09T13:03:12",
+            "NextSearch": "2027-04-03T13:03:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "82-microsoft-msx",
+            "ImmutableId": "82-microsoft-msx",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/82-microsoft-msx",
+            "LastSearch": "2026-02-24T09:57:21",
+            "NextSearch": "2026-04-24T09:57:21",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758293,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The MSX is a standardized home computer architecture, born from Microsoft's involvement but finding its greatest popularity outside the United States, particularly in Asia, South America, and Europe. Before the rise of the Nintendo Family Computer, it was a key platform for major Japanese game studios like Konami and Hudson Soft, hosting the original *Metal Gear* series. \n\nA diverse library of games flourished on the MSX, including classics like *Antarctic Adventure*, *Bomberman*, *Parodius*, and *Puyo Puyo*.  It also saw versions of popular titles such as *Castlevania*, *Contra*, *Dragon Quest*, and *Final Fantasy*.  Years later, efforts to revive the platform included the MSX Mini Replica, a faithful reproduction, and the official MSXPLAYer emulator.  Notably, Nintendo even brought MSX games to the Wii and Wii U Virtual Console in Japan."
+          },
+          {
+            "Id": 202,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "EA506AE84A6011CB1331D406791D866EF717E0D1"
+          },
+          {
+            "Id": 39,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 55,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "951",
+                  "Publisher": "Microsoft"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "128",
+                  "ImmutableId": "128",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/microsoft",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-08-23T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "10176",
+                  "ImmutableId": "10176",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-01-09T00:49:12",
+                  "NextSearch": "2025-02-09T00:49:12",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:14:46",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:13:21",
+                  "NextSearch": "2026-06-20T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:11:42",
+                  "NextSearch": "2026-03-03T13:11:42",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:38",
+                  "NextSearch": "2026-04-24T09:49:38",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 436295,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "501B90AB65C9F9F9B37EE2E938F77AE0E59F4B37"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:02:56",
+              "UpdatedDate": "2026-01-31T09:59:54",
+              "Name": "Microsoft"
+            }
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 133,
+                    "Text": "early 1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 205,
+                    "Text": "cartridge input",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 125,
+                    "Text": "cartridge slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 410,
+                    "Text": "hdmi output",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 280,
+                    "Text": "usb ports",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 572,
+                    "Text": "computer platform",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 571,
+                    "Text": "standardized architecture",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 95267,
+                    "Text": "msx-dos",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 2136,
+                    "Text": "tms9918 graphics",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 154,
+                    "Text": "yamaha sound",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 56,
+                    "Text": "z80 cpu",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:01:05",
+        "UpdatedDate": "2026-05-24T16:24:40",
+        "Name": "MSX"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "007 - A View to a Kill, 007-A View to a Kill, 007 A View to a Kill, 007: A View to a Kill, VII - A View to a Kill, VII-A View to a Kill, VII A View to a Kill, VII: A View to a Kill, Seven - A View to a Kill, Seven-A View to a Kill, Seven A View to a Kill, Seven: A View to a Kill"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 33,
+          "Id": "940084",
+          "Name": "007 - A View to a Kill (1986)(Domark)(GB).dsk",
+          "Size": 737280,
+          "Crc": "5212709d",
+          "Md5": "70cde0f5dafbd5258e0c60122e4b9757",
+          "Sha1": "8a68b31ac5999bc06afd1e0c3640d2e4122497e7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "DSK"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "GB",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "938959",
+          "Name": "007 - A View to a Kill (1986)(Domark)(GB)[a][RUN'CAS-'].cas",
+          "Size": 70667,
+          "Crc": "e96fd61b",
+          "Md5": "1ddffacb42f2a2f7c4efdab80a7e586a",
+          "Sha1": "212db0290fc57ec9f2772772bbee065b06359b26",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "CAS",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "GB",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "938960",
+          "Name": "007 - A View to a Kill (1986)(Domark)(GB)[RUN'CAS-'].cas",
+          "Size": 70667,
+          "Crc": "0fb02ab5",
+          "Md5": "5e65bb56200873403b6948b9d8cd5c0d",
+          "Sha1": "de6ffdbf9889ffab5390444fe3213af6cab336fb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "CAS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "GB",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 789,
+              "Text": "adventure",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1050,
+              "Text": "text adventure",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1058,
+              "Text": "film adaptation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1056,
+              "Text": "james bond",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1057,
+              "Text": "spy thriller",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 1568,
+              "Text": "inventory management",
+              "AIGenerated": true
+            },
+            {
+              "Id": 999,
+              "Text": "multiple levels",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1054,
+              "Text": "password system",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 887,
+              "Text": "isometric",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1230,
+              "Text": "text-based",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 1135,
+              "Text": "platforming",
+              "AIGenerated": true
+            },
+            {
+              "Id": 10947,
+              "Text": "point and click",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1052,
+              "Text": "puzzle solving",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "United Kingdom (GB)"
+    }
+  ],
+  "CreatedDate": "2025-09-18T10:14:58",
+  "UpdatedDate": "2026-01-26T20:26:34",
+  "Name": "007 - A View to a Kill"
+}

@@ -156,10 +156,11 @@ every enabled DAT.
 For offline Hasheous enrichment during builds, download platform dumps once:
 
 ```bash
-scripts/update_hasheous_dumps.sh --all-core
+scripts/update_hasheous_dumps.sh --all-core   # curated platforms (~25 ZIPs from hasheous.org API)
+# scripts/update_hasheous_dumps.sh --all      # all 111 platform dumps (large)
 ```
 
-(`scripts/update_dats.sh --all` optionally syncs these at the end when the script is present.)
+(`scripts/update_dats.sh --all` runs `--all-core` at the end when the script is present.)
 
 ## Files
 

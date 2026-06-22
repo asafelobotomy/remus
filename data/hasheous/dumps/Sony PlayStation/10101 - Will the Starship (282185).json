@@ -1,0 +1,1215 @@
+{
+  "Id": 282185,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "602945",
+      "Name": "10101 - Will the Starship",
+      "Year": "",
+      "Country": "JP",
+      "Platform": "Sony - PlayStation",
+      "SourceId": "38236",
+      "MetadataSource": "5"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "127739",
+      "ImmutableId": "127739",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/10101-will-the-starship",
+      "LastSearch": "2025-07-26T02:34:02",
+      "NextSearch": "2026-11-05T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2025-07-26T02:34:29",
+      "NextSearch": "2026-07-20T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-07-26T02:34:29",
+      "NextSearch": "2026-07-20T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-07-26T02:34:29",
+      "NextSearch": "2026-07-20T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-26T02:34:37",
+      "NextSearch": "2026-07-20T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-26T02:34:37",
+      "NextSearch": "2026-07-20T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-26T02:34:37",
+      "NextSearch": "2026-07-20T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2025-07-26T02:34:37",
+      "NextSearch": "2026-07-20T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-07-26T02:34:37",
+      "NextSearch": "2026-07-20T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T14:00:47",
+      "NextSearch": "2026-03-03T14:00:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T01:26:56",
+      "NextSearch": "2026-04-25T01:26:56",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759247,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 10101 - Will the Starship (PlayStation) - Synopsis\n\nEmbark on an epic spacefaring adventure in *10101 - Will the Starship*, a unique blend of tactical RPG and thrilling space combat for the PlayStation. As the newly appointed captain of the Space Battleship *Will*, your mission is to defeat the enigmatic Keasu and navigate the perils of deep space. \n\nThis immersive experience features a compelling narrative rich with romance, talent, and dramatic character arcs, brought to life by full voice acting from a stellar cast including Kyoko Hikami and Ishida Akira.  \n\nGameplay revolves around strategic ship management and intense real-time battles where you’ll command your crew and utilize tactical maneuvers to overcome challenging enemies.  Promote your crew, develop their skills, and forge relationships as you lead the *Will* on a perilous journey.  Experience a captivating story, stunning visuals, and engaging gameplay that will test your leadership and strategic prowess in this unforgettable space opera."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 541286,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "724014029A228C0FEF1C91001174054F15619CDF"
+    },
+    {
+      "Id": 541285,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 100,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "743",
+            "Platform": "PlayStation"
+          },
+          {
+            "SignatureId": "683",
+            "Platform": "PlayStation GameShark Updates"
+          },
+          {
+            "SignatureId": "691",
+            "Platform": "Sony - PlayStation"
+          },
+          {
+            "SignatureId": "624",
+            "Platform": "Sony - PlayStation (PS one Classics) (PSN)"
+          },
+          {
+            "SignatureId": "1079",
+            "Platform": "Sony - PlayStation (PS one Classics) (PSN) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "327",
+            "Platform": "Sony PlayStation"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "7",
+            "ImmutableId": "7",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/ps",
+            "LastSearch": "2024-04-29T11:18:44",
+            "NextSearch": "2024-05-29T11:18:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "10",
+            "ImmutableId": "10",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=10",
+            "LastSearch": "2024-12-12T01:25:31",
+            "NextSearch": "2025-01-12T01:25:31",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "12",
+            "ImmutableId": "12",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/12/games",
+            "LastSearch": "2025-05-06T21:46:00",
+            "NextSearch": "2025-06-06T21:46:00",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "22",
+            "ImmutableId": "22",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-22/",
+            "LastSearch": "2025-06-20T15:32:12",
+            "NextSearch": "2025-07-20T15:32:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2026-10-30T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2026-10-30T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2026-10-30T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/PlayStation_(console)",
+            "ImmutableId": "https://en.wikipedia.org/wiki/PlayStation_(console)",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/PlayStation_(console)",
+            "LastSearch": "2025-12-21T10:28:07",
+            "NextSearch": "2026-01-21T10:28:07",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327251",
+            "ImmutableId": "5327251",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327251",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2027-02-02T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "57",
+            "ImmutableId": "57",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=57",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2027-02-02T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "47-sony-playstation",
+            "ImmutableId": "47-sony-playstation",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/47-sony-playstation",
+            "LastSearch": "2026-02-24T09:49:32",
+            "NextSearch": "2026-04-24T09:49:32",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758491,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The PlayStation (originally codenamed PSX) is a home video game console developed and marketed by Sony Computer Entertainment, released in Japan in 1994 and globally throughout 1995. It marked Sony's entry into the console market, challenging Nintendo and Sega. Designed with an emphasis on 3D polygon graphics and streamlined game development, the PlayStation fostered a vast and diverse game library, attracting numerous third-party developers. \n\nCritically acclaimed titles like *Final Fantasy VII*, *Crash Bandicoot*, *Spyro the Dragon*, *Metal Gear Solid*, *Tomb Raider*, and *Gran Turismo* became instant classics, with *Gran Turismo* becoming the console's best-selling game. The PlayStation revolutionized the industry by embracing CD-ROMs and appealing to a broader, more adult audience. Ultimately, it sold over 100 million units, paving the way for the PlayStation 2 and establishing Sony as a dominant force in gaming."
+          },
+          {
+            "Id": 110865,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "PS1"
+          },
+          {
+            "Id": 236,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "652D5596E86C59DBC04645370C13B92FD3F53CC7"
+          },
+          {
+            "Id": 461506,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 19877,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "14855",
+                  "Publisher": "Sony"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "AutomaticTooManyMatches",
+                  "Source": "IGDB",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T14:40:50",
+                  "NextSearch": "2026-08-19T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:14:46",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:36",
+                  "NextSearch": "2026-03-03T13:05:36",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:32",
+                  "NextSearch": "2026-04-24T09:49:32",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [],
+              "CreatedDate": "2024-05-26T10:46:55",
+              "UpdatedDate": "2026-01-31T19:53:39",
+              "Name": "Sony"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sony PlayStation, Sony-PlayStation"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 8,
+                    "Text": "32-bit processor",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 6,
+                    "Text": "cd-rom drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95325,
+                    "Text": "soundscope",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 342,
+                    "Text": "analog stick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95271,
+                    "Text": "digital pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88561,
+                    "Text": "dual analog controller",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 30,
+                    "Text": "composite video",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 12,
+                    "Text": "scart",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T11:18:44",
+        "UpdatedDate": "2026-05-25T01:27:05",
+        "Name": "Sony PlayStation"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "10101 - Will the Starship, 10101-Will the Starship, 10101 Will the Starship, 10101: Will the Starship"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "2391899",
+          "Name": "10101 - Will the Starship (Japan) (Track 01).bin",
+          "Size": 291904368,
+          "Crc": "22e23d6c",
+          "Md5": "83ffe83e6b14502c53ee38c553e85636",
+          "Sha1": "ec18f3bbcc6b6fa105acfba92b6363c1a8659ac3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391900",
+          "Name": "10101 - Will the Starship (Japan) (Track 02).bin",
+          "Size": 11143776,
+          "Crc": "176cfd7a",
+          "Md5": "68f79c90a6e94ea713e28445147dbe30",
+          "Sha1": "31c6370cdd1048c5c4e9fa54628726de6882c7dd",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391901",
+          "Name": "10101 - Will the Starship (Japan) (Track 03).bin",
+          "Size": 11557728,
+          "Crc": "dacf21df",
+          "Md5": "16bd299972ada8257a57dbdf7d899044",
+          "Sha1": "bcf55fc6e206380437407a22b1aae508a639f19b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391902",
+          "Name": "10101 - Will the Starship (Japan) (Track 04).bin",
+          "Size": 8239056,
+          "Crc": "7e7ed88d",
+          "Md5": "3dfb269bba005c2bdfff94bae26df6de",
+          "Sha1": "95a849bd6a97b00938d7735d5a7ece2c0d3d765e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391903",
+          "Name": "10101 - Will the Starship (Japan) (Track 05).bin",
+          "Size": 11891712,
+          "Crc": "51cfbccb",
+          "Md5": "62b4a6f2d0f9ad44d31ec59777040cee",
+          "Sha1": "d0d7d335822f7ca4f9af6055731d1739a3816273",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391904",
+          "Name": "10101 - Will the Starship (Japan) (Track 06).bin",
+          "Size": 9250416,
+          "Crc": "c69e29bc",
+          "Md5": "1694074192b7fae553ace3669d6ed8b4",
+          "Sha1": "4e029526549fc924e582dd05189143bcbae949c1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391905",
+          "Name": "10101 - Will the Starship (Japan) (Track 07).bin",
+          "Size": 13175904,
+          "Crc": "2907192a",
+          "Md5": "0f0c4ca38ddb0d8483debed4543a2312",
+          "Sha1": "b1e2ede0cb92ef8572af9d338e8177e87010a8ae",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391906",
+          "Name": "10101 - Will the Starship (Japan) (Track 08).bin",
+          "Size": 15741936,
+          "Crc": "95c8da57",
+          "Md5": "af2098c344ca07050b8f65b183b10352",
+          "Sha1": "e3e94c9fb861c5f770a4ca8ce748ae5e68814b47",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391907",
+          "Name": "10101 - Will the Starship (Japan) (Track 09).bin",
+          "Size": 5797680,
+          "Crc": "3cb85e97",
+          "Md5": "90e1d632889aa48a82b462368a79a17e",
+          "Sha1": "b26173c3d638d72f2347884a42675a3f16737472",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391908",
+          "Name": "10101 - Will the Starship (Japan) (Track 10).bin",
+          "Size": 5122656,
+          "Crc": "0945a45a",
+          "Md5": "174ab16e535b4ac94e366ea9f3cb2f0d",
+          "Sha1": "849a29459fee8c7d32a20df310155879933ac2b4",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391909",
+          "Name": "10101 - Will the Starship (Japan) (Track 11).bin",
+          "Size": 6028176,
+          "Crc": "9594405d",
+          "Md5": "46f369bed8a2a57ef36d0fb4c24c2147",
+          "Sha1": "10fc2a3bfd1f0911f9d2ec180c65146ba561fd24",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391910",
+          "Name": "10101 - Will the Starship (Japan) (Track 12).bin",
+          "Size": 5868240,
+          "Crc": "17a2b198",
+          "Md5": "9938683f6bc844e8ab7f636c84180ece",
+          "Sha1": "8a18e05fcde101c73cb965c5d7dcd58571e2f52c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391911",
+          "Name": "10101 - Will the Starship (Japan) (Track 13).bin",
+          "Size": 7088928,
+          "Crc": "44f739a2",
+          "Md5": "e6850233ee92211a031dbe7caab1b423",
+          "Sha1": "94b38e58d3dcba304d2787f914d67962ef0b661e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391912",
+          "Name": "10101 - Will the Starship (Japan) (Track 14).bin",
+          "Size": 6472704,
+          "Crc": "7c1456d3",
+          "Md5": "bffbbdedce43863da7a420070958c859",
+          "Sha1": "3cfbdc3852960bce1d9ca69479696389590f5610",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391913",
+          "Name": "10101 - Will the Starship (Japan) (Track 15).bin",
+          "Size": 8939952,
+          "Crc": "f2361058",
+          "Md5": "959dcadabadb5ca8c65a73f34db0735a",
+          "Sha1": "9ad7635814440011de07370f6e29cf47714c47ff",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3865881",
+          "Name": "10101 - Will the Starship (Japan).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "c29d68bc092111dfea7c159f8965004be77f18bf",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2391898",
+          "Name": "10101 - Will the Starship (Japan).cue",
+          "Size": 1902,
+          "Crc": "4b6710c4",
+          "Md5": "3722dfbee72550df96a36cccf134ff35",
+          "Sha1": "4e926cd1395f76ce820739e12cce9aa29dd8aa53",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01054"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 844,
+              "Text": "character development",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2737,
+              "Text": "full voice cast",
+              "AIGenerated": true
+            },
+            {
+              "Id": 843,
+              "Text": "voice acting",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 2738,
+              "Text": "enemy conflict",
+              "AIGenerated": true
+            },
+            {
+              "Id": 927,
+              "Text": "heroic journey",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1028,
+              "Text": "space exploration",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 1349,
+              "Text": "isometric view",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 2733,
+              "Text": "sci-fi rpg",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2735,
+              "Text": "shooter rpg",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2734,
+              "Text": "space combat",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 2736,
+              "Text": "ship customization",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1395,
+              "Text": "story-driven",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1004,
+              "Text": "turn-based combat",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Japan (JP)"
+    }
+  ],
+  "CreatedDate": "2025-07-26T02:34:02",
+  "UpdatedDate": "2026-01-27T05:19:58",
+  "Name": "10101 - Will the Starship"
+}

@@ -1,0 +1,1024 @@
+{
+  "Id": 260994,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "923110",
+      "Name": "007 - From Russia with Love",
+      "Year": "2005",
+      "Country": "EU",
+      "Platform": "Nintendo GameCube",
+      "SourceId": "13122",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "985334",
+      "Name": "007 - From Russia with Love",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - GameCube",
+      "SourceId": "38228",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "589833",
+      "Name": "007 - From Russia with Love",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - GameCube",
+      "SourceId": "38228",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "947490",
+      "Name": "007 - From Russia with Love",
+      "Year": "2005",
+      "Country": "US",
+      "Platform": "Nintendo GameCube",
+      "SourceId": "13122",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "1645",
+      "ImmutableId": "1645",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/james-bond-007-from-russia-with-love",
+      "LastSearch": "2026-04-10T11:48:05",
+      "NextSearch": "2027-03-21T11:48:05",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "6981",
+      "ImmutableId": "6981",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=6981",
+      "LastSearch": "2026-04-10T11:48:05",
+      "NextSearch": "2027-03-21T11:48:05",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "30238",
+      "ImmutableId": "30238",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/30238",
+      "LastSearch": "2026-04-10T11:48:05",
+      "NextSearch": "2027-03-21T11:48:05",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "3641",
+      "ImmutableId": "3641",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-3641/",
+      "LastSearch": "2026-04-10T11:48:05",
+      "NextSearch": "2027-03-21T11:48:05",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-04-10T11:48:05",
+      "NextSearch": "2026-06-17T11:48:05",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-04-10T11:48:05",
+      "NextSearch": "2026-06-17T11:48:05",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-04-10T11:48:05",
+      "NextSearch": "2026-06-17T11:48:05",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/From_Russia_with_Love_(video_game)",
+      "ImmutableId": "https://en.wikipedia.org/wiki/From_Russia_with_Love_(video_game)",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/From_Russia_with_Love_(video_game)",
+      "LastSearch": "2026-04-10T11:48:05",
+      "NextSearch": "2026-10-10T11:48:05",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-04-10T11:48:05",
+      "NextSearch": "2026-06-17T11:48:05",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-04-10T11:48:05",
+      "NextSearch": "2026-04-10T12:48:15",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T00:38:30",
+      "NextSearch": "2026-04-25T00:38:30",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 845867,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 007 - From Russia with Love (GameCube)\n\nStep back into the iconic world of James Bond with *007 - From Russia with Love* for the GameCube, a thrilling adaptation of the classic 1963 film.  Experience the suave espionage and intense action as Agent 007 navigates a treacherous plot involving the theft of a vital Soviet encoding machine, the Lektor.  Due to legal complications, the nefarious organization SPECTRE is rebranded as OCTOPUS, lacking a clear leader and adding a layer of mystery to the unfolding events.\n\nThe game features Sean Connery's likeness and voice acting, marking his return to the role and a video game debut.  Relive key moments from the film while enjoying new action sequences and gadgets, including the iconic Aston Martin DB5 and the jetpack from *Thunderball*.  Developed by Electronic Arts, the gameplay mirrors the feel of earlier Bond games, offering a third-person perspective and a focus on combat and puzzle-solving.  Prepare for a respectful tribute to Bond's formative years, complete with a 1960s aesthetic and a soundtrack recorded at Abbey Road Studios."
+    },
+    {
+      "Id": 548426,
+      "attributeType": "ShortString",
+      "attributeName": "VIMMManualId",
+      "attributeRelationType": "Game",
+      "Value": "8901"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 1231956,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "C53A4C5CEC437FB95DC09D63EAD18D2A5DF59FF9"
+    },
+    {
+      "Id": 506088,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 73,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "721",
+            "Platform": "GameCube"
+          },
+          {
+            "SignatureId": "677",
+            "Platform": "Nintendo - GameCube"
+          },
+          {
+            "SignatureId": "791",
+            "Platform": "Nintendo - Nintendo GameCube (Memory Card)"
+          },
+          {
+            "SignatureId": "591",
+            "Platform": "Nintendo - Nintendo GameCube (NPDP Carts)"
+          },
+          {
+            "SignatureId": "1045",
+            "Platform": "Nintendo - Nintendo GameCube (NPDP Carts) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "244",
+            "Platform": "Nintendo GameCube"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "21",
+            "ImmutableId": "21",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/ngc",
+            "LastSearch": "2024-04-29T04:21:06",
+            "NextSearch": "2024-05-29T04:21:06",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "2",
+            "ImmutableId": "2",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=2",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2027-01-16T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "16",
+            "ImmutableId": "16",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/16/games",
+            "LastSearch": "2025-05-06T21:45:16",
+            "NextSearch": "2025-06-06T21:45:16",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "23",
+            "ImmutableId": "23",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-23/",
+            "LastSearch": "2025-06-20T15:24:47",
+            "NextSearch": "2025-07-20T15:24:47",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2026-07-21T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2026-07-21T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2026-07-21T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/GameCube",
+            "ImmutableId": "https://en.wikipedia.org/wiki/GameCube",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/GameCube",
+            "LastSearch": "2025-12-21T10:26:44",
+            "NextSearch": "2026-01-21T10:26:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327259",
+            "ImmutableId": "5327259",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327259",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2027-01-16T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "13",
+            "ImmutableId": "13",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=13",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2027-01-16T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "31-nintendo-gamecube",
+            "ImmutableId": "31-nintendo-gamecube",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/31-nintendo-gamecube",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758313,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo GameCube, released in 2001, marked Nintendo’s fourth foray into home consoles and a direct competitor to the PlayStation 2 and Xbox. Departing from cartridges, it utilized proprietary miniDVD optical discs, a design choice prioritizing developer ease and cost-effectiveness. Powered by a custom IBM \"Gekko\" CPU and an ArtX \"Flipper\" GPU, the GameCube delivered impressive performance for its time. Notably, it lacked DVD playback capabilities, focusing solely on gaming. \n\nThe console fostered a strong library of exclusive titles, including critically acclaimed games like *Super Smash Bros. Melee*, *Metroid Prime*, *The Legend of Zelda: The Wind Waker*, and *Resident Evil 4*. While commercially less successful than its rivals, the GameCube’s innovative controller and unique game experiences cemented its legacy, with its design influencing subsequent Nintendo consoles and its games remaining beloved classics."
+          },
+          {
+            "Id": 110858,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "GameCube"
+          },
+          {
+            "Id": 219,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "8641C931252BA59431447F3686D077DF166170A8"
+          },
+          {
+            "Id": 56,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo GameCube, Nintendo-GameCube"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 88530,
+                    "Text": "128-bit architecture",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 276,
+                    "Text": "dvd drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88529,
+                    "Text": "powerpc cpu",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 88531,
+                    "Text": "broadband",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 80,
+                    "Text": "ethernet",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 144,
+                    "Text": "link cable",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 13,
+                    "Text": "controller",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88532,
+                    "Text": "game boy link",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 411,
+                    "Text": "motion controls",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:21:06",
+        "UpdatedDate": "2026-05-25T00:41:09",
+        "Name": "Nintendo GameCube"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "007 - From Russia with Love, 007-From Russia with Love, 007 From Russia with Love, 007: From Russia with Love, VII - From Russia with Love, VII-From Russia with Love, VII From Russia with Love, VII: From Russia with Love, Seven - From Russia with Love, Seven-From Russia with Love, Seven From Russia with Love, Seven: From Russia with Love"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 33,
+          "Id": "3946016",
+          "Name": "007 - From Russia with Love (2005)(Electronic Arts)(EU).iso",
+          "Size": 1459978240,
+          "Crc": "2002f5ba",
+          "Md5": "b06a75020dde3f6d3c296da11743d080",
+          "Sha1": "1a7f562ecdc2f3ee61dacf820470751e100f2a01",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "EU",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3946017",
+          "Name": "007 - From Russia with Love (2005)(Electronic Arts)(US).iso",
+          "Size": 1459978240,
+          "Crc": "d2fd9a69",
+          "Md5": "978b18050fac6b4bd47fab6069704bfa",
+          "Sha1": "0f002bca477a6631cc90e909b39f53fc27e60855",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "US",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "7463404",
+          "Name": "007 - From Russia with Love (Europe).iso",
+          "Size": 1459978240,
+          "Crc": "2002f5ba",
+          "Md5": "b06a75020dde3f6d3c296da11743d080",
+          "Sha1": "1a7f562ecdc2f3ee61dacf820470751e100f2a01",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "DL-DOL-GLZP-EUT, DL-DOL-GLZP-UKV"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2291360",
+          "Name": "007 - From Russia with Love (Europe).iso",
+          "Size": 1459978240,
+          "Crc": "2002f5ba",
+          "Md5": "b06a75020dde3f6d3c296da11743d080",
+          "Sha1": "1a7f562ecdc2f3ee61dacf820470751e100f2a01",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "DL-DOL-GLZP-EUT, DL-DOL-GLZP-UKV"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 22,
+          "Id": "3923539",
+          "Name": "007 - From Russia with Love (Europe).rvz",
+          "Size": 1221429424,
+          "Crc": "35d323da",
+          "Md5": "",
+          "Sha1": "bae771f326737687542b36a9272a2f3ef58f9ae5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2290698",
+          "Name": "007 - From Russia with Love (USA).iso",
+          "Size": 1459978240,
+          "Crc": "d2fd9a69",
+          "Md5": "978b18050fac6b4bd47fab6069704bfa",
+          "Sha1": "0f002bca477a6631cc90e909b39f53fc27e60855",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "DL-DOL-GLZE-USA"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 22,
+          "Id": "3923540",
+          "Name": "007 - From Russia with Love (USA).rvz",
+          "Size": 1244960320,
+          "Crc": "cf0c1ab3",
+          "Md5": "",
+          "Sha1": "7598fe163755e98be7bde7a588c583b58cda4d7d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 39734,
+              "Text": "1960s",
+              "AIGenerated": true
+            },
+            {
+              "Id": 4096,
+              "Text": "cold war",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1057,
+              "Text": "spy thriller",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 2503,
+              "Text": "auto-aim",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1089,
+              "Text": "mission-based",
+              "AIGenerated": true
+            },
+            {
+              "Id": 31570,
+              "Text": "vehicular combat",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 10886,
+              "Text": "espionage",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1073,
+              "Text": "shooter",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1072,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 849,
+              "Text": "fixed camera",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 39730,
+              "Text": "jetpack missions",
+              "AIGenerated": true
+            },
+            {
+              "Id": 39731,
+              "Text": "on-rails shooting",
+              "AIGenerated": true
+            },
+            {
+              "Id": 843,
+              "Text": "voice acting",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU), United States (US)"
+    }
+  ],
+  "CreatedDate": "2025-07-21T04:04:37",
+  "UpdatedDate": "2026-04-10T11:48:20",
+  "Name": "007 - From Russia with Love"
+}

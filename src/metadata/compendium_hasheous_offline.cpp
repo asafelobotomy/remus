@@ -48,24 +48,90 @@ namespace Compendium {
             return { };
         }
 
-        QString firstGenreFromAttributes(const QJsonObject &attributes) {
-            const QJsonValue tagsValue = attributes.value(QStringLiteral("Tags"));
+        QString firstGenreFromTagsValue(const QJsonValue &tagsValue) {
             if (!tagsValue.isObject())
                 return { };
             const QJsonValue genreValue = tagsValue.toObject().value(QStringLiteral("GameGenre"));
-            if (genreValue.isArray()) {
-                const QJsonArray genres = genreValue.toArray();
-                for (const QJsonValue &entry : genres) {
-                    if (entry.isObject()) {
-                        const QString text = entry.toObject().value(QStringLiteral("Text")).toString().trimmed();
-                        if (!text.isEmpty())
-                            return text;
-                    } else if (entry.isString() && !entry.toString().trimmed().isEmpty()) {
-                        return entry.toString().trimmed();
-                    }
+            if (!genreValue.isArray())
+                return { };
+            const QJsonArray genres = genreValue.toArray();
+            for (const QJsonValue &entry : genres) {
+                if (entry.isObject()) {
+                    const QString text = entry.toObject().value(QStringLiteral("Text")).toString().trimmed();
+                    if (!text.isEmpty())
+                        return text;
+                } else if (entry.isString() && !entry.toString().trimmed().isEmpty()) {
+                    return entry.toString().trimmed();
                 }
             }
             return { };
+        }
+
+        QString firstGenreFromAttributesObject(const QJsonObject &attributes) {
+            return firstGenreFromTagsValue(attributes.value(QStringLiteral("Tags")));
+        }
+
+        QString stringFromAttributeList(const QJsonArray &attributes, const QString &attributeName) {
+            for (const QJsonValue &entry : attributes) {
+                if (!entry.isObject())
+                    continue;
+                const QJsonObject obj = entry.toObject();
+                if (obj.value(QStringLiteral("attributeName")).toString().compare(attributeName, Qt::CaseInsensitive)
+                    != 0)
+                    continue;
+                return stringFromJsonValue(obj.value(QStringLiteral("Value")));
+            }
+            return { };
+        }
+
+        QJsonArray romsFromAttributesList(const QJsonArray &attributes) {
+            for (const QJsonValue &entry : attributes) {
+                if (!entry.isObject())
+                    continue;
+                const QJsonObject obj = entry.toObject();
+                if (obj.value(QStringLiteral("attributeName")).toString().compare(QStringLiteral("ROMs"),
+                        Qt::CaseInsensitive)
+                    != 0)
+                    continue;
+                const QJsonValue value = obj.value(QStringLiteral("Value"));
+                if (value.isArray())
+                    return value.toArray();
+            }
+            return { };
+        }
+
+        void applyMetadataEntry(const QJsonObject &meta, HasheousOfflineMatch &match) {
+            const QString source = meta.value(QStringLiteral("Source")).toString();
+            const QString id = stringFromJsonValue(meta.value(QStringLiteral("Id")));
+            if (id.isEmpty())
+                return;
+            if (source.compare(QStringLiteral("IGDB"), Qt::CaseInsensitive) == 0)
+                match.igdbId = id;
+            else if (source.compare(QStringLiteral("RetroAchievements"), Qt::CaseInsensitive) == 0)
+                match.raGameId = id;
+        }
+
+        void applyAttributesList(const QJsonArray &attributes, HasheousOfflineMatch &match) {
+            if (match.description.isEmpty()) {
+                const QString description = stringFromAttributeList(attributes, QStringLiteral("AIDescription"));
+                if (!description.isEmpty())
+                    match.description = description;
+            }
+            if (match.genre.isEmpty()) {
+                for (const QJsonValue &entry : attributes) {
+                    if (!entry.isObject())
+                        continue;
+                    if (entry.toObject().value(QStringLiteral("attributeName")).toString().compare(
+                            QStringLiteral("Tags"), Qt::CaseInsensitive)
+                        != 0)
+                        continue;
+                    const QString genre = firstGenreFromTagsValue(entry.toObject().value(QStringLiteral("Value")));
+                    if (!genre.isEmpty()) {
+                        match.genre = genre;
+                        break;
+                    }
+                }
+            }
         }
 
         void indexRomHashes(
@@ -94,30 +160,36 @@ namespace Compendium {
 
         void indexGameJsonObject(const QJsonObject &root, QHash<QString, HasheousOfflineMatch> &index) {
             HasheousOfflineMatch match;
-            const QJsonObject attributes = root.value(QStringLiteral("Attributes")).toObject();
-            match.description = stringFromJsonValue(attributes.value(QStringLiteral("AIDescription")));
-            match.genre = firstGenreFromAttributes(attributes);
+
+            const QJsonValue attributesValue = root.value(QStringLiteral("Attributes"));
+            if (attributesValue.isObject()) {
+                const QJsonObject attributes = attributesValue.toObject();
+                match.description = stringFromJsonValue(attributes.value(QStringLiteral("AIDescription")));
+                match.genre = firstGenreFromAttributesObject(attributes);
+            } else if (attributesValue.isArray()) {
+                applyAttributesList(attributesValue.toArray(), match);
+            }
 
             const QJsonArray metadata = root.value(QStringLiteral("Metadata")).toArray();
             for (const QJsonValue &metaValue : metadata) {
                 if (!metaValue.isObject())
                     continue;
-                const QJsonObject meta = metaValue.toObject();
-                const QString source = meta.value(QStringLiteral("Source")).toString();
-                const QString id = stringFromJsonValue(meta.value(QStringLiteral("Id")));
-                if (id.isEmpty())
-                    continue;
-                if (source.compare(QStringLiteral("IGDB"), Qt::CaseInsensitive) == 0)
-                    match.igdbId = id;
-                else if (source.compare(QStringLiteral("RetroAchievements"), Qt::CaseInsensitive) == 0)
-                    match.raGameId = id;
+                applyMetadataEntry(metaValue.toObject(), match);
             }
 
             if (match.igdbId.isEmpty() && match.description.isEmpty() && match.genre.isEmpty()
                 && match.raGameId.isEmpty())
                 return;
 
-            const QJsonArray roms = root.value(QStringLiteral("ROMs")).toArray();
+            QJsonArray roms = root.value(QStringLiteral("ROMs")).toArray();
+            if (roms.isEmpty() && attributesValue.isObject()) {
+                const QJsonValue nestedRoms = attributesValue.toObject().value(QStringLiteral("ROMs"));
+                if (nestedRoms.isArray())
+                    roms = nestedRoms.toArray();
+            }
+            if (roms.isEmpty() && attributesValue.isArray())
+                roms = romsFromAttributesList(attributesValue.toArray());
+
             if (!roms.isEmpty()) {
                 indexRomHashes(roms, match, index);
                 return;

@@ -1,0 +1,1072 @@
+{
+  "Id": 271890,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "662551",
+      "Name": "16-Bit Rhythm Land",
+      "Year": "2018",
+      "Country": "",
+      "Platform": "Megadrive",
+      "SourceId": "38325",
+      "MetadataSource": "8"
+    },
+    {
+      "SignatureId": "636426",
+      "Name": "16-Bit Rhythm Land",
+      "Year": "",
+      "Country": "JP",
+      "Platform": "Genesis/Mega Drive",
+      "SourceId": "38270",
+      "MetadataSource": "7"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "213860",
+      "ImmutableId": "213860",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/16bit-rhythm-land",
+      "LastSearch": "2025-07-22T22:38:27",
+      "NextSearch": "2026-10-23T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2025-07-22T22:38:56",
+      "NextSearch": "2026-07-01T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-07-22T22:38:56",
+      "NextSearch": "2026-07-01T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-07-22T22:38:56",
+      "NextSearch": "2026-07-01T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-22T22:38:58",
+      "NextSearch": "2026-07-01T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-22T22:38:58",
+      "NextSearch": "2026-07-01T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-22T22:38:58",
+      "NextSearch": "2026-07-01T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2025-07-22T22:38:58",
+      "NextSearch": "2026-07-01T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T09:26:35",
+      "NextSearch": "2026-07-01T12:54:22",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T19:25:03",
+      "NextSearch": "2026-03-03T19:25:03",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T10:37:29",
+      "NextSearch": "2026-04-24T10:37:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759869,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 16-Bit Rhythm Land: A Nostalgic Journey Through Gaming History\n\nStep back into the golden age of gaming with *16-Bit Rhythm Land*, a captivating rhythm game exclusively for the Sega Mega Drive/Genesis! This unique cassette delivers a vibrant experience, immersing players in a world of iconic 16-bit music. Featuring four distinct games, the title boasts a total of 20 beloved tracks, meticulously recreated using the authentic FM sound source – a hallmark of classic games and PCs.\n\nDeveloped with a deep reverence for gaming history, *16-Bit Rhythm Land* enlists a specialist composer renowned for his work on legendary game soundtracks, ensuring an authentic and nostalgic feel.  Beyond the music, the game's striking package art is crafted by a celebrated designer known for their work on famous titles. \n\nPrepare to tap, press, and groove your way through challenging levels, testing your rhythm and reflexes. Whether you're a seasoned FM sound source enthusiast or simply a fan of classic gaming, *16-Bit Rhythm Land* offers a delightful and engaging experience that celebrates the sounds and style of the 16-bit era."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 758433,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "F32BECD1578970DCC3CE6D5FD9969AC8BCA4179E"
+    },
+    {
+      "Id": 523958,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 263912,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "55573",
+            "Publisher": "Columbus Circle"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "23287",
+            "ImmutableId": "23287",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/companies/columbus-circle",
+            "LastSearch": "2025-07-21T14:58:22",
+            "NextSearch": "2026-11-30T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2025-07-21T14:58:24",
+            "NextSearch": "2026-07-08T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2025-07-21T14:58:24",
+            "NextSearch": "2026-07-08T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2025-07-21T14:58:24",
+            "NextSearch": "2026-07-08T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2025-07-21T14:58:24",
+            "NextSearch": "2026-07-08T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2025-07-21T14:58:24",
+            "NextSearch": "2026-07-08T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2025-07-21T14:58:24",
+            "NextSearch": "2026-07-08T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2025-07-21T14:58:24",
+            "NextSearch": "2026-07-08T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2025-04-23T09:26:35",
+            "NextSearch": "2026-07-08T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T19:25:03",
+            "NextSearch": "2026-03-03T19:25:03",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T10:37:29",
+            "NextSearch": "2026-04-24T10:37:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Columbus Circle, Columbus-Circle"
+          }
+        ],
+        "CreatedDate": "2025-07-21T14:58:22",
+        "UpdatedDate": "2026-01-31T09:00:59",
+        "Name": "Columbus Circle"
+      }
+    },
+    {
+      "Id": 523957,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 86,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "722",
+            "Platform": "Genesis/Mega Drive"
+          },
+          {
+            "SignatureId": "766",
+            "Platform": "Megadrive"
+          },
+          {
+            "SignatureId": "612",
+            "Platform": "Sega - Mega Drive - Genesis"
+          },
+          {
+            "SignatureId": "1067",
+            "Platform": "Sega - Mega Drive - Genesis (Parent-Clone)"
+          },
+          {
+            "SignatureId": "303",
+            "Platform": "Sega Mega Drive & Genesis"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "29",
+            "ImmutableId": "29",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/genesis-slash-megadrive",
+            "LastSearch": "2024-04-29T04:33:40",
+            "NextSearch": "2024-05-29T04:33:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "18",
+            "ImmutableId": "18",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=18",
+            "LastSearch": "2024-12-12T01:25:00",
+            "NextSearch": "2025-01-12T01:25:00",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "1",
+            "ImmutableId": "1",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/1/games",
+            "LastSearch": "2025-04-30T06:22:35",
+            "NextSearch": "2025-05-30T06:22:35",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "6",
+            "ImmutableId": "6",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-6/",
+            "LastSearch": "2025-06-20T15:29:46",
+            "NextSearch": "2025-07-20T15:29:46",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-04-03T14:11:16",
+            "NextSearch": "2026-09-22T14:11:16",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-04-03T14:11:16",
+            "NextSearch": "2026-09-22T14:11:16",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-04-03T14:11:16",
+            "NextSearch": "2026-09-22T14:11:16",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Sega_Genesis",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Sega_Genesis",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Sega_Genesis",
+            "LastSearch": "2025-12-21T10:27:46",
+            "NextSearch": "2026-01-21T10:27:46",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2026-04-03T14:11:16",
+            "NextSearch": "2026-09-22T14:11:16",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "1",
+            "ImmutableId": "1",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=1",
+            "LastSearch": "2026-04-03T14:11:16",
+            "NextSearch": "2026-10-11T14:11:16",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "42-sega-genesis",
+            "ImmutableId": "42-sega-genesis",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/42-sega-genesis",
+            "LastSearch": "2026-02-24T09:49:25",
+            "NextSearch": "2026-04-24T09:49:25",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758481,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Sega Genesis, known as the Mega Drive outside North America, was a 16-bit home video game console that sparked a fierce rivalry with Nintendo in the early 1990s. Released in 1988 in Japan and 1989 in North America, it boasted a Motorola 68000 processor and impressive graphics capabilities, quickly establishing itself as a powerhouse. Its aggressive marketing targeted adolescents, positioning it as the \"cool\" console. \n\nThe Genesis library was extensive, featuring arcade ports and iconic titles like *Sonic the Hedgehog*, *Ecco the Dolphin*, and *Street Fighter II*. Add-ons like the Sega CD and 32X expanded its capabilities, though ultimately proved unsuccessful. Despite initial struggles in Japan, the Genesis achieved significant success in North America, Brazil, Australia, and Europe, selling over 30 million units worldwide. Its legacy continues with rereleases and modern tributes, solidifying its place in gaming history."
+          },
+          {
+            "Id": 110859,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "Genesis"
+          },
+          {
+            "Id": 229,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "CE599B2E7A43FA6F0DF17E4A81A399BC00792857"
+          },
+          {
+            "Id": 67,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 79,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "2664",
+                  "Publisher": "Sega"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "112",
+                  "ImmutableId": "112",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/sega",
+                  "LastSearch": "2025-06-24T19:51:51",
+                  "NextSearch": "2026-09-03T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T19:51:52",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-07-13T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:34",
+                  "NextSearch": "2026-03-03T13:05:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:25",
+                  "NextSearch": "2026-04-24T09:49:25",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 297392,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "FA75F68C2F5C275E561FB3BDB99AC6D07BDC945B"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:26:49",
+              "UpdatedDate": "2026-01-31T13:46:36",
+              "Name": "Sega"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sega Mega Drive / Genesis, Sega-Mega-Drive-/-Genesis, Sega Mega Drive/Genesis, Sega Mega Drive Genesis, Sega Mega Drive - Genesis, Sega Mega Drive, Genesis"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 222,
+                    "Text": "16-bit",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88548,
+                    "Text": "cd support",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 89,
+                    "Text": "custom chipset",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 314,
+                    "Text": "early 90s",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 677,
+                    "Text": "composite",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 11,
+                    "Text": "s-video",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 12,
+                    "Text": "scart",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 338,
+                    "Text": "home",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88547,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 13,
+                    "Text": "controller",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:33:40",
+        "UpdatedDate": "2026-05-25T01:13:04",
+        "Name": "Sega Mega Drive / Genesis"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "16-Bit Rhythm Land, 16 - Bit Rhythm Land, 16 Bit Rhythm Land, 16: Bit Rhythm Land, XVI-Bit Rhythm Land, XVI - Bit Rhythm Land, XVI Bit Rhythm Land, XVI: Bit Rhythm Land, Sixteen-Bit Rhythm Land, Sixteen - Bit Rhythm Land, Sixteen Bit Rhythm Land, Sixteen: Bit Rhythm Land"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 21,
+          "Id": "2737737",
+          "Name": "16-Bit Rhythm Land (2018)(Columbus Circle).bin",
+          "Size": 3145728,
+          "Crc": "67271302",
+          "Md5": "",
+          "Sha1": "",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "FBNeo"
+        },
+        {
+          "Score": 12,
+          "Id": "2599928",
+          "Name": "16Bit Rhythm Land (Japan) (En) (Aftermarket) (Unl).md",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "43d1341ba30dc3a19ecf8a3cd75245cb",
+          "Sha1": "",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "labels": "nointro"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "RetroAchievements"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 3465,
+              "Text": "16-bit",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2106,
+              "Text": "music",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2775,
+              "Text": "rhythm",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 877,
+              "Text": "arcade",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2127,
+              "Text": "music game",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2126,
+              "Text": "rhythm game",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 2773,
+              "Text": "beat matching",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2352,
+              "Text": "score tracking",
+              "AIGenerated": true
+            },
+            {
+              "Id": 820,
+              "Text": "single player",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 3463,
+              "Text": "built-in songs",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3462,
+              "Text": "fm sound",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3464,
+              "Text": "fm sound source",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 1030,
+              "Text": "side-scrolling",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Japan (JP)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "English"
+    }
+  ],
+  "CreatedDate": "2025-07-22T22:38:26",
+  "UpdatedDate": "2026-01-27T13:12:07",
+  "Name": "16-Bit Rhythm Land"
+}

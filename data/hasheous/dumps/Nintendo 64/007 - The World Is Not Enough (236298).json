@@ -1,0 +1,1729 @@
+{
+  "Id": 236298,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "946712",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "2000",
+      "Country": "US",
+      "Platform": "Nintendo 64",
+      "SourceId": "9128",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "484238",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo 64 (BigEndian)",
+      "SourceId": "12434",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "904464",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "12/15/1998 00:00:00",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo 64 (BigEndian) (Parent-Clone)",
+      "SourceId": "12435",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "954955",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo 64 (BigEndian) (Parent-Clone)",
+      "SourceId": "12435",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "847477",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo 64 (BigEndian) (Parent-Clone)",
+      "SourceId": "12435",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "904611",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "12/15/1998 00:00:00",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo 64 (ByteSwapped) (Parent-Clone)",
+      "SourceId": "12437",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "284707",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "2000",
+      "Country": "EU",
+      "Platform": "Nintendo 64",
+      "SourceId": "9128",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "904394",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "12/15/1998 00:00:00",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo 64 (BigEndian)",
+      "SourceId": "12434",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "955323",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo 64 (ByteSwapped) (Parent-Clone)",
+      "SourceId": "12437",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "954629",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo 64 (BigEndian)",
+      "SourceId": "12434",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "484757",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo 64 (ByteSwapped)",
+      "SourceId": "12436",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "904541",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "12/15/1998 00:00:00",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo 64 (ByteSwapped)",
+      "SourceId": "12436",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "848076",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo 64 (ByteSwapped) (Parent-Clone)",
+      "SourceId": "12437",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "954991",
+      "Name": "007 - The World Is Not Enough",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo 64 (ByteSwapped)",
+      "SourceId": "12436",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "144507",
+      "ImmutableId": "144507",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/james-bond-007-the-world-is-not-enough--1",
+      "LastSearch": "2025-04-07T03:10:07",
+      "NextSearch": "2026-10-07T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "238",
+      "ImmutableId": "238",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=238",
+      "LastSearch": "2025-04-07T03:10:12",
+      "NextSearch": "2026-10-07T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "10135",
+      "ImmutableId": "10135",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/10135",
+      "LastSearch": "2025-04-07T03:10:15",
+      "NextSearch": "2026-10-07T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "18168",
+      "ImmutableId": "18168",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-18168/",
+      "LastSearch": "2025-07-22T09:41:47",
+      "NextSearch": "2026-10-07T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:41:47",
+      "NextSearch": "2026-05-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:41:47",
+      "NextSearch": "2026-05-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:41:47",
+      "NextSearch": "2026-05-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/The_World_Is_Not_Enough_(Nintendo_64)",
+      "ImmutableId": "https://en.wikipedia.org/wiki/The_World_Is_Not_Enough_(Nintendo_64)",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/The_World_Is_Not_Enough_(Nintendo_64)",
+      "LastSearch": "2025-06-21T22:48:39",
+      "NextSearch": "2026-07-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T11:09:49",
+      "NextSearch": "2026-05-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:44:04",
+      "NextSearch": "2026-03-03T13:44:04",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T10:07:51",
+      "NextSearch": "2026-04-24T10:07:51",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 758573,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "Step into the shoes of the legendary James Bond in *007 – The World Is Not Enough* for the Nintendo 64, a thrilling first-person shooter that faithfully adapts the 1999 film. As Agent 007, you’re thrust into a globe-trotting mission to thwart a terrorist plot threatening to trigger a nuclear meltdown in Istanbul. The game closely follows the film's narrative, beginning with a pursuit in Spain and escalating to a frantic chase through the London Underground.\n\nExperience iconic Bond moments as you protect Elektra King, investigate a KGB-turned-terrorist named Renard, and infiltrate a Russian ICBM base. Utilize a variety of gadgets and weaponry to overcome challenging scenarios, from snowy mountain ambushes to tense underwater sequences. \n\nThe game features a robust single-player campaign and a split-screen multiplayer mode for up to four players, offering diverse deathmatch and objective-based gameplay. Optimized for the Nintendo 64, the game boasts impressive graphics, smooth frame rates, and a cinematic feel, enhanced by the optional Expansion Pak. A Controller Pak is required to save your progress."
+    },
+    {
+      "Id": 447713,
+      "attributeType": "ShortString",
+      "attributeName": "VIMMManualId",
+      "attributeRelationType": "Game",
+      "Value": "2521"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 447161,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "ED56891638160ABACADCCB35189AD84C9CD5FA39"
+    },
+    {
+      "Id": 447159,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 64,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "1194",
+            "Platform": "-Nintendo 64 (Rom Hacks)-"
+          },
+          {
+            "SignatureId": "1191",
+            "Platform": "-Nintendo 64 (Rom Hacks)-"
+          },
+          {
+            "SignatureId": "576",
+            "Platform": "Nintendo - Nintendo 64 (BigEndian)"
+          },
+          {
+            "SignatureId": "1030",
+            "Platform": "Nintendo - Nintendo 64 (BigEndian) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "577",
+            "Platform": "Nintendo - Nintendo 64 (ByteSwapped)"
+          },
+          {
+            "SignatureId": "1031",
+            "Platform": "Nintendo - Nintendo 64 (ByteSwapped) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "578",
+            "Platform": "Nintendo - Nintendo 64 (Mario no Photopi SmartMedia)"
+          },
+          {
+            "SignatureId": "1032",
+            "Platform": "Nintendo - Nintendo 64 (Mario no Photopi SmartMedia) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "235",
+            "Platform": "Nintendo 64"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "4",
+            "ImmutableId": "4",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/n64",
+            "LastSearch": "2024-04-29T04:12:37",
+            "NextSearch": "2024-05-29T04:12:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "3",
+            "ImmutableId": "3",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=3",
+            "LastSearch": "2026-05-09T13:06:53",
+            "NextSearch": "2027-01-20T13:06:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "2",
+            "ImmutableId": "2",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/2/games",
+            "LastSearch": "2026-05-09T13:06:53",
+            "NextSearch": "2027-01-20T13:06:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "43",
+            "ImmutableId": "43",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-43/",
+            "LastSearch": "2026-05-09T13:06:53",
+            "NextSearch": "2027-01-20T13:06:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-06-11T15:50:29",
+            "NextSearch": "2026-08-17T15:50:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-06-11T15:50:29",
+            "NextSearch": "2026-08-17T15:50:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-06-11T15:50:29",
+            "NextSearch": "2026-08-17T15:50:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Nintendo_64",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Nintendo_64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Nintendo_64",
+            "LastSearch": "2025-12-21T10:26:31",
+            "NextSearch": "2026-01-21T10:26:31",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5321187",
+            "ImmutableId": "5321187",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5321187",
+            "LastSearch": "2026-05-09T13:06:53",
+            "NextSearch": "2027-01-20T13:06:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14",
+            "ImmutableId": "14",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=14",
+            "LastSearch": "2026-05-09T13:06:53",
+            "NextSearch": "2027-01-20T13:06:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "25-nintendo-64",
+            "ImmutableId": "25-nintendo-64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/25-nintendo-64",
+            "LastSearch": "2026-02-24T09:49:01",
+            "NextSearch": "2026-04-24T09:49:01",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758301,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo 64 (N64) was a revolutionary home video game console released by Nintendo in 1996, marking their third major console and a key player in the fifth generation of gaming. Featuring a 64-bit CPU and a unique coprocessor for graphics and sound, it introduced the thumbstick controller and supported multiplayer with four controller ports. While commercially successful in North America, it faced challenges in Japan and Europe, partly due to its reliance on ROM cartridges instead of optical discs.\n\nDespite a smaller library of 388 games compared to its competitors, the N64 delivered groundbreaking experiences like *Super Mario 64*, *GoldenEye 007*, and *The Legend of Zelda: Ocarina of Time*, which are considered among the greatest games ever made. Its innovations in 3D graphics and gameplay continue to influence game design today, and it remains an iconic console in video game history."
+          },
+          {
+            "Id": 110863,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "N64"
+          },
+          {
+            "Id": 211,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "873A657AFF6B82E141560F298109A5FAE6860398"
+          },
+          {
+            "Id": 47,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo 64, Nintendo-64"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 88,
+                    "Text": "3d graphics",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95263,
+                    "Text": "64-bit cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 340,
+                    "Text": "rdram memory",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95268,
+                    "Text": "trilinear filtering",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 375,
+                    "Text": "90s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 342,
+                    "Text": "analog stick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95271,
+                    "Text": "digital pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95270,
+                    "Text": "thumbstick controller",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 499,
+                    "Text": "composite output",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95269,
+                    "Text": "expansion pak",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 94057,
+                    "Text": "s-video output",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:12:37",
+        "UpdatedDate": "2026-06-11T15:50:31",
+        "Name": "Nintendo 64"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "007 - The World Is Not Enough, 007-The World Is Not Enough, 007 The World Is Not Enough, 007: The World Is Not Enough, VII - The World Is Not Enough, VII-The World Is Not Enough, VII The World Is Not Enough, VII: The World Is Not Enough, Seven - The World Is Not Enough, Seven-The World Is Not Enough, Seven The World Is Not Enough, Seven: The World Is Not Enough"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 34,
+          "Id": "2793612",
+          "Name": "007 - The World Is Not Enough (Europe) (En,Fr,De) (Beta).z64",
+          "Size": 33554432,
+          "Crc": "8a91d343",
+          "Md5": "1b376e5b1679a24323bdedfd1aa3a512",
+          "Sha1": "ce8c5941cf539a00b47517ee3e32d3b74bc67ea4",
+          "Sha256": "d0c9d3b6d9399236b2cc048b919f70199d482bf37c4a9065c00f1f05b93d30ce",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German"
+          },
+          "DevelopmentStatus": "beta",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 25,
+          "Id": "1571017",
+          "Name": "007 - The World Is Not Enough (Europe) (En,Fr,De).z64",
+          "Size": 33554432,
+          "Crc": "002c3b2a",
+          "Md5": "34ab1dea3111a233a8b5c5679de22e83",
+          "Sha1": "7fde668850a7e1a8402ab94bb09538a537a7e38b",
+          "Sha256": "06c65f4f35c869468502f33bf7edd2d4995c9cccada6bff30fe4e8da0209c2ac",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "2793613",
+          "Name": "007 - The World Is Not Enough (USA) (Beta 1) (1998-12-15).z64",
+          "Size": 16777216,
+          "Crc": "2f8ffe8f",
+          "Md5": "b20c4f04c4501817bf484e5344dc4deb",
+          "Sha1": "6809dd15351f7ebd3acfa03389133c2c514a874b",
+          "Sha256": "1ef09447e4da92df53b84d3d494022f53e8226455734c3c1d10d25d3aabc4a5a",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 34,
+          "Id": "1571019",
+          "Name": "007 - The World Is Not Enough (USA) (Beta 2).z64",
+          "Size": 33554432,
+          "Crc": "f0b6bf59",
+          "Md5": "12bd3fafb4e064b6b0c07b7ee156243b",
+          "Sha1": "53c6de60383517f38d27e449d47bced319f8e87a",
+          "Sha256": "1cd43fbe6ff06d7b326297824d3458c46014517096ba0c08e9edfab75639bbfa",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "beta",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1571020",
+          "Name": "007 - The World Is Not Enough (USA) (v2) (Beta).z64",
+          "Size": 16777216,
+          "Crc": "6c180fef",
+          "Md5": "39abe0c383a44c464b408be3e1d6766e",
+          "Sha1": "376042ddedfd4f738786500531d67d5c299577be",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1571018",
+          "Name": "007 - The World Is Not Enough (USA).z64",
+          "Size": 33554432,
+          "Crc": "26360987",
+          "Md5": "9d58996a8aa91263b5cd45c385f45fe4",
+          "Sha1": "d347159808f0374a93cf44cfb6135d8f56279f7b",
+          "Sha256": "72e3e7b4ff1615bc17336d3d10e18aa9342898db063ace68922a47f5e46c48b1",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "3906714",
+          "Name": "007 - The World Is Not Enough (USA) (Beta 1) (1998-12-15).z64",
+          "Size": 16777216,
+          "Crc": "2f8ffe8f",
+          "Md5": "b20c4f04c4501817bf484e5344dc4deb",
+          "Sha1": "6809dd15351f7ebd3acfa03389133c2c514a874b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "beta",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "3630886",
+          "Name": "007 - The World Is Not Enough (Europe) (En,Fr,De) (Beta).z64",
+          "Size": 33554432,
+          "Crc": "8a91d343",
+          "Md5": "1b376e5b1679a24323bdedfd1aa3a512",
+          "Sha1": "ce8c5941cf539a00b47517ee3e32d3b74bc67ea4",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German"
+          },
+          "DevelopmentStatus": "beta",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "3630882",
+          "Name": "007 - The World Is Not Enough (Europe) (En,Fr,De).z64",
+          "Size": 33554432,
+          "Crc": "002c3b2a",
+          "Md5": "34ab1dea3111a233a8b5c5679de22e83",
+          "Sha1": "7fde668850a7e1a8402ab94bb09538a537a7e38b",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "3630885",
+          "Name": "007 - The World Is Not Enough (USA) (Beta 1) (1998-12-15).z64",
+          "Size": 16777216,
+          "Crc": "2f8ffe8f",
+          "Md5": "b20c4f04c4501817bf484e5344dc4deb",
+          "Sha1": "6809dd15351f7ebd3acfa03389133c2c514a874b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "3630884",
+          "Name": "007 - The World Is Not Enough (USA) (Beta 2).z64",
+          "Size": 33554432,
+          "Crc": "f0b6bf59",
+          "Md5": "12bd3fafb4e064b6b0c07b7ee156243b",
+          "Sha1": "53c6de60383517f38d27e449d47bced319f8e87a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "beta",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "3630883",
+          "Name": "007 - The World Is Not Enough (USA).z64",
+          "Size": 33554432,
+          "Crc": "26360987",
+          "Md5": "9d58996a8aa91263b5cd45c385f45fe4",
+          "Sha1": "d347159808f0374a93cf44cfb6135d8f56279f7b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "3906901",
+          "Name": "007 - The World Is Not Enough (USA) (Beta 1) (1998-12-15).v64",
+          "Size": 16777216,
+          "Crc": "24899739",
+          "Md5": "a452429d799f2ce07207243109d265aa",
+          "Sha1": "a9e82cd9104d97411e8a14b722f1c6ac7a803a8e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "beta",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "964719",
+          "Name": "007 - The World Is Not Enough (2000)(Electronic Arts)(EU)(M3).bin",
+          "Size": 33554432,
+          "Crc": "002c3b2a",
+          "Md5": "34ab1dea3111a233a8b5c5679de22e83",
+          "Sha1": "7fde668850a7e1a8402ab94bb09538a537a7e38b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M3",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "964720",
+          "Name": "007 - The World Is Not Enough (2000)(Electronic Arts)(EU)(M3)[tr es].bin",
+          "Size": 33554432,
+          "Crc": "f6e47946",
+          "Md5": "6c92f47cb7548e36eb311b9a7187221a",
+          "Sha1": "903074e0aa2a6131fa725dfc019803ab673a3b73",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "tr": "es"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M3",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "964722",
+          "Name": "007 - The World Is Not Enough (2000)(Electronic Arts)(US)(beta)[v21].bin",
+          "Size": 33554432,
+          "Crc": "f0b6bf59",
+          "Md5": "12bd3fafb4e064b6b0c07b7ee156243b",
+          "Sha1": "53c6de60383517f38d27e449d47bced319f8e87a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "beta",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "964723",
+          "Name": "007 - The World Is Not Enough (2000)(Electronic Arts)(US)(beta)[v2].bin",
+          "Size": 16777216,
+          "Crc": "6c180fef",
+          "Md5": "39abe0c383a44c464b408be3e1d6766e",
+          "Sha1": "376042ddedfd4f738786500531d67d5c299577be",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "beta",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "964721",
+          "Name": "007 - The World Is Not Enough (2000)(Electronic Arts)(US).bin",
+          "Size": 33554432,
+          "Crc": "26360987",
+          "Md5": "9d58996a8aa91263b5cd45c385f45fe4",
+          "Sha1": "d347159808f0374a93cf44cfb6135d8f56279f7b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "US",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "964724",
+          "Name": "007 - The World Is Not Enough (2000)(Electronic Arts)(US)[h].bin",
+          "Size": 33554432,
+          "Crc": "98fdd6a2",
+          "Md5": "1d86ae43ff88e4583c8161815577f1cd",
+          "Sha1": "c616c5516ec2e3f8d1b5d40472a3d12e3e40c89a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "h": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "US",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "964725",
+          "Name": "007 - The World Is Not Enough (2000)(Electronic Arts)(US)[t].bin",
+          "Size": 33554432,
+          "Crc": "c3b67335",
+          "Md5": "0846fffda3081821ea0dcbb7d4deaaa3",
+          "Sha1": "99cec1dc49a56912a1b3715a74e5957147cad004",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "US",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 34,
+          "Id": "3906621",
+          "Name": "007 - The World Is Not Enough (USA) (Beta 1) (1998-12-15).z64",
+          "Size": 16777216,
+          "Crc": "2f8ffe8f",
+          "Md5": "b20c4f04c4501817bf484e5344dc4deb",
+          "Sha1": "6809dd15351f7ebd3acfa03389133c2c514a874b",
+          "Sha256": "1ef09447e4da92df53b84d3d494022f53e8226455734c3c1d10d25d3aabc4a5a",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "beta",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 34,
+          "Id": "2793654",
+          "Name": "007 - The World Is Not Enough (Europe) (En,Fr,De) (Beta).v64",
+          "Size": 33554432,
+          "Crc": "049c0ef6",
+          "Md5": "e41e7844b0e801709ca29d3311da119f",
+          "Sha1": "c5836d7072e15b105245e972ee250510a92d8a7e",
+          "Sha256": "701ba48887e0f4507d34666d8a937a04d61f16c704dbf43fbcf5407b4faa247e",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German"
+          },
+          "DevelopmentStatus": "beta",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1572156",
+          "Name": "007 - The World Is Not Enough (Europe) (En,Fr,De).v64",
+          "Size": 33554432,
+          "Crc": "7f030d3a",
+          "Md5": "7fdc9151f2bd8f6b6f3cba3bb93a06a2",
+          "Sha1": "441bdf924566e6475aa49bab7a199dc06d32a6d5",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "2793655",
+          "Name": "007 - The World Is Not Enough (USA) (Beta 1) (1998-12-15).v64",
+          "Size": 16777216,
+          "Crc": "24899739",
+          "Md5": "a452429d799f2ce07207243109d265aa",
+          "Sha1": "a9e82cd9104d97411e8a14b722f1c6ac7a803a8e",
+          "Sha256": "bdc8f64667c59339103d02c2c07927f88e0c4a2e0d117b8d8dd593cf533a9c41",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "1572158",
+          "Name": "007 - The World Is Not Enough (USA) (Beta 2).v64",
+          "Size": 33554432,
+          "Crc": "ebf883ed",
+          "Md5": "dfc1bc54bde57e70b74645b9f4c1082c",
+          "Sha1": "5b1fd70969dce39c215aab618d9da718351ce7e5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "beta",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1572159",
+          "Name": "007 - The World Is Not Enough (USA) (v2) (Beta).v64",
+          "Size": 16777216,
+          "Crc": "6416d1bf",
+          "Md5": "3f86f5a0b93fdb63d7cba122a5056c90",
+          "Sha1": "cf0c30ee647552537a860ab58af476bc0d3b2d85",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1572157",
+          "Name": "007 - The World Is Not Enough (USA).v64",
+          "Size": 33554432,
+          "Crc": "34f0ee5b",
+          "Md5": "2b1594e9b9f1ec0105c5adabe3c024ce",
+          "Sha1": "e93005466ac84bc1d19b40673d0c50b604a8753c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 34,
+          "Id": "3906803",
+          "Name": "007 - The World Is Not Enough (USA) (Beta 1) (1998-12-15).v64",
+          "Size": 16777216,
+          "Crc": "24899739",
+          "Md5": "a452429d799f2ce07207243109d265aa",
+          "Sha1": "a9e82cd9104d97411e8a14b722f1c6ac7a803a8e",
+          "Sha256": "bdc8f64667c59339103d02c2c07927f88e0c4a2e0d117b8d8dd593cf533a9c41",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "beta",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "3632122",
+          "Name": "007 - The World Is Not Enough (Europe) (En,Fr,De) (Beta).v64",
+          "Size": 33554432,
+          "Crc": "049c0ef6",
+          "Md5": "e41e7844b0e801709ca29d3311da119f",
+          "Sha1": "c5836d7072e15b105245e972ee250510a92d8a7e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German"
+          },
+          "DevelopmentStatus": "beta",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "3632118",
+          "Name": "007 - The World Is Not Enough (Europe) (En,Fr,De).v64",
+          "Size": 33554432,
+          "Crc": "7f030d3a",
+          "Md5": "7fdc9151f2bd8f6b6f3cba3bb93a06a2",
+          "Sha1": "441bdf924566e6475aa49bab7a199dc06d32a6d5",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "3632121",
+          "Name": "007 - The World Is Not Enough (USA) (Beta 1) (1998-12-15).v64",
+          "Size": 16777216,
+          "Crc": "24899739",
+          "Md5": "a452429d799f2ce07207243109d265aa",
+          "Sha1": "a9e82cd9104d97411e8a14b722f1c6ac7a803a8e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "3632120",
+          "Name": "007 - The World Is Not Enough (USA) (Beta 2).v64",
+          "Size": 33554432,
+          "Crc": "ebf883ed",
+          "Md5": "dfc1bc54bde57e70b74645b9f4c1082c",
+          "Sha1": "5b1fd70969dce39c215aab618d9da718351ce7e5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "beta",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "3632119",
+          "Name": "007 - The World Is Not Enough (USA).v64",
+          "Size": 33554432,
+          "Crc": "34f0ee5b",
+          "Md5": "2b1594e9b9f1ec0105c5adabe3c024ce",
+          "Sha1": "e93005466ac84bc1d19b40673d0c50b604a8753c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1093,
+              "Text": "first-person",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1073,
+              "Text": "shooter",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1078,
+              "Text": "espionage",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1173,
+              "Text": "nuclear threat",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1172,
+              "Text": "terrorism",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 1088,
+              "Text": "first-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 1168,
+              "Text": "gadget system",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1100,
+              "Text": "health system",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1171,
+              "Text": "split-screen",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1170,
+              "Text": "objective-based",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1097,
+              "Text": "single-player",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU), United States (US)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, English, French"
+    }
+  ],
+  "CreatedDate": "2025-04-07T03:09:48",
+  "UpdatedDate": "2026-03-28T02:13:16",
+  "Name": "007 - The World Is Not Enough"
+}

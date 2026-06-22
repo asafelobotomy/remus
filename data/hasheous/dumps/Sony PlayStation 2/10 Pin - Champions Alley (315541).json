@@ -1,0 +1,899 @@
+{
+  "Id": 315541,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "605193",
+      "Name": "10 Pin - Champions Alley",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Sony - PlayStation 2",
+      "SourceId": "38237",
+      "MetadataSource": "5"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "97356",
+      "ImmutableId": "97356",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/10-pin-champions-alley",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-09-05T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "67690",
+      "ImmutableId": "67690",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=67690",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-09-05T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "21541",
+      "ImmutableId": "21541",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/21541",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-09-05T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "67826",
+      "ImmutableId": "67826",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-67826/",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-09-05T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-08-01T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-08-01T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-08-01T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-08-01T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-08-01T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T14:01:05",
+      "NextSearch": "2026-03-03T14:01:05",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T01:27:14",
+      "NextSearch": "2026-04-25T01:27:14",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759021,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 10 Pin: Champions Alley - PlayStation 2\n\nStep onto the lanes and strike out for fun with *10 Pin: Champions Alley*, an accessible and engaging bowling game perfect for players of all ages. Developed by Atomic Planet Entertainment Limited and published by Liquid Games, this PlayStation 2 classic delivers a vibrant and competitive bowling experience.\n\nGather up to seven friends for lively multiplayer battles, or hone your skills in solo practice mode. Choose from a diverse cast of exuberant characters, each possessing unique strengths and weaknesses, and compete across a variety of game types, from quick practice rounds to full-blown tournaments. Face off against colourful opponents and master the art of the strike.\n\nOriginally released in 2005, *10 Pin: Champions Alley* later became available as a PlayStation 2 Classic title on the PlayStation 3 via digital download, published by OG International. Combining simple controls with exciting multiplayer action, it's the ideal party game for kids and adults alike, promising hours of bowling entertainment."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 591394,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "F3D984BCEE8DDB76EA9735A692C8EC2103B81FF8"
+    },
+    {
+      "Id": 591393,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 101,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "741",
+            "Platform": "PlayStation 2"
+          },
+          {
+            "SignatureId": "692",
+            "Platform": "Sony - PlayStation 2"
+          },
+          {
+            "SignatureId": "328",
+            "Platform": "Sony PlayStation 2"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "8",
+            "ImmutableId": "8",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/ps2",
+            "LastSearch": "2024-04-29T11:20:12",
+            "NextSearch": "2024-05-29T11:20:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "11",
+            "ImmutableId": "11",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=11",
+            "LastSearch": "2024-12-12T01:25:34",
+            "NextSearch": "2025-01-12T01:25:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "21",
+            "ImmutableId": "21",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/21/games",
+            "LastSearch": "2025-05-06T21:46:02",
+            "NextSearch": "2025-06-06T21:46:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "19",
+            "ImmutableId": "19",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-19/",
+            "LastSearch": "2025-06-20T15:34:14",
+            "NextSearch": "2025-07-20T15:34:14",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2026-11-01T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2026-11-01T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2026-11-01T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/PlayStation_2",
+            "ImmutableId": "https://en.wikipedia.org/wiki/PlayStation_2",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/PlayStation_2",
+            "LastSearch": "2025-12-21T10:28:08",
+            "NextSearch": "2026-01-21T10:28:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327252",
+            "ImmutableId": "5327252",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327252",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2027-03-10T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "58",
+            "ImmutableId": "58",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=58",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2027-03-10T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "48-sony-playstation-2",
+            "ImmutableId": "48-sony-playstation-2",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/48-sony-playstation-2",
+            "LastSearch": "2026-02-24T09:49:44",
+            "NextSearch": "2026-04-24T09:49:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758493,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The PlayStation 2 (PS2) is a sixth-generation home video game console developed and marketed by Sony Computer Entertainment, released in Japan on March 4, 2000. It succeeded the original PlayStation and remains the best-selling video game console of all time, with over 160 million units sold worldwide. A key innovation was its integrated DVD drive, offering significant value compared to standalone players. \n\nThe PS2 boasted a custom-built Emotion Engine processor, delivering impressive graphics and performance, and was backward compatible with original PlayStation games. Popular titles include the *Grand Theft Auto*, *Final Fantasy*, *Silent Hill*, and *Metal Gear* series, alongside beloved exclusives like *God of War*, *Ratchet & Clank*, and *Jak and Daxter*. Its longevity was remarkable, with new games released until 2013, solidifying its place in gaming history."
+          },
+          {
+            "Id": 110866,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "PS2"
+          },
+          {
+            "Id": 237,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "A885A9E3E636FA92973918DB27D271BC5C890FC2"
+          },
+          {
+            "Id": 461507,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 19877,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "14855",
+                  "Publisher": "Sony"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "AutomaticTooManyMatches",
+                  "Source": "IGDB",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T14:40:50",
+                  "NextSearch": "2026-08-19T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:14:46",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:36",
+                  "NextSearch": "2026-03-03T13:05:36",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:32",
+                  "NextSearch": "2026-04-24T09:49:32",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [],
+              "CreatedDate": "2024-05-26T10:46:55",
+              "UpdatedDate": "2026-01-31T19:53:39",
+              "Name": "Sony"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sony PlayStation 2, Sony-PlayStation-2, Sony PlayStation II, Sony-PlayStation-II, Sony PlayStation Two, Sony-PlayStation-Two"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 94052,
+                    "Text": "40gb hdd",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 276,
+                    "Text": "dvd drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 738,
+                    "Text": "emotion engine",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 741,
+                    "Text": "dualshock 2",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 743,
+                    "Text": "dvd remote",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 742,
+                    "Text": "eyetoy",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 67,
+                    "Text": "retro gaming",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 80,
+                    "Text": "ethernet",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 281,
+                    "Text": "i.link",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 291,
+                    "Text": "usb 2.0",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T11:20:12",
+        "UpdatedDate": "2026-05-25T01:30:32",
+        "Name": "Sony PlayStation 2"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "10 Pin - Champions Alley, 10 Pin-Champions Alley, 10 Pin Champions Alley, 10 Pin: Champions Alley, X Pin - Champions Alley, X Pin-Champions Alley, X Pin Champions Alley, X Pin: Champions Alley, Ten Pin - Champions Alley, Ten Pin-Champions Alley, Ten Pin Champions Alley, Ten Pin: Champions Alley"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "2403650",
+          "Name": "10 Pin - Champions Alley (Europe) (En,Fr,De,Es,It,Nl).bin",
+          "Size": 107862720,
+          "Crc": "aa3daca5",
+          "Md5": "cc0d969e2761e67d9c9fdf35125fd7f1",
+          "Sha1": "88d9e8375fb272714ae0fd690ce49617879b5da6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian",
+            "nl": "Dutch"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-53150"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3877558",
+          "Name": "10 Pin - Champions Alley (Europe) (En,Fr,De,Es,It,Nl).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "e8907c617089a0f95bcb24a49208ffd0f4b0c250",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian",
+            "nl": "Dutch"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2403649",
+          "Name": "10 Pin - Champions Alley (Europe) (En,Fr,De,Es,It,Nl).cue",
+          "Size": 119,
+          "Crc": "1adfb9df",
+          "Md5": "bfbdfdc91a2491986d6180bf0b09c3b5",
+          "Sha1": "dfbe9d9f3dae6c83d57400145a673030dba6aae9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian",
+            "nl": "Dutch"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-53150"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 2392,
+              "Text": "bowling",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1690,
+              "Text": "party",
+              "AIGenerated": true
+            },
+            {
+              "Id": 876,
+              "Text": "sports",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 1649,
+              "Text": "character selection",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1475,
+              "Text": "game modes",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1109,
+              "Text": "local multiplayer",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 885,
+              "Text": "competition",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1017,
+              "Text": "fun",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2395,
+              "Text": "social",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 887,
+              "Text": "isometric",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2394,
+              "Text": "quick match",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2393,
+              "Text": "tournament",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, English, Spanish, French, Italian, Dutch"
+    }
+  ],
+  "CreatedDate": "2025-08-09T22:13:32",
+  "UpdatedDate": "2026-02-14T02:17:46",
+  "Name": "10 Pin - Champions Alley"
+}

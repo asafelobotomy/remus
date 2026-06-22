@@ -1,0 +1,1377 @@
+{
+  "Id": 268172,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "490431",
+      "Name": "1000 Cooking Recipes from Elle a Table",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo DS (Download Play)",
+      "SourceId": "6090",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "485317",
+      "Name": "1000 Cooking Recipes from Elle a Table",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo DS (Decrypted)",
+      "SourceId": "12440",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "490982",
+      "Name": "1000 Cooking Recipes from Elle a Table",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo DS (Encrypted)",
+      "SourceId": "12442",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "98671",
+      "ImmutableId": "98671",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/1000-cooking-recipes-from-elle-a-table",
+      "LastSearch": "2025-07-22T06:27:36",
+      "NextSearch": "2026-10-25T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "55570",
+      "ImmutableId": "55570",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=55570",
+      "LastSearch": "2025-07-22T06:27:36",
+      "NextSearch": "2026-10-25T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-07-22T06:27:36",
+      "NextSearch": "2026-06-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "65236",
+      "ImmutableId": "65236",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-65236/",
+      "LastSearch": "2025-07-22T06:27:36",
+      "NextSearch": "2026-10-25T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-22T06:27:37",
+      "NextSearch": "2026-06-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-22T06:27:37",
+      "NextSearch": "2026-06-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-22T06:27:37",
+      "NextSearch": "2026-06-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2025-07-22T06:27:37",
+      "NextSearch": "2026-06-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T19:28:15",
+      "NextSearch": "2026-06-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T18:11:16",
+      "NextSearch": "2026-03-03T18:11:16",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T04:48:14",
+      "NextSearch": "2026-04-25T04:48:14",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759176,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 1000 Cooking Recipes from Elle à Table - Nintendo DS\n\nEmbark on a culinary journey with *1000 Cooking Recipes from Elle à Table* for the Nintendo DS, a delightful cooking guide inspired by the renowned French cuisine magazine. Dive into a vast collection of 1000 authentic recipes, ranging from simple appetizers to elaborate desserts, all presented in an accessible and engaging format. \n\nGuided by a helpful voice assistant, you'll learn essential cooking techniques and master the art of French cuisine. Beyond just recipes, the game provides valuable nutritional information to help you make informed choices.  \n\nCreate your own personalized menus, drawing inspiration from recommended pairings or crafting entirely new culinary creations.  Share your delicious discoveries with friends and family, showcasing your newfound skills and expanding your repertoire. Whether you're a seasoned chef or a novice cook, *1000 Cooking Recipes from Elle à Table* offers a fun and educational experience for everyone."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 518341,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "FE4FF398A442C3BEAD65332904E4AD8AE5DF76BA"
+    },
+    {
+      "Id": 518339,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 66,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "580",
+            "Platform": "Nintendo - Nintendo DS (Decrypted)"
+          },
+          {
+            "SignatureId": "1034",
+            "Platform": "Nintendo - Nintendo DS (Decrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "581",
+            "Platform": "Nintendo - Nintendo DS (Download Play)"
+          },
+          {
+            "SignatureId": "1035",
+            "Platform": "Nintendo - Nintendo DS (Download Play) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "582",
+            "Platform": "Nintendo - Nintendo DS (DSvision SD cards)"
+          },
+          {
+            "SignatureId": "1036",
+            "Platform": "Nintendo - Nintendo DS (DSvision SD cards) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "583",
+            "Platform": "Nintendo - Nintendo DS (Encrypted)"
+          },
+          {
+            "SignatureId": "1037",
+            "Platform": "Nintendo - Nintendo DS (Encrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "237",
+            "Platform": "Nintendo DS"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "20",
+            "ImmutableId": "20",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/nds",
+            "LastSearch": "2024-04-29T04:13:51",
+            "NextSearch": "2024-05-29T04:13:51",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "8",
+            "ImmutableId": "8",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=8",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "18",
+            "ImmutableId": "18",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/18/games",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "52",
+            "ImmutableId": "52",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-52/",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2026-10-03T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2026-10-03T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2026-10-03T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Nintendo_DS",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Nintendo_DS",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Nintendo_DS",
+            "LastSearch": "2025-12-21T10:26:34",
+            "NextSearch": "2026-01-21T10:26:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327260",
+            "ImmutableId": "5327260",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327260",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=15",
+            "LastSearch": "2026-05-09T13:07:40",
+            "NextSearch": "2027-04-28T13:07:40",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "26-nintendo-ds",
+            "ImmutableId": "26-nintendo-ds",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/26-nintendo-ds",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758312,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo DS, released in 2004, revolutionized handheld gaming with its innovative dual-screen design – a feature reflected in its name, standing for \"Dual Screen.\" This clamshell console, reminiscent of earlier Game Boy models, combined a traditional display with a responsive touchscreen, offering unique gameplay possibilities. Powered by dual processors, it boasted wireless connectivity for local and online multiplayer via the now-defunct Nintendo Wi-Fi Connection. \n\nA commercial success, the DS sold over 154 million units, becoming a cornerstone of Nintendo's lineup and surpassing the Game Boy Advance. Popular titles like *New Super Mario Bros.* captivated players, while its backward compatibility with Game Boy Advance games broadened its appeal. Later models, including the DS Lite and DSi, introduced enhancements like brighter screens, improved battery life, and digital cameras."
+          },
+          {
+            "Id": 110864,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "DS"
+          },
+          {
+            "Id": 213,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "D21178DAFE99B8EE877EC2B73185AE444175F9FD"
+          },
+          {
+            "Id": 49,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo DS, Nintendo-DS"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 95275,
+                    "Text": "256 kb vram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 94014,
+                    "Text": "320x240 resolution",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 604,
+                    "Text": "arm7/arm9",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 353,
+                    "Text": "dual screens",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 81,
+                    "Text": "bluetooth",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 272,
+                    "Text": "usb",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 79,
+                    "Text": "wi-fi",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 93,
+                    "Text": "button pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 137,
+                    "Text": "d-pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 358,
+                    "Text": "stylus",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 357,
+                    "Text": "touchscreen",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95274,
+                    "Text": "gamepad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 132,
+                    "Text": "handheld",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:13:51",
+        "UpdatedDate": "2026-05-24T16:31:35",
+        "Name": "Nintendo DS"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "1000 Cooking Recipes from Elle a Table, 1000-Cooking-Recipes-from-Elle-a-Table"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 25,
+          "Id": "1580853",
+          "Name": "1000 Cooking Recipes from Elle a Table (Europe) (En,Fr,De,Es,It) (Demo) (Europe).bcn",
+          "Size": 856,
+          "Crc": "940e9142",
+          "Md5": "1846911b04ecc37cf4f1292563316ffb",
+          "Sha1": "faeea42851e783aca8e7a55cf5d889a85be6f533",
+          "Sha256": "ccbd2de40a93ed852412623dbd9863b82422a63112c83b26c403c0d70241f705",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 25,
+          "Id": "1580855",
+          "Name": "1000 Cooking Recipes from Elle a Table (Europe) (En,Fr,De,Es,It) (Demo) (France).bcn",
+          "Size": 856,
+          "Crc": "65b1f8d0",
+          "Md5": "0f09ee1a5f3a672720e1dbebad759fe6",
+          "Sha1": "0aa6bd6e1c453e6cbad100722800e57ed3e31d00",
+          "Sha256": "336033140acd993c3794240385969a1f5d5b890e8f64d223292301d4070f232b",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 25,
+          "Id": "1580859",
+          "Name": "1000 Cooking Recipes from Elle a Table (Europe) (En,Fr,De,Es,It) (Demo) (Germany).bcn",
+          "Size": 856,
+          "Crc": "48cb3f4f",
+          "Md5": "6b95ba01ae76cbaf393a18b5a65fdedf",
+          "Sha1": "b55f6df3a30981a4b1e9a9cf3ad92ad4f15be411",
+          "Sha256": "b91d61692ddf19e64ccece0dfcad3757c037279659ad64548a863376541f0174",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 25,
+          "Id": "1580857",
+          "Name": "1000 Cooking Recipes from Elle a Table (Europe) (En,Fr,De,Es,It) (Demo) (Italy).bcn",
+          "Size": 856,
+          "Crc": "d8a27d37",
+          "Md5": "9520387fc94cb58ee4d4c2abda4d3fdb",
+          "Sha1": "0e91c8e553f73de65033c7f451ca894b191f80d5",
+          "Sha256": "99e9e5c40de32e3db6a027d9b6802db93ed35f0601363f681a47c48cdd0ea207",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 25,
+          "Id": "1580863",
+          "Name": "1000 Cooking Recipes from Elle a Table (Europe) (En,Fr,De,Es,It) (Demo) (Netherlands).bcn",
+          "Size": 856,
+          "Crc": "00bd54ad",
+          "Md5": "0f3673686940c71c56a7f62b04432ca2",
+          "Sha1": "075243d31dde9e4184a3d412ba3350280d871120",
+          "Sha256": "082f30cb75eac5b5099cee83fd36c930ced288dce5d7da3dd6bf059546a4ebcf",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 25,
+          "Id": "1580861",
+          "Name": "1000 Cooking Recipes from Elle a Table (Europe) (En,Fr,De,Es,It) (Demo) (Spain).bcn",
+          "Size": 856,
+          "Crc": "2b1291bd",
+          "Md5": "7cdb384e0c52a2e6804a06b209168412",
+          "Sha1": "dc15f273da74acd9b7b0d3a6ded467ab237e08e7",
+          "Sha256": "526f4808803efe04334ec5e516e17db1dad9e3e00ce70b8e2d8fb2bef2e4c654",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 25,
+          "Id": "1580852",
+          "Name": "1000 Cooking Recipes from Elle a Table (Europe) (En,Fr,De,Es,It) (Demo).nds",
+          "Size": 1443528,
+          "Crc": "3b550c68",
+          "Md5": "046424c8fd725dec5afd83ec54b0d0b4",
+          "Sha1": "198404ee740ece72adb767f42f57cca2485bae12",
+          "Sha256": "c27096c92bf0bb245827664ae22ebfe6827a49138636821396d0835c512b5b59",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1580854",
+          "Name": "1000 Cooking Recipes from Elle a Table.bin",
+          "Size": 1443860,
+          "Crc": "b44fd33b",
+          "Md5": "4ed4d16b7dc60fd1fc79b929f0f730a3",
+          "Sha1": "542c2969b4be82f6453e2a87c39734a9b9f07f4d",
+          "Sha256": "f48b61847df2d378aae88945cab101005d4122aee5d2c7aff79e31b28ab7a09a",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "1455",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2010-07-26",
+            "details.origin": "Extracted from Nintendo Channel WiiConnect24 DLC file (328274242.bin)",
+            "details.region": "Europe",
+            "details.dumper": "!anonymous",
+            "details.project": "!anonymous",
+            "details.originalformat": "Default",
+            "details.tool": "DSDLP Assembler",
+            "file.serial": "NTRJ",
+            "file.format": "Default",
+            "file.item": "Europe",
+            "file.note": "[Name: 1000 Cooking Recipes from ELLE A TABLE][Description: Sharpen up your entertaining skills␤with fabulous recipes for every taste!][Server: NintendoCh]"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1580856",
+          "Name": "1000 Cooking Recipes from Elle a Table.bin",
+          "Size": 1443860,
+          "Crc": "d1b8143f",
+          "Md5": "ded168c67d5fe2b7f9c95de7480cdd6e",
+          "Sha1": "deac828c2f909d6613236e5f30b4176c0bee194c",
+          "Sha256": "5d34bc3b7cc4d0d7055e6e4239d8bcb6b20fe2a7a9e52424787887b15ad95ea9",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "1456",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2010-07-26",
+            "details.origin": "Extracted from Nintendo Channel WiiConnect24 DLC file (328274242.bin)",
+            "details.region": "France",
+            "details.dumper": "!anonymous",
+            "details.project": "!anonymous",
+            "details.originalformat": "Default",
+            "details.tool": "DSDLP Assembler",
+            "file.serial": "NTRJ",
+            "file.format": "Default",
+            "file.item": "France",
+            "file.note": "[Name: 1 000 recettes de cuisine avec ELLE A TABLE][Description: Laissez votre talent culinaire s'ex-␤primer avec ces fabuleuses recettes !][Server: C.Nintendo]"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1580858",
+          "Name": "1000 Cooking Recipes from Elle a Table.bin",
+          "Size": 1443860,
+          "Crc": "d4304dfa",
+          "Md5": "efabb5dbfbaa534236b84badd3f08165",
+          "Sha1": "04c463836b1df8448d6ef03b1d3b220e086cf707",
+          "Sha256": "edbec9c1818c96b6677e0cb7bc25141be36a1e6e2e2e982a3f282dee518318c2",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "1457",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2010-07-26",
+            "details.origin": "Extracted from Nintendo Channel WiiConnect24 DLC file (328274242.bin)",
+            "details.region": "Italy",
+            "details.dumper": "!anonymous",
+            "details.project": "!anonymous",
+            "details.originalformat": "Default",
+            "details.tool": "DSDLP Assembler",
+            "file.serial": "NTRJ",
+            "file.format": "Default",
+            "file.item": "Italy",
+            "file.note": "[Name: 1000 ricette di cucina di ELLE A TABLE][Description: Delizia i tuoi ospiti con favolose␤ricette per ogni palato!][Server: C.Nintendo]"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1580860",
+          "Name": "1000 Cooking Recipes from Elle a Table.bin",
+          "Size": 1443860,
+          "Crc": "6c82e8ae",
+          "Md5": "fa68e7d1b63e516317cf1dd047a2f832",
+          "Sha1": "fad0bf0009fb2112a22e9c81275edc19b17ab6c2",
+          "Sha256": "82e637038e47f5f3c1d4adbbaea68b4b6fc5a2c5f591a3731dfb85f0f1243233",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "1458",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2010-07-26",
+            "details.origin": "Extracted from Nintendo Channel WiiConnect24 DLC file (328274242.bin)",
+            "details.region": "Germany",
+            "details.dumper": "!anonymous",
+            "details.project": "!anonymous",
+            "details.originalformat": "Default",
+            "details.tool": "DSDLP Assembler",
+            "file.serial": "NTRJ",
+            "file.format": "Default",
+            "file.item": "Germany",
+            "file.note": "[Name: Kochen mit ELLE A TABLE: 1 000 Rezepte][Description: Gute Unterhaltung mit tollen␤Rezepten für jeden Geschmack!][Server: Nintendo-K]"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1580862",
+          "Name": "1000 Cooking Recipes from Elle a Table.bin",
+          "Size": 1443860,
+          "Crc": "eb16e743",
+          "Md5": "50958133daece98184474c735a227cfc",
+          "Sha1": "9d5e508f84b2a16deefdd7448138689a3724a338",
+          "Sha256": "78fa01f5f08f98a5ead822b64b404cdb1e45354b36f07bd136ac4b4fae48ddd0",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "1459",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2010-07-26",
+            "details.origin": "Extracted from Nintendo Channel WiiConnect24 DLC file (328274242.bin)",
+            "details.region": "Spain",
+            "details.dumper": "!anonymous",
+            "details.project": "!anonymous",
+            "details.originalformat": "Default",
+            "details.tool": "DSDLP Assembler",
+            "file.serial": "NTRJ",
+            "file.format": "Default",
+            "file.item": "Spain",
+            "file.note": "[Name: Cocina con ELLE A TABLE: 1000 recetas][Description: ¡Mejora tus dotes culinarias con mil␤suculentas recetas para cada ocasión!][Server: C.Nintendo]"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1580864",
+          "Name": "1000 Cooking Recipes from Elle a Table.bin",
+          "Size": 1443860,
+          "Crc": "6e191248",
+          "Md5": "25896fcf488ae55654c78da25484ae08",
+          "Sha1": "773b0339805b2dd000c8779fe670b065ed472f6b",
+          "Sha256": "e09911cb06ffd649da2626fa78b9d2a42a93b2c515fc35a40471e580f5f49afd",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "1460",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2010-07-26",
+            "details.origin": "Extracted from Nintendo Channel WiiConnect24 DLC file (328274242.bin)",
+            "details.region": "Netherlands",
+            "details.dumper": "!anonymous",
+            "details.project": "!anonymous",
+            "details.originalformat": "Default",
+            "details.tool": "DSDLP Assembler",
+            "file.serial": "NTRJ",
+            "file.format": "Default",
+            "file.item": "Netherlands",
+            "file.note": "[Name: 1000 Cooking Recipes from ELLE A TABLE][Description: Speel de ideale gastheer of -vrouw␤met geweldige recepten voor elke smaak.][Server: Nintendo-k]"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1573359",
+          "Name": "1000 Cooking Recipes from Elle a Table (Europe) (En,Fr,De,Es,It) (NDSi Enhanced).nds",
+          "Size": 134217728,
+          "Crc": "a9b1f1de",
+          "Md5": "338cac568dcba1ca53051e443f3b005b",
+          "Sha1": "1ab191efea5a9a280b0d9a2565ea353c52bf6d07",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1582426",
+          "Name": "1000 Cooking Recipes from Elle a Table (Europe) (En,Fr,De,Es,It) (NDSi Enhanced).nds",
+          "Size": 134217728,
+          "Crc": "36c310dd",
+          "Md5": "ce23f1dce658fe47d8cfaa4097a5c2c0",
+          "Sha1": "5a797d258a8dbb06b7bf78566b490502c09c0406",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 2594,
+              "Text": "cooking simulation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 817,
+              "Text": "educational",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2595,
+              "Text": "lifestyle",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 2604,
+              "Text": "culinary arts",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2602,
+              "Text": "french cuisine",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2603,
+              "Text": "home cooking",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 1349,
+              "Text": "isometric view",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 2600,
+              "Text": "nutrition info",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2601,
+              "Text": "recipe recommendations",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2599,
+              "Text": "recipe sharing",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 2596,
+              "Text": "recipe creation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2597,
+              "Text": "step-by-step cooking",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2598,
+              "Text": "voice guidance",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, English, Spanish, French, Italian"
+    }
+  ],
+  "CreatedDate": "2025-07-22T06:27:35",
+  "UpdatedDate": "2026-01-27T05:15:49",
+  "Name": "1000 Cooking Recipes from Elle a Table"
+}

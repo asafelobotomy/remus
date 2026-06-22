@@ -1,0 +1,540 @@
+{
+  "Id": 608089,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "893425",
+      "Name": "102dalm\\disney les 102 dalmatiens a la rescousse",
+      "Year": "",
+      "Country": null,
+      "Platform": "Sega - Dreamcast",
+      "SourceId": "11604",
+      "MetadataSource": "11"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-05-20T19:57:53",
+      "NextSearch": "2026-10-22T19:57:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-05-20T19:57:53",
+      "NextSearch": "2026-10-22T19:57:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-05-20T19:57:53",
+      "NextSearch": "2026-10-22T19:57:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-05-20T19:57:53",
+      "NextSearch": "2026-10-22T19:57:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-05-20T19:57:53",
+      "NextSearch": "2026-10-22T19:57:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-05-20T19:57:53",
+      "NextSearch": "2026-10-22T19:57:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-05-20T19:57:53",
+      "NextSearch": "2026-10-22T19:57:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-05-20T19:57:53",
+      "NextSearch": "2026-10-22T19:57:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-05-20T19:57:53",
+      "NextSearch": "2026-10-22T19:57:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-05-20T19:57:53",
+      "NextSearch": "2026-10-22T19:57:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T01:11:52",
+      "NextSearch": "2026-04-25T01:11:52",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 1254667,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 603738,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "712",
+            "Platform": "Dreamcast"
+          },
+          {
+            "SignatureId": "685",
+            "Platform": "Sega - Dreamcast"
+          },
+          {
+            "SignatureId": "608",
+            "Platform": "Sega - Dreamcast (Development Kit Hard Drives)"
+          },
+          {
+            "SignatureId": "1063",
+            "Platform": "Sega - Dreamcast (Development Kit Hard Drives) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "609",
+            "Platform": "Sega - Dreamcast (Visual Memory Unit)"
+          },
+          {
+            "SignatureId": "1064",
+            "Platform": "Sega - Dreamcast (Visual Memory Unit) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "1120",
+            "Platform": "Sega Dreamcast"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "23",
+            "ImmutableId": "23",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/dc",
+            "LastSearch": "2026-04-09T12:01:37",
+            "NextSearch": "2026-09-21T12:01:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "16",
+            "ImmutableId": "16",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=16",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2027-01-04T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40",
+            "ImmutableId": "40",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/40/games",
+            "LastSearch": "2026-04-09T12:01:37",
+            "NextSearch": "2026-09-21T12:01:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "37",
+            "ImmutableId": "37",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-37/",
+            "LastSearch": "2026-04-09T12:01:37",
+            "NextSearch": "2026-09-21T12:01:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2026-10-26T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2026-10-26T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2026-10-26T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Dreamcast",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Dreamcast",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Dreamcast",
+            "LastSearch": "2026-04-09T12:01:37",
+            "NextSearch": "2026-09-21T12:01:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327256",
+            "ImmutableId": "5327256",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327256",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2027-01-04T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "23",
+            "ImmutableId": "23",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=23",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2027-01-04T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40-sega-dreamcast",
+            "ImmutableId": "40-sega-dreamcast",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/40-sega-dreamcast",
+            "LastSearch": "2026-02-24T09:49:42",
+            "NextSearch": "2026-04-24T09:49:42",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 1230358,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Sega Dreamcast, released in Japan in 1998 and globally in 1999, marked Sega's final foray into home console hardware. As the first sixth-generation console, it innovated with features like a built-in modem for online play and the use of GD-ROM discs to reduce production costs. Sharing architecture with Sega's NAOMI arcade system board, the Dreamcast delivered authentic arcade experiences at home. While hampered by competition from the PlayStation 2 and limited third-party support, the Dreamcast left a lasting legacy. \n\nPopular titles like *Sonic Adventure*, *Crazy Taxi*, *Shenmue*, *Jet Set Radio*, and *Phantasy Star Online* showcased its capabilities. Despite selling 9.13 million units worldwide, Sega discontinued the Dreamcast in 2001, transitioning to a third-party developer role. Today, it's celebrated for its pioneering online features and innovative game design."
+          },
+          {
+            "Id": 1231570,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "Dreamcast"
+          },
+          {
+            "Id": 1231571,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "473BE7DB3057CD0628BB11170D262DE82CD713B1"
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sega Dreamcast, Sega-Dreamcast"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 88,
+                    "Text": "3d graphics",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 6,
+                    "Text": "cd-rom drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95365,
+                    "Text": "mpeg encoder",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 13,
+                    "Text": "controller",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 2947,
+                    "Text": "dial-up",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 248,
+                    "Text": "modem support",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 349,
+                    "Text": "online service",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2026-04-09T12:01:37",
+        "UpdatedDate": "2026-05-25T01:12:04",
+        "Name": "Sega Dreamcast"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "102dalm\\disney les 102 dalmatiens a la rescousse, 102dalm\\disney-les-102-dalmatiens-a-la-rescousse"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 12,
+          "Id": "3859747",
+          "Name": "102dalm\\disney les 102 dalmatiens a la rescousse (fra, ger, ita, spa).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "89854cde030ae64fedcec57bafd1ded6dc46c000",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {}
+    }
+  ],
+  "CreatedDate": "2026-05-20T19:57:53",
+  "UpdatedDate": "2026-05-20T19:58:11",
+  "Name": "102dalm\\disney les 102 dalmatiens a la rescousse"
+}

@@ -1,0 +1,1098 @@
+{
+  "Id": 317234,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "482270",
+      "Name": "101 Penguin Pets 3D",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo 3DS (Digital) (Deprecated)",
+      "SourceId": "6080",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "951397",
+      "Name": "101 Penguin Pets 3D",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo 3DS (Digital) (CDN)",
+      "SourceId": "12429",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "477761",
+      "Name": "101 Penguin Pets 3D",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo 3DS (Digital) (CDN)",
+      "SourceId": "12429",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "951396",
+      "Name": "101 Penguin Pets 3D",
+      "Year": "",
+      "Country": "JP",
+      "Platform": "Nintendo - Nintendo 3DS (Digital) (CDN)",
+      "SourceId": "12429",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "84620",
+      "ImmutableId": "84620",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/101-penguin-pets-3d",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-11-28T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "98230",
+      "ImmutableId": "98230",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=98230",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-11-28T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-04-18T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-04-18T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-04-18T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-04-18T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-04-18T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-04-18T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-02-14T00:23:08",
+      "NextSearch": "2026-04-18T00:23:08",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:43:40",
+      "NextSearch": "2026-03-03T13:43:40",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T16:30:20",
+      "NextSearch": "2026-04-24T16:30:20",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759239,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 101 Penguin Pets 3D - Nintendo 3DS\n\nGet ready for a flurry of fun with *101 Penguin Pets 3D*! Dive into a vibrant, 3D world where you can adopt and care for over 101 adorable penguin companions. Each penguin is unique, waiting for you to dress them in hilarious outfits – hats, glasses, shoes, and more! Teach your feathered friends amazing tricks like breakdancing and jumping, then show off their skills in exciting dance competitions.\n\nBeyond the fashion and fun, nurture your penguin through vet checkups, bubble baths, and even skiing adventures! A variety of silly minigames keep the gameplay fresh and engaging. Utilize the Nintendo 3DS’s stereoscopic 3D capabilities to zoom, rotate, and truly immerse yourself in the playful world.  From romping in the snow to earning toys and furniture, *101 Penguin Pets 3D* offers endless hours of heartwarming fun and penguin-powered entertainment!  Pamper, play, and love your way to penguin paradise!"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 594331,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "CC6C800392F7FF658FCF02FB4DA9943448CCA3FD"
+    },
+    {
+      "Id": 594330,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 62,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "570",
+            "Platform": "Nintendo - Nintendo 3DS (Decrypted)"
+          },
+          {
+            "SignatureId": "1024",
+            "Platform": "Nintendo - Nintendo 3DS (Decrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "571",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (CDN)"
+          },
+          {
+            "SignatureId": "572",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Deprecated)"
+          },
+          {
+            "SignatureId": "1025",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Deprecated) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "573",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Dev ROMs)"
+          },
+          {
+            "SignatureId": "1026",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Dev ROMs) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "574",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Pre-Install)"
+          },
+          {
+            "SignatureId": "1027",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (Pre-Install) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "790",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (SpotPass)"
+          },
+          {
+            "SignatureId": "1028",
+            "Platform": "Nintendo - Nintendo 3DS (Digital) (SpotPass) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "575",
+            "Platform": "Nintendo - Nintendo 3DS (Encrypted)"
+          },
+          {
+            "SignatureId": "1029",
+            "Platform": "Nintendo - Nintendo 3DS (Encrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "234",
+            "Platform": "Nintendo 3DS"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "37",
+            "ImmutableId": "37",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/3ds",
+            "LastSearch": "2024-04-29T04:10:51",
+            "NextSearch": "2024-05-29T04:10:51",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "4912",
+            "ImmutableId": "4912",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=4912",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "62",
+            "ImmutableId": "62",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/62/games",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "117",
+            "ImmutableId": "117",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-117/",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2026-07-18T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2026-07-18T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2026-07-18T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Nintendo_3DS",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Nintendo_3DS",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Nintendo_3DS",
+            "LastSearch": "2025-12-21T10:26:30",
+            "NextSearch": "2026-01-21T10:26:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5283557",
+            "ImmutableId": "5283557",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5283557",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "17",
+            "ImmutableId": "17",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=17",
+            "LastSearch": "2026-05-09T13:06:27",
+            "NextSearch": "2027-03-22T13:06:27",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "24-nintendo-3ds",
+            "ImmutableId": "24-nintendo-3ds",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/24-nintendo-3ds",
+            "LastSearch": "2026-02-24T09:49:38",
+            "NextSearch": "2026-04-24T09:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758303,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo 3DS is a foldable, dual-screen handheld game console that succeeded the Nintendo DS and DSi, released in 2011. A defining feature is its autostereoscopic 3D visuals, eliminating the need for special glasses. It retains backward compatibility with Nintendo DS software. Initially priced at $249.99, a subsequent price reduction and free game promotion significantly boosted its popularity. \n\nHardware revisions included the 3DS XL with larger screens, the 2DS (a non-folding model), and the New 3DS with upgraded hardware. The console boasts a virtual console library, Miis, an Activity Log, and the innovative StreetPass and SpotPass features. Popular titles include *Mario Kart 7*, which sold nearly 19 million units, alongside *Animal Crossing: New Leaf*, *The Legend of Zelda: Ocarina of Time 3D*, and *Super Street Fighter IV 3D Edition*. Discontinued in 2020, the 3DS remains a beloved handheld."
+          },
+          {
+            "Id": 210,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "4FF887C52E6CEE3024D97CC8AE1EB6FF55AFB1C8"
+          },
+          {
+            "Id": 45,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo 3DS, Nintendo-3DS"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 354,
+                    "Text": "3d display",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88506,
+                    "Text": "autostereoscopic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 94011,
+                    "Text": "dual-core cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 355,
+                    "Text": "touchscreen",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 88509,
+                    "Text": "3d slider",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 93,
+                    "Text": "button pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88508,
+                    "Text": "motion sensor",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 357,
+                    "Text": "touchscreen",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 132,
+                    "Text": "handheld",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 394,
+                    "Text": "infrared",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 79,
+                    "Text": "wi-fi",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 74,
+                    "Text": "modern",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:10:51",
+        "UpdatedDate": "2026-05-24T16:30:34",
+        "Name": "Nintendo 3DS"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "101 Penguin Pets 3D, 101-Penguin-Pets-3D"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "1567925",
+          "Name": "101 Penguin Pets 3D (Europe) (En,Fr,De,Es,It) (eShop).3ds",
+          "Size": 134217728,
+          "Crc": "37d0d66e",
+          "Md5": "2bccd2e8ce2ccd0dd19693aa3146cce0",
+          "Sha1": "dbf3e75b8b630f456abd14757e6f7bbefd12aa9f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497794",
+          "Name": "00000000",
+          "Size": 68243456,
+          "Crc": "c2c3a8a4",
+          "Md5": "89a677ea5df8baf02691a22fe24f9e85",
+          "Sha1": "4ca12f603702e0d18ad3a95d2b93b305756f69f0",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497797",
+          "Name": "00000000",
+          "Size": 69312512,
+          "Crc": "9844a538",
+          "Md5": "3785a8431b54cfd20f2dac03de619086",
+          "Sha1": "47671f57d3d8d888d65144c7dea915a75874d2d6",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497800",
+          "Name": "00000000",
+          "Size": 67829760,
+          "Crc": "fcd5d09c",
+          "Md5": "0168592c792751f5be95d6ca895abaae",
+          "Sha1": "98f3050d1491231c7b694ac82e3b86e77a1d554f",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497795",
+          "Name": "00000001",
+          "Size": 1265664,
+          "Crc": "57173619",
+          "Md5": "f6f2d45a3b21b3dc8895f8088267a395",
+          "Sha1": "86a57ff2c070fe544ccfaada5a9225e93cfae4e1",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497798",
+          "Name": "00000001",
+          "Size": 1089536,
+          "Crc": "c18ea87c",
+          "Md5": "f21be158f64c6d8945e4b37bc48c132a",
+          "Sha1": "f5b69116a00abe55c35592857e562e48f762587f",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497801",
+          "Name": "00000001",
+          "Size": 1044480,
+          "Crc": "0389686c",
+          "Md5": "97200f5ebdf5ae4c7fb9dcae78f3cf34",
+          "Sha1": "6d08ed2199b32f77c666c5649b3b9fc30876fc12",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497796",
+          "Name": "tmd.0",
+          "Size": 4708,
+          "Crc": "2a42b6fc",
+          "Md5": "518ab591c7f63188cd8a8ecb9155f5b9",
+          "Sha1": "8a71340bc83a3db5e7aa7c23e97a72cd44087b9e",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497799",
+          "Name": "tmd.0",
+          "Size": 4708,
+          "Crc": "c6e41bcc",
+          "Md5": "ee6af817510d5aa7d41ff8fe18f5b3b3",
+          "Sha1": "1143599dad80f155b42b9d2199ac8cf3feb6c155",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1497802",
+          "Name": "tmd.0",
+          "Size": 4708,
+          "Crc": "0c144299",
+          "Md5": "d264a7f6f7b01336760e21f158a91b70",
+          "Sha1": "73a74d900d8e31cedb1b13f6f5201e88b663dd71",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 2718,
+              "Text": "3d",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2719,
+              "Text": "free roam",
+              "AIGenerated": true
+            },
+            {
+              "Id": 887,
+              "Text": "isometric",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 2695,
+              "Text": "3d interaction",
+              "AIGenerated": true
+            },
+            {
+              "Id": 892,
+              "Text": "character customization",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2716,
+              "Text": "pet grooming",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 2714,
+              "Text": "care simulation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1044,
+              "Text": "mini games",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2715,
+              "Text": "training",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 974,
+              "Text": "comedy",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2104,
+              "Text": "pet ownership",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2717,
+              "Text": "snowy environments",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 1701,
+              "Text": "family",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2099,
+              "Text": "pet care",
+              "AIGenerated": true
+            },
+            {
+              "Id": 888,
+              "Text": "simulation",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU), Japan (JP), United States (US)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, English, Spanish, French, Italian"
+    }
+  ],
+  "CreatedDate": "2025-08-12T09:36:17",
+  "UpdatedDate": "2026-02-14T03:12:53",
+  "Name": "101 Penguin Pets 3D"
+}

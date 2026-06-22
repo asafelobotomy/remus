@@ -1,0 +1,1080 @@
+{
+  "Id": 282181,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "601620",
+      "Name": "1 on 1",
+      "Year": "",
+      "Country": "JP",
+      "Platform": "Sony - PlayStation",
+      "SourceId": "38236",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "679860",
+      "Name": "1 on 1",
+      "Year": "",
+      "Country": "JP",
+      "Platform": "Sony - PlayStation (PS one Classics) (PSN)",
+      "SourceId": "12474",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "513884",
+      "Name": "JP0240-NPJJ00292_00-0000000000000001",
+      "Year": "",
+      "Country": null,
+      "Platform": "Sony - PlayStation (PS one Classics) (PSN)",
+      "SourceId": "3613",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "205772",
+      "ImmutableId": "205772",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/1-on-1",
+      "LastSearch": "2025-07-26T02:32:35",
+      "NextSearch": "2026-08-24T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "105767",
+      "ImmutableId": "105767",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=105767",
+      "LastSearch": "2025-07-26T02:32:35",
+      "NextSearch": "2026-08-24T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "26830",
+      "ImmutableId": "26830",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/26830",
+      "LastSearch": "2025-07-26T02:32:35",
+      "NextSearch": "2026-08-24T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "41025",
+      "ImmutableId": "41025",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-41025/",
+      "LastSearch": "2025-07-26T02:32:35",
+      "NextSearch": "2026-08-24T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-26T02:32:36",
+      "NextSearch": "2026-04-11T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-26T02:32:36",
+      "NextSearch": "2026-04-11T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-26T02:32:36",
+      "NextSearch": "2026-04-11T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/List_of_downloadable_PlayStation_games_(Japan)",
+      "ImmutableId": "https://en.wikipedia.org/wiki/List_of_downloadable_PlayStation_games_(Japan)",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/List_of_downloadable_PlayStation_games_(Japan)",
+      "LastSearch": "2025-07-26T02:32:36",
+      "NextSearch": "2026-07-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-07-26T02:32:36",
+      "NextSearch": "2026-04-11T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T14:00:47",
+      "NextSearch": "2026-03-03T14:00:47",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T01:26:55",
+      "NextSearch": "2026-04-25T01:26:55",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 758868,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 1 on 1 (Sony PlayStation) - Synopsis\n\n*1 on 1* is a unique and energetic sports game for the PlayStation, blending basketball with fighting game mechanics. Released in 1998, it distinguishes itself with its over-the-top, anime-inspired visuals and a focus on individual player rivalries rather than team play. \n\nPlayers choose from a roster of eccentric characters, each possessing distinct special moves and unique basketball skills. Gameplay revolves around fast-paced one-on-one matches, where players must utilize a combination of dribbling, passing, shooting, and powerful special attacks to outmaneuver and defeat their opponents. \n\nBeyond the core basketball action, *1 on 1* introduces a combat system allowing players to unleash devastating blows and signature moves. The game's vibrant presentation, coupled with its unconventional gameplay, creates a chaotic and entertaining experience that stands out from traditional sports titles. It's a celebration of individual skill and a showcase of over-the-top action."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 541281,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "C6705CA3B31CA309AD013CBE0F6763ED5296E543"
+    },
+    {
+      "Id": 541280,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 100,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "743",
+            "Platform": "PlayStation"
+          },
+          {
+            "SignatureId": "683",
+            "Platform": "PlayStation GameShark Updates"
+          },
+          {
+            "SignatureId": "691",
+            "Platform": "Sony - PlayStation"
+          },
+          {
+            "SignatureId": "624",
+            "Platform": "Sony - PlayStation (PS one Classics) (PSN)"
+          },
+          {
+            "SignatureId": "1079",
+            "Platform": "Sony - PlayStation (PS one Classics) (PSN) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "327",
+            "Platform": "Sony PlayStation"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "7",
+            "ImmutableId": "7",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/ps",
+            "LastSearch": "2024-04-29T11:18:44",
+            "NextSearch": "2024-05-29T11:18:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "10",
+            "ImmutableId": "10",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=10",
+            "LastSearch": "2024-12-12T01:25:31",
+            "NextSearch": "2025-01-12T01:25:31",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "12",
+            "ImmutableId": "12",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/12/games",
+            "LastSearch": "2025-05-06T21:46:00",
+            "NextSearch": "2025-06-06T21:46:00",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "22",
+            "ImmutableId": "22",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-22/",
+            "LastSearch": "2025-06-20T15:32:12",
+            "NextSearch": "2025-07-20T15:32:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2026-10-30T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2026-10-30T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2026-10-30T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/PlayStation_(console)",
+            "ImmutableId": "https://en.wikipedia.org/wiki/PlayStation_(console)",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/PlayStation_(console)",
+            "LastSearch": "2025-12-21T10:28:07",
+            "NextSearch": "2026-01-21T10:28:07",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327251",
+            "ImmutableId": "5327251",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327251",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2027-02-02T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "57",
+            "ImmutableId": "57",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=57",
+            "LastSearch": "2026-05-09T13:20:30",
+            "NextSearch": "2027-02-02T13:20:30",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "47-sony-playstation",
+            "ImmutableId": "47-sony-playstation",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/47-sony-playstation",
+            "LastSearch": "2026-02-24T09:49:32",
+            "NextSearch": "2026-04-24T09:49:32",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758491,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The PlayStation (originally codenamed PSX) is a home video game console developed and marketed by Sony Computer Entertainment, released in Japan in 1994 and globally throughout 1995. It marked Sony's entry into the console market, challenging Nintendo and Sega. Designed with an emphasis on 3D polygon graphics and streamlined game development, the PlayStation fostered a vast and diverse game library, attracting numerous third-party developers. \n\nCritically acclaimed titles like *Final Fantasy VII*, *Crash Bandicoot*, *Spyro the Dragon*, *Metal Gear Solid*, *Tomb Raider*, and *Gran Turismo* became instant classics, with *Gran Turismo* becoming the console's best-selling game. The PlayStation revolutionized the industry by embracing CD-ROMs and appealing to a broader, more adult audience. Ultimately, it sold over 100 million units, paving the way for the PlayStation 2 and establishing Sony as a dominant force in gaming."
+          },
+          {
+            "Id": 110865,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "PS1"
+          },
+          {
+            "Id": 236,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "652D5596E86C59DBC04645370C13B92FD3F53CC7"
+          },
+          {
+            "Id": 461506,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 19877,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "14855",
+                  "Publisher": "Sony"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "AutomaticTooManyMatches",
+                  "Source": "IGDB",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T14:40:50",
+                  "NextSearch": "2026-08-19T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:14:46",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:36",
+                  "NextSearch": "2026-03-03T13:05:36",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:32",
+                  "NextSearch": "2026-04-24T09:49:32",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [],
+              "CreatedDate": "2024-05-26T10:46:55",
+              "UpdatedDate": "2026-01-31T19:53:39",
+              "Name": "Sony"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sony PlayStation, Sony-PlayStation"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 8,
+                    "Text": "32-bit processor",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 6,
+                    "Text": "cd-rom drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95325,
+                    "Text": "soundscope",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 342,
+                    "Text": "analog stick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95271,
+                    "Text": "digital pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88561,
+                    "Text": "dual analog controller",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 30,
+                    "Text": "composite video",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 12,
+                    "Text": "scart",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T11:18:44",
+        "UpdatedDate": "2026-05-25T01:27:05",
+        "Name": "Sony PlayStation"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "1 on 1, 1-on-1, I on I, I-on-I, One on One, One-on-One"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "2380504",
+          "Name": "1 on 1 (Japan) (Demo).bin",
+          "Size": 362012784,
+          "Crc": "41c5e9a9",
+          "Md5": "27402c16d11558ed190d137f13213d31",
+          "Sha1": "0aeb97ad2e59f70ffe1af5a09bf93a7481635718",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPM 80351"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3865877",
+          "Name": "1 on 1 (Japan) (Demo).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "9779d6a9ef5a04eb3584fad9144add3c5e0d0676",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2380503",
+          "Name": "1 on 1 (Japan) (Demo).cue",
+          "Size": 87,
+          "Crc": "c9c4b962",
+          "Md5": "0afb67d6b69515d6c628b4f7773dc4b6",
+          "Sha1": "78b5a68f677dfd82b0486fc164ebb5d623542c48",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPM 80351"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2380506",
+          "Name": "1 on 1 (Japan).bin",
+          "Size": 362012784,
+          "Crc": "dfb6de76",
+          "Md5": "17ac1624d397c35e77956e766912a055",
+          "Sha1": "94f6b76c481536f72923e0f47875d17ac8798302",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01706, SLPS 02298"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3865876",
+          "Name": "1 on 1 (Japan).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "f39f9fae87573f96d42d254b102b9638bec57f18",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2380505",
+          "Name": "1 on 1 (Japan).cue",
+          "Size": 80,
+          "Crc": "77ce8caa",
+          "Md5": "e2b916aaa32f40be68ffe2b83cf2881a",
+          "Sha1": "b6c17ee3571a00b703d1526111baa8fa7125fab1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPS 01706, SLPS 02298"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 24,
+          "Id": "2959171",
+          "Name": "7r7Iw6cdIvvaf4ueD9AfNxL28SHOMO5SQuPQA6mpPRfDegUNuSKi6bfQC0BOD0rjh4dGeWOsub8h75OnFaI1I6NUXvJqyga3Ktar4.pkg",
+          "Size": 167323008,
+          "Crc": "8dd0498e",
+          "Md5": "d153347726e8a9152da9f7e5020cbce7",
+          "Sha1": "56c828fba4d97bdd726012ab20e25fa8ec5c4604",
+          "Sha256": "bf394bbdae3718564d4e80db9e4ec55a97c657f9033fa7b4ec6331518aa3d304",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "2959172",
+          "Name": "JP0240-NPJJ00292_00-0000000000000001.rap",
+          "Size": 16,
+          "Crc": "56c69f9c",
+          "Md5": "9fef193a685da46835dc9852e384accf",
+          "Sha1": "c96cb984a48bfa67ffbda19ce6a7971df9f6e7fc",
+          "Sha256": "a336b6fd439015b1770d57e8c67a8a10b80d9844dcb13f04ec3e7fe9ed1cb75b",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {
+            "ja": "Japanese"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "1294",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2022-04-02",
+            "details.r_date": "2022-04-02",
+            "details.origin": "CDN",
+            "details.region": "Unset",
+            "details.dumper": "Landcross",
+            "details.project": "No-Intro",
+            "details.originalformat": "Default",
+            "file.format": "Default"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1693280",
+          "Name": "7r7Iw6cdIvvaf4ueD9AfNxL28SHOMO5SQuPQA6mpPRfDegUNuSKi6bfQC0BOD0rjh4dGeWOsub8h75OnFaI1I6NUXvJqyga3Ktar4.pkg",
+          "Size": 167323008,
+          "Crc": "8dd0498e",
+          "Md5": "d153347726e8a9152da9f7e5020cbce7",
+          "Sha1": "56c828fba4d97bdd726012ab20e25fa8ec5c4604",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1693281",
+          "Name": "JP0240-NPJJ00292_00-0000000000000001.rap",
+          "Size": 16,
+          "Crc": "56c69f9c",
+          "Md5": "9fef193a685da46835dc9852e384accf",
+          "Sha1": "c96cb984a48bfa67ffbda19ce6a7971df9f6e7fc",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "1294",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2022-04-02",
+            "details.r_date": "2022-04-02",
+            "details.origin": "CDN",
+            "details.region": "Unset",
+            "details.dumper": "Landcross",
+            "details.project": "No-Intro",
+            "details.originalformat": "Default",
+            "file.sha256": "bf394bbdae3718564d4e80db9e4ec55a97c657f9033fa7b4ec6331518aa3d304",
+            "file.format": "Default"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 2269,
+              "Text": "athletics",
+              "AIGenerated": true
+            },
+            {
+              "Id": 885,
+              "Text": "competition",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2198,
+              "Text": "skill",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 889,
+              "Text": "competitive",
+              "AIGenerated": true
+            },
+            {
+              "Id": 888,
+              "Text": "simulation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 876,
+              "Text": "sports",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 1931,
+              "Text": "custom matches",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1479,
+              "Text": "tournament mode",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1617,
+              "Text": "training mode",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 2195,
+              "Text": "one-on-one",
+              "AIGenerated": true
+            },
+            {
+              "Id": 948,
+              "Text": "strategy",
+              "AIGenerated": true
+            },
+            {
+              "Id": 819,
+              "Text": "turn-based",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 861,
+              "Text": "side-view",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Japan (JP)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "Japanese"
+    }
+  ],
+  "CreatedDate": "2025-07-26T02:32:35",
+  "UpdatedDate": "2026-01-27T05:07:22",
+  "Name": "1 on 1"
+}

@@ -1,0 +1,971 @@
+{
+  "Id": 430659,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "870858",
+      "Name": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom",
+      "Year": "",
+      "Country": null,
+      "Platform": "Nintendo - Nintendo GameCube (NPDP Carts) (Parent-Clone)",
+      "SourceId": "10453",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "905903",
+      "Name": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom",
+      "Year": "11/10/2005 00:00:00",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo GameCube (NPDP Carts) (Parent-Clone)",
+      "SourceId": "12453",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "503697",
+      "Name": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom",
+      "Year": "",
+      "Country": null,
+      "Platform": "Nintendo - Nintendo GameCube (NPDP Carts)",
+      "SourceId": "3577",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "905886",
+      "Name": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom",
+      "Year": "11/10/2005 00:00:00",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo GameCube (NPDP Carts)",
+      "SourceId": "12452",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-05-08T01:19:11",
+      "NextSearch": "2026-09-04T01:19:11",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-05-08T01:19:11",
+      "NextSearch": "2026-09-04T01:19:11",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-05-08T01:19:11",
+      "NextSearch": "2026-09-04T01:19:11",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-05-08T01:19:11",
+      "NextSearch": "2026-09-04T01:19:11",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-05-08T01:19:11",
+      "NextSearch": "2026-09-04T01:19:11",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-05-08T01:19:11",
+      "NextSearch": "2026-09-04T01:19:11",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-05-08T01:19:11",
+      "NextSearch": "2026-09-04T01:19:11",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-05-08T01:19:11",
+      "NextSearch": "2026-09-04T01:19:11",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-05-08T01:19:11",
+      "NextSearch": "2026-09-04T01:19:11",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-05-08T01:19:11",
+      "NextSearch": "2026-09-04T01:19:11",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-26T03:58:39",
+      "NextSearch": "2026-04-26T03:58:39",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 810682,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 73,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "721",
+            "Platform": "GameCube"
+          },
+          {
+            "SignatureId": "677",
+            "Platform": "Nintendo - GameCube"
+          },
+          {
+            "SignatureId": "791",
+            "Platform": "Nintendo - Nintendo GameCube (Memory Card)"
+          },
+          {
+            "SignatureId": "591",
+            "Platform": "Nintendo - Nintendo GameCube (NPDP Carts)"
+          },
+          {
+            "SignatureId": "1045",
+            "Platform": "Nintendo - Nintendo GameCube (NPDP Carts) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "244",
+            "Platform": "Nintendo GameCube"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "21",
+            "ImmutableId": "21",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/ngc",
+            "LastSearch": "2024-04-29T04:21:06",
+            "NextSearch": "2024-05-29T04:21:06",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "2",
+            "ImmutableId": "2",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=2",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2027-01-16T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "16",
+            "ImmutableId": "16",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/16/games",
+            "LastSearch": "2025-05-06T21:45:16",
+            "NextSearch": "2025-06-06T21:45:16",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "23",
+            "ImmutableId": "23",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-23/",
+            "LastSearch": "2025-06-20T15:24:47",
+            "NextSearch": "2025-07-20T15:24:47",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2026-07-21T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2026-07-21T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2026-07-21T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/GameCube",
+            "ImmutableId": "https://en.wikipedia.org/wiki/GameCube",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/GameCube",
+            "LastSearch": "2025-12-21T10:26:44",
+            "NextSearch": "2026-01-21T10:26:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327259",
+            "ImmutableId": "5327259",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327259",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2027-01-16T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "13",
+            "ImmutableId": "13",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=13",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2027-01-16T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "31-nintendo-gamecube",
+            "ImmutableId": "31-nintendo-gamecube",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/31-nintendo-gamecube",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758313,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo GameCube, released in 2001, marked Nintendo’s fourth foray into home consoles and a direct competitor to the PlayStation 2 and Xbox. Departing from cartridges, it utilized proprietary miniDVD optical discs, a design choice prioritizing developer ease and cost-effectiveness. Powered by a custom IBM \"Gekko\" CPU and an ArtX \"Flipper\" GPU, the GameCube delivered impressive performance for its time. Notably, it lacked DVD playback capabilities, focusing solely on gaming. \n\nThe console fostered a strong library of exclusive titles, including critically acclaimed games like *Super Smash Bros. Melee*, *Metroid Prime*, *The Legend of Zelda: The Wind Waker*, and *Resident Evil 4*. While commercially less successful than its rivals, the GameCube’s innovative controller and unique game experiences cemented its legacy, with its design influencing subsequent Nintendo consoles and its games remaining beloved classics."
+          },
+          {
+            "Id": 110858,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "GameCube"
+          },
+          {
+            "Id": 219,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "8641C931252BA59431447F3686D077DF166170A8"
+          },
+          {
+            "Id": 56,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo GameCube, Nintendo-GameCube"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 88530,
+                    "Text": "128-bit architecture",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 276,
+                    "Text": "dvd drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88529,
+                    "Text": "powerpc cpu",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 88531,
+                    "Text": "broadband",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 80,
+                    "Text": "ethernet",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 144,
+                    "Text": "link cable",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 13,
+                    "Text": "controller",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88532,
+                    "Text": "game boy link",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 411,
+                    "Text": "motion controls",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:21:06",
+        "UpdatedDate": "2026-05-25T00:41:09",
+        "Name": "Nintendo GameCube"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom, 2 Games in 1-Nickelodeon SpongeBob SquarePants-The Movie & Nickelodeon SpongeBob SquarePants-Battle for Bikini Bottom, 2 Games in 1 Nickelodeon SpongeBob SquarePants The Movie & Nickelodeon SpongeBob SquarePants Battle for Bikini Bottom, 2 Games in 1: Nickelodeon SpongeBob SquarePants: The Movie & Nickelodeon SpongeBob SquarePants: Battle for Bikini Bottom, II Games in I - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom, II Games in I-Nickelodeon SpongeBob SquarePants-The Movie & Nickelodeon SpongeBob SquarePants-Battle for Bikini Bottom, II Games in I Nickelodeon SpongeBob SquarePants The Movie & Nickelodeon SpongeBob SquarePants Battle for Bikini Bottom, II Games in I: Nickelodeon SpongeBob SquarePants: The Movie & Nickelodeon SpongeBob SquarePants: Battle for Bikini Bottom, Two Games in One - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom, Two Games in One-Nickelodeon SpongeBob SquarePants-The Movie & Nickelodeon SpongeBob SquarePants-Battle for Bikini Bottom, Two Games in One Nickelodeon SpongeBob SquarePants The Movie & Nickelodeon SpongeBob SquarePants Battle for Bikini Bottom, Two Games in One: Nickelodeon SpongeBob SquarePants: The Movie & Nickelodeon SpongeBob SquarePants: Battle for Bikini Bottom"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "3681858",
+          "Name": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom (Europe) (Disc 1) (Proto) (2005-11-10).iso",
+          "Size": 1459978240,
+          "Crc": "09fbd438",
+          "Md5": "face4ab02e61ae7f6905e0824603a208",
+          "Sha1": "df85835fc6216aa074a90654d90e502b1411aa35",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "3681859",
+          "Name": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom (Europe) (Disc 2) (Proto) (2005-11-10).iso",
+          "Size": 1459978240,
+          "Crc": "a582fd52",
+          "Md5": "66048f7dc3ddb9326a9c05aec6cb720f",
+          "Sha1": "b21c8bfef984f0fd0c3aa2f8c1acd19b9ae70394",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "3908596",
+          "Name": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom (Europe) (Disc 1) (Proto) (2005-11-10).iso",
+          "Size": 1459978240,
+          "Crc": "09fbd438",
+          "Md5": "face4ab02e61ae7f6905e0824603a208",
+          "Sha1": "df85835fc6216aa074a90654d90e502b1411aa35",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "Proto",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "3908597",
+          "Name": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom (Europe) (Disc 2) (Proto) (2005-11-10).iso",
+          "Size": 1459978240,
+          "Crc": "a582fd52",
+          "Md5": "66048f7dc3ddb9326a9c05aec6cb720f",
+          "Sha1": "b21c8bfef984f0fd0c3aa2f8c1acd19b9ae70394",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "Proto",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 34,
+          "Id": "1624596",
+          "Name": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom (2005-11-10).iso",
+          "Size": 1459978240,
+          "Crc": "a582fd52",
+          "Md5": "66048f7dc3ddb9326a9c05aec6cb720f",
+          "Sha1": "b21c8bfef984f0fd0c3aa2f8c1acd19b9ae70394",
+          "Sha256": "4dae493c263b74fa07a2e6be4aa6c9454fb03f6d403666a5f914484f4284fdc2",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "22",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2022-09-13",
+            "details.r_date": "2022-09-13",
+            "details.r_date_info": "0",
+            "details.origin": "NPDP cartridge",
+            "details.region": "Europe",
+            "details.dumper": "emu_kidid",
+            "details.project": "Forest of Illusion",
+            "details.originalformat": "Default",
+            "file.serial": "GU4P78",
+            "file.format": "Default"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "2005-11-10",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 34,
+          "Id": "1624597",
+          "Name": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom (2005-11-10).iso",
+          "Size": 1459978240,
+          "Crc": "09fbd438",
+          "Md5": "face4ab02e61ae7f6905e0824603a208",
+          "Sha1": "df85835fc6216aa074a90654d90e502b1411aa35",
+          "Sha256": "9089d6c6a464fb3063828f640a504eba832edc5dd02e5f654357b2f6d66f9959",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "21",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2022-09-13",
+            "details.r_date": "2022-09-13",
+            "details.r_date_info": "0",
+            "details.origin": "NPDP cartridge",
+            "details.region": "Europe",
+            "details.dumper": "emu_kidid",
+            "details.project": "Forest of Illusion",
+            "details.originalformat": "Default",
+            "file.serial": "GU4P78",
+            "file.format": "Default"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "2005-11-10",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 34,
+          "Id": "3908578",
+          "Name": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom (2005-11-10).iso",
+          "Size": 1459978240,
+          "Crc": "a582fd52",
+          "Md5": "66048f7dc3ddb9326a9c05aec6cb720f",
+          "Sha1": "b21c8bfef984f0fd0c3aa2f8c1acd19b9ae70394",
+          "Sha256": "4dae493c263b74fa07a2e6be4aa6c9454fb03f6d403666a5f914484f4284fdc2",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "22",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2022-09-13",
+            "details.r_date": "2022-09-13",
+            "details.r_date_info": "0",
+            "details.origin": "NPDP cartridge",
+            "details.region": "Europe",
+            "details.dumper": "emu_kidid",
+            "details.project": "Forest of Illusion",
+            "details.originalformat": "Default",
+            "file.serial": "GU4P78",
+            "file.format": "Default"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "2005-11-10",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 34,
+          "Id": "3908579",
+          "Name": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom (2005-11-10).iso",
+          "Size": 1459978240,
+          "Crc": "09fbd438",
+          "Md5": "face4ab02e61ae7f6905e0824603a208",
+          "Sha1": "df85835fc6216aa074a90654d90e502b1411aa35",
+          "Sha256": "9089d6c6a464fb3063828f640a504eba832edc5dd02e5f654357b2f6d66f9959",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "details.id": "21",
+            "details.section": "Trusted Dump",
+            "details.d_date": "2022-09-13",
+            "details.r_date": "2022-09-13",
+            "details.r_date_info": "0",
+            "details.origin": "NPDP cartridge",
+            "details.region": "Europe",
+            "details.dumper": "emu_kidid",
+            "details.project": "Forest of Illusion",
+            "details.originalformat": "Default",
+            "file.serial": "GU4P78",
+            "file.format": "Default"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "2005-11-10",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {}
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "English"
+    }
+  ],
+  "CreatedDate": "2026-01-26T09:58:12",
+  "UpdatedDate": "2026-05-08T01:19:49",
+  "Name": "2 Games in 1 - Nickelodeon SpongeBob SquarePants - The Movie & Nickelodeon SpongeBob SquarePants - Battle for Bikini Bottom"
+}

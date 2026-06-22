@@ -1,0 +1,1149 @@
+{
+  "Id": 253334,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "990749",
+      "Name": "007 - Nightfire",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Sony - PlayStation 2",
+      "SourceId": "38237",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "990751",
+      "Name": "007 - Nightfire",
+      "Year": "",
+      "Country": "",
+      "Platform": "Sony - PlayStation 2",
+      "SourceId": "38237",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "605205",
+      "Name": "007 - Nightfire",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Sony - PlayStation 2",
+      "SourceId": "38237",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "990750",
+      "Name": "007 - Nightfire",
+      "Year": "",
+      "Country": "JP",
+      "Platform": "Sony - PlayStation 2",
+      "SourceId": "38237",
+      "MetadataSource": "5"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "1631",
+      "ImmutableId": "1631",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/james-bond-007-nightfire",
+      "LastSearch": "2025-07-15T00:49:16",
+      "NextSearch": "2026-12-15T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "4757",
+      "ImmutableId": "4757",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=4757",
+      "LastSearch": "2025-07-15T00:49:52",
+      "NextSearch": "2026-12-15T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "19208",
+      "ImmutableId": "19208",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/19208",
+      "LastSearch": "2025-07-15T00:49:52",
+      "NextSearch": "2026-12-15T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "6647",
+      "ImmutableId": "6647",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-6647/",
+      "LastSearch": "2025-07-15T00:49:52",
+      "NextSearch": "2026-12-15T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-15T00:49:58",
+      "NextSearch": "2026-07-22T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-15T00:49:58",
+      "NextSearch": "2026-07-22T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-15T00:49:58",
+      "NextSearch": "2026-07-22T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/James_Bond_007:_Nightfire",
+      "ImmutableId": "https://en.wikipedia.org/wiki/James_Bond_007:_Nightfire",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/James_Bond_007:_Nightfire",
+      "LastSearch": "2025-07-15T00:49:58",
+      "NextSearch": "2026-07-27T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T11:09:49",
+      "NextSearch": "2026-07-22T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T14:01:04",
+      "NextSearch": "2026-03-03T14:01:04",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T14:46:39",
+      "NextSearch": "2026-04-24T14:46:39",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 758552,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## James Bond 007: Nightfire - PlayStation 2\n\nStep into the sleek world of espionage as James Bond in *007: Nightfire* for PlayStation 2! This action-packed first-person shooter puts you in the role of the iconic British secret agent as he investigates industrialist Raphael Drake’s suspicious dismantling of global warheads. Drake’s philanthropic facade hides a sinister plot to conquer the world using a powerful U.S. Space Weapons Platform.\n\nDeveloped by Eurocom, *Nightfire* delivers thrilling missions across exotic locales, from underwater bases to space stations. While Pierce Brosnan lends his likeness to the character, Maxwell Caulfield provides the voice acting. Engage in intense firefights utilizing a diverse arsenal of real-world inspired weaponry, including silenced pistols, machine guns, and explosive gadgets. Experience a blend of stealth and explosive action, complete with driving sequences reminiscent of *Spy Hunter*. \n\nFeaturing a robust multiplayer mode and a compelling storyline, *007: Nightfire* offers a definitive James Bond gaming experience. Collect \"007 tokens\" to unlock special rewards and execute signature \"Bond Moments\" to outwit your enemies."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 493273,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "8D3DF105034E93BE06CB8FEDD8B03705FEBE22B9"
+    },
+    {
+      "Id": 493272,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 101,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "741",
+            "Platform": "PlayStation 2"
+          },
+          {
+            "SignatureId": "692",
+            "Platform": "Sony - PlayStation 2"
+          },
+          {
+            "SignatureId": "328",
+            "Platform": "Sony PlayStation 2"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "8",
+            "ImmutableId": "8",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/ps2",
+            "LastSearch": "2024-04-29T11:20:12",
+            "NextSearch": "2024-05-29T11:20:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "11",
+            "ImmutableId": "11",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=11",
+            "LastSearch": "2024-12-12T01:25:34",
+            "NextSearch": "2025-01-12T01:25:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "21",
+            "ImmutableId": "21",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/21/games",
+            "LastSearch": "2025-05-06T21:46:02",
+            "NextSearch": "2025-06-06T21:46:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "19",
+            "ImmutableId": "19",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-19/",
+            "LastSearch": "2025-06-20T15:34:14",
+            "NextSearch": "2025-07-20T15:34:14",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2026-11-01T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2026-11-01T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2026-11-01T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/PlayStation_2",
+            "ImmutableId": "https://en.wikipedia.org/wiki/PlayStation_2",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/PlayStation_2",
+            "LastSearch": "2025-12-21T10:28:08",
+            "NextSearch": "2026-01-21T10:28:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327252",
+            "ImmutableId": "5327252",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327252",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2027-03-10T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "58",
+            "ImmutableId": "58",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=58",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2027-03-10T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "48-sony-playstation-2",
+            "ImmutableId": "48-sony-playstation-2",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/48-sony-playstation-2",
+            "LastSearch": "2026-02-24T09:49:44",
+            "NextSearch": "2026-04-24T09:49:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758493,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The PlayStation 2 (PS2) is a sixth-generation home video game console developed and marketed by Sony Computer Entertainment, released in Japan on March 4, 2000. It succeeded the original PlayStation and remains the best-selling video game console of all time, with over 160 million units sold worldwide. A key innovation was its integrated DVD drive, offering significant value compared to standalone players. \n\nThe PS2 boasted a custom-built Emotion Engine processor, delivering impressive graphics and performance, and was backward compatible with original PlayStation games. Popular titles include the *Grand Theft Auto*, *Final Fantasy*, *Silent Hill*, and *Metal Gear* series, alongside beloved exclusives like *God of War*, *Ratchet & Clank*, and *Jak and Daxter*. Its longevity was remarkable, with new games released until 2013, solidifying its place in gaming history."
+          },
+          {
+            "Id": 110866,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "PS2"
+          },
+          {
+            "Id": 237,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "A885A9E3E636FA92973918DB27D271BC5C890FC2"
+          },
+          {
+            "Id": 461507,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 19877,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "14855",
+                  "Publisher": "Sony"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "AutomaticTooManyMatches",
+                  "Source": "IGDB",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T14:40:50",
+                  "NextSearch": "2026-08-19T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:14:46",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:36",
+                  "NextSearch": "2026-03-03T13:05:36",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:32",
+                  "NextSearch": "2026-04-24T09:49:32",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [],
+              "CreatedDate": "2024-05-26T10:46:55",
+              "UpdatedDate": "2026-01-31T19:53:39",
+              "Name": "Sony"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sony PlayStation 2, Sony-PlayStation-2, Sony PlayStation II, Sony-PlayStation-II, Sony PlayStation Two, Sony-PlayStation-Two"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 94052,
+                    "Text": "40gb hdd",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 276,
+                    "Text": "dvd drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 738,
+                    "Text": "emotion engine",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 741,
+                    "Text": "dualshock 2",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 743,
+                    "Text": "dvd remote",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 742,
+                    "Text": "eyetoy",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 67,
+                    "Text": "retro gaming",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 80,
+                    "Text": "ethernet",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 281,
+                    "Text": "i.link",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 291,
+                    "Text": "usb 2.0",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T11:20:12",
+        "UpdatedDate": "2026-05-25T01:30:32",
+        "Name": "Sony PlayStation 2"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "007 - Nightfire, 007-Nightfire, 007 Nightfire, 007: Nightfire, VII - Nightfire, VII-Nightfire, VII Nightfire, VII: Nightfire, Seven - Nightfire, Seven-Nightfire, Seven Nightfire, Seven: Nightfire"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "7492282",
+          "Name": "007 - Nightfire (USA).iso",
+          "Size": 2439315456,
+          "Crc": "848bacb6",
+          "Md5": "008302d82a305e9ad04e349f1f6982ee",
+          "Sha1": "03717059f97630e9ee2fd56dcf537c6fe3ed96d1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLUS 20579"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7495139",
+          "Name": "007 - Nightfire (Korea).iso",
+          "Size": 2439315456,
+          "Crc": "c120dd44",
+          "Md5": "d4bfcae2d842e8d6d76e55118ad172a6",
+          "Sha1": "a77af3fde16c2149e87cfc98d4ccac99876c4ad6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLKA 25004"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3877549",
+          "Name": "007 - Nightfire (Europe) (De,Es).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "5a1d57686eccd4781c6681c48f08be2010af399d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "de": "German",
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2407111",
+          "Name": "007 - Nightfire (Europe) (De,Es).iso",
+          "Size": 4007493632,
+          "Crc": "21cf89f9",
+          "Md5": "e7784aa283e2613757405910ef1c4b61",
+          "Sha1": "e1e3fe142e4e9304f9d061e55192767455335435",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "de": "German",
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-51260, SLES-51260-P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3877550",
+          "Name": "007 - Nightfire (Europe) (En,Fr,It,Nl,Sv).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "3a4182a03c496b6f9a43d5278a1660f1b328458a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "it": "Italian",
+            "nl": "Dutch",
+            "sv": "Swedish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2403665",
+          "Name": "007 - Nightfire (Europe) (En,Fr,It,Nl,Sv).iso",
+          "Size": 4001595392,
+          "Crc": "fe375ebe",
+          "Md5": "9319e8b917b126f1317cc06c31569cfd",
+          "Sha1": "12d610c10032685b79fb87f67c208369d474660a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "it": "Italian",
+            "nl": "Dutch",
+            "sv": "Swedish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLES-51258, SLES-51258-P"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3877551",
+          "Name": "007 - Nightfire (Japan).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "2968e8e240ec821d3146bb6c09c2a10670733a0c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2411088",
+          "Name": "007 - Nightfire (Japan).iso",
+          "Size": 2623307776,
+          "Crc": "476201a0",
+          "Md5": "8f122351386a9feef307cdd6e4260da4",
+          "Sha1": "bd14ee444917187c5ee7f7f01b62a632ad92cc55",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPM 65538, SLPM 66615, SLPS 25203"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3877552",
+          "Name": "007 - Nightfire (Korea).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "0a4b9f4afef2b09ef970e5107410c9c21a605ae8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2416158",
+          "Name": "007 - Nightfire (Korea).iso",
+          "Size": 2439315456,
+          "Crc": "c120dd44",
+          "Md5": "d4bfcae2d842e8d6d76e55118ad172a6",
+          "Sha1": "a77af3fde16c2149e87cfc98d4ccac99876c4ad6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLKA 25004"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3877553",
+          "Name": "007 - Nightfire (USA).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "a128303a234da872c8e4b18429c86ec070e55130",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2406352",
+          "Name": "007 - Nightfire (USA).iso",
+          "Size": 2439315456,
+          "Crc": "848bacb6",
+          "Md5": "008302d82a305e9ad04e349f1f6982ee",
+          "Sha1": "03717059f97630e9ee2fd56dcf537c6fe3ed96d1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLUS 20579"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7493758",
+          "Name": "007 - Nightfire (Japan).iso",
+          "Size": 2623307776,
+          "Crc": "476201a0",
+          "Md5": "8f122351386a9feef307cdd6e4260da4",
+          "Sha1": "bd14ee444917187c5ee7f7f01b62a632ad92cc55",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPM 65538, SLPM 66615, SLPS 25203"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1093,
+              "Text": "first-person",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1073,
+              "Text": "shooter",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1070,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1078,
+              "Text": "espionage",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1068,
+              "Text": "spy",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 1095,
+              "Text": "customization",
+              "AIGenerated": true
+            },
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1094,
+              "Text": "team-based",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 1088,
+              "Text": "first-person",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 1083,
+              "Text": "gadgets",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1096,
+              "Text": "robotic vehicles",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1090,
+              "Text": "unlockables",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "United States (US), Europe (EU), Japan (JP)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, English, Spanish, French, Italian, Dutch, Swedish"
+    }
+  ],
+  "CreatedDate": "2025-07-15T00:49:16",
+  "UpdatedDate": "2026-01-27T04:31:30",
+  "Name": "007 - Nightfire"
+}

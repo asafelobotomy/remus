@@ -1,0 +1,1218 @@
+{
+  "Id": 23980,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "805190",
+      "Name": "1944",
+      "Year": "",
+      "Country": "AS",
+      "Platform": "Nintendo - Nintendo Entertainment System (Headerless)",
+      "SourceId": "12450",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "905410",
+      "Name": "1944",
+      "Year": "",
+      "Country": "AS",
+      "Platform": "Nintendo - Nintendo Entertainment System (Headered)",
+      "SourceId": "12448",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "285483",
+      "Name": "1944",
+      "Year": "199x",
+      "Country": "AS",
+      "Platform": "Nintendo Famicom & Entertainment System",
+      "SourceId": "9137",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "862421",
+      "Name": "1944",
+      "Year": "",
+      "Country": "AS",
+      "Platform": "Nintendo - Nintendo Entertainment System (Headered) (Parent-Clone)",
+      "SourceId": "12449",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-11-03T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-11-03T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-11-03T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-11-03T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-11-03T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-11-03T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-11-03T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-11-03T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-11-03T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "141314",
+      "ImmutableId": "141314",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "ScreenScraper",
+      "Link": "https://www.screenscraper.fr/gameinfos.php?gameid=141314",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-12-19T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T19:06:32",
+      "NextSearch": "2026-04-24T19:06:32",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 475863,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "57F2FC2029A5196CBDF1A9A7FC5F7551F180D252"
+    },
+    {
+      "Id": 48032,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 376,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "4",
+            "Publisher": "-"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "AutomaticTooManyMatches",
+            "Source": "IGDB",
+            "Link": "",
+            "LastSearch": "2025-07-20T05:54:37",
+            "NextSearch": "2026-09-18T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:19:29",
+            "NextSearch": "2026-07-13T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:19:29",
+            "NextSearch": "2026-07-13T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:19:29",
+            "NextSearch": "2026-07-13T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:19:29",
+            "NextSearch": "2026-07-13T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:19:29",
+            "NextSearch": "2026-07-13T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:19:29",
+            "NextSearch": "2026-07-13T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:19:29",
+            "NextSearch": "2026-07-13T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2025-04-23T07:07:26",
+            "NextSearch": "2026-07-13T12:49:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T13:05:39",
+            "NextSearch": "2026-03-03T13:05:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T09:50:07",
+            "NextSearch": "2026-04-24T09:50:07",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [],
+        "CreatedDate": "2024-05-14T13:39:04",
+        "UpdatedDate": "2026-01-27T12:50:20",
+        "Name": "-"
+      }
+    },
+    {
+      "Id": 48031,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 68,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "769",
+            "Platform": "NES"
+          },
+          {
+            "SignatureId": "731",
+            "Platform": "NES/Famicom"
+          },
+          {
+            "SignatureId": "589",
+            "Platform": "Nintendo - Nintendo Entertainment System (Headered)"
+          },
+          {
+            "SignatureId": "1043",
+            "Platform": "Nintendo - Nintendo Entertainment System (Headered) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "590",
+            "Platform": "Nintendo - Nintendo Entertainment System (Headerless)"
+          },
+          {
+            "SignatureId": "1044",
+            "Platform": "Nintendo - Nintendo Entertainment System (Headerless) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "239",
+            "Platform": "Nintendo Famicom & Entertainment System"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "18",
+            "ImmutableId": "18",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/nes",
+            "LastSearch": "2024-04-29T04:15:22",
+            "NextSearch": "2024-05-29T04:15:22",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "7",
+            "ImmutableId": "7",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=7",
+            "LastSearch": "2024-12-12T01:24:04",
+            "NextSearch": "2025-01-12T01:24:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "7",
+            "ImmutableId": "7",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/7/games",
+            "LastSearch": "2025-05-12T23:58:47",
+            "NextSearch": "2025-06-12T23:58:47",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "21",
+            "ImmutableId": "21",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-21/",
+            "LastSearch": "2026-05-09T13:08:38",
+            "NextSearch": "2027-02-15T13:08:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:08:38",
+            "NextSearch": "2026-09-20T13:08:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:08:38",
+            "NextSearch": "2026-09-20T13:08:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:08:38",
+            "NextSearch": "2026-09-20T13:08:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Nintendo_Entertainment_System",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Nintendo_Entertainment_System",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Nintendo_Entertainment_System",
+            "LastSearch": "2025-12-21T10:26:36",
+            "NextSearch": "2026-01-21T10:26:36",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5321195",
+            "ImmutableId": "5321195",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5321195",
+            "LastSearch": "2026-05-09T13:08:38",
+            "NextSearch": "2027-02-15T13:08:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "3",
+            "ImmutableId": "3",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=3",
+            "LastSearch": "2026-05-09T13:08:38",
+            "NextSearch": "2027-02-15T13:08:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "27-nintendo-entertainment-system",
+            "ImmutableId": "27-nintendo-entertainment-system",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/27-nintendo-entertainment-system",
+            "LastSearch": "2026-02-24T09:49:06",
+            "NextSearch": "2026-04-24T09:49:06",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758304,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo Entertainment System (NES), initially released in Japan as the Family Computer (Famicom), revolutionized the home video game market after the 1983 crash. Developed by Nintendo, it succeeded their Color TV-Game line and competed with Sega's Master System. Designed with simplicity and affordability in mind, the NES featured detachable controllers and a distinctive front-loading cartridge design resembling a VCR, intended to distance it from the perception of a child's toy. \n\nThe system's success was fueled by a focus on third-party developer support and iconic games like *Super Mario Bros.*, *The Legend of Zelda*, *Dragon Quest*, and *Final Fantasy*, which became major franchises. While initially facing skepticism, the NES revitalized the American gaming industry and established Nintendo as a dominant force, pioneering a licensing model that continues to shape the industry today. A Disk System add-on was released in Japan, but ultimately proved less successful than cartridges."
+          },
+          {
+            "Id": 110862,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "NES"
+          },
+          {
+            "Id": 215,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "521F67C942121507F60119F23A531BACFB9ACE8C"
+          },
+          {
+            "Id": 51,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo Entertainment System, Nintendo-Entertainment-System"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 1419,
+                    "Text": "256 kb ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95306,
+                    "Text": "72-pin cartridge",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 62,
+                    "Text": "8-bit processor",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 30,
+                    "Text": "composite video",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 731,
+                    "Text": "rf output",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 13,
+                    "Text": "controller",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:15:22",
+        "UpdatedDate": "2026-05-25T00:36:26",
+        "Name": "Nintendo Entertainment System"
+      }
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 24,
+          "Id": "3414309",
+          "Name": "1944 (Asia) (Ja) (Pirate).unh",
+          "Size": 131072,
+          "Crc": "85d3f785",
+          "Md5": "744be3d78793c8129940605a3a28f823",
+          "Sha1": "67d2f904617ca384109921e22a447b726623d0b9",
+          "Sha256": "c382c285e92a3c01995460c9c2eea78c145584df77293c3f8071172b51ec0055",
+          "Status": "",
+          "Country": {
+            "AS": "Asia"
+          },
+          "Language": {
+            "ja": "Japanese"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "3907852",
+          "Name": "1944 (Asia) (Ja) (Pirate).nes",
+          "Size": 131088,
+          "Crc": "d1e3428b",
+          "Md5": "3ffa94d1b50e388f0e3f3ed8be7c9c36",
+          "Sha1": "1ae0d6154e0375e0541c048f22c63dada4d84981",
+          "Sha256": "f81480b20068e8466ce4207594bbdc812c987b47eacae7dc2cc362d4e27bccc2",
+          "Status": "",
+          "Country": {
+            "AS": "Asia"
+          },
+          "Language": {
+            "ja": "Japanese"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "965968",
+          "Name": "1944 (199x)(-)(AS)[p].nes",
+          "Size": 131088,
+          "Crc": "46249d57",
+          "Md5": "bf887996c9add45aabe881ceaf1f410a",
+          "Sha1": "ec51157e06c98df1df31031ee103a85ed98e067e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "AS": "Asia"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "NES",
+            "p": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "AS",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "965969",
+          "Name": "1944 (199x)(-)(AS)[p][b2].nes",
+          "Size": 131088,
+          "Crc": "50e7019e",
+          "Md5": "1e43a71f04b2dbcf7b9b4e293e841a07",
+          "Sha1": "9ff70ef6b1c71ebbea837f8e0e94060d72604ee1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "AS": "Asia"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "NES",
+            "p": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "AS",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "965970",
+          "Name": "1944 (199x)(-)(AS)[p][b3].nes",
+          "Size": 131088,
+          "Crc": "960ef77e",
+          "Md5": "f08ec947c97e80f3afdb4d7164feae7c",
+          "Sha1": "b360988b222304c15b1dc7aa2bce2eae14838474",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "AS": "Asia"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "NES",
+            "p": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "AS",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "965971",
+          "Name": "1944 (199x)(-)(AS)[p][b].nes",
+          "Size": 131088,
+          "Crc": "c97f6ce1",
+          "Md5": "312315753f68fc1c019f046b7126bc74",
+          "Sha1": "b24eb48df8e0b297bfa41153d1fd05f7a9564cf5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "AS": "Asia"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "NES",
+            "p": "",
+            "b": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "AS",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "965972",
+          "Name": "1944 (199x)(-)(AS)[p][tr zh MS emumax][v.20051205].nes",
+          "Size": 131088,
+          "Crc": "c1d0e658",
+          "Md5": "c1effa96dc9ea5ea3c6cbc04f537cc37",
+          "Sha1": "c7bf3480a1a1a8cf635ff0db3fe8e32189f1a7e6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "AS": "Asia"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "NES",
+            "p": "",
+            "tr": "zh MS emumax"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "AS",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "965973",
+          "Name": "1944 (199x)(-)(AS)[p][tr zh MS emumax][v.20060511].nes",
+          "Size": 131088,
+          "Crc": "6be23da5",
+          "Md5": "227ef62135aa57d4588614ef62176349",
+          "Sha1": "12637555f30c9fe2f0b7284322630977bb306493",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "AS": "Asia"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "NES",
+            "p": "",
+            "tr": "zh MS emumax"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "AS",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "965974",
+          "Name": "1944 (199x)(-)(AS)[p][tr zh].nes",
+          "Size": 131088,
+          "Crc": "0b434fc8",
+          "Md5": "32708d8475af0bf2d1102d9b7dd59ba1",
+          "Sha1": "3debcddc1a12ee93d0e8a61fac2c4532aa96e630",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "AS": "Asia"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "NES",
+            "p": "",
+            "tr": "zh"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "AS",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "965975",
+          "Name": "1944 (199x)(-)(AS)[p][tr zh][a].nes",
+          "Size": 131088,
+          "Crc": "005c8ac6",
+          "Md5": "da84c5cf276cc87a8decf45e98b739f4",
+          "Sha1": "525183d4546eac4ae77b909f9ef0485f6ff49a9d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "AS": "Asia"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "NES",
+            "p": "",
+            "tr": "zh",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "AS",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "3667684",
+          "Name": "1944 (Asia) (Ja) (Pirate).nes",
+          "Size": 131088,
+          "Crc": "d1e3428b",
+          "Md5": "3ffa94d1b50e388f0e3f3ed8be7c9c36",
+          "Sha1": "1ae0d6154e0375e0541c048f22c63dada4d84981",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "AS": "Asia"
+          },
+          "Language": {
+            "ja": "Japanese"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {}
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Asia (AS)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "Japanese"
+    }
+  ],
+  "CreatedDate": "2024-05-26T14:11:01",
+  "UpdatedDate": "2026-05-09T14:57:27",
+  "Name": "1944"
+}

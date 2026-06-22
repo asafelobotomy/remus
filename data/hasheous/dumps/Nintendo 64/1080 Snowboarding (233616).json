@@ -1,0 +1,2019 @@
+{
+  "Id": 233616,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "484239",
+      "Name": "1080 Snowboarding",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo 64 (BigEndian)",
+      "SourceId": "12434",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "954992",
+      "Name": "1080 Snowboarding",
+      "Year": "",
+      "Country": "JP, US",
+      "Platform": "Nintendo - Nintendo 64 (ByteSwapped)",
+      "SourceId": "12436",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "946713",
+      "Name": "1080 Snowboarding",
+      "Year": "1998",
+      "Country": "JP, US",
+      "Platform": "Nintendo 64",
+      "SourceId": "9128",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "284019",
+      "Name": "1080 Snowboarding",
+      "Year": "1998",
+      "Country": "EU",
+      "Platform": "Nintendo 64",
+      "SourceId": "9128",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "954631",
+      "Name": "1080 Snowboarding",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo 64 (BigEndian)",
+      "SourceId": "12434",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "484758",
+      "Name": "1080 Snowboarding",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - Nintendo 64 (ByteSwapped)",
+      "SourceId": "12436",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "954993",
+      "Name": "1080 Snowboarding",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - Nintendo 64 (ByteSwapped)",
+      "SourceId": "12436",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "954630",
+      "Name": "1080 Snowboarding",
+      "Year": "",
+      "Country": "JP, US",
+      "Platform": "Nintendo - Nintendo 64 (BigEndian)",
+      "SourceId": "12434",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "3328",
+      "ImmutableId": "3328",
+      "Status": "Mapped",
+      "MatchMethod": "ManualByAdmin",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/1080-snowboarding",
+      "LastSearch": "2025-03-06T12:40:25",
+      "NextSearch": "2025-04-06T12:40:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2025-08-18T09:09:29",
+      "NextSearch": "2026-06-28T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-08-18T09:09:29",
+      "NextSearch": "2026-06-28T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-08-18T09:09:29",
+      "NextSearch": "2026-06-28T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-08-18T09:09:29",
+      "NextSearch": "2026-06-28T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-08-18T09:09:29",
+      "NextSearch": "2026-06-28T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-08-18T09:09:29",
+      "NextSearch": "2026-06-28T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/1080%C2%B0_Snowboarding",
+      "ImmutableId": "https://en.wikipedia.org/wiki/1080%C2%B0_Snowboarding",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/1080°_Snowboarding",
+      "LastSearch": "2025-08-18T09:09:29",
+      "NextSearch": "2026-07-27T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-08-18T09:09:29",
+      "NextSearch": "2026-06-28T10:12:07",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:22:11",
+      "NextSearch": "2026-03-03T13:22:11",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T09:49:33",
+      "NextSearch": "2026-04-24T09:49:33",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 759304,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 1080° Snowboarding: A Synopsis\n\nExperience the thrill of competitive snowboarding with *1080° Snowboarding*, a critically acclaimed Nintendo 64 title that redefined the genre. Take control of one of five snowboarders, each striving for victory across eight challenging and visually stunning mountain courses. Developed and published by Nintendo, the game delivers a realistic and intense snowboarding experience from a third-person perspective.\n\nMaster a combination of button presses to execute jumps, tricks, and navigate treacherous terrain. *1080° Snowboarding* prioritizes realism, demanding precision and practice to perfect your technique. While the controls are initially challenging, the rewarding gameplay and responsive physics model create a deeply involving experience. \n\nBeyond the single-player campaign, enjoy competitive multiplayer action with friends. Featuring a soundtrack blending techno and rappy beats, the game also boasts impressive graphics for the N64 era, with detailed snow effects and crisp visuals. *1080° Snowboarding* isn't just a game; it's a virtual snowboarding adventure that captured the excitement of the sport and introduced a broader audience to underground electronic music."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 598238,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "119EA31C8A86686DEC8B035E6FACF932C628E261"
+    },
+    {
+      "Id": 437924,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 61,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "9071",
+            "Publisher": "Nintendo"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "70",
+            "ImmutableId": "70",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/companies/nintendo",
+            "LastSearch": "2026-03-18T07:08:26",
+            "NextSearch": "2026-12-04T07:08:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2026-03-18T07:08:26",
+            "NextSearch": "2026-07-21T07:08:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2026-03-18T07:08:26",
+            "NextSearch": "2026-07-21T07:08:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2026-03-18T07:08:26",
+            "NextSearch": "2026-07-21T07:08:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-03-18T07:08:26",
+            "NextSearch": "2026-07-21T07:08:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-03-18T07:08:26",
+            "NextSearch": "2026-07-21T07:08:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-03-18T07:08:26",
+            "NextSearch": "2026-07-21T07:08:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2026-03-18T07:08:26",
+            "NextSearch": "2026-07-21T07:08:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2026-03-18T07:08:26",
+            "NextSearch": "2026-07-21T07:08:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T13:05:33",
+            "NextSearch": "2026-03-03T13:05:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T09:48:39",
+            "NextSearch": "2026-04-24T09:48:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 331,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:10:43",
+        "UpdatedDate": "2026-03-18T07:08:26",
+        "Name": "Nintendo"
+      }
+    },
+    {
+      "Id": 437923,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 64,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "1194",
+            "Platform": "-Nintendo 64 (Rom Hacks)-"
+          },
+          {
+            "SignatureId": "1191",
+            "Platform": "-Nintendo 64 (Rom Hacks)-"
+          },
+          {
+            "SignatureId": "576",
+            "Platform": "Nintendo - Nintendo 64 (BigEndian)"
+          },
+          {
+            "SignatureId": "1030",
+            "Platform": "Nintendo - Nintendo 64 (BigEndian) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "577",
+            "Platform": "Nintendo - Nintendo 64 (ByteSwapped)"
+          },
+          {
+            "SignatureId": "1031",
+            "Platform": "Nintendo - Nintendo 64 (ByteSwapped) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "578",
+            "Platform": "Nintendo - Nintendo 64 (Mario no Photopi SmartMedia)"
+          },
+          {
+            "SignatureId": "1032",
+            "Platform": "Nintendo - Nintendo 64 (Mario no Photopi SmartMedia) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "235",
+            "Platform": "Nintendo 64"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "4",
+            "ImmutableId": "4",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/n64",
+            "LastSearch": "2024-04-29T04:12:37",
+            "NextSearch": "2024-05-29T04:12:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "3",
+            "ImmutableId": "3",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=3",
+            "LastSearch": "2026-05-09T13:06:53",
+            "NextSearch": "2027-01-20T13:06:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "2",
+            "ImmutableId": "2",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/2/games",
+            "LastSearch": "2026-05-09T13:06:53",
+            "NextSearch": "2027-01-20T13:06:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "43",
+            "ImmutableId": "43",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-43/",
+            "LastSearch": "2026-05-09T13:06:53",
+            "NextSearch": "2027-01-20T13:06:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-06-11T15:50:29",
+            "NextSearch": "2026-08-17T15:50:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-06-11T15:50:29",
+            "NextSearch": "2026-08-17T15:50:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-06-11T15:50:29",
+            "NextSearch": "2026-08-17T15:50:29",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Nintendo_64",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Nintendo_64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Nintendo_64",
+            "LastSearch": "2025-12-21T10:26:31",
+            "NextSearch": "2026-01-21T10:26:31",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5321187",
+            "ImmutableId": "5321187",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5321187",
+            "LastSearch": "2026-05-09T13:06:53",
+            "NextSearch": "2027-01-20T13:06:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14",
+            "ImmutableId": "14",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=14",
+            "LastSearch": "2026-05-09T13:06:53",
+            "NextSearch": "2027-01-20T13:06:53",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "25-nintendo-64",
+            "ImmutableId": "25-nintendo-64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/25-nintendo-64",
+            "LastSearch": "2026-02-24T09:49:01",
+            "NextSearch": "2026-04-24T09:49:01",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758301,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo 64 (N64) was a revolutionary home video game console released by Nintendo in 1996, marking their third major console and a key player in the fifth generation of gaming. Featuring a 64-bit CPU and a unique coprocessor for graphics and sound, it introduced the thumbstick controller and supported multiplayer with four controller ports. While commercially successful in North America, it faced challenges in Japan and Europe, partly due to its reliance on ROM cartridges instead of optical discs.\n\nDespite a smaller library of 388 games compared to its competitors, the N64 delivered groundbreaking experiences like *Super Mario 64*, *GoldenEye 007*, and *The Legend of Zelda: Ocarina of Time*, which are considered among the greatest games ever made. Its innovations in 3D graphics and gameplay continue to influence game design today, and it remains an iconic console in video game history."
+          },
+          {
+            "Id": 110863,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "N64"
+          },
+          {
+            "Id": 211,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "873A657AFF6B82E141560F298109A5FAE6860398"
+          },
+          {
+            "Id": 47,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo 64, Nintendo-64"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 88,
+                    "Text": "3d graphics",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95263,
+                    "Text": "64-bit cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 340,
+                    "Text": "rdram memory",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95268,
+                    "Text": "trilinear filtering",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 375,
+                    "Text": "90s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 342,
+                    "Text": "analog stick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95271,
+                    "Text": "digital pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95270,
+                    "Text": "thumbstick controller",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 499,
+                    "Text": "composite output",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95269,
+                    "Text": "expansion pak",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 94057,
+                    "Text": "s-video output",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:12:37",
+        "UpdatedDate": "2026-06-11T15:50:31",
+        "Name": "Nintendo 64"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "1080 Snowboarding, 1080-Snowboarding"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 25,
+          "Id": "1571021",
+          "Name": "1080 Snowboarding (Europe) (En,Ja,Fr,De).z64",
+          "Size": 16777216,
+          "Crc": "75a21679",
+          "Md5": "632c98cf281cda776e66685b278a4fa6",
+          "Sha1": "637d92b08dbfe7c2f9d5e338835b1fce5f4a87d0",
+          "Sha256": "a5d47b9b21bc2c234a0e5c8a1f7eb0e893a914e17a0755318b48c5ad15b7d13c",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "ja": "Japanese",
+            "fr": "French"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 25,
+          "Id": "1571022",
+          "Name": "1080 Snowboarding (Japan, USA) (En,Ja).z64",
+          "Size": 16777216,
+          "Crc": "08fe81c7",
+          "Md5": "fa27089c425dbab99f19245c5c997613",
+          "Sha1": "79cd1166c365e5809dec9b62e6d40d6032d5db3a",
+          "Sha256": "5e9d7168e5786ba1bd4b643431ba7100ff3d7a09e558acae15438d426c0f34df",
+          "Status": "verified",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1571023",
+          "Name": "1080 Snowboarding (USA) (En,Ja) (LodgeNet).i64",
+          "Size": 64,
+          "Crc": "57c7bfe2",
+          "Md5": "e0c4c9a32a35616014624c3f01c355ba",
+          "Sha1": "23e06350c61dccf3ffaade55873163adabf747f7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1571024",
+          "Name": "1080 Snowboarding (USA) (En,Ja) (LodgeNet).z64",
+          "Size": 16777216,
+          "Crc": "67e010d2",
+          "Md5": "c6061ad1b4446c4db57cdf094da7c534",
+          "Sha1": "7266eef53af8f2c21f3e3288258121f97eddfa7e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {
+            "en": "English",
+            "ja": "Japanese"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 33,
+          "Id": "961622",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(EU)(M4).bin",
+          "Size": 16777216,
+          "Crc": "75a21679",
+          "Md5": "632c98cf281cda776e66685b278a4fa6",
+          "Sha1": "637d92b08dbfe7c2f9d5e338835b1fce5f4a87d0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M4",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961623",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(EU)(M4)[b2].bin",
+          "Size": 16777216,
+          "Crc": "933a9d1b",
+          "Md5": "4fca132d6c96130371f4186a3df85077",
+          "Sha1": "308e2daded2caacd27c12212fe965b40047e88aa",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M4",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961624",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(EU)(M4)[b].bin",
+          "Size": 16777216,
+          "Crc": "9204cc62",
+          "Md5": "4e08d29b094c13c030ac73a1da2f8cd2",
+          "Sha1": "ee89a7d9c4c0ed972d98bdac36dcdcd39e30f32d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "b": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M4",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961625",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(EU)(M4)[h2].bin",
+          "Size": 16777216,
+          "Crc": "7e360eb6",
+          "Md5": "5ca3a45c21e16edafbafe1bd0491dc8d",
+          "Sha1": "738fc07625b31b208bb945a009febfdf23b2e5f8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M4",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961626",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(EU)(M4)[h].bin",
+          "Size": 16777216,
+          "Crc": "f6a6e391",
+          "Md5": "ec9db32624b6c16376429d0660f0710b",
+          "Sha1": "5d2437b8331361ab1326940119e8650f34b41b2c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "h": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M4",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961627",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja).bin",
+          "Size": 16777216,
+          "Crc": "08fe81c7",
+          "Md5": "fa27089c425dbab99f19245c5c997613",
+          "Sha1": "79cd1166c365e5809dec9b62e6d40d6032d5db3a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961628",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[b10].bin",
+          "Size": 16777216,
+          "Crc": "2efff977",
+          "Md5": "a4aaa7e92367696797bee00f257a3267",
+          "Sha1": "6e0b9d5975791f56a165741c2a5c4980fb60e0f6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961629",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[b11].bin",
+          "Size": 16777216,
+          "Crc": "2d25e8d8",
+          "Md5": "765dc057507aa32daaec194e32ff26b1",
+          "Sha1": "5ffba462c20a32f68baa7848ca0a1b50d7161449",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961630",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[b2].bin",
+          "Size": 16777216,
+          "Crc": "a1dff82c",
+          "Md5": "a3d30fbdfd84b5e7298568bbd5ced7fd",
+          "Sha1": "fd30f88c28d831745c098e2c4c340d36f0e1782a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961631",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[b3].bin",
+          "Size": 16777216,
+          "Crc": "e9fdcb54",
+          "Md5": "fe15a6e7af4e37487252369d6f0ab35b",
+          "Sha1": "b7f779a3258b91345b125158de67411a0a959d10",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961632",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[b4].bin",
+          "Size": 16777216,
+          "Crc": "5ffac155",
+          "Md5": "7657c4bb92e3f6f126d94f5942fdb445",
+          "Sha1": "ef40d0b3ffb3c9735b0b837bb4c548bbf1acb20b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961633",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[b5].bin",
+          "Size": 16777216,
+          "Crc": "c3eba74a",
+          "Md5": "c7ac7460af3897bb38d6745bc4557c8e",
+          "Sha1": "ae5abdbcbd644b8c33aa6a126b75b6af62f211b8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961634",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[b6].bin",
+          "Size": 16777216,
+          "Crc": "c71f2e9e",
+          "Md5": "fe320327cf6edc64d06bfa56d8e7a085",
+          "Sha1": "6009a3ac57c9ba76827e5aeaeeb90f2943ea794e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961635",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[b7].bin",
+          "Size": 16777216,
+          "Crc": "8c39ceab",
+          "Md5": "c36ac032e36c61723698344c33dc1f7e",
+          "Sha1": "bc24fc9a992f920ae6379a630e8b7c0fd7c6c020",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961636",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[b8].bin",
+          "Size": 16777216,
+          "Crc": "a59a9ca3",
+          "Md5": "dafe880cef56af0231eba2390259a2ac",
+          "Sha1": "98ecefacb2c473cb088277639419e82b4a2611eb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961637",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[b9].bin",
+          "Size": 16777216,
+          "Crc": "06615926",
+          "Md5": "a0b2e39fd3fe3802c369a6937416b38e",
+          "Sha1": "accca04ef1c10da7995e89c04c046439356fd185",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961638",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[b].bin",
+          "Size": 16777216,
+          "Crc": "1a5cdba6",
+          "Md5": "e428181d573e25dcc0dc7f9f3bf4d1e1",
+          "Sha1": "a0218ec35c78dd4efc709674edd5e0e302e9223b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "b": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961639",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[h2].bin",
+          "Size": 16777216,
+          "Crc": "e3969a61",
+          "Md5": "00ce20766866883063af3a6c3368039f",
+          "Sha1": "1a12f93b6022625163bb60c66ef2bed7f9dc91e9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961640",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[h3].bin",
+          "Size": 16777216,
+          "Crc": "c980f67f",
+          "Md5": "aee3fa928b2c1b73d841b47074d91c71",
+          "Sha1": "56dc0a57dab8b88f74d5b5272f03afa595ac7c15",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961641",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[h4].bin",
+          "Size": 16777216,
+          "Crc": "15bfdee8",
+          "Md5": "b5ac31d584bb2ef93c2a229e19b6d9a1",
+          "Sha1": "a4bded274cdcd9f6b79a4bf3325c1d84dfed6380",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961642",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[h5].bin",
+          "Size": 16777216,
+          "Crc": "407adfd5",
+          "Md5": "136245692e02003ed1a972f424cd9323",
+          "Sha1": "cd192b9c02ad6ced93a1eb098bc58205592f5f6e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961643",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[h6].bin",
+          "Size": 16777216,
+          "Crc": "b1fc6b9d",
+          "Md5": "6ceacf73f03ba3de740bdb00d7cc18a1",
+          "Sha1": "8568371a0923894ecfd1e2eeacc95e73d0d031d5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961644",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[h].bin",
+          "Size": 16777216,
+          "Crc": "3ed1c741",
+          "Md5": "3b5691b895b415056e4ea69695dc26b4",
+          "Sha1": "ff73db29e3d5ba3f74619bfc57935d8eff43ec32",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "h": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961645",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[t2].bin",
+          "Size": 16777216,
+          "Crc": "8009aa55",
+          "Md5": "c70578054aa00d7f95ae1d64e3aa9995",
+          "Sha1": "fdf9d9082f1cbf90ff1540186d608af0e2d1ea63",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "961646",
+          "Name": "1080 Snowboarding (1998)(Nintendo)(JP-US)(en-ja)[t].bin",
+          "Size": 16777216,
+          "Crc": "33e0ab89",
+          "Md5": "1ed9c697bd2f2aebe6b3b8bf0d24a8ca",
+          "Sha1": "04772fa85fc91a6c9b546b36b075186d45f82348",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "en",
+            "ja": "ja"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-ja",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 24,
+          "Id": "1572160",
+          "Name": "1080 Snowboarding (Europe) (En,Ja,Fr,De).v64",
+          "Size": 16777216,
+          "Crc": "b0256101",
+          "Md5": "f58b3055a2c642fb2f563f11b6b597ea",
+          "Sha1": "da7bcb78cf78333d7515b77f676fd45473b5b506",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "ja": "Japanese",
+            "fr": "French"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1572161",
+          "Name": "1080 Snowboarding (Japan, USA) (En,Ja).v64",
+          "Size": 16777216,
+          "Crc": "d1744951",
+          "Md5": "18381c8f37e2b29f5940eea9b5f96814",
+          "Sha1": "5f837c13a2fb3c8cdfd6fb720bd4a963ab515632",
+          "Sha256": "",
+          "Status": "verified",
+          "Country": {
+            "JP": "Japan",
+            "US": "United States"
+          },
+          "Language": {
+            "en": "English"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1572162",
+          "Name": "1080 Snowboarding (USA) (En,Ja) (LodgeNet).i64",
+          "Size": 64,
+          "Crc": "57c7bfe2",
+          "Md5": "e0c4c9a32a35616014624c3f01c355ba",
+          "Sha1": "23e06350c61dccf3ffaade55873163adabf747f7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 23,
+          "Id": "1572163",
+          "Name": "1080 Snowboarding (USA) (En,Ja) (LodgeNet).v64",
+          "Size": 16777216,
+          "Crc": "4f5e35d9",
+          "Md5": "9ac2e60a1111c03c3dbed3845e55cd52",
+          "Sha1": "d74e47810eaa94929406004e82eceabc3dc70fe5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {
+            "en": "English",
+            "ja": "Japanese"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 826,
+              "Text": "competitive",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2838,
+              "Text": "snowboarding",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1541,
+              "Text": "winter sports",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2835,
+              "Text": "race modes",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2834,
+              "Text": "trick combos",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 813,
+              "Text": "overhead",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 2837,
+              "Text": "product placement",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2836,
+              "Text": "snow physics",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2497,
+              "Text": "unlockable content",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 875,
+              "Text": "racing",
+              "AIGenerated": true
+            },
+            {
+              "Id": 888,
+              "Text": "simulation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 876,
+              "Text": "sports",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Europe (EU), Japan (JP), United States (US)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, English, French, Japanese"
+    }
+  ],
+  "CreatedDate": "2025-03-06T12:36:26",
+  "UpdatedDate": "2026-01-27T10:35:44",
+  "Name": "1080 Snowboarding"
+}

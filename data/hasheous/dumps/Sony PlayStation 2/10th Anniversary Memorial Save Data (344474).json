@@ -1,0 +1,873 @@
+{
+  "Id": 344474,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "605994",
+      "Name": "10th Anniversary Memorial Save Data",
+      "Year": "",
+      "Country": "JP",
+      "Platform": "Sony - PlayStation 2",
+      "SourceId": "38237",
+      "MetadataSource": "5"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-15T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-15T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-15T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-15T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-15T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-15T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-15T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-15T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2026-08-15T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "127001",
+      "ImmutableId": "127001",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "ScreenScraper",
+      "Link": "https://www.screenscraper.fr/gameinfos.php?gameid=127001",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2027-03-09T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "219583",
+      "ImmutableId": "219583",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "LaunchBox",
+      "Link": "https://gamesdb.launchbox-app.com/games/dbid/219583",
+      "LastSearch": "2026-05-28T06:27:27",
+      "NextSearch": "2027-03-09T06:27:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 1267842,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "Delve into a treasure trove of PlayStation 2 gaming history with this unique \"10th Anniversary Memorial Save Data\" disc, a component of the LaunchBox encyclopedia. This isn't a game itself, but a curated collection of save data from 1467 different PS2 titles, spanning the console's golden years. Imagine instantly accessing progress in a variety of games – from sprawling RPGs to adrenaline-pumping action adventures, and everything in between.\n\nThis disc offers a fascinating glimpse into the diverse gaming landscape of the early 2000s, allowing players to experience pivotal moments and overcome challenging sections without the grind. While it doesn't offer a singular narrative, it provides a shortcut to experiencing a vast library of games. Perfect for collectors, retro enthusiasts, or anyone curious about the breadth of the PS2’s library, this save data disc is a tangible piece of PlayStation history, offering a unique and convenient way to sample a wide range of gaming experiences. A must-have for those seeking a nostalgic journey through the PS2 era."
+    },
+    {
+      "Id": 640686,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 101,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "741",
+            "Platform": "PlayStation 2"
+          },
+          {
+            "SignatureId": "692",
+            "Platform": "Sony - PlayStation 2"
+          },
+          {
+            "SignatureId": "328",
+            "Platform": "Sony PlayStation 2"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "8",
+            "ImmutableId": "8",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/ps2",
+            "LastSearch": "2024-04-29T11:20:12",
+            "NextSearch": "2024-05-29T11:20:12",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "11",
+            "ImmutableId": "11",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=11",
+            "LastSearch": "2024-12-12T01:25:34",
+            "NextSearch": "2025-01-12T01:25:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "21",
+            "ImmutableId": "21",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/21/games",
+            "LastSearch": "2025-05-06T21:46:02",
+            "NextSearch": "2025-06-06T21:46:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "19",
+            "ImmutableId": "19",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-19/",
+            "LastSearch": "2025-06-20T15:34:14",
+            "NextSearch": "2025-07-20T15:34:14",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2026-11-01T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2026-11-01T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2026-11-01T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/PlayStation_2",
+            "ImmutableId": "https://en.wikipedia.org/wiki/PlayStation_2",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/PlayStation_2",
+            "LastSearch": "2025-12-21T10:28:08",
+            "NextSearch": "2026-01-21T10:28:08",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327252",
+            "ImmutableId": "5327252",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327252",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2027-03-10T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "58",
+            "ImmutableId": "58",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=58",
+            "LastSearch": "2026-05-09T13:20:44",
+            "NextSearch": "2027-03-10T13:20:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "48-sony-playstation-2",
+            "ImmutableId": "48-sony-playstation-2",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/48-sony-playstation-2",
+            "LastSearch": "2026-02-24T09:49:44",
+            "NextSearch": "2026-04-24T09:49:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758493,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The PlayStation 2 (PS2) is a sixth-generation home video game console developed and marketed by Sony Computer Entertainment, released in Japan on March 4, 2000. It succeeded the original PlayStation and remains the best-selling video game console of all time, with over 160 million units sold worldwide. A key innovation was its integrated DVD drive, offering significant value compared to standalone players. \n\nThe PS2 boasted a custom-built Emotion Engine processor, delivering impressive graphics and performance, and was backward compatible with original PlayStation games. Popular titles include the *Grand Theft Auto*, *Final Fantasy*, *Silent Hill*, and *Metal Gear* series, alongside beloved exclusives like *God of War*, *Ratchet & Clank*, and *Jak and Daxter*. Its longevity was remarkable, with new games released until 2013, solidifying its place in gaming history."
+          },
+          {
+            "Id": 110866,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "PS2"
+          },
+          {
+            "Id": 237,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "A885A9E3E636FA92973918DB27D271BC5C890FC2"
+          },
+          {
+            "Id": 461507,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 19877,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "14855",
+                  "Publisher": "Sony"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "AutomaticTooManyMatches",
+                  "Source": "IGDB",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T14:40:50",
+                  "NextSearch": "2026-08-19T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:14:46",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:36",
+                  "NextSearch": "2026-03-03T13:05:36",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:32",
+                  "NextSearch": "2026-04-24T09:49:32",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [],
+              "CreatedDate": "2024-05-26T10:46:55",
+              "UpdatedDate": "2026-01-31T19:53:39",
+              "Name": "Sony"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sony PlayStation 2, Sony-PlayStation-2, Sony PlayStation II, Sony-PlayStation-II, Sony PlayStation Two, Sony-PlayStation-Two"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 94052,
+                    "Text": "40gb hdd",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 276,
+                    "Text": "dvd drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 738,
+                    "Text": "emotion engine",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 741,
+                    "Text": "dualshock 2",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 743,
+                    "Text": "dvd remote",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 742,
+                    "Text": "eyetoy",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 67,
+                    "Text": "retro gaming",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 80,
+                    "Text": "ethernet",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 281,
+                    "Text": "i.link",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 291,
+                    "Text": "usb 2.0",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T11:20:12",
+        "UpdatedDate": "2026-05-25T01:30:32",
+        "Name": "Sony PlayStation 2"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "10th Anniversary Memorial Save Data, 10th-Anniversary-Memorial-Save-Data"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 43,
+          "Id": "2405201",
+          "Name": "10th Anniversary Memorial Save Data (Japan) (Disc 2) (PlayStation 2 Taiou).bin",
+          "Size": 312623136,
+          "Crc": "9646dbc6",
+          "Md5": "066f5cd411d5b98e1d0aa1bc05ecc235",
+          "Sha1": "15d4919bbf7b4d8ffc9b6cdeb00e6ed8b95c0dac",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPM 60262"
+          },
+          "RomType": "Disc",
+          "RomTypeMedia": "Disc 2",
+          "MediaDetail": {
+            "Media": "Disc",
+            "Number": 2
+          },
+          "MediaLabel": "PlayStation 2 Taiou",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 32,
+          "Id": "3877561",
+          "Name": "10th Anniversary Memorial Save Data (Japan) (Disc 2) (PlayStation 2 Taiou).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "0a88001b985f236fcb304f222e59582f1ca198cd",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Disc",
+          "RomTypeMedia": "Disc 2",
+          "MediaDetail": {
+            "Media": "Disc",
+            "Number": 2
+          },
+          "MediaLabel": "PlayStation 2 Taiou",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 43,
+          "Id": "2405200",
+          "Name": "10th Anniversary Memorial Save Data (Japan) (Disc 2) (PlayStation 2 Taiou).cue",
+          "Size": 140,
+          "Crc": "ebf8b356",
+          "Md5": "65011c2436bb08174cfce33617cd2cb1",
+          "Sha1": "fb35a4531395548f10345a1bbafe94cbb806bb91",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "JP": "Japan"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "SLPM 60262"
+          },
+          "RomType": "Disc",
+          "RomTypeMedia": "Disc 2",
+          "MediaDetail": {
+            "Media": "Disc",
+            "Number": 2
+          },
+          "MediaLabel": "PlayStation 2 Taiou",
+          "SignatureSource": "Redump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 2429,
+              "Text": "bonus content",
+              "AIGenerated": true
+            },
+            {
+              "Id": 97276,
+              "Text": "memorial edition",
+              "AIGenerated": true
+            },
+            {
+              "Id": 18696,
+              "Text": "save data",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 3455,
+              "Text": "bonus content",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3439,
+              "Text": "compilation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 34266,
+              "Text": "save data",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 1763,
+              "Text": "collectible",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1270,
+              "Text": "compilation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3567,
+              "Text": "miscellaneous",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 16270,
+              "Text": "collectibles",
+              "AIGenerated": true
+            },
+            {
+              "Id": 97277,
+              "Text": "memorial",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1457,
+              "Text": "nostalgia",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 3445,
+              "Text": "compilation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 97278,
+              "Text": "miscellaneous",
+              "AIGenerated": true
+            },
+            {
+              "Id": 918,
+              "Text": "none",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Japan (JP)"
+    }
+  ],
+  "CreatedDate": "2025-09-23T14:50:10",
+  "UpdatedDate": "2026-05-30T08:17:58",
+  "Name": "10th Anniversary Memorial Save Data"
+}

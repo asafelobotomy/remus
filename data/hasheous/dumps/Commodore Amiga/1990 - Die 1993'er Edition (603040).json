@@ -1,0 +1,1557 @@
+{
+  "Id": 603040,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "92364",
+      "Name": "1990 - Die 1993'er Edition",
+      "Year": "1994",
+      "Country": "DE",
+      "Platform": "Commodore Amiga",
+      "SourceId": "8602",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "87903",
+      "Name": "1990 - Die 1993'er Edition",
+      "Year": "1993",
+      "Country": "DE",
+      "Platform": "Commodore Amiga",
+      "SourceId": "8603",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "38854",
+      "ImmutableId": "38854",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/1990-die-1993-er-edition",
+      "LastSearch": "2026-04-23T15:03:02",
+      "NextSearch": "2026-10-24T15:03:02",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "37411",
+      "ImmutableId": "37411",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=37411",
+      "LastSearch": "2026-04-23T15:03:02",
+      "NextSearch": "2026-10-24T15:03:02",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-04-23T15:03:02",
+      "NextSearch": "2026-09-21T15:03:02",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-04-23T15:03:02",
+      "NextSearch": "2026-09-21T15:03:02",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-04-23T15:03:02",
+      "NextSearch": "2026-09-21T15:03:02",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-04-23T15:03:02",
+      "NextSearch": "2026-09-21T15:03:02",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-04-23T15:03:02",
+      "NextSearch": "2026-09-21T15:03:02",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-04-23T15:03:02",
+      "NextSearch": "2026-09-21T15:03:02",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-04-23T15:03:02",
+      "NextSearch": "2026-09-21T15:03:02",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-04-23T15:03:02",
+      "NextSearch": "2026-09-21T15:03:02",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-26T10:37:20",
+      "NextSearch": "2026-04-26T10:37:20",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 1223201,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 1990 - Die 1993'er Edition (Commodore Amiga)\n\nStep back into a mysterious world with *1990 - Die 1993'er Edition*, an expanded re-release of the original *1990* for the Commodore Amiga. While retaining the core gameplay and user interface that made the original a cult classic, this edition boasts significant technical enhancements. Prepare to be immersed in a visually updated experience, as hand-drawn graphics have been replaced with digitized photographs, bringing a new level of realism to the game's environments and characters. \n\nThe soundtrack has also been dramatically improved, featuring in-game music that enhances the atmosphere and tension. Though the narrative remains unchanged, the enhanced visuals and audio create a more compelling and engaging journey.  Explore the game's intriguing storyline, solve puzzles, and uncover secrets within a unique and captivating setting. *1990 - Die 1993'er Edition* offers a fresh perspective on a beloved classic, perfect for both returning fans and newcomers alike."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 1239858,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "8CD34DAADC42A3CB2BC8A47D71D7F0596997B4EB"
+    },
+    {
+      "Id": 1202718,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 10896,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "14302",
+            "Publisher": "APC&TCP"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "21736",
+            "ImmutableId": "21736",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/companies/apc-and-tcp",
+            "LastSearch": "2025-06-24T06:21:40",
+            "NextSearch": "2026-12-11T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:40",
+            "NextSearch": "2026-06-20T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:40",
+            "NextSearch": "2026-06-20T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:40",
+            "NextSearch": "2026-06-20T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:40",
+            "NextSearch": "2026-06-20T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:40",
+            "NextSearch": "2026-06-20T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:40",
+            "NextSearch": "2026-06-20T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2025-06-24T06:21:40",
+            "NextSearch": "2026-06-20T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2025-04-23T07:55:58",
+            "NextSearch": "2026-06-20T08:35:26",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T15:19:50",
+            "NextSearch": "2026-03-03T15:19:50",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T10:50:54",
+            "NextSearch": "2026-04-24T10:50:54",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [],
+        "CreatedDate": "2024-05-26T04:12:49",
+        "UpdatedDate": "2026-01-31T08:42:05",
+        "Name": "APC&TCP"
+      }
+    },
+    {
+      "Id": 1202717,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 3,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "703",
+            "Platform": "Amiga"
+          },
+          {
+            "SignatureId": "1142",
+            "Platform": "Amiga (AGA)"
+          },
+          {
+            "SignatureId": "1156",
+            "Platform": "Amiga CD"
+          },
+          {
+            "SignatureId": "475",
+            "Platform": "Commodore - Amiga"
+          },
+          {
+            "SignatureId": "476",
+            "Platform": "Commodore - Amiga (Bitstream)"
+          },
+          {
+            "SignatureId": "932",
+            "Platform": "Commodore - Amiga (Bitstream) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "477",
+            "Platform": "Commodore - Amiga (Flux)"
+          },
+          {
+            "SignatureId": "933",
+            "Platform": "Commodore - Amiga (Flux) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "934",
+            "Platform": "Commodore - Amiga (Parent-Clone)"
+          },
+          {
+            "SignatureId": "662",
+            "Platform": "Commodore - Amiga CD"
+          },
+          {
+            "SignatureId": "76",
+            "Platform": "Commodore Amiga"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "16",
+            "ImmutableId": "16",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/amiga",
+            "LastSearch": "2024-04-28T13:40:21",
+            "NextSearch": "2024-05-28T13:40:21",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "4911",
+            "ImmutableId": "4911",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=4911",
+            "LastSearch": "2024-12-12T01:22:38",
+            "NextSearch": "2025-01-12T01:22:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "35",
+            "ImmutableId": "35",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/35/games",
+            "LastSearch": "2025-04-06T16:50:11",
+            "NextSearch": "2025-05-06T16:50:11",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "1",
+            "ImmutableId": "1",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-1/",
+            "LastSearch": "2025-06-20T15:10:46",
+            "NextSearch": "2025-07-20T15:10:46",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2026-10-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2026-10-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2026-10-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Amiga",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Amiga",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Amiga",
+            "LastSearch": "2026-01-05T10:52:06",
+            "NextSearch": "2026-02-05T10:52:06",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5249407",
+            "ImmutableId": "5249407",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5249407",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2026-10-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "64",
+            "ImmutableId": "64",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=64",
+            "LastSearch": "2026-05-09T12:49:37",
+            "NextSearch": "2027-02-22T12:49:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "2-commodore-amiga",
+            "ImmutableId": "2-commodore-amiga",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/2-commodore-amiga",
+            "LastSearch": "2026-02-24T09:50:39",
+            "NextSearch": "2026-04-24T09:50:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758273,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Commodore Amiga was a family of personal computers produced from 1985 to 1994, and later by other companies, leaving a lasting legacy in computing. Distinguished by its custom hardware accelerating graphics and sound – including sprites, a blitter, and four channels of audio – the Amiga offered capabilities unmatched by its contemporaries like the Atari ST and Macintosh. It ran AmigaOS, a pioneering preemptive multitasking operating system with a graphical user interface called Workbench. \n\nInitially marketed as a business machine, the Amiga found its niche as a home computer, becoming a hub for gaming and creative software, including early 3D rendering and music creation tools like LightWave 3D and tracker music editors. Popular games like *Populous* and *Lemmings* originated on the platform. Despite its innovations, the Amiga eventually lost market share, but remains fondly remembered for its technical advancements and vibrant community."
+          },
+          {
+            "Id": 192,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "868B0D6B8BA0ED5881DEC2783B20D9F01E6B8976"
+          },
+          {
+            "Id": 2,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 2,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "24910",
+                  "Publisher": "Commodore Business Machines"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "10999",
+                  "ImmutableId": "10999",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/commodore-business-machines-inc",
+                  "LastSearch": "2024-04-28T13:39:01",
+                  "NextSearch": "2024-05-28T13:39:01",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:35",
+                  "NextSearch": "2026-03-03T13:05:35",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:34",
+                  "NextSearch": "2026-04-24T09:49:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 173,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "9C5599A7B44D515191A2E5331213A99061CF2F31"
+                },
+                {
+                  "attributeType": "LongString",
+                  "attributeName": "SearchAliases",
+                  "attributeRelationType": "None",
+                  "Value": "Commodore Business Machines, Commodore-Business-Machines"
+                }
+              ],
+              "CreatedDate": "2024-04-28T13:39:01",
+              "UpdatedDate": "2026-01-31T09:01:22",
+              "Name": "Commodore Business Machines"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Commodore Amiga, Commodore-Amiga"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 152,
+                    "Text": "68000 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95249,
+                    "Text": "custom sound chips",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88484,
+                    "Text": "ega graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 30,
+                    "Text": "composite video",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 58,
+                    "Text": "parallel port",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 57,
+                    "Text": "serial port",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 16,
+                    "Text": "personal computer",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-28T13:40:21",
+        "UpdatedDate": "2026-05-28T14:48:27",
+        "Name": "Commodore Amiga"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "1990 - Die 1993'er Edition, 1990-Die 1993'er Edition, 1990 Die 1993'er Edition, 1990: Die 1993'er Edition"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 33,
+          "Id": "199903",
+          "Name": "1990 - Die 1993'er Edition (demo-playable) (1994)(APC&TCP)(DE).adf",
+          "Size": 901120,
+          "Crc": "4e5a1150",
+          "Md5": "1ed8c335093f26f1c989e15c442196c9",
+          "Sha1": "80b543430264728fb012ec2441f471b9daee756c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "DE",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "199904",
+          "Name": "1990 - Die 1993'er Edition (demo-playable) (1994)(APC&TCP)(DE)[h FD-Serie].adf",
+          "Size": 901120,
+          "Crc": "40715afb",
+          "Md5": "ee326470786b1f28933827052ca871fa",
+          "Sha1": "c0af7b4e027cacbb461500f58f952f35582e945b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "h": "FD-Serie"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "DE",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "171568",
+          "Name": "1990 - Die 1993'er Edition (1993)(APC&TCP)(DE)(Disk 1 of 3).adf",
+          "Size": 901120,
+          "Crc": "2b44cd22",
+          "Md5": "e5828bef75ebd2b1f4bb7a26cdd0f3bf",
+          "Sha1": "5007ae3a0f3fe2be4ea28c1cae1016755b5ffda0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 3",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 3
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3121466",
+          "Name": "1990 - Die 1993'er Edition (1993)(APC&TCP)(DE)(Disk 1 of 3).ipf",
+          "Size": 1046412,
+          "Crc": "3d526a9e",
+          "Md5": "bfd8ccda10aced0b1d5fcaab88229447",
+          "Sha1": "716dfa6ab9c19b0e92ca2dd86f511b243266385a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "Unofficial IPF"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 3",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 3
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "171569",
+          "Name": "1990 - Die 1993'er Edition (1993)(APC&TCP)(DE)(Disk 1 of 3)[h AFL].adf",
+          "Size": 901120,
+          "Crc": "72d85677",
+          "Md5": "111dd8fda249150847f133b919d93379",
+          "Sha1": "0c39acb9dcbeda2cf29079e137059cab0f977327",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "h": "AFL"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 3",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 3
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "171570",
+          "Name": "1990 - Die 1993'er Edition (1993)(APC&TCP)(DE)(Disk 1 of 3)[h X-ACT].adf",
+          "Size": 901120,
+          "Crc": "a8c981e0",
+          "Md5": "f1e44dd6e0eff9f26e1505bc0af4b9ff",
+          "Sha1": "6c103446be7ed710fbec760b2c8444fdc58dc1e3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "h": "X-ACT"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 3",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 3
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "171571",
+          "Name": "1990 - Die 1993'er Edition (1993)(APC&TCP)(DE)(Disk 2 of 3).adf",
+          "Size": 901120,
+          "Crc": "befc9633",
+          "Md5": "4ed7304016cfee188bf3d6fb61faafb8",
+          "Sha1": "efe98f6357399025a556f33c099669224e5fb498",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 2 of 3",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 2,
+            "Count": 3
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3121467",
+          "Name": "1990 - Die 1993'er Edition (1993)(APC&TCP)(DE)(Disk 2 of 3).ipf",
+          "Size": 1046412,
+          "Crc": "3dbe95dd",
+          "Md5": "dcdd138ac510df2fbc3dc0bda10e7b17",
+          "Sha1": "5a8b8dc6eb9e0f7fdfbb5794efa4803a8f68db92",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "Unofficial IPF"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 2 of 3",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 2,
+            "Count": 3
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "171572",
+          "Name": "1990 - Die 1993'er Edition (1993)(APC&TCP)(DE)(Disk 2 of 3)[a savegame].adf",
+          "Size": 901120,
+          "Crc": "6d5df9f2",
+          "Md5": "1726afc2e229bae20f732a4d9660f130",
+          "Sha1": "72c3644f4a4333088140acd17fd722e649ef5103",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "a": "a"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 2 of 3",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 2,
+            "Count": 3
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "171573",
+          "Name": "1990 - Die 1993'er Edition (1993)(APC&TCP)(DE)(Disk 2 of 3)[h AFL].adf",
+          "Size": 901120,
+          "Crc": "6f766786",
+          "Md5": "a89b7ced0173e0822bae58138244f437",
+          "Sha1": "ffa2814204c91dcc37ce27da7bd148e29557aa08",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "h": "AFL"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 2 of 3",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 2,
+            "Count": 3
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "171574",
+          "Name": "1990 - Die 1993'er Edition (1993)(APC&TCP)(DE)(Disk 3 of 3).adf",
+          "Size": 901120,
+          "Crc": "e3b979b5",
+          "Md5": "8d8351347e942c61f0dfb68daac85623",
+          "Sha1": "c3ce11ab7f33bb1c922ba265b6165c63ab5be6a7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 3 of 3",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 3,
+            "Count": 3
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3121468",
+          "Name": "1990 - Die 1993'er Edition (1993)(APC&TCP)(DE)(Disk 3 of 3).ipf",
+          "Size": 1046412,
+          "Crc": "c20736b8",
+          "Md5": "e06304549d5f45b7e53de57f3edd73b7",
+          "Sha1": "b1d66aa1066b1c84a2cce1332ee97b98bf681e18",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "Unofficial IPF"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 3 of 3",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 3,
+            "Count": 3
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "171575",
+          "Name": "1990 - Die 1993'er Edition (1993)(APC&TCP)(DE)(Disk 3 of 3)[a rebuilt].adf",
+          "Size": 901120,
+          "Crc": "da9c933d",
+          "Md5": "334c48699e1e0fc7c82928573a34fe54",
+          "Sha1": "b5fe61cb7bdbf8afa5799002897d2cadb5deeff8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "a": "a"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 3 of 3",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 3,
+            "Count": 3
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "199901",
+          "Name": "1990 - Die 1993'er Edition (1993)(APC&TCP)(DE)(Disk 3 of 3)[h AFL].adf",
+          "Size": 901120,
+          "Crc": "421c8ef2",
+          "Md5": "d540ee567268c5a6f99be4a9e86dfac8",
+          "Sha1": "b217aae005ab3620356caed3b96e0c53e582b351",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "h": "AFL"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 3 of 3",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 3,
+            "Count": 3
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "171576",
+          "Name": "1990 - Die 1993'er Edition (1993)(APC&TCP)(DE)(Disk 3 of 3)[h AFL][b corrupt files].adf",
+          "Size": 901120,
+          "Crc": "cf887203",
+          "Md5": "80899a2c81e567b6c5baa9d00e063b88",
+          "Sha1": "eec5525d14ac104d8cf13a50978aedbd0bbe8bc4",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF",
+            "h": "AFL",
+            "b": "corrupt files"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 3 of 3",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 3,
+            "Count": 3
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "199902",
+          "Name": "1990 - Die 1993'er Edition (demo-playable) (1993)(APC&TCP)(DE).adf",
+          "Size": 901120,
+          "Crc": "d02e0b87",
+          "Md5": "7328c3ddc93f704c91ca719ef7acc8d8",
+          "Sha1": "d21f0bfee96668566defdeaa79122d0d7f2632b3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ],
+            "filetype": "ADF"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "DE",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 976,
+              "Text": "action-adventure",
+              "AIGenerated": true
+            },
+            {
+              "Id": 838,
+              "Text": "drama",
+              "AIGenerated": true
+            },
+            {
+              "Id": 888,
+              "Text": "simulation",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 3901,
+              "Text": "digitized graphics",
+              "AIGenerated": true
+            },
+            {
+              "Id": 38778,
+              "Text": "enhanced visuals",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3902,
+              "Text": "in-game music",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 849,
+              "Text": "fixed camera",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1946,
+              "Text": "historical fiction",
+              "AIGenerated": true
+            },
+            {
+              "Id": 40334,
+              "Text": "political drama",
+              "AIGenerated": true
+            },
+            {
+              "Id": 5690,
+              "Text": "social commentary",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 990,
+              "Text": "linear progression",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1051,
+              "Text": "point-and-click",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1395,
+              "Text": "story-driven",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Germany (DE)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German"
+    }
+  ],
+  "CreatedDate": "2026-03-04T07:55:13",
+  "UpdatedDate": "2026-04-23T15:06:05",
+  "Name": "1990 - Die 1993'er Edition"
+}

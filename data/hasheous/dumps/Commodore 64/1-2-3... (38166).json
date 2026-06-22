@@ -1,0 +1,2245 @@
+{
+  "Id": 38166,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "194384",
+      "Name": "1-2-3...",
+      "Year": "2000",
+      "Country": "",
+      "Platform": "Commodore C64",
+      "SourceId": "8728",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-03-19T05:26:32",
+      "NextSearch": "2026-06-25T05:26:32",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-03-19T05:26:32",
+      "NextSearch": "2026-06-25T05:26:32",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-03-19T05:26:32",
+      "NextSearch": "2026-06-25T05:26:32",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-03-19T05:26:32",
+      "NextSearch": "2026-06-25T05:26:32",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-03-19T05:26:32",
+      "NextSearch": "2026-06-25T05:26:32",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-03-19T05:26:32",
+      "NextSearch": "2026-06-25T05:26:32",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-03-19T05:26:32",
+      "NextSearch": "2026-06-25T05:26:32",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/Nord_and_Bert_Couldn't_Make_Head_or_Tail_of_It",
+      "ImmutableId": "https://en.wikipedia.org/wiki/Nord_and_Bert_Couldn't_Make_Head_or_Tail_of_It",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/Nord_and_Bert_Couldn't_Make_Head_or_Tail_of_It",
+      "LastSearch": "2026-03-19T05:26:32",
+      "NextSearch": "2026-06-25T05:26:32",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-03-19T05:26:32",
+      "NextSearch": "2026-06-25T05:26:32",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-04T12:31:25",
+      "NextSearch": "2026-03-04T12:31:25",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T05:02:02",
+      "NextSearch": "2026-04-25T05:02:02",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 758889,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## Nord and Bert Couldn't Make Head or Tail of It - Commodore 64\n\nStep into the bizarre town of Punster in *Nord and Bert Couldn't Make Head or Tail of It*, a uniquely quirky interactive fiction game from Infocom. Released in 1987 for the Commodore 64 and other platforms, this twenty-seventh entry from the legendary publisher throws out the traditional logic puzzles in favor of a riotous celebration of wordplay.\n\nThe game is structured as a series of independent \"short stories,\" each dedicated to a different style of linguistic trickery – from homonyms in a grocery store (\"The Shopping Bizarre\") to literal interpretations of idioms (\"Buy the Farm\") and even participating in a 1950s sitcom (\"Act the Part\").  Solve puzzles by typing in clever responses, often requiring you to think outside the box and embrace the absurd. \n\nWhile the first seven chapters can be tackled in any order, unlocking the final chapter, \"Meet the Mayor,\" requires collecting passwords from each previous section.  Included with the game is \"Home on the Range,\" a booklet of humorous cartoons illustrating the game's wordplay. Prepare for a delightfully unconventional adventure!"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 475712,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "CD7DA84EB47576902DC74849235DBBE9E0CB63F5"
+    },
+    {
+      "Id": 76592,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 38165,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "25779",
+            "Publisher": "Mudd, C."
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "IGDB",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-11-02T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-11-02T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-11-02T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-11-02T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-11-02T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-11-02T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-11-02T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-11-02T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "3123",
+            "ImmutableId": "3123",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2027-03-17T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-06-03T21:43:09",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-06-03T20:36:04",
+            "NextSearch": "2026-11-02T20:36:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Mudd, C., Mudd,-C."
+          }
+        ],
+        "CreatedDate": "2024-05-27T05:23:11",
+        "UpdatedDate": "2026-06-03T20:43:09",
+        "Name": "Mudd, C."
+      }
+    },
+    {
+      "Id": 76591,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 1,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "478",
+            "Platform": "Commodore - Commodore 64"
+          },
+          {
+            "SignatureId": "788",
+            "Platform": "Commodore - Commodore 64 (Headerless)"
+          },
+          {
+            "SignatureId": "935",
+            "Platform": "Commodore - Commodore 64 (Headerless) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "936",
+            "Platform": "Commodore - Commodore 64 (Parent-Clone)"
+          },
+          {
+            "SignatureId": "479",
+            "Platform": "Commodore - Commodore 64 (PP)"
+          },
+          {
+            "SignatureId": "937",
+            "Platform": "Commodore - Commodore 64 (PP) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "480",
+            "Platform": "Commodore - Commodore 64 (Tapes)"
+          },
+          {
+            "SignatureId": "938",
+            "Platform": "Commodore - Commodore 64 (Tapes) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "710",
+            "Platform": "Commodore 64"
+          },
+          {
+            "SignatureId": "80",
+            "Platform": "Commodore C64"
+          },
+          {
+            "SignatureId": "81",
+            "Platform": "Commodore C64DTV"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/c64",
+            "LastSearch": "2024-04-28T13:35:39",
+            "NextSearch": "2024-05-28T13:35:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40",
+            "ImmutableId": "40",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=40",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "30",
+            "ImmutableId": "30",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/30/games",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14",
+            "ImmutableId": "14",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-14/",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Commodore_64",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Commodore_64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Commodore_64",
+            "LastSearch": "2025-08-05T05:17:02",
+            "NextSearch": "2025-09-05T05:17:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5500690",
+            "ImmutableId": "5500690",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5500690",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "66",
+            "ImmutableId": "66",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=66",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14-commodore-64",
+            "ImmutableId": "14-commodore-64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/14-commodore-64",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758269,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Commodore 64, affectionately known as the C64, was an 8-bit home computer released in 1982 that became a cultural icon and the best-selling desktop computer of all time, with estimated sales between 12.5 and 17 million units. Boasting 64 kilobytes of RAM and impressive graphics and sound capabilities thanks to its VIC-II chip and SID sound chip, the C64 offered a significant leap in performance compared to its predecessors. It initially sold for $595, but its price later dropped, making it accessible to a wider audience.\n\nThe C64 dominated the home computer market throughout the 1980s, particularly in the US and UK, though it faced stiff competition from the ZX Spectrum and Amstrad CPC. Popular games like *Impossible Mission*, *The Last Ninja*, and *Elite* showcased its capabilities and cemented its legacy. Even today, emulators allow enthusiasts to relive the C64 experience."
+          },
+          {
+            "Id": 190,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "629CB9AB45447D77ECBE2C1F3AB8A3291E40052F"
+          },
+          {
+            "Id": 1,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 2,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "24910",
+                  "Publisher": "Commodore Business Machines"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "10999",
+                  "ImmutableId": "10999",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/commodore-business-machines-inc",
+                  "LastSearch": "2024-04-28T13:39:01",
+                  "NextSearch": "2024-05-28T13:39:01",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:35",
+                  "NextSearch": "2026-03-03T13:05:35",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:34",
+                  "NextSearch": "2026-04-24T09:49:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 173,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "9C5599A7B44D515191A2E5331213A99061CF2F31"
+                },
+                {
+                  "attributeType": "LongString",
+                  "attributeName": "SearchAliases",
+                  "attributeRelationType": "None",
+                  "Value": "Commodore Business Machines, Commodore-Business-Machines"
+                }
+              ],
+              "CreatedDate": "2024-04-28T13:39:01",
+              "UpdatedDate": "2026-01-31T09:01:22",
+              "Name": "Commodore Business Machines"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Commodore 64, Commodore-64"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 286,
+                    "Text": "classic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 96779,
+                    "Text": "64 kib ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 500,
+                    "Text": "6510 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96778,
+                    "Text": "sid sound chip",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 501,
+                    "Text": "vic-ii graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 26,
+                    "Text": "8-bit system",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96777,
+                    "Text": "video game platform",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 125,
+                    "Text": "cartridge slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 419,
+                    "Text": "cassette tape",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 165,
+                    "Text": "floppy disk",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-28T13:35:39",
+        "UpdatedDate": "2026-05-24T16:04:23",
+        "Name": "Commodore 64"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "1-2-3..., 1 - 2 - 3..., 1 2 3..., 1: 2: 3..., I-II-III..., I - II - III..., I II III..., I: II: III..., One-Two-Three..., One - Two - Three..., One Two Three..., One: Two: Three..."
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 33,
+          "Id": "476095",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2).d64",
+          "Size": 174848,
+          "Crc": "b066919f",
+          "Md5": "d8663db8eca273e236d5ddf22a954e0f",
+          "Sha1": "fac26b3c880d4f57d670a7efec04c43d3687446a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648327",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a10].d64",
+          "Size": 174848,
+          "Crc": "821ff04c",
+          "Md5": "565807e27dc8f971716eb98978b4470a",
+          "Sha1": "cf4b0857066f52c1d56149cf88fe4c3283498432",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a10"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648328",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a11].d64",
+          "Size": 174848,
+          "Crc": "9e133dca",
+          "Md5": "489c4e1d942b46887262915b0e04ffb0",
+          "Sha1": "96f99c6cdea80b37d0a0625fe50c9ca65b9f59c9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a11"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648329",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a12].d64",
+          "Size": 174848,
+          "Crc": "4942bfd0",
+          "Md5": "45853634ba4e4cdd280f4ded27867d00",
+          "Sha1": "f646080aaeb8f139fb5215e4b6357bfdee001497",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a12"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648330",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a13].d64",
+          "Size": 174848,
+          "Crc": "a21d11bc",
+          "Md5": "a8e364d209e7f0ea6de08c9f17c5f34b",
+          "Sha1": "4c70132949c76c2138c40cf4677e65c1c2b9dafe",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a13"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648331",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a14].d64",
+          "Size": 174848,
+          "Crc": "c4c007c5",
+          "Md5": "6f26c870bfa4bc37c7230b6d50be80d6",
+          "Sha1": "42ff70bb8137c130bb41b1688c0227dfe8f30315",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a14"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648332",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a15].d64",
+          "Size": 174848,
+          "Crc": "d088a411",
+          "Md5": "0473d58b4b782ccce792ca07b9f8324a",
+          "Sha1": "7ccc23e0668608db3fe20fa6112910278e6aa8b3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a15"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648333",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a16].d64",
+          "Size": 174848,
+          "Crc": "28d30a1e",
+          "Md5": "69c390c8e75859ffe85696ccdf161b90",
+          "Sha1": "cbcbe09f6849eb3ba427c95afe089f3142c7d0e1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a16"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648334",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a17].d64",
+          "Size": 174848,
+          "Crc": "6b1ee5c9",
+          "Md5": "9638d235ffc5a34fa5546487d016d0ad",
+          "Sha1": "aff6b1f6cb986a1e137bf06e5c8ec7f6c7eff822",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a17"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648335",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a18].d64",
+          "Size": 174848,
+          "Crc": "5ca0a51d",
+          "Md5": "ee7d5d68792e5afd459f6512887e8015",
+          "Sha1": "c18f45d23ad1f844f6103d0178e137acdbbf31bc",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a18"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648336",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a19].d64",
+          "Size": 174848,
+          "Crc": "882cf5ef",
+          "Md5": "b9251a4a2be7f26d9b7194c488d46a48",
+          "Sha1": "15571c6d5eaef3d1aec0e6d8918c38928b960ca8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a19"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648338",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a20].d64",
+          "Size": 174848,
+          "Crc": "33b100fb",
+          "Md5": "2b66415f8ac207cd9df6df27060bc6e5",
+          "Sha1": "ea91cd662e654afc74584f911f55af8dc8548253",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a20"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648339",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a21].d64",
+          "Size": 174848,
+          "Crc": "a86ec971",
+          "Md5": "dcf0bcad00985f111d73e0fd3f990313",
+          "Sha1": "fe635cbb52bdebaada296e437d1dba716f6b4c04",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a21"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648340",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a22].d64",
+          "Size": 174848,
+          "Crc": "8f7566d3",
+          "Md5": "aa898623bc42db2b8ef88586771d50b1",
+          "Sha1": "18c3d33678e84fa94371cbecda4a65bc347b6ad0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a22"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648341",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a23].d64",
+          "Size": 174848,
+          "Crc": "1aa2f814",
+          "Md5": "3a9610ab6214fd1b0041bebd9d21129b",
+          "Sha1": "8a24b623f163ad5ad130c03182059d36e544f40e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a23"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648342",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a24].d64",
+          "Size": 174848,
+          "Crc": "d8671b32",
+          "Md5": "ca47584ab7f2da061c1568457bbd8ddf",
+          "Sha1": "a0d2a9968d8b0ba3b109435c85496955f74fb64e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a24"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648343",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a25].d64",
+          "Size": 174848,
+          "Crc": "25a955e0",
+          "Md5": "5e18a6ad48ec9b01225c421478c99f00",
+          "Sha1": "f178afb22341e57fb222023a54134ebd8db0fd6e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a25"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648344",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a26].d64",
+          "Size": 174848,
+          "Crc": "90dea8f5",
+          "Md5": "6d3c1ad37050542fd0e3b9b37acd9dbf",
+          "Sha1": "72cb9da879b4847e4ac47f8f53e1d52b5a731752",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a26"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648345",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a27].d64",
+          "Size": 174848,
+          "Crc": "956066ca",
+          "Md5": "30016ad2da5e031368f004648777b1c1",
+          "Sha1": "e6f9b22cc20a10f3bbc056ee608096f627c60f1a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a27"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648346",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a28].d64",
+          "Size": 174848,
+          "Crc": "bdb6f7d3",
+          "Md5": "1091cc2498bb363e7245c31d9fe00e85",
+          "Sha1": "a75435a550b46765136fff02cad14c771ea5ccd0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a28"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648347",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a29].d64",
+          "Size": 174848,
+          "Crc": "99722332",
+          "Md5": "e6afece394ec2fd5c73cfbb46bd105e3",
+          "Sha1": "ad0bc1cbd87ae8ff40d666ac7bf57f0e5004933d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a29"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648337",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a2].d64",
+          "Size": 174848,
+          "Crc": "07ac1e8f",
+          "Md5": "2c081c9bd4c4c4d74101f2edb6e50396",
+          "Sha1": "4b4b51b8bb4843dc4973b2e80922c0b0ad92f916",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a2"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648349",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a30].d64",
+          "Size": 174848,
+          "Crc": "546c0214",
+          "Md5": "72235a0e5414e92e1e0c3ef20da390ed",
+          "Sha1": "8de33618b8352795b336a3a763a6f3f64c402ed7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a30"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648350",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a31].d64",
+          "Size": 174848,
+          "Crc": "440ecaaf",
+          "Md5": "96975636b3544529234a505a9ec94e9d",
+          "Sha1": "531b8c9166d037aa93c0323a0366cd08bad9aeb1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a31"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648351",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a32].d64",
+          "Size": 174848,
+          "Crc": "5fe15c91",
+          "Md5": "559afb28c25454d3e6ef9f137cd1d191",
+          "Sha1": "29d9bc45d5b892101e9c2a12df433eb0bc004357",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a32"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648352",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a33].d64",
+          "Size": 174848,
+          "Crc": "cab168c1",
+          "Md5": "72890a6a026ecedde858f03e9b77c979",
+          "Sha1": "fd85ea132447bf4674731a27549692f8921ab1d8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a33"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648353",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a34].d64",
+          "Size": 174848,
+          "Crc": "450c0f3c",
+          "Md5": "224ad551e9b2344388bebcf31ca78a06",
+          "Sha1": "2265db7f1e851a922dc0f61e29b0e1eeee6e70a9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a34"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648354",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a35].d64",
+          "Size": 174848,
+          "Crc": "6d1e868a",
+          "Md5": "cf018266b2cd1f89c066bf9cee75188e",
+          "Sha1": "043720994d774f23e853e7f6ee0b1669eba8e87c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a35"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648355",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a36].d64",
+          "Size": 174848,
+          "Crc": "99661309",
+          "Md5": "50cd8feb8d0eade8b8ba70c51e5bc529",
+          "Sha1": "95998a0a7c3be8b7637c8441de53640b951b0d79",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a36"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648356",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a37].d64",
+          "Size": 174848,
+          "Crc": "bcb89af3",
+          "Md5": "8ff0531fd531cecb17355d1f6aeb8d8e",
+          "Sha1": "5d27639fe7a6f12c847c6f1cf283c2eabb7f11f8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a37"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648348",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a3].d64",
+          "Size": 174848,
+          "Crc": "243dca34",
+          "Md5": "5f2ad30ab4ad86c7e40f6920f0d48479",
+          "Sha1": "32de6d40979203feda07bbad1466d90fc4b9cbea",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a3"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648357",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a4].d64",
+          "Size": 174848,
+          "Crc": "7660ac4b",
+          "Md5": "1da4f2f47d01eb16b367b0ed6da31d3b",
+          "Sha1": "cb156514d30d6756746e6aa5c91ec2754ab46861",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a4"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648358",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a5].d64",
+          "Size": 174848,
+          "Crc": "e966f865",
+          "Md5": "9d85f2c8b8454dfbbbe791935fc4fd1b",
+          "Sha1": "84a06491b8c10122591eb0454db73114fbeb140b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a5"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648359",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a6].d64",
+          "Size": 174848,
+          "Crc": "5d9ee435",
+          "Md5": "eea3abab167a1e47d74ee383c0e66667",
+          "Sha1": "c28aeb68a2f5e8fb75173955fa5814595dc61972",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a6"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648360",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a7].d64",
+          "Size": 174848,
+          "Crc": "28f2b1f4",
+          "Md5": "f8e79bbd8e6bd7e8ffa0a6a6cd4b02d4",
+          "Sha1": "c35eff2dd5cc1185cff04bc30a1951859a8ca9f4",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a7"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648361",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a8].d64",
+          "Size": 174848,
+          "Crc": "b46e436a",
+          "Md5": "4214682c2b3797a3cc6777342a56d95c",
+          "Sha1": "f6a753984db38c8113f8a4a04eb96b92e3e857a9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a8"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648362",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a9].d64",
+          "Size": 174848,
+          "Crc": "c6fbb6a7",
+          "Md5": "785ffc8400a55416fe2eeafbf4e39bdb",
+          "Sha1": "07aa3298b3597d87cab75b29a9b1cf155649bbc5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a9"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "648326",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 1 of 2)[a].d64",
+          "Size": 174848,
+          "Crc": "caf1c90a",
+          "Md5": "6ace2ee850652292ed7bd3a63fec8feb",
+          "Sha1": "9718aea82f7a4d072a1a97b92e47195cbf16adb7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64",
+            "a": "a"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 1 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 1,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "476096",
+          "Name": "1-2-3... (2000)(Mudd, C.)(Disk 2 of 2).d64",
+          "Size": 174848,
+          "Crc": "6f8535b0",
+          "Md5": "5073b38710b62a1045512fc925511cc7",
+          "Sha1": "13d28c3252afaee08721a900e3ab707355470992",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Adventure"
+            ],
+            "filetype": "D64"
+          },
+          "RomType": "Disk",
+          "RomTypeMedia": "Disk 2 of 2",
+          "MediaDetail": {
+            "Media": "Disk",
+            "Number": 2,
+            "Count": 2
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 1088,
+              "Text": "first-person",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2189,
+              "Text": "narrative-driven",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2190,
+              "Text": "player-driven",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 2187,
+              "Text": "humor-based puzzles",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1185,
+              "Text": "multiple chapters",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1054,
+              "Text": "password system",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 2159,
+              "Text": "idioms",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2225,
+              "Text": "surreal humor",
+              "AIGenerated": true
+            },
+            {
+              "Id": 825,
+              "Text": "wordplay",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 1182,
+              "Text": "interactive fiction",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1050,
+              "Text": "text adventure",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2219,
+              "Text": "wordplay game",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 1412,
+              "Text": "non-linear",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1052,
+              "Text": "puzzle solving",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2186,
+              "Text": "wordplay challenges",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "CreatedDate": "2024-05-27T05:23:12",
+  "UpdatedDate": "2026-03-19T05:33:16",
+  "Name": "1-2-3..."
+}

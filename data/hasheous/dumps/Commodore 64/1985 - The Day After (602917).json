@@ -1,0 +1,6117 @@
+{
+  "Id": 602917,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "194404",
+      "Name": "1985 - The Day After",
+      "Year": "1984",
+      "Country": null,
+      "Platform": "Commodore C64",
+      "SourceId": "1423",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "936658",
+      "Name": "1985 - The Day After",
+      "Year": "",
+      "Country": null,
+      "Platform": "Commodore 64",
+      "SourceId": "21805",
+      "MetadataSource": "98"
+    },
+    {
+      "SignatureId": "194403",
+      "Name": "1985 - The Day After",
+      "Year": "1984",
+      "Country": null,
+      "Platform": "Commodore C64",
+      "SourceId": "1423",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "210694",
+      "Name": "1985 - The Day After",
+      "Year": "1985",
+      "Country": "",
+      "Platform": "Commodore C64",
+      "SourceId": "8755",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "26150",
+      "ImmutableId": "26150",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/1985-the-day-after",
+      "LastSearch": "2026-04-16T07:06:42",
+      "NextSearch": "2026-11-22T07:06:42",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "95121",
+      "ImmutableId": "95121",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=95121",
+      "LastSearch": "2026-04-16T07:06:42",
+      "NextSearch": "2026-11-22T07:06:42",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-04-16T07:06:42",
+      "NextSearch": "2026-07-20T07:06:42",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "6274",
+      "ImmutableId": "6274",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-6274/",
+      "LastSearch": "2026-04-16T07:06:42",
+      "NextSearch": "2026-11-22T07:06:42",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-04-16T07:06:42",
+      "NextSearch": "2026-07-20T07:06:42",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-04-16T07:06:42",
+      "NextSearch": "2026-07-20T07:06:42",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-04-16T07:06:42",
+      "NextSearch": "2026-07-20T07:06:42",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-04-16T07:06:42",
+      "NextSearch": "2026-07-20T07:06:42",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-04-16T07:06:42",
+      "NextSearch": "2026-07-20T07:06:42",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "36057",
+      "ImmutableId": "36057",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "ScreenScraper",
+      "Link": "https://www.screenscraper.fr/gameinfos.php?gameid=36057",
+      "LastSearch": "2026-04-16T07:06:42",
+      "NextSearch": "2026-11-22T07:06:42",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T11:02:33",
+      "NextSearch": "2026-04-24T11:02:33",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 1222961,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 1985: The Day After - A Commodore 64 Classic\n\nEscape into a retrofuturistic world in *1985: The Day After*, a challenging space exploration game for the Commodore 64. Set in the aftermath of oppressive rule, humanity strives for self-sufficiency after overthrowing the tyrannical \"Big Brother,\" inspired by George Orwell's *1984*. Your mission: navigate a spacecraft through treacherous underground caverns on five distinct planets, recovering vital nuclear plasma pods left behind by the fallen regime.\n\nMaster precise rotational controls to maneuver through tight spaces, carefully managing your ship’s limited fuel supply. Gravity constantly pulls your ship downwards, demanding strategic thrusting and hovering to avoid crashes and enemy fire. Stationary sentries guard the precious plasma, adding another layer of peril. Utilize the ship’s tractor beam to collect the pods and earn points for fuel efficiency. Successfully gather all plasma, including the final reactor, and the game loops with your score intact, increasing the level counter and introducing shifting gravity directions for an escalating challenge. Lose three lives, and your quest ends."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 1235644,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "C05B14D401952FFD844BE2E2EE2DE16A5FDDAAC5"
+    },
+    {
+      "Id": 1195583,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 313,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "489",
+            "Publisher": "Mastertronic"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "AutomaticTooManyMatches",
+            "Source": "IGDB",
+            "Link": "",
+            "LastSearch": "2026-02-14T00:16:04",
+            "NextSearch": "2026-10-30T00:16:04",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2026-05-19T20:43:28",
+            "NextSearch": "2026-07-30T20:43:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2026-05-19T20:43:28",
+            "NextSearch": "2026-07-30T20:43:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2026-05-19T20:43:28",
+            "NextSearch": "2026-07-30T20:43:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-19T20:43:28",
+            "NextSearch": "2026-07-30T20:43:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-19T20:43:28",
+            "NextSearch": "2026-07-30T20:43:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-19T20:43:28",
+            "NextSearch": "2026-07-30T20:43:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2026-05-19T20:43:28",
+            "NextSearch": "2026-07-30T20:43:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2026-05-19T20:43:28",
+            "NextSearch": "2026-07-30T20:43:28",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-05-19T20:43:28",
+            "NextSearch": "2026-05-19T21:57:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T09:49:35",
+            "NextSearch": "2026-04-24T09:49:35",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [],
+        "CreatedDate": "2024-05-14T13:28:38",
+        "UpdatedDate": "2026-05-19T20:57:38",
+        "Name": "Mastertronic"
+      }
+    },
+    {
+      "Id": 1195582,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 1,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "478",
+            "Platform": "Commodore - Commodore 64"
+          },
+          {
+            "SignatureId": "788",
+            "Platform": "Commodore - Commodore 64 (Headerless)"
+          },
+          {
+            "SignatureId": "935",
+            "Platform": "Commodore - Commodore 64 (Headerless) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "936",
+            "Platform": "Commodore - Commodore 64 (Parent-Clone)"
+          },
+          {
+            "SignatureId": "479",
+            "Platform": "Commodore - Commodore 64 (PP)"
+          },
+          {
+            "SignatureId": "937",
+            "Platform": "Commodore - Commodore 64 (PP) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "480",
+            "Platform": "Commodore - Commodore 64 (Tapes)"
+          },
+          {
+            "SignatureId": "938",
+            "Platform": "Commodore - Commodore 64 (Tapes) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "710",
+            "Platform": "Commodore 64"
+          },
+          {
+            "SignatureId": "80",
+            "Platform": "Commodore C64"
+          },
+          {
+            "SignatureId": "81",
+            "Platform": "Commodore C64DTV"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/c64",
+            "LastSearch": "2024-04-28T13:35:39",
+            "NextSearch": "2024-05-28T13:35:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40",
+            "ImmutableId": "40",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=40",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "30",
+            "ImmutableId": "30",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/30/games",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14",
+            "ImmutableId": "14",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-14/",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Commodore_64",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Commodore_64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Commodore_64",
+            "LastSearch": "2025-08-05T05:17:02",
+            "NextSearch": "2025-09-05T05:17:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5500690",
+            "ImmutableId": "5500690",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5500690",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "66",
+            "ImmutableId": "66",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=66",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14-commodore-64",
+            "ImmutableId": "14-commodore-64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/14-commodore-64",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758269,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Commodore 64, affectionately known as the C64, was an 8-bit home computer released in 1982 that became a cultural icon and the best-selling desktop computer of all time, with estimated sales between 12.5 and 17 million units. Boasting 64 kilobytes of RAM and impressive graphics and sound capabilities thanks to its VIC-II chip and SID sound chip, the C64 offered a significant leap in performance compared to its predecessors. It initially sold for $595, but its price later dropped, making it accessible to a wider audience.\n\nThe C64 dominated the home computer market throughout the 1980s, particularly in the US and UK, though it faced stiff competition from the ZX Spectrum and Amstrad CPC. Popular games like *Impossible Mission*, *The Last Ninja*, and *Elite* showcased its capabilities and cemented its legacy. Even today, emulators allow enthusiasts to relive the C64 experience."
+          },
+          {
+            "Id": 190,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "629CB9AB45447D77ECBE2C1F3AB8A3291E40052F"
+          },
+          {
+            "Id": 1,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 2,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "24910",
+                  "Publisher": "Commodore Business Machines"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "10999",
+                  "ImmutableId": "10999",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/commodore-business-machines-inc",
+                  "LastSearch": "2024-04-28T13:39:01",
+                  "NextSearch": "2024-05-28T13:39:01",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:35",
+                  "NextSearch": "2026-03-03T13:05:35",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:34",
+                  "NextSearch": "2026-04-24T09:49:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 173,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "9C5599A7B44D515191A2E5331213A99061CF2F31"
+                },
+                {
+                  "attributeType": "LongString",
+                  "attributeName": "SearchAliases",
+                  "attributeRelationType": "None",
+                  "Value": "Commodore Business Machines, Commodore-Business-Machines"
+                }
+              ],
+              "CreatedDate": "2024-04-28T13:39:01",
+              "UpdatedDate": "2026-01-31T09:01:22",
+              "Name": "Commodore Business Machines"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Commodore 64, Commodore-64"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 286,
+                    "Text": "classic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 96779,
+                    "Text": "64 kib ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 500,
+                    "Text": "6510 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96778,
+                    "Text": "sid sound chip",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 501,
+                    "Text": "vic-ii graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 26,
+                    "Text": "8-bit system",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96777,
+                    "Text": "video game platform",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 125,
+                    "Text": "cartridge slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 419,
+                    "Text": "cassette tape",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 165,
+                    "Text": "floppy disk",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-28T13:35:39",
+        "UpdatedDate": "2026-05-24T16:04:23",
+        "Name": "Commodore 64"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "1985 - The Day After, 1985-The Day After, 1985 The Day After, 1985: The Day After"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "571406",
+          "Name": "1985 - The Day After (1984)(Virgin Mastertronic)[cr NO][t +2 NO][b].lnx",
+          "Size": 18478,
+          "Crc": "5e45f450",
+          "Md5": "0e80259f950d0bcdade4c0f5cc6c8871",
+          "Sha1": "69552ccbf4dd2ba88b72b53f0027b1da6013fa62",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "NO",
+            "t": "+2 NO",
+            "b": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476388",
+          "Name": "1985 - The Day After (1984)(Virgin Mastertronic)[cr Talent][t +1 Talent].d64",
+          "Size": 174848,
+          "Crc": "93d38298",
+          "Md5": "ac22cbbb9a9a4ad9bd4cff0bfd2a676a",
+          "Sha1": "f2f11fe48898415910eb82d7b8b269493ab28e54",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Talent",
+            "t": "+1 Talent"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585785",
+          "Name": "1985 - The Day After (1984)(Virgin Mastertronic)[cr Talent][t +1 Talent].prg",
+          "Size": 12036,
+          "Crc": "fa484367",
+          "Md5": "5ebe8c2c6f2cdcef2c229ce1cfc2d735",
+          "Sha1": "50502636822144e9b16fac220e49ece35b777610",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Talent",
+            "t": "+1 Talent"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "4076773",
+          "Name": "1985 (14121).zip",
+          "Size": 18303,
+          "Crc": "672b097a",
+          "Md5": "d8472a8a8461139da077c284a9020c72",
+          "Sha1": "ddf89264ab9f01e4faac2729839b9d67c78c7d04",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076786",
+          "Name": "1985 - The Day After (1984)(Mastertronic)(es).prg",
+          "Size": 38913,
+          "Crc": "d408be91",
+          "Md5": "0ce938ee164c3a903b553de347099a05",
+          "Sha1": "865e49d689fb462bb36b012238d1a820506702e2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076788",
+          "Name": "1985 - The Day After (1984)(Mastertronic)(es)[a].prg",
+          "Size": 17654,
+          "Crc": "3fdd7aca",
+          "Md5": "5411da2a48ebe2cbed16d3f532502c33",
+          "Sha1": "6bdff7c7cb0f99fd8c7d0293c21f5644473c264c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076780",
+          "Name": "1985 - The Day After (1984)(Mastertronic).prg",
+          "Size": 14710,
+          "Crc": "d09097ff",
+          "Md5": "eb63212cc70a71ca872cb55f4c780c40",
+          "Sha1": "1127dac1b5c5b6c43e1849bc79d867112e3d6751",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076782",
+          "Name": "1985 - The Day After (1984)(Mastertronic).tap",
+          "Size": 398278,
+          "Crc": "86d6990f",
+          "Md5": "79d9a0959bd43a80102d267439baf297",
+          "Sha1": "42222a1eb6e51d352ce4ff27ebbc98d59285651a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076796",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a10].tap",
+          "Size": 540664,
+          "Crc": "120ac82d",
+          "Md5": "2236fa75427f244fade693cddfb030ae",
+          "Sha1": "7ed6f9be275856b6bb730e02105fa9192b072824",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076797",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a11].tap",
+          "Size": 379354,
+          "Crc": "da7a2dab",
+          "Md5": "154affa6804a3f3446070824e3135b57",
+          "Sha1": "8e158ad434248d655771e59c30d6903505d99d65",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076790",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a2].tap",
+          "Size": 540681,
+          "Crc": "8ec74cba",
+          "Md5": "47dbd50f4e25a3858cd354bec285aef9",
+          "Sha1": "a5f846160bd5310a1e328778a5111db0487853de",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076789",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a3].tap",
+          "Size": 540656,
+          "Crc": "1bdf038b",
+          "Md5": "9d68888601eafb783d4daed73a3d9868",
+          "Sha1": "242f7cb6ac228f67329cbb7b93b8c851af2d3912",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076792",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a4].tap",
+          "Size": 540659,
+          "Crc": "f5f2f25b",
+          "Md5": "7f692362ef864d66e7f375683eb6ed69",
+          "Sha1": "d25d3883e0ecb8b2dcd82c5d44e2ee008b92b75b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076791",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a5].tap",
+          "Size": 551750,
+          "Crc": "58305223",
+          "Md5": "6907a46e417a33c3083b15be2e34394e",
+          "Sha1": "40aabb5097e22838ce525007a7ac6ff63282889e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076793",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a6].tap",
+          "Size": 540626,
+          "Crc": "47650554",
+          "Md5": "556ebf4395c3fee199aa493a1c0808a6",
+          "Sha1": "0c12d4f5e1b20516107fef90ac7f87e4e502df05",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076794",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a7].tap",
+          "Size": 398413,
+          "Crc": "94e46e1c",
+          "Md5": "dab3f18d25f992d7b7c1f089c7d1d789",
+          "Sha1": "e740b4c35bd7877a4afe9fb2ad40f6ffe3e966b5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076785",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a8].tap",
+          "Size": 541077,
+          "Crc": "1a040f58",
+          "Md5": "afcbb1bc822980fe2e221cf39fac1e53",
+          "Sha1": "37bb9f46736a331eb39a9d02a3a54a39f64d2dfa",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076784",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a].tap",
+          "Size": 392092,
+          "Crc": "57763dab",
+          "Md5": "d9ec209ceb4aa3fc6fb70169cc0051d1",
+          "Sha1": "eebdb0018cdabb819658a6878f14be16dfabb946",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076795",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr BFBS].prg",
+          "Size": 30721,
+          "Crc": "609f04ca",
+          "Md5": "48e3e5be775d61dc3ada30ee21783d8c",
+          "Sha1": "dbd38a82644423b8ce7d1f0f27f80abfb8ed5f8f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 1,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076783",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[h CPX].prg",
+          "Size": 24229,
+          "Crc": "6f8d3919",
+          "Md5": "0ac6175c230c235f39e0b3d1e0dc9b94",
+          "Sha1": "8814061ad5527dd09aa077cba1858f8ee19cc3a2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 1,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076787",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[h The Crackin'Ltd].prg",
+          "Size": 30724,
+          "Crc": "8adaca3b",
+          "Md5": "2b94b7f31f6341d11bdee62c4529223b",
+          "Sha1": "c09480c1678e4f327f53e0f3f774b7fe898f9679",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 1,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076770",
+          "Name": "1985 - The Day After (Europe) (Burner).zip",
+          "Size": 22796,
+          "Crc": "e1549f78",
+          "Md5": "ce8e45b2235ea6c4e496b317ae726b09",
+          "Sha1": "9048e44b459f98050be001e591ffaa5e4d1ece0a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076771",
+          "Name": "1985 - The Day After (Europe) (Burner).zip",
+          "Size": 379354,
+          "Crc": "474fd7e8",
+          "Md5": "cb12f85cf34524d884430c5874c44318",
+          "Sha1": "4652d7716356e6f9d3e056a67c6af69e52abc434",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076772",
+          "Name": "1985 - The Day After (Europe) (Visiload).zip",
+          "Size": 557991,
+          "Crc": "625a89e3",
+          "Md5": "ebe60c5c558d583451b13508030e88bf",
+          "Sha1": "de6679ec9f817a06142cd9963d48c62efec60d1b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076774",
+          "Name": "1985 - The Day After (Europe) (Visiload).zip",
+          "Size": 37239,
+          "Crc": "6ece31c7",
+          "Md5": "d1874b1b9f725f683ab653cba63434ac",
+          "Sha1": "a89baa7eaca8d95c99997a311960cdcb5438bd26",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076769",
+          "Name": "1985 - The Day After (Europe).D64",
+          "Size": 174848,
+          "Crc": "35bf46c6",
+          "Md5": "d08d68e73ee2a911480d730beb585290",
+          "Sha1": "242e0d00a03767fffc55aff084a14c63d6ae732c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "eu": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076779",
+          "Name": "1985 - The Day After.crt",
+          "Size": 65728,
+          "Crc": "3d1325d9",
+          "Md5": "f34b19c1489ee7cc183699407ce2b7bc",
+          "Sha1": "4f38c9e929f06f8f723e4a95a923459f6437e689",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076775",
+          "Name": "1985.D64",
+          "Size": 18863,
+          "Crc": "861915ae",
+          "Md5": "a3ab168ab13001ea93c4cd795cc752fd",
+          "Sha1": "62adb37da1defefd814b94a35f22bdfd785d2092",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076776",
+          "Name": "1985.Mastertronic. 3pdh-MHI.zip",
+          "Size": 18548,
+          "Crc": "9505fc53",
+          "Md5": "273d08d52db820978437ddc8d6127f21",
+          "Sha1": "2dce3c1f6285be08a0ffc251b2966b1e5000564e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 1,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076781",
+          "Name": "1985.Mastertronic. 3pdh-MHI.zip",
+          "Size": 18523,
+          "Crc": "2f12d154",
+          "Md5": "4da6e4893970a71c4843383d1193e7fe",
+          "Sha1": "3b239d3354af6736e4bf7c6b01306858a331ae18",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076778",
+          "Name": "1985.zip",
+          "Size": 28965,
+          "Crc": "0f3a8469",
+          "Md5": "20e85a00e113c00c27b7425a0a86caaf",
+          "Sha1": "5fe564c146b50d18fa1a2dca7b0820dd5a9f8c90",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 1,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "4076777",
+          "Name": "DAYAFTER.PRG",
+          "Size": 12036,
+          "Crc": "fa484367",
+          "Md5": "5ebe8c2c6f2cdcef2c229ce1cfc2d735",
+          "Sha1": "50502636822144e9b16fac220e49ece35b777610",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "screenscraper.best": 0,
+            "screenscraper.beta": 0,
+            "screenscraper.demo": 0,
+            "screenscraper.hack": 0,
+            "screenscraper.unl": 0
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "ScreenScraper"
+        },
+        {
+          "Score": 23,
+          "Id": "585783",
+          "Name": "1985 - The Day After (1984)(Mastertronic)(es).prg",
+          "Size": 38913,
+          "Crc": "d408be91",
+          "Md5": "0ce938ee164c3a903b553de347099a05",
+          "Sha1": "865e49d689fb462bb36b012238d1a820506702e2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585784",
+          "Name": "1985 - The Day After (1984)(Mastertronic)(es)[a].prg",
+          "Size": 17654,
+          "Crc": "3fdd7aca",
+          "Md5": "5411da2a48ebe2cbed16d3f532502c33",
+          "Sha1": "6bdff7c7cb0f99fd8c7d0293c21f5644473c264c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476350",
+          "Name": "1985 - The Day After (1984)(Mastertronic)(es)[h Load 'n' Run].d64",
+          "Size": 174848,
+          "Crc": "aa16e554",
+          "Md5": "9d6a4dd3597f2d46e884ceb5bb1d4ce6",
+          "Sha1": "040972038d54f5b8abdbb15bcaed32e02e644418",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "Load 'n' Run"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603061",
+          "Name": "1985 - The Day After (1984)(Mastertronic)(es)[h Load 'n' Run].t64",
+          "Size": 39935,
+          "Crc": "b13cde32",
+          "Md5": "6ce3a97bbbab96709b3db3bad1fbddbe",
+          "Sha1": "08e576565fe02f921088ade5aafca397f896dfed",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "Load 'n' Run"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476351",
+          "Name": "1985 - The Day After (1984)(Mastertronic)(es)[h Load 'n' Run][a].d64",
+          "Size": 174848,
+          "Crc": "65249452",
+          "Md5": "72469e25640cd02dc835dd34e8539882",
+          "Sha1": "1f397d2fe8ce78f9b0608a52505507672842953f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "Load 'n' Run",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603062",
+          "Name": "1985 - The Day After (1984)(Mastertronic)(es)[h Load 'n' Run][a].t64",
+          "Size": 17748,
+          "Crc": "0a15097b",
+          "Md5": "76015be0bfcedae75a25fb592fd293e2",
+          "Sha1": "3965946300d7c6413258b4287cd49c180e0060c7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "es": "Spanish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "Load 'n' Run",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585777",
+          "Name": "1985 - The Day After (1984)(Mastertronic).prg",
+          "Size": 14710,
+          "Crc": "d09097ff",
+          "Md5": "eb63212cc70a71ca872cb55f4c780c40",
+          "Sha1": "1127dac1b5c5b6c43e1849bc79d867112e3d6751",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636259",
+          "Name": "1985 - The Day After (1984)(Mastertronic).tap",
+          "Size": 398278,
+          "Crc": "86d6990f",
+          "Md5": "79d9a0959bd43a80102d267439baf297",
+          "Sha1": "42222a1eb6e51d352ce4ff27ebbc98d59285651a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636261",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a10].tap",
+          "Size": 540664,
+          "Crc": "120ac82d",
+          "Md5": "2236fa75427f244fade693cddfb030ae",
+          "Sha1": "7ed6f9be275856b6bb730e02105fa9192b072824",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "a": "a10"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636262",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a11].tap",
+          "Size": 379354,
+          "Crc": "da7a2dab",
+          "Md5": "154affa6804a3f3446070824e3135b57",
+          "Sha1": "8e158ad434248d655771e59c30d6903505d99d65",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "a": "a11"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636263",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a2].tap",
+          "Size": 540681,
+          "Crc": "8ec74cba",
+          "Md5": "47dbd50f4e25a3858cd354bec285aef9",
+          "Sha1": "a5f846160bd5310a1e328778a5111db0487853de",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636264",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a3].tap",
+          "Size": 540656,
+          "Crc": "1bdf038b",
+          "Md5": "9d68888601eafb783d4daed73a3d9868",
+          "Sha1": "242f7cb6ac228f67329cbb7b93b8c851af2d3912",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636265",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a4].tap",
+          "Size": 540659,
+          "Crc": "f5f2f25b",
+          "Md5": "7f692362ef864d66e7f375683eb6ed69",
+          "Sha1": "d25d3883e0ecb8b2dcd82c5d44e2ee008b92b75b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636266",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a5].tap",
+          "Size": 551750,
+          "Crc": "58305223",
+          "Md5": "6907a46e417a33c3083b15be2e34394e",
+          "Sha1": "40aabb5097e22838ce525007a7ac6ff63282889e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636267",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a6].tap",
+          "Size": 540626,
+          "Crc": "47650554",
+          "Md5": "556ebf4395c3fee199aa493a1c0808a6",
+          "Sha1": "0c12d4f5e1b20516107fef90ac7f87e4e502df05",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "a": "a6"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636268",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a7].tap",
+          "Size": 398413,
+          "Crc": "94e46e1c",
+          "Md5": "dab3f18d25f992d7b7c1f089c7d1d789",
+          "Sha1": "e740b4c35bd7877a4afe9fb2ad40f6ffe3e966b5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "a": "a7"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636269",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a8].tap",
+          "Size": 541077,
+          "Crc": "1a040f58",
+          "Md5": "afcbb1bc822980fe2e221cf39fac1e53",
+          "Sha1": "37bb9f46736a331eb39a9d02a3a54a39f64d2dfa",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "a": "a8"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636270",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a9].tap",
+          "Size": 557991,
+          "Crc": "625a89e3",
+          "Md5": "ebe60c5c558d583451b13508030e88bf",
+          "Sha1": "de6679ec9f817a06142cd9963d48c62efec60d1b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "a": "a9"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636260",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[a].tap",
+          "Size": 392092,
+          "Crc": "57763dab",
+          "Md5": "d9ec209ceb4aa3fc6fb70169cc0051d1",
+          "Sha1": "eebdb0018cdabb819658a6878f14be16dfabb946",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476352",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr BFBS].d64",
+          "Size": 174848,
+          "Crc": "3c3b1cda",
+          "Md5": "a5c2fd667ffc2c91b45372724ffb7a1d",
+          "Sha1": "cc4759fbedb291c72cb8a482eefc9d13fbbf00ce",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "BFBS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585778",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr BFBS].prg",
+          "Size": 30721,
+          "Crc": "609f04ca",
+          "Md5": "48e3e5be775d61dc3ada30ee21783d8c",
+          "Sha1": "dbd38a82644423b8ce7d1f0f27f80abfb8ed5f8f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "BFBS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603063",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr BFBS].t64",
+          "Size": 30815,
+          "Crc": "7b9729ce",
+          "Md5": "0736ef193cbef3449c68ee64b4737612",
+          "Sha1": "820a12180634b3e09a37dabf1bb7f5866ca356cc",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "BFBS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476353",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr BFBS][a].d64",
+          "Size": 174848,
+          "Crc": "67aee7d0",
+          "Md5": "ab981b2efdc275dda5ad56c6a3df577b",
+          "Sha1": "b13c812996e2ec79d4dc45d58fce8a7cc0d20a1f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "BFBS",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476354",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr CHR][t +5 CHR].d64",
+          "Size": 174848,
+          "Crc": "8b96a95f",
+          "Md5": "340a93f6a82623cf057d5d17681a7bba",
+          "Sha1": "00e0f99297f4d3f8678e916279f09ed0be619ebc",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "CHR",
+            "t": "+5 CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476356",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr CHR][t +5 CHR][a2][Docs].d64",
+          "Size": 174848,
+          "Crc": "9db4dbb9",
+          "Md5": "78d74c13fbc71f0de121f139a237a218",
+          "Sha1": "56e36eaf110dc1f1b2969a550d3a692d26b31c59",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "CHR",
+            "t": "+5 CHR",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476355",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr CHR][t +5 CHR][a][Docs].d64",
+          "Size": 174848,
+          "Crc": "5b1ae818",
+          "Md5": "df677c1eeefd882b5127b9b397bbcd00",
+          "Sha1": "4c43e16c78199f3211530f838b823de970f8b666",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "CHR",
+            "t": "+5 CHR",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476357",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr CHR][t +5 CHR][Docs].d64",
+          "Size": 174848,
+          "Crc": "35bf46c6",
+          "Md5": "d08d68e73ee2a911480d730beb585290",
+          "Sha1": "242e0d00a03767fffc55aff084a14c63d6ae732c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "CHR",
+            "t": "+5 CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476358",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr CPX].d64",
+          "Size": 174848,
+          "Crc": "845dd7c3",
+          "Md5": "5a9a795ff19a7653d9673599e5784e16",
+          "Sha1": "b25ac38061edf13e5cbd57ddc03f1f2016d753d3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "CPX"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "571404",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr CPX].lnx",
+          "Size": 24483,
+          "Crc": "71f6d68c",
+          "Md5": "7dd56989ee6001f223c695c12f1d4b65",
+          "Sha1": "348784fb4ba77c460be7630186b9c2fcaf526cf9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "CPX"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603064",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr CPX].t64",
+          "Size": 25283,
+          "Crc": "5859c4d2",
+          "Md5": "8636051f04690a42483754413544cd96",
+          "Sha1": "ee2129f659dea3ad00b549b9ad14308533dd6559",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "CPX"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476360",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr CPX][a2].d64",
+          "Size": 174848,
+          "Crc": "42a4be4f",
+          "Md5": "41dece883ff31b136bbf30107355d7b6",
+          "Sha1": "5ecae8da8850a50c75232d9d2de3388a79096de7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "CPX",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476359",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr CPX][a].d64",
+          "Size": 174848,
+          "Crc": "f32a121c",
+          "Md5": "2c80c972be1d5a9cdc4c7c59cfe11401",
+          "Sha1": "924bb855aff9b3ccce3947d573bc886c9fb2c95d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "CPX",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476361",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackin' Ltd.].d64",
+          "Size": 174848,
+          "Crc": "bc808d4c",
+          "Md5": "008b7cfc20bb20094527928a4e1f5472",
+          "Sha1": "29aed1eea18c6b8301645d6a01c81660c61685ab",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackin' Ltd."
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "576052",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackin' Ltd.].p00",
+          "Size": 30750,
+          "Crc": "13851058",
+          "Md5": "502dc53c09705c99399bc01bfee11696",
+          "Sha1": "08010f7a5fe910de6e5080c61b3b6cafb06f3321",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackin' Ltd."
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603065",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackin' Ltd.].t64",
+          "Size": 30818,
+          "Crc": "6ac8264f",
+          "Md5": "3fcbeff545b6fcc04e0e63254b606dc6",
+          "Sha1": "a6dd2b3a404fe4fa921563e998f2400bfc0baca5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackin' Ltd."
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476363",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackin' Ltd.][a2].d64",
+          "Size": 174848,
+          "Crc": "a9503c67",
+          "Md5": "f19e5660b6a4cf1b8b4372ec392cee35",
+          "Sha1": "ea8e05ee58151167c0557bf38f4f374598454c02",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackin' Ltd.",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603067",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackin' Ltd.][a2].t64",
+          "Size": 31746,
+          "Crc": "27dd350c",
+          "Md5": "fe68572d4f876710bd3f1763e1ab5c15",
+          "Sha1": "77beb58bce8c4043972d17b9c6540b72c0be47a4",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackin' Ltd.",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476364",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackin' Ltd.][a3].d64",
+          "Size": 174848,
+          "Crc": "9b50b82a",
+          "Md5": "9f705dadd9608cc8b28958f3ba22390f",
+          "Sha1": "496c3fb587984efcbf818e9b360697a7690bf22c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackin' Ltd.",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603068",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackin' Ltd.][a3].t64",
+          "Size": 31746,
+          "Crc": "1645edfd",
+          "Md5": "ebcc7279207857f1057ae495b5133bcf",
+          "Sha1": "8448ea8553782a11b0a9e53e925c3ee72b6694e5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackin' Ltd.",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476365",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackin' Ltd.][a4].d64",
+          "Size": 174848,
+          "Crc": "9ab6c61d",
+          "Md5": "02147d8e06b6b0c3c95654d0ec9766d1",
+          "Sha1": "ba2f7b2a6575baf45bd93752615c7503fbf46cb2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackin' Ltd.",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476366",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackin' Ltd.][a5].d64",
+          "Size": 174848,
+          "Crc": "bdf0060e",
+          "Md5": "4dc3266bdc0387f384788450fc6c6ec2",
+          "Sha1": "192709e2762a1ec29ae7d1ac210f504a5e15be5a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackin' Ltd.",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476367",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackin' Ltd.][a6].d64",
+          "Size": 174848,
+          "Crc": "3e546bc7",
+          "Md5": "0b752de97e5caaa86db6f6c7b8ca957f",
+          "Sha1": "496febcbe00b935f638cbc0116a3f49f51c143c9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackin' Ltd.",
+            "a": "a6"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476362",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackin' Ltd.][a].d64",
+          "Size": 174848,
+          "Crc": "cfdb4258",
+          "Md5": "662522262e9172cd0ccf93c149ee92a2",
+          "Sha1": "e19e55c70129c42ab72cd585999ecc37e1f03e30",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackin' Ltd.",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603066",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackin' Ltd.][a].t64",
+          "Size": 31746,
+          "Crc": "bc2708b7",
+          "Md5": "800ba0acf18d0af88b2ba5dc0eeb6eb9",
+          "Sha1": "b5f3ebc3d70487916eceddaa88c3c1851226ca87",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackin' Ltd.",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476368",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackman].d64",
+          "Size": 174848,
+          "Crc": "a8a74d07",
+          "Md5": "1c22c86a777143ad964837180c64c964",
+          "Sha1": "953aed39c0da091006495745df2e3298492c8a31",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackman"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476370",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackman][a2].d64",
+          "Size": 174848,
+          "Crc": "301bbf45",
+          "Md5": "02711fa0d9c91f92ba7bd0d71c1798cc",
+          "Sha1": "75ea19404833539ecf9023bc8c6217ec8e2aad37",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackman",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476371",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackman][a3].d64",
+          "Size": 174848,
+          "Crc": "c33c9208",
+          "Md5": "39ecd9e81ecfe9dbf0786f46129a3cf5",
+          "Sha1": "13a336717dca23a5b88cb19f303ada8166044af9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackman",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476369",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Crackman][a].d64",
+          "Size": 174848,
+          "Crc": "bf7c1ce7",
+          "Md5": "20cec7d9969b325a9a9763e686892cf2",
+          "Sha1": "5c50b7e55d6f4114a447efb4b75f800c1bc1e5a3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Crackman",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476372",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Gafitti Palace].d64",
+          "Size": 174848,
+          "Crc": "d2ab2ab0",
+          "Md5": "ee683120b58149ee663a728784d37d39",
+          "Sha1": "207cccb5e23c551254b528b1f51d2e30708bedbb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Gafitti Palace"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476373",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Gafitti Palace][a].d64",
+          "Size": 174848,
+          "Crc": "2ef8d624",
+          "Md5": "7419b1f2c2da8ec75c668af7dfe20d95",
+          "Sha1": "08ca9a8d499a60ac900c1715d4a7e71a16fd718a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Gafitti Palace",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476374",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr MHI].d64",
+          "Size": 174848,
+          "Crc": "566a91f5",
+          "Md5": "7582250b2eb349f317be727d2a3443e5",
+          "Sha1": "f5e83ee0753a6ff5a35f541abc482fbbf894e1f1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "MHI"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585779",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr MHI].prg",
+          "Size": 18548,
+          "Crc": "9505fc53",
+          "Md5": "273d08d52db820978437ddc8d6127f21",
+          "Sha1": "2dce3c1f6285be08a0ffc251b2966b1e5000564e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "MHI"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603069",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr MHI].t64",
+          "Size": 19570,
+          "Crc": "fbb706cc",
+          "Md5": "8495854ddbb53dae1475dfce1cca9874",
+          "Sha1": "899db3d63ba57a1bfc1871918c8ff7ceb5f6126b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "MHI"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476375",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr MHI][a].d64",
+          "Size": 174848,
+          "Crc": "6a138654",
+          "Md5": "96e2f2a9bfeab2396d175e0175f6b668",
+          "Sha1": "a064b00f3ac6187d9f6bbb712ad63cf0ff157625",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "MHI",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476376",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr NO][t +2 NO].d64",
+          "Size": 174848,
+          "Crc": "11fc1196",
+          "Md5": "b7c81b403b017db2a94406f6cbba8718",
+          "Sha1": "ebc99300f7d5b696030eae6857e0229ff341c6af",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "NO",
+            "t": "+2 NO"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "571405",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr NO][t +2 NO].lnx",
+          "Size": 18482,
+          "Crc": "acdfb6ac",
+          "Md5": "69556e5f91b3a463f536e5d1acae5297",
+          "Sha1": "de27a68a5bcfca3fd6118dce14a589a740dcaf27",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "NO",
+            "t": "+2 NO"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476378",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr NO][t +2 NO][a2].d64",
+          "Size": 174848,
+          "Crc": "57fc8c59",
+          "Md5": "1ab1ca5a99a56ed8575a8b8dd008ac57",
+          "Sha1": "27c11eeba642078e80259bf5021723e33354da34",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "NO",
+            "t": "+2 NO",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476379",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr NO][t +2 NO][a3].d64",
+          "Size": 174848,
+          "Crc": "9087649d",
+          "Md5": "1200dc9610101688ebbda090d40f5ec4",
+          "Sha1": "07f07d95ce6ff8985726a2b1b368769e860e120d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "NO",
+            "t": "+2 NO",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476380",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr NO][t +2 NO][a4].d64",
+          "Size": 174848,
+          "Crc": "624ecc8f",
+          "Md5": "641a5cab6ebd8a4918932ea4be9ebf35",
+          "Sha1": "de2b22b2073a407ca2f9bfa031777d6a7c48e2d3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "NO",
+            "t": "+2 NO",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476381",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr NO][t +2 NO][a5].d64",
+          "Size": 174848,
+          "Crc": "e70f6562",
+          "Md5": "aeaa4d763292a4a20b960a439fd0b3ab",
+          "Sha1": "640884460868f2605921fe094742108d5151d3e9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "NO",
+            "t": "+2 NO",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476377",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr NO][t +2 NO][a].d64",
+          "Size": 174848,
+          "Crc": "82f2fa09",
+          "Md5": "00d1979a87810dd1136f9b1f07c748bb",
+          "Sha1": "8193bd7400611668c2010ed954652fbed3c0a343",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "NO",
+            "t": "+2 NO",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476382",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr RamJet].d64",
+          "Size": 174848,
+          "Crc": "1bfa43cc",
+          "Md5": "1cda95b64a077d0d3f58287ec809d725",
+          "Sha1": "0ffd2d65714f727734898ed1cf1dd86d46b99298",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "RamJet"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476383",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr RamJet][a].d64",
+          "Size": 174848,
+          "Crc": "e7a9bf58",
+          "Md5": "27d1091d63e32be3d87f683dc68def66",
+          "Sha1": "018618744f801aeb6f2958d621a91add341aa155",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "RamJet",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476384",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Sherlock Holmes].d64",
+          "Size": 174848,
+          "Crc": "dba7d130",
+          "Md5": "375a90c32c062234ceab5655427b743c",
+          "Sha1": "94bb72041b1ef9a5c2beaa46ccc1fc8160277a52",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Sherlock Holmes"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476385",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[cr Sherlock Holmes][a].d64",
+          "Size": 174848,
+          "Crc": "d63d8ce2",
+          "Md5": "7f6ba659135e3179669209f17290e3fd",
+          "Sha1": "6c4612d7c6b9642b2a75273eebf914b9c6cfee3c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Sherlock Holmes",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476386",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[h CPX].d64",
+          "Size": 174848,
+          "Crc": "b3a91f76",
+          "Md5": "492dab5a7d167fc9eb4a9628e7957021",
+          "Sha1": "c8c99bd1d7c6b396440b84d62e7449ecf1de6911",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "CPX"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585780",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[h CPX].prg",
+          "Size": 24229,
+          "Crc": "6f8d3919",
+          "Md5": "0ac6175c230c235f39e0b3d1e0dc9b94",
+          "Sha1": "8814061ad5527dd09aa077cba1858f8ee19cc3a2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "CPX"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603070",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[h CPX].t64",
+          "Size": 25283,
+          "Crc": "d8ad7ba7",
+          "Md5": "f732a3f210d9d54f7eeea968ea1b5d26",
+          "Sha1": "9092fe4d14df404fe6d02942aca16ee133529964",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "CPX"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476387",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[h CPX][a].d64",
+          "Size": 174848,
+          "Crc": "c4dedaa9",
+          "Md5": "a0865c38b2783c8ec5c81bd92f898f57",
+          "Sha1": "329693c509153fcf6eab460e2e7494e3c11fda1d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "CPX",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603071",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[h Crackin' Ltd].t64",
+          "Size": 31746,
+          "Crc": "2a30cc50",
+          "Md5": "40e27680ef05a54f615e9d468c090529",
+          "Sha1": "20428e01db8cdb690d7670e038341c00488b4c66",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "Crackin' Ltd"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585781",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[h Crackman].prg",
+          "Size": 28965,
+          "Crc": "0f3a8469",
+          "Md5": "20e85a00e113c00c27b7425a0a86caaf",
+          "Sha1": "5fe564c146b50d18fa1a2dca7b0820dd5a9f8c90",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "Crackman"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603072",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[h Talent].t64",
+          "Size": 13058,
+          "Crc": "d6c08711",
+          "Md5": "e5bdecbc5b4a06ed4e1d4243c5b7d4d0",
+          "Sha1": "c6d7007d1f322cc97071c075149732c42bcf917a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "Talent"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "603073",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[h Talent][a].t64",
+          "Size": 12130,
+          "Crc": "2492cb64",
+          "Md5": "8f4d62a8904b1a7f86bbdb802cbfbf35",
+          "Sha1": "a1273766a79382a81c7780aeb721b38ef69b7761",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "Talent",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "585782",
+          "Name": "1985 - The Day After (1984)(Mastertronic)[h The Crackin'Ltd].prg",
+          "Size": 30724,
+          "Crc": "8adaca3b",
+          "Md5": "2b94b7f31f6341d11bdee62c4529223b",
+          "Sha1": "c09480c1678e4f327f53e0f3f774b7fe898f9679",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "The Crackin'Ltd"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "663010",
+          "Name": "1985 - The Day After (1985)(Mastertronic)(es)[h Load 'n' Run].d64",
+          "Size": 174848,
+          "Crc": "65249452",
+          "Md5": "72469e25640cd02dc835dd34e8539882",
+          "Sha1": "1f397d2fe8ce78f9b0608a52505507672842953f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "es": "es"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "h": "Load 'n' Run"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "es",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "683071",
+          "Name": "1985 - The Day After (1985)(Mastertronic)(es)[h Load 'n' Run].prg",
+          "Size": 17654,
+          "Crc": "3fdd7aca",
+          "Md5": "5411da2a48ebe2cbed16d3f532502c33",
+          "Sha1": "6bdff7c7cb0f99fd8c7d0293c21f5644473c264c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "es": "es"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "PRG",
+            "h": "Load 'n' Run"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "es",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "686475",
+          "Name": "1985 - The Day After (1985)(Mastertronic)(es)[h Load 'n' Run].t64",
+          "Size": 17748,
+          "Crc": "0a15097b",
+          "Md5": "76015be0bfcedae75a25fb592fd293e2",
+          "Sha1": "3965946300d7c6413258b4287cd49c180e0060c7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "es": "es"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "h": "Load 'n' Run"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "es",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "663011",
+          "Name": "1985 - The Day After (1985)(Mastertronic)(es)[h Load 'n' Run][a].d64",
+          "Size": 174848,
+          "Crc": "aa16e554",
+          "Md5": "9d6a4dd3597f2d46e884ceb5bb1d4ce6",
+          "Sha1": "040972038d54f5b8abdbb15bcaed32e02e644418",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "es": "es"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "h": "Load 'n' Run",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "es",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "683072",
+          "Name": "1985 - The Day After (1985)(Mastertronic)(es)[h Load 'n' Run][a].prg",
+          "Size": 38913,
+          "Crc": "d408be91",
+          "Md5": "0ce938ee164c3a903b553de347099a05",
+          "Sha1": "865e49d689fb462bb36b012238d1a820506702e2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "es": "es"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "PRG",
+            "h": "Load 'n' Run",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "es",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "686476",
+          "Name": "1985 - The Day After (1985)(Mastertronic)(es)[h Load 'n' Run][a].t64",
+          "Size": 39935,
+          "Crc": "b13cde32",
+          "Md5": "6ce3a97bbbab96709b3db3bad1fbddbe",
+          "Sha1": "08e576565fe02f921088ade5aafca397f896dfed",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "es": "es"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "h": "Load 'n' Run",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "es",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "683063",
+          "Name": "1985 - The Day After (1985)(Mastertronic).prg",
+          "Size": 14710,
+          "Crc": "d09097ff",
+          "Md5": "eb63212cc70a71ca872cb55f4c780c40",
+          "Sha1": "1127dac1b5c5b6c43e1849bc79d867112e3d6751",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "PRG"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636271",
+          "Name": "1985 - The Day After (1985)(Mastertronic).tap",
+          "Size": 379354,
+          "Crc": "474fd7e8",
+          "Md5": "cb12f85cf34524d884430c5874c44318",
+          "Sha1": "4652d7716356e6f9d3e056a67c6af69e52abc434",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693607",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a10].tap",
+          "Size": 379354,
+          "Crc": "da7a2dab",
+          "Md5": "154affa6804a3f3446070824e3135b57",
+          "Sha1": "8e158ad434248d655771e59c30d6903505d99d65",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a10"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693608",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a11].tap",
+          "Size": 540664,
+          "Crc": "120ac82d",
+          "Md5": "2236fa75427f244fade693cddfb030ae",
+          "Sha1": "7ed6f9be275856b6bb730e02105fa9192b072824",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a11"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693609",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a12].tap",
+          "Size": 540681,
+          "Crc": "8ec74cba",
+          "Md5": "47dbd50f4e25a3858cd354bec285aef9",
+          "Sha1": "a5f846160bd5310a1e328778a5111db0487853de",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a12"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693610",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a13].tap",
+          "Size": 540626,
+          "Crc": "47650554",
+          "Md5": "556ebf4395c3fee199aa493a1c0808a6",
+          "Sha1": "0c12d4f5e1b20516107fef90ac7f87e4e502df05",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a13"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693611",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a14].tap",
+          "Size": 551750,
+          "Crc": "58305223",
+          "Md5": "6907a46e417a33c3083b15be2e34394e",
+          "Sha1": "40aabb5097e22838ce525007a7ac6ff63282889e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a14"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693612",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a15].tap",
+          "Size": 398278,
+          "Crc": "86d6990f",
+          "Md5": "79d9a0959bd43a80102d267439baf297",
+          "Sha1": "42222a1eb6e51d352ce4ff27ebbc98d59285651a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a15"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693613",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a2].tap",
+          "Size": 540659,
+          "Crc": "f5f2f25b",
+          "Md5": "7f692362ef864d66e7f375683eb6ed69",
+          "Sha1": "d25d3883e0ecb8b2dcd82c5d44e2ee008b92b75b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693614",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a3].tap",
+          "Size": 540656,
+          "Crc": "1bdf038b",
+          "Md5": "9d68888601eafb783d4daed73a3d9868",
+          "Sha1": "242f7cb6ac228f67329cbb7b93b8c851af2d3912",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693615",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a4].tap",
+          "Size": 541077,
+          "Crc": "1a040f58",
+          "Md5": "afcbb1bc822980fe2e221cf39fac1e53",
+          "Sha1": "37bb9f46736a331eb39a9d02a3a54a39f64d2dfa",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693616",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a5].tap",
+          "Size": 392092,
+          "Crc": "57763dab",
+          "Md5": "d9ec209ceb4aa3fc6fb70169cc0051d1",
+          "Sha1": "eebdb0018cdabb819658a6878f14be16dfabb946",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693617",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a6].tap",
+          "Size": 398413,
+          "Crc": "94e46e1c",
+          "Md5": "dab3f18d25f992d7b7c1f089c7d1d789",
+          "Sha1": "e740b4c35bd7877a4afe9fb2ad40f6ffe3e966b5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a6"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693618",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a7].tap",
+          "Size": 557991,
+          "Crc": "625a89e3",
+          "Md5": "ebe60c5c558d583451b13508030e88bf",
+          "Sha1": "de6679ec9f817a06142cd9963d48c62efec60d1b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a7"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693619",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a8].tap",
+          "Size": 540664,
+          "Crc": "8dcdb246",
+          "Md5": "62c7491bc3a86da3ac9765712a73c320",
+          "Sha1": "f5551c42c206c8ff90986b645822a486209c5ba0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a8"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693620",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a9].tap",
+          "Size": 381153,
+          "Crc": "2b8c05ab",
+          "Md5": "a0568a7e0aa0ba1fa5305787f5829a54",
+          "Sha1": "ef8fd74086dbbfe10935f096e6839ab48dc7d5b8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a9"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693606",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[a].tap",
+          "Size": 557991,
+          "Crc": "65ffedeb",
+          "Md5": "9f691b5eddd05ba7617ccef9f313a79a",
+          "Sha1": "5081ce11ea4e175694710046fcbdb425d6a3fe12",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663012",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr BFBS].d64",
+          "Size": 174848,
+          "Crc": "3c3b1cda",
+          "Md5": "a5c2fd667ffc2c91b45372724ffb7a1d",
+          "Sha1": "cc4759fbedb291c72cb8a482eefc9d13fbbf00ce",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "BFBS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "683064",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr BFBS].prg",
+          "Size": 30721,
+          "Crc": "609f04ca",
+          "Md5": "48e3e5be775d61dc3ada30ee21783d8c",
+          "Sha1": "dbd38a82644423b8ce7d1f0f27f80abfb8ed5f8f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "PRG",
+            "cr": "BFBS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686477",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr BFBS].t64",
+          "Size": 30815,
+          "Crc": "7b9729ce",
+          "Md5": "0736ef193cbef3449c68ee64b4737612",
+          "Sha1": "820a12180634b3e09a37dabf1bb7f5866ca356cc",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "BFBS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663013",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr BFBS][a].d64",
+          "Size": 174848,
+          "Crc": "67aee7d0",
+          "Md5": "ab981b2efdc275dda5ad56c6a3df577b",
+          "Sha1": "b13c812996e2ec79d4dc45d58fce8a7cc0d20a1f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "BFBS",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663014",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CHR][t +5 CHR].d64",
+          "Size": 174848,
+          "Crc": "8b96a95f",
+          "Md5": "340a93f6a82623cf057d5d17681a7bba",
+          "Sha1": "00e0f99297f4d3f8678e916279f09ed0be619ebc",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CHR",
+            "t": "+5 CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663016",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CHR][t +5 CHR][a2][Docs].d64",
+          "Size": 174848,
+          "Crc": "9db4dbb9",
+          "Md5": "78d74c13fbc71f0de121f139a237a218",
+          "Sha1": "56e36eaf110dc1f1b2969a550d3a692d26b31c59",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CHR",
+            "t": "+5 CHR",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663017",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CHR][t +5 CHR][a3][Docs].d64",
+          "Size": 174848,
+          "Crc": "2c0dc38d",
+          "Md5": "44f9b421758ed70ddbea3823ab7f964d",
+          "Sha1": "9c93aac3fbeebc10f1576f5eadf609523f60f496",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CHR",
+            "t": "+5 CHR",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663015",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CHR][t +5 CHR][a][Docs].d64",
+          "Size": 174848,
+          "Crc": "5b1ae818",
+          "Md5": "df677c1eeefd882b5127b9b397bbcd00",
+          "Sha1": "4c43e16c78199f3211530f838b823de970f8b666",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CHR",
+            "t": "+5 CHR",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663018",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CHR][t +5 CHR][Docs].d64",
+          "Size": 174848,
+          "Crc": "35bf46c6",
+          "Md5": "d08d68e73ee2a911480d730beb585290",
+          "Sha1": "242e0d00a03767fffc55aff084a14c63d6ae732c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CHR",
+            "t": "+5 CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "681586",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CHR][t +5 CHR][Docs].p00",
+          "Size": 21030,
+          "Crc": "0add0a83",
+          "Md5": "1d02e0cd1eb3aa469d426096218cdfee",
+          "Sha1": "4aeeeb116eaa0f3dd1ae13c90005e568067b1308",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "P00",
+            "cr": "CHR",
+            "t": "+5 CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663019",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CPX].d64",
+          "Size": 174848,
+          "Crc": "845dd7c3",
+          "Md5": "5a9a795ff19a7653d9673599e5784e16",
+          "Sha1": "b25ac38061edf13e5cbd57ddc03f1f2016d753d3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CPX"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "680690",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CPX].lnx",
+          "Size": 24483,
+          "Crc": "71f6d68c",
+          "Md5": "7dd56989ee6001f223c695c12f1d4b65",
+          "Sha1": "348784fb4ba77c460be7630186b9c2fcaf526cf9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "LNX",
+            "cr": "CPX"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "681587",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CPX].p00",
+          "Size": 24255,
+          "Crc": "c291b7a8",
+          "Md5": "d443a1f537be9007ca3737717bf4d328",
+          "Sha1": "2b93e15fcd001e68d668dbd9169ea3df5d3aec16",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "P00",
+            "cr": "CPX"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "683065",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CPX].prg",
+          "Size": 24229,
+          "Crc": "6f8d3919",
+          "Md5": "0ac6175c230c235f39e0b3d1e0dc9b94",
+          "Sha1": "8814061ad5527dd09aa077cba1858f8ee19cc3a2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "PRG",
+            "cr": "CPX"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686478",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CPX].t64",
+          "Size": 25283,
+          "Crc": "5859c4d2",
+          "Md5": "8636051f04690a42483754413544cd96",
+          "Sha1": "ee2129f659dea3ad00b549b9ad14308533dd6559",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "CPX"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663021",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CPX][a2].d64",
+          "Size": 174848,
+          "Crc": "42a4be4f",
+          "Md5": "41dece883ff31b136bbf30107355d7b6",
+          "Sha1": "5ecae8da8850a50c75232d9d2de3388a79096de7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CPX",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663022",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CPX][a3].d64",
+          "Size": 174848,
+          "Crc": "b3a91f76",
+          "Md5": "492dab5a7d167fc9eb4a9628e7957021",
+          "Sha1": "c8c99bd1d7c6b396440b84d62e7449ecf1de6911",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CPX",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663023",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CPX][a4].d64",
+          "Size": 174848,
+          "Crc": "c4dedaa9",
+          "Md5": "a0865c38b2783c8ec5c81bd92f898f57",
+          "Sha1": "329693c509153fcf6eab460e2e7494e3c11fda1d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CPX",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663020",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CPX][a].d64",
+          "Size": 174848,
+          "Crc": "f32a121c",
+          "Md5": "2c80c972be1d5a9cdc4c7c59cfe11401",
+          "Sha1": "924bb855aff9b3ccce3947d573bc886c9fb2c95d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "CPX",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686479",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr CPX][a].t64",
+          "Size": 25283,
+          "Crc": "d8ad7ba7",
+          "Md5": "f732a3f210d9d54f7eeea968ea1b5d26",
+          "Sha1": "9092fe4d14df404fe6d02942aca16ee133529964",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "CPX",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663024",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.].d64",
+          "Size": 174848,
+          "Crc": "bc808d4c",
+          "Md5": "008b7cfc20bb20094527928a4e1f5472",
+          "Sha1": "29aed1eea18c6b8301645d6a01c81660c61685ab",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Crackin' Ltd."
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "681588",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.].p00",
+          "Size": 30750,
+          "Crc": "e9fc241b",
+          "Md5": "7abee368d210f77d6c6873215cb039b9",
+          "Sha1": "9985da6d170bbc521d8a8b3ba178b705ab62042e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "P00",
+            "cr": "Crackin' Ltd."
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "683066",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.].prg",
+          "Size": 30724,
+          "Crc": "9e049315",
+          "Md5": "a5ccb6057140e6d322f5d4c321e20e1a",
+          "Sha1": "d6ffbeb91827e9aab44b1a191271c20645dcfbf7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "PRG",
+            "cr": "Crackin' Ltd."
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686480",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.].t64",
+          "Size": 31746,
+          "Crc": "22e2a7e8",
+          "Md5": "2491626996fdff5e93a090031efbeddb",
+          "Sha1": "201e1d0f73fb9d5b10019f69bf28fe0b0dabd5f9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "Crackin' Ltd."
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663026",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a2].d64",
+          "Size": 174848,
+          "Crc": "a9503c67",
+          "Md5": "f19e5660b6a4cf1b8b4372ec392cee35",
+          "Sha1": "ea8e05ee58151167c0557bf38f4f374598454c02",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Crackin' Ltd.",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "681590",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a2].p00",
+          "Size": 30750,
+          "Crc": "13851058",
+          "Md5": "502dc53c09705c99399bc01bfee11696",
+          "Sha1": "08010f7a5fe910de6e5080c61b3b6cafb06f3321",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "P00",
+            "cr": "Crackin' Ltd.",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686482",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a2].t64",
+          "Size": 31746,
+          "Crc": "1e978645",
+          "Md5": "b9089b6c17119e9cb2b59a8054fab4c9",
+          "Sha1": "6f0e4ae8409a38af8f86819fd84e50247bb91648",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "Crackin' Ltd.",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663027",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a3].d64",
+          "Size": 174848,
+          "Crc": "9b50b82a",
+          "Md5": "9f705dadd9608cc8b28958f3ba22390f",
+          "Sha1": "496c3fb587984efcbf818e9b360697a7690bf22c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Crackin' Ltd.",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686483",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a3].t64",
+          "Size": 30818,
+          "Crc": "6ac8264f",
+          "Md5": "3fcbeff545b6fcc04e0e63254b606dc6",
+          "Sha1": "a6dd2b3a404fe4fa921563e998f2400bfc0baca5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "Crackin' Ltd.",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663028",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a4].d64",
+          "Size": 174848,
+          "Crc": "9ab6c61d",
+          "Md5": "02147d8e06b6b0c3c95654d0ec9766d1",
+          "Sha1": "ba2f7b2a6575baf45bd93752615c7503fbf46cb2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Crackin' Ltd.",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686484",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a4].t64",
+          "Size": 31746,
+          "Crc": "bc2708b7",
+          "Md5": "800ba0acf18d0af88b2ba5dc0eeb6eb9",
+          "Sha1": "b5f3ebc3d70487916eceddaa88c3c1851226ca87",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "Crackin' Ltd.",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663029",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a5].d64",
+          "Size": 174848,
+          "Crc": "bdf0060e",
+          "Md5": "4dc3266bdc0387f384788450fc6c6ec2",
+          "Sha1": "192709e2762a1ec29ae7d1ac210f504a5e15be5a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Crackin' Ltd.",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686485",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a5].t64",
+          "Size": 31746,
+          "Crc": "27dd350c",
+          "Md5": "fe68572d4f876710bd3f1763e1ab5c15",
+          "Sha1": "77beb58bce8c4043972d17b9c6540b72c0be47a4",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "Crackin' Ltd.",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663030",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a6].d64",
+          "Size": 174848,
+          "Crc": "3e546bc7",
+          "Md5": "0b752de97e5caaa86db6f6c7b8ca957f",
+          "Sha1": "496febcbe00b935f638cbc0116a3f49f51c143c9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Crackin' Ltd.",
+            "a": "a6"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686486",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a6].t64",
+          "Size": 31746,
+          "Crc": "1645edfd",
+          "Md5": "ebcc7279207857f1057ae495b5133bcf",
+          "Sha1": "8448ea8553782a11b0a9e53e925c3ee72b6694e5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "Crackin' Ltd.",
+            "a": "a6"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686487",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a7].t64",
+          "Size": 31746,
+          "Crc": "2a30cc50",
+          "Md5": "40e27680ef05a54f615e9d468c090529",
+          "Sha1": "20428e01db8cdb690d7670e038341c00488b4c66",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "Crackin' Ltd.",
+            "a": "a7"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663025",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a].d64",
+          "Size": 174848,
+          "Crc": "cfdb4258",
+          "Md5": "662522262e9172cd0ccf93c149ee92a2",
+          "Sha1": "e19e55c70129c42ab72cd585999ecc37e1f03e30",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Crackin' Ltd.",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "681589",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a].p00",
+          "Size": 30750,
+          "Crc": "fae5ef23",
+          "Md5": "6336c6d2b2d2125570a5632b9e03c074",
+          "Sha1": "ab683bc0d2cbc3ea87ade822afce0d66a253c524",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "P00",
+            "cr": "Crackin' Ltd.",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "683067",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a].prg",
+          "Size": 30724,
+          "Crc": "8adaca3b",
+          "Md5": "2b94b7f31f6341d11bdee62c4529223b",
+          "Sha1": "c09480c1678e4f327f53e0f3f774b7fe898f9679",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "PRG",
+            "cr": "Crackin' Ltd.",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686481",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackin' Ltd.][a].t64",
+          "Size": 31746,
+          "Crc": "4c267f62",
+          "Md5": "7acf6dfc3b7927fdef67134f145e1e9a",
+          "Sha1": "02dbe74fde6f5b428fda756fba283c42631f4b70",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "Crackin' Ltd.",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663031",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackman].d64",
+          "Size": 174848,
+          "Crc": "c33c9208",
+          "Md5": "39ecd9e81ecfe9dbf0786f46129a3cf5",
+          "Sha1": "13a336717dca23a5b88cb19f303ada8166044af9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Crackman"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "683068",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackman].prg",
+          "Size": 28965,
+          "Crc": "0f3a8469",
+          "Md5": "20e85a00e113c00c27b7425a0a86caaf",
+          "Sha1": "5fe564c146b50d18fa1a2dca7b0820dd5a9f8c90",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "PRG",
+            "cr": "Crackman"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663033",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackman][a2].d64",
+          "Size": 174848,
+          "Crc": "bf7c1ce7",
+          "Md5": "20cec7d9969b325a9a9763e686892cf2",
+          "Sha1": "5c50b7e55d6f4114a447efb4b75f800c1bc1e5a3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Crackman",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663034",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackman][a3].d64",
+          "Size": 174848,
+          "Crc": "301bbf45",
+          "Md5": "02711fa0d9c91f92ba7bd0d71c1798cc",
+          "Sha1": "75ea19404833539ecf9023bc8c6217ec8e2aad37",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Crackman",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663032",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Crackman][a].d64",
+          "Size": 174848,
+          "Crc": "a8a74d07",
+          "Md5": "1c22c86a777143ad964837180c64c964",
+          "Sha1": "953aed39c0da091006495745df2e3298492c8a31",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Crackman",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663035",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Gafitti Palace].d64",
+          "Size": 174848,
+          "Crc": "d2ab2ab0",
+          "Md5": "ee683120b58149ee663a728784d37d39",
+          "Sha1": "207cccb5e23c551254b528b1f51d2e30708bedbb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Gafitti Palace"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663036",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Gafitti Palace][a].d64",
+          "Size": 174848,
+          "Crc": "2ef8d624",
+          "Md5": "7419b1f2c2da8ec75c668af7dfe20d95",
+          "Sha1": "08ca9a8d499a60ac900c1715d4a7e71a16fd718a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Gafitti Palace",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "3150101",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr House][t].d64",
+          "Size": 174848,
+          "Crc": "a8df8719",
+          "Md5": "9148fece0ea22cbc5f1cdadf53be09b8",
+          "Sha1": "c793e50874ca32f8c7a3aa761c4e73146690f5db",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "House",
+            "t": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663037",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr MHI].d64",
+          "Size": 174848,
+          "Crc": "566a91f5",
+          "Md5": "7582250b2eb349f317be727d2a3443e5",
+          "Sha1": "f5e83ee0753a6ff5a35f541abc482fbbf894e1f1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "MHI"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "683069",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr MHI].prg",
+          "Size": 18548,
+          "Crc": "9505fc53",
+          "Md5": "273d08d52db820978437ddc8d6127f21",
+          "Sha1": "2dce3c1f6285be08a0ffc251b2966b1e5000564e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "PRG",
+            "cr": "MHI"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686488",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr MHI].t64",
+          "Size": 19570,
+          "Crc": "fbb706cc",
+          "Md5": "8495854ddbb53dae1475dfce1cca9874",
+          "Sha1": "899db3d63ba57a1bfc1871918c8ff7ceb5f6126b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "MHI"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663038",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr MHI][a].d64",
+          "Size": 174848,
+          "Crc": "6a138654",
+          "Md5": "96e2f2a9bfeab2396d175e0175f6b668",
+          "Sha1": "a064b00f3ac6187d9f6bbb712ad63cf0ff157625",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "MHI",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663039",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr NO][t +2 NO].d64",
+          "Size": 174848,
+          "Crc": "11fc1196",
+          "Md5": "b7c81b403b017db2a94406f6cbba8718",
+          "Sha1": "ebc99300f7d5b696030eae6857e0229ff341c6af",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "NO",
+            "t": "+2 NO"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "680691",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr NO][t +2 NO].lnx",
+          "Size": 18482,
+          "Crc": "acdfb6ac",
+          "Md5": "69556e5f91b3a463f536e5d1acae5297",
+          "Sha1": "de27a68a5bcfca3fd6118dce14a589a740dcaf27",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "LNX",
+            "cr": "NO",
+            "t": "+2 NO"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663041",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr NO][t +2 NO][a2].d64",
+          "Size": 174848,
+          "Crc": "57fc8c59",
+          "Md5": "1ab1ca5a99a56ed8575a8b8dd008ac57",
+          "Sha1": "27c11eeba642078e80259bf5021723e33354da34",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "NO",
+            "t": "+2 NO",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663042",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr NO][t +2 NO][a3].d64",
+          "Size": 174848,
+          "Crc": "9087649d",
+          "Md5": "1200dc9610101688ebbda090d40f5ec4",
+          "Sha1": "07f07d95ce6ff8985726a2b1b368769e860e120d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "NO",
+            "t": "+2 NO",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663043",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr NO][t +2 NO][a4].d64",
+          "Size": 174848,
+          "Crc": "624ecc8f",
+          "Md5": "641a5cab6ebd8a4918932ea4be9ebf35",
+          "Sha1": "de2b22b2073a407ca2f9bfa031777d6a7c48e2d3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "NO",
+            "t": "+2 NO",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663044",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr NO][t +2 NO][a5].d64",
+          "Size": 174848,
+          "Crc": "e70f6562",
+          "Md5": "aeaa4d763292a4a20b960a439fd0b3ab",
+          "Sha1": "640884460868f2605921fe094742108d5151d3e9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "NO",
+            "t": "+2 NO",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663040",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr NO][t +2 NO][a].d64",
+          "Size": 174848,
+          "Crc": "82f2fa09",
+          "Md5": "00d1979a87810dd1136f9b1f07c748bb",
+          "Sha1": "8193bd7400611668c2010ed954652fbed3c0a343",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "NO",
+            "t": "+2 NO",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "680692",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr NO][t +2 NO][b].lnx",
+          "Size": 18478,
+          "Crc": "5e45f450",
+          "Md5": "0e80259f950d0bcdade4c0f5cc6c8871",
+          "Sha1": "69552ccbf4dd2ba88b72b53f0027b1da6013fa62",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "LNX",
+            "cr": "NO",
+            "t": "+2 NO",
+            "b": ""
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663045",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr RamJet].d64",
+          "Size": 174848,
+          "Crc": "1bfa43cc",
+          "Md5": "1cda95b64a077d0d3f58287ec809d725",
+          "Sha1": "0ffd2d65714f727734898ed1cf1dd86d46b99298",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "RamJet"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663046",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr RamJet][a].d64",
+          "Size": 174848,
+          "Crc": "e7a9bf58",
+          "Md5": "27d1091d63e32be3d87f683dc68def66",
+          "Sha1": "018618744f801aeb6f2958d621a91add341aa155",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "RamJet",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663047",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Sherlock Holmes].d64",
+          "Size": 174848,
+          "Crc": "dba7d130",
+          "Md5": "375a90c32c062234ceab5655427b743c",
+          "Sha1": "94bb72041b1ef9a5c2beaa46ccc1fc8160277a52",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Sherlock Holmes"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663048",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Sherlock Holmes][a].d64",
+          "Size": 174848,
+          "Crc": "d63d8ce2",
+          "Md5": "7f6ba659135e3179669209f17290e3fd",
+          "Sha1": "6c4612d7c6b9642b2a75273eebf914b9c6cfee3c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Sherlock Holmes",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663049",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Talent][t +1 Talent].d64",
+          "Size": 174848,
+          "Crc": "93d38298",
+          "Md5": "ac22cbbb9a9a4ad9bd4cff0bfd2a676a",
+          "Sha1": "f2f11fe48898415910eb82d7b8b269493ab28e54",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Talent",
+            "t": "+1 Talent"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "683070",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Talent][t +1 Talent].prg",
+          "Size": 12036,
+          "Crc": "fa484367",
+          "Md5": "5ebe8c2c6f2cdcef2c229ce1cfc2d735",
+          "Sha1": "50502636822144e9b16fac220e49ece35b777610",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "PRG",
+            "cr": "Talent",
+            "t": "+1 Talent"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686489",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Talent][t +1 Talent].t64",
+          "Size": 12130,
+          "Crc": "2492cb64",
+          "Md5": "8f4d62a8904b1a7f86bbdb802cbfbf35",
+          "Sha1": "a1273766a79382a81c7780aeb721b38ef69b7761",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "Talent",
+            "t": "+1 Talent"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686490",
+          "Name": "1985 - The Day After (1985)(Mastertronic)[cr Talent][t +1 Talent][a].t64",
+          "Size": 13058,
+          "Crc": "d6c08711",
+          "Md5": "e5bdecbc5b4a06ed4e1d4243c5b7d4d0",
+          "Sha1": "c6d7007d1f322cc97071c075149732c42bcf917a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "Talent",
+            "t": "+1 Talent",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 789,
+              "Text": "adventure",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1285,
+              "Text": "sci-fi",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 2030,
+              "Text": "enemy avoidance",
+              "AIGenerated": true
+            },
+            {
+              "Id": 14718,
+              "Text": "fuel collection",
+              "AIGenerated": true
+            },
+            {
+              "Id": 4964,
+              "Text": "replayability",
+              "AIGenerated": true
+            },
+            {
+              "Id": 14506,
+              "Text": "tractor beam",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 3799,
+              "Text": "fuel management",
+              "AIGenerated": true
+            },
+            {
+              "Id": 14128,
+              "Text": "gravity based",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1209,
+              "Text": "level progression",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3859,
+              "Text": "tractor beam",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 887,
+              "Text": "isometric",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1544,
+              "Text": "post-apocalyptic",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3867,
+              "Text": "rebellion",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1543,
+              "Text": "sci-fi",
+              "AIGenerated": true
+            },
+            {
+              "Id": 812,
+              "Text": "survival",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "United States (US),  (ss),  (wor)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, English, Spanish, French, Portuguese"
+    }
+  ],
+  "CreatedDate": "2026-03-02T06:16:41",
+  "UpdatedDate": "2026-04-16T07:06:51",
+  "Name": "1985 - The Day After"
+}

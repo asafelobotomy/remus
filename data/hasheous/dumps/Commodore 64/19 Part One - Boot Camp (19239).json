@@ -1,0 +1,2998 @@
+{
+  "Id": 19239,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "213663",
+      "Name": "19 Part One - Boot Camp",
+      "Year": "1988",
+      "Country": "",
+      "Platform": "Commodore C64",
+      "SourceId": "8755",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "194396",
+      "Name": "19 Part One - Boot Camp",
+      "Year": "1988",
+      "Country": null,
+      "Platform": "Commodore C64",
+      "SourceId": "1423",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "41010",
+      "ImmutableId": "41010",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/19-part-one-boot-camp",
+      "LastSearch": "2024-05-26T10:18:51",
+      "NextSearch": "2026-08-09T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "32254",
+      "ImmutableId": "32254",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=32254",
+      "LastSearch": "2024-12-13T06:24:14",
+      "NextSearch": "2026-08-09T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-07-07T00:21:42",
+      "NextSearch": "2026-07-02T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "16381",
+      "ImmutableId": "16381",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-16381/",
+      "LastSearch": "2025-06-21T22:57:41",
+      "NextSearch": "2026-08-09T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:57:13",
+      "NextSearch": "2026-07-02T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:57:13",
+      "NextSearch": "2026-07-02T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:57:13",
+      "NextSearch": "2026-07-02T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2025-07-22T09:57:13",
+      "NextSearch": "2026-07-02T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T11:09:54",
+      "NextSearch": "2026-07-02T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T23:50:31",
+      "NextSearch": "2026-03-03T23:50:31",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T11:02:15",
+      "NextSearch": "2026-04-24T11:02:15",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 760033,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 19 Part One: Boot Camp - Commodore 64\n\n**Experience the brutal reality of the Vietnam War draft in 19 Part One: Boot Camp!**\n\nStep into the shoes of a 19-year-old American draftee in 1965, a time when Vietnam felt distant to many. The game plunges you from a comfortable civilian life into the harsh and unforgiving world of basic military training. Witness the stark contrast between your former existence and the grueling demands of becoming a soldier.\n\nPrepare for intense physical and psychological challenges as you endure relentless drills and exercises. Test your coordination, stamina, and morale under the watchful eye of a demanding drill sergeant. Each task pushes you to your limits, simulating the transformation from a young civilian to a battle-ready soldier.\n\n*19 Part One: Boot Camp* isn't just about surviving training; it's a powerful introduction to the larger Vietnam War experience.  Can you endure the rigors and emerge as a soldier?  Prepare for a visceral and unforgettable journey."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 38197,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "9C1797816BCD921CF55ACB4C9B07E69FFDD5C92A"
+    },
+    {
+      "Id": 38196,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 2031,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "1349",
+            "Publisher": "Cascade Games"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "IGDB",
+            "Link": "",
+            "LastSearch": "2026-04-28T21:08:33",
+            "NextSearch": "2026-10-18T21:08:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2026-04-28T21:08:33",
+            "NextSearch": "2026-10-18T21:08:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2026-04-28T21:08:33",
+            "NextSearch": "2026-10-18T21:08:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2026-04-28T21:08:33",
+            "NextSearch": "2026-10-18T21:08:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-04-28T21:08:33",
+            "NextSearch": "2026-10-18T21:08:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-04-28T21:08:33",
+            "NextSearch": "2026-10-18T21:08:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-04-28T21:08:33",
+            "NextSearch": "2026-10-18T21:08:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2026-04-28T21:08:33",
+            "NextSearch": "2026-10-18T21:08:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2026-04-28T21:08:33",
+            "NextSearch": "2026-10-18T21:08:33",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-04-28T21:08:33",
+            "NextSearch": "2026-04-28T22:08:38",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T11:02:15",
+            "NextSearch": "2026-04-24T11:02:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Cascade Games, Cascade-Games"
+          }
+        ],
+        "CreatedDate": "2024-05-18T14:14:31",
+        "UpdatedDate": "2026-04-28T21:08:38",
+        "Name": "Cascade Games"
+      }
+    },
+    {
+      "Id": 38195,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 1,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "478",
+            "Platform": "Commodore - Commodore 64"
+          },
+          {
+            "SignatureId": "788",
+            "Platform": "Commodore - Commodore 64 (Headerless)"
+          },
+          {
+            "SignatureId": "935",
+            "Platform": "Commodore - Commodore 64 (Headerless) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "936",
+            "Platform": "Commodore - Commodore 64 (Parent-Clone)"
+          },
+          {
+            "SignatureId": "479",
+            "Platform": "Commodore - Commodore 64 (PP)"
+          },
+          {
+            "SignatureId": "937",
+            "Platform": "Commodore - Commodore 64 (PP) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "480",
+            "Platform": "Commodore - Commodore 64 (Tapes)"
+          },
+          {
+            "SignatureId": "938",
+            "Platform": "Commodore - Commodore 64 (Tapes) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "710",
+            "Platform": "Commodore 64"
+          },
+          {
+            "SignatureId": "80",
+            "Platform": "Commodore C64"
+          },
+          {
+            "SignatureId": "81",
+            "Platform": "Commodore C64DTV"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/c64",
+            "LastSearch": "2024-04-28T13:35:39",
+            "NextSearch": "2024-05-28T13:35:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40",
+            "ImmutableId": "40",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=40",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "30",
+            "ImmutableId": "30",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/30/games",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14",
+            "ImmutableId": "14",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-14/",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Commodore_64",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Commodore_64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Commodore_64",
+            "LastSearch": "2025-08-05T05:17:02",
+            "NextSearch": "2025-09-05T05:17:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5500690",
+            "ImmutableId": "5500690",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5500690",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "66",
+            "ImmutableId": "66",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=66",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14-commodore-64",
+            "ImmutableId": "14-commodore-64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/14-commodore-64",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758269,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Commodore 64, affectionately known as the C64, was an 8-bit home computer released in 1982 that became a cultural icon and the best-selling desktop computer of all time, with estimated sales between 12.5 and 17 million units. Boasting 64 kilobytes of RAM and impressive graphics and sound capabilities thanks to its VIC-II chip and SID sound chip, the C64 offered a significant leap in performance compared to its predecessors. It initially sold for $595, but its price later dropped, making it accessible to a wider audience.\n\nThe C64 dominated the home computer market throughout the 1980s, particularly in the US and UK, though it faced stiff competition from the ZX Spectrum and Amstrad CPC. Popular games like *Impossible Mission*, *The Last Ninja*, and *Elite* showcased its capabilities and cemented its legacy. Even today, emulators allow enthusiasts to relive the C64 experience."
+          },
+          {
+            "Id": 190,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "629CB9AB45447D77ECBE2C1F3AB8A3291E40052F"
+          },
+          {
+            "Id": 1,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 2,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "24910",
+                  "Publisher": "Commodore Business Machines"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "10999",
+                  "ImmutableId": "10999",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/commodore-business-machines-inc",
+                  "LastSearch": "2024-04-28T13:39:01",
+                  "NextSearch": "2024-05-28T13:39:01",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:35",
+                  "NextSearch": "2026-03-03T13:05:35",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:34",
+                  "NextSearch": "2026-04-24T09:49:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 173,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "9C5599A7B44D515191A2E5331213A99061CF2F31"
+                },
+                {
+                  "attributeType": "LongString",
+                  "attributeName": "SearchAliases",
+                  "attributeRelationType": "None",
+                  "Value": "Commodore Business Machines, Commodore-Business-Machines"
+                }
+              ],
+              "CreatedDate": "2024-04-28T13:39:01",
+              "UpdatedDate": "2026-01-31T09:01:22",
+              "Name": "Commodore Business Machines"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Commodore 64, Commodore-64"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 286,
+                    "Text": "classic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 96779,
+                    "Text": "64 kib ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 500,
+                    "Text": "6510 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96778,
+                    "Text": "sid sound chip",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 501,
+                    "Text": "vic-ii graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 26,
+                    "Text": "8-bit system",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96777,
+                    "Text": "video game platform",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 125,
+                    "Text": "cartridge slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 419,
+                    "Text": "cassette tape",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 165,
+                    "Text": "floppy disk",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-28T13:35:39",
+        "UpdatedDate": "2026-05-24T16:04:23",
+        "Name": "Commodore 64"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "19 Part One - Boot Camp, 19 Part One-Boot Camp, 19 Part One Boot Camp, 19 Part One: Boot Camp, XIX Part One - Boot Camp, XIX Part One-Boot Camp, XIX Part One Boot Camp, XIX Part One: Boot Camp, Nineteen Part One - Boot Camp, 19 Part 1 - Boot Camp, Nineteen Part One-Boot Camp, 19 Part 1-Boot Camp, Nineteen Part One Boot Camp, 19 Part 1 Boot Camp, Nineteen Part One: Boot Camp, 19 Part 1: Boot Camp, XIX Part 1 - Boot Camp, XIX Part 1-Boot Camp, XIX Part 1 Boot Camp, XIX Part 1: Boot Camp"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 33,
+          "Id": "693604",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)(Side A)[2 Sides Version].tap",
+          "Size": 243697,
+          "Crc": "dc663d4a",
+          "Md5": "2a3def28a0c4a4dedbcc2e41073ad17c",
+          "Sha1": "a3aec7ed0a3a49512782ef3be1494359f79eec3a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP"
+          },
+          "RomType": "Side",
+          "RomTypeMedia": "Side A",
+          "MediaDetail": {
+            "Side": "A"
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "693605",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)(Side B)[2 Sides Version].tap",
+          "Size": 1597636,
+          "Crc": "bfd2d198",
+          "Md5": "f9f4055994e293933c5eca518fe0316a",
+          "Sha1": "b441bda9bdc46a428c23a31330df932b7ff058ca",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP"
+          },
+          "RomType": "Side",
+          "RomTypeMedia": "Side B",
+          "MediaDetail": {
+            "Side": "B"
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "680242",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade).dfi",
+          "Size": 196608,
+          "Crc": "6ba6bb80",
+          "Md5": "595d0c70e25202cca3299d1268327f17",
+          "Sha1": "9df29e893d4875c9bb02daa5f6702bb8bc8438c6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "DFI"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "693603",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade).tap",
+          "Size": 1841314,
+          "Crc": "b8ae5181",
+          "Md5": "89827d930b344b3f7bf831888ff4247c",
+          "Sha1": "729db93e1b9fea4a71cab7a9691f3b082af160ed",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "TAP"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "680244",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[a2].dfi",
+          "Size": 196608,
+          "Crc": "935faaad",
+          "Md5": "e4cb6c357c751ceec31d1f15f1c17b27",
+          "Sha1": "3c00d9dd719c80fb7945264a93f89a6582b92d46",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "DFI",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "680243",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[a].dfi",
+          "Size": 196608,
+          "Crc": "7a30fe45",
+          "Md5": "85e80714dea3d996bbd1a0f0c96db7f2",
+          "Sha1": "b0fcf68be98e3f334be66715b68cca8449f9df5c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "DFI",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662977",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr FSS].d64",
+          "Size": 174848,
+          "Crc": "45944973",
+          "Md5": "f50c09527603fef8cf202515cbff7101",
+          "Sha1": "f9bec1b88a6ca3de80d3f7bb73fc7374ec17a86d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "FSS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662978",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr FSS][a].d64",
+          "Size": 174848,
+          "Crc": "b9c7b5e7",
+          "Md5": "b9b00f45fc1a1cb4f34d6476806fcceb",
+          "Sha1": "12272c3f9ef79cff8dd8ec541cd4a47a16f8c77f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "FSS",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662979",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL].d64",
+          "Size": 174848,
+          "Crc": "d7e854b4",
+          "Md5": "7d6ba840e44a40a9eec04f87013f4278",
+          "Sha1": "898faa920f017cec0411213614f7cfe2ea9e83dd",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "HTL"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686472",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL].t64",
+          "Size": 116415,
+          "Crc": "397b72b6",
+          "Md5": "64a8dbde8114a475179d5da6e981171c",
+          "Sha1": "fad1d36530fa709db668d80294adec8ce4a4067b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "HTL"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662981",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL][a10].d64",
+          "Size": 174848,
+          "Crc": "3e70a158",
+          "Md5": "85b6fb5f15af5a0bff6cd04f56041489",
+          "Sha1": "dfc51d9c41df278f72e63bf7af33072fd6c19fd6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "HTL",
+            "a": "a10"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662982",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL][a2].d64",
+          "Size": 174848,
+          "Crc": "064d3356",
+          "Md5": "16c7d76d1b87de7d56892885e7775bbb",
+          "Sha1": "bfe5a523f7f07d714b5f7a899645c9f578747a96",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "HTL",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686474",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL][a2].t64",
+          "Size": 115551,
+          "Crc": "dd353c3a",
+          "Md5": "cda5494f1c6896446bb3dab3fb8be20f",
+          "Sha1": "51150b6f3b47ef4170e46f1e4405793469c96f95",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "HTL",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662983",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL][a3].d64",
+          "Size": 174848,
+          "Crc": "99769e3a",
+          "Md5": "0e38db8f982ccfd7f8b3d4d3b201084a",
+          "Sha1": "6d4d1a844d1b8cac77a327b69482af3cbcdaeecf",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "HTL",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662984",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL][a4].d64",
+          "Size": 174848,
+          "Crc": "027ba6a3",
+          "Md5": "61c301d1880f9e943ba9d77d1f9e63a6",
+          "Sha1": "9b47a348aa0605eb0a9ea8d38525e1617bd9fa91",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "HTL",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662985",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL][a5].d64",
+          "Size": 174848,
+          "Crc": "2cc8a40e",
+          "Md5": "2ab49da2ec261f05b52a715af684100f",
+          "Sha1": "2a2a88b4326651f88f701c975b504539657b5c31",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "HTL",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662986",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL][a6].d64",
+          "Size": 174848,
+          "Crc": "3414189f",
+          "Md5": "9ae574fc2a28db15f06b52722ef05000",
+          "Sha1": "0452b6d35edc2547618b706468f1e7b43dc35608",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "HTL",
+            "a": "a6"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662987",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL][a7].d64",
+          "Size": 174848,
+          "Crc": "a16d7277",
+          "Md5": "9b2cc17fd6f3fb58133fa2209f035e97",
+          "Sha1": "c70347783b2ad05337e0f93887408d5bc0b24173",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "HTL",
+            "a": "a7"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662988",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL][a8].d64",
+          "Size": 174848,
+          "Crc": "f373d078",
+          "Md5": "f3fe0a2b63295c51051fdd666affd57c",
+          "Sha1": "af9c6395177a486bc9e744b0b903ec527473942c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "HTL",
+            "a": "a8"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662989",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL][a9].d64",
+          "Size": 174848,
+          "Crc": "b32c70b3",
+          "Md5": "e081b3fa2a7a0d62fc2bd1198eee082d",
+          "Sha1": "c72aeebb17df19bbc1f075ee7e65b606c1fe835c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "HTL",
+            "a": "a9"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662980",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL][a].d64",
+          "Size": 174848,
+          "Crc": "0cd7a8c0",
+          "Md5": "b7533ecc0d4e38f972b60eed1d2993a6",
+          "Sha1": "d3ed8741913fb950abeddc9a003c20b1d497fc46",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "HTL",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "686473",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr HTL][a].t64",
+          "Size": 116511,
+          "Crc": "82e48066",
+          "Md5": "261f0352cff5821a63d2f86ebf208437",
+          "Sha1": "57d0cc89842ac4b71a19738356bf87d60befa13f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "T64",
+            "cr": "HTL",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662990",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Ikari].d64",
+          "Size": 174848,
+          "Crc": "2a229282",
+          "Md5": "7e82e9c53c8dfbcbd3cb68a834a9adb5",
+          "Sha1": "a5a564e1337d4e56df7381b6fa33eb6f605de775",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Ikari"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662992",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Ikari][a2].d64",
+          "Size": 174848,
+          "Crc": "ddb7910b",
+          "Md5": "ed095f3cd8b2768de3e54643e0dd01ad",
+          "Sha1": "0528a407ee3a4f4f6fc225df954294fae73bc55b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Ikari",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662993",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Ikari][a3].d64",
+          "Size": 174848,
+          "Crc": "58011140",
+          "Md5": "bbebd66574bf577e823e1eba199bfc65",
+          "Sha1": "d0add41a6433d8e7cc74d4fd48e72e3580d45509",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Ikari",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662991",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Ikari][a].d64",
+          "Size": 174848,
+          "Crc": "ee8d63c3",
+          "Md5": "7071c1dcd9292c0a3c861212967a8d6b",
+          "Sha1": "71cda7d2ce0faafe368118fca1b24d2a0a73daa9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Ikari",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662994",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Lions].d64",
+          "Size": 174848,
+          "Crc": "745efb6b",
+          "Md5": "37b4845861914c1407009161b50bbc4f",
+          "Sha1": "784f4bedbfc67d2e4859713a0d74d795ddc5a129",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Lions"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662995",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Zenith - FBR].d64",
+          "Size": 174848,
+          "Crc": "3e9d1b34",
+          "Md5": "349ba7f6af64d8d2c161ad01563171ce",
+          "Sha1": "2fd2d33716fbb7269e13fabbdd3bd0d59cbae497",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Zenith - FBR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662997",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Zenith - FBR][a10].d64",
+          "Size": 174848,
+          "Crc": "6fc6e1ff",
+          "Md5": "56fc9b6d841611ca3f09c5ef5b1bdfb8",
+          "Sha1": "b1ec6b34c0c04bbd787c049109c96861ef7c9a01",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Zenith - FBR",
+            "a": "a10"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662998",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Zenith - FBR][a2].d64",
+          "Size": 174848,
+          "Crc": "4670be46",
+          "Md5": "3e6ae1585da10fe2fd81c534a89ed17d",
+          "Sha1": "b78339db609e758c7af69702b24d3bbcda255380",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Zenith - FBR",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662999",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Zenith - FBR][a3].d64",
+          "Size": 175531,
+          "Crc": "c0d3b85e",
+          "Md5": "d6389e5e85f42c82ce234c6ab8085a14",
+          "Sha1": "07cf038514c46ab354bd55fb0426849f0cce0b78",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Zenith - FBR",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663000",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Zenith - FBR][a4].d64",
+          "Size": 174848,
+          "Crc": "f840ec5d",
+          "Md5": "c7e7d33185027c0b0e7b290a21b22804",
+          "Sha1": "799edcd4eec51ba2d2f0b0ccfda7ec411ef3b91f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Zenith - FBR",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663001",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Zenith - FBR][a5].d64",
+          "Size": 174848,
+          "Crc": "4d6fc3e9",
+          "Md5": "d9369bef696f09ff7e447d9df62a74ca",
+          "Sha1": "d95769c88467857f2a4e9252ffc5e3e169cfcb59",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Zenith - FBR",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663002",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Zenith - FBR][a6].d64",
+          "Size": 174848,
+          "Crc": "d36490a8",
+          "Md5": "3bfc2852cd8e6b3462b4eb3e6479319b",
+          "Sha1": "cea5e17cd75a19b477c100577c83d95e0c6b8758",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Zenith - FBR",
+            "a": "a6"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663003",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Zenith - FBR][a7].d64",
+          "Size": 174848,
+          "Crc": "f7e995a5",
+          "Md5": "7dcd985e447004cb03ac2ba474502a0e",
+          "Sha1": "9115039dd34e172a4aef1ce34d2f9e0fe011d52a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Zenith - FBR",
+            "a": "a7"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663004",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Zenith - FBR][a8].d64",
+          "Size": 174848,
+          "Crc": "ac725087",
+          "Md5": "1e8e35abd1acb975b3baa4a303f28c49",
+          "Sha1": "9009e3933027c3654bb0765237d97872970d3535",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Zenith - FBR",
+            "a": "a8"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663005",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Zenith - FBR][a9].d64",
+          "Size": 174848,
+          "Crc": "af460edb",
+          "Md5": "e16bad732ffc77af7e7d58c5b1cd9d51",
+          "Sha1": "e7836149a3b35dc1f6f065316a7d0ff150df10a3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Zenith - FBR",
+            "a": "a9"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "662996",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Zenith - FBR][a].d64",
+          "Size": 174848,
+          "Crc": "c5b59d90",
+          "Md5": "a397a5d5640fbdce3bddc3c6a70d4023",
+          "Sha1": "eb4386d058d0de374d574ba8e58acb1dbc19d3a5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Zenith - FBR",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663006",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[cr Zenith].d64",
+          "Size": 174848,
+          "Crc": "27003198",
+          "Md5": "db2a96a8014c33e6b35ba59a90cf436a",
+          "Sha1": "d492402839eb33d898737766be71409b2dcd06be",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "cr": "Zenith"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663007",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[h Ian].d64",
+          "Size": 174848,
+          "Crc": "e8a8349f",
+          "Md5": "1944adfaf2f90f3a6505e488c59e285e",
+          "Sha1": "3a6d10ef98acab14f331bd3765860126a4673847",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "h": "Ian"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663009",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[h Ian][a2].d64",
+          "Size": 174848,
+          "Crc": "67407e78",
+          "Md5": "343643c60b525dbe003e3147eb994f15",
+          "Sha1": "c3c11c4608d1c6078647df23677a258202bba852",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "h": "Ian",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "663008",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade)[h Ian][a].d64",
+          "Size": 174848,
+          "Crc": "7ca60d80",
+          "Md5": "2921185183ff10b1055864d17df9b9e4",
+          "Sha1": "bb7b876485a803756c77d5e410f2371911252ee8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games",
+              "Arcade"
+            ],
+            "filetype": "D64",
+            "h": "Ian",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "636238",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)(Side 1 of 2)[2 Sides Version].tap",
+          "Size": 243697,
+          "Crc": "dc663d4a",
+          "Md5": "2a3def28a0c4a4dedbcc2e41073ad17c",
+          "Sha1": "a3aec7ed0a3a49512782ef3be1494359f79eec3a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Side",
+          "RomTypeMedia": "Side 1 of 2",
+          "MediaDetail": {
+            "Count": 2,
+            "Side": "1"
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "636239",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)(Side 2 of 2)[2 Sides Version].tap",
+          "Size": 1597636,
+          "Crc": "bfd2d198",
+          "Md5": "f9f4055994e293933c5eca518fe0316a",
+          "Sha1": "b441bda9bdc46a428c23a31330df932b7ff058ca",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Side",
+          "RomTypeMedia": "Side 2 of 2",
+          "MediaDetail": {
+            "Count": 2,
+            "Side": "2"
+          },
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "636237",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games).tap",
+          "Size": 1841314,
+          "Crc": "b8ae5181",
+          "Md5": "89827d930b344b3f7bf831888ff4247c",
+          "Sha1": "729db93e1b9fea4a71cab7a9691f3b082af160ed",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476178",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr FSS].d64",
+          "Size": 174848,
+          "Crc": "45944973",
+          "Md5": "f50c09527603fef8cf202515cbff7101",
+          "Sha1": "f9bec1b88a6ca3de80d3f7bb73fc7374ec17a86d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "FSS"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476179",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr HTL].d64",
+          "Size": 174848,
+          "Crc": "0cd7a8c0",
+          "Md5": "b7533ecc0d4e38f972b60eed1d2993a6",
+          "Sha1": "d3ed8741913fb950abeddc9a003c20b1d497fc46",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "HTL"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "602996",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr HTL].t64",
+          "Size": 116415,
+          "Crc": "397b72b6",
+          "Md5": "64a8dbde8114a475179d5da6e981171c",
+          "Sha1": "fad1d36530fa709db668d80294adec8ce4a4067b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "HTL"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476181",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr HTL][a10].d64",
+          "Size": 174848,
+          "Crc": "b32c70b3",
+          "Md5": "e081b3fa2a7a0d62fc2bd1198eee082d",
+          "Sha1": "c72aeebb17df19bbc1f075ee7e65b606c1fe835c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "HTL",
+            "a": "a10"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476182",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr HTL][a2].d64",
+          "Size": 174848,
+          "Crc": "027ba6a3",
+          "Md5": "61c301d1880f9e943ba9d77d1f9e63a6",
+          "Sha1": "9b47a348aa0605eb0a9ea8d38525e1617bd9fa91",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "HTL",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476183",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr HTL][a3].d64",
+          "Size": 174848,
+          "Crc": "d7e854b4",
+          "Md5": "7d6ba840e44a40a9eec04f87013f4278",
+          "Sha1": "898faa920f017cec0411213614f7cfe2ea9e83dd",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "HTL",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476184",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr HTL][a4].d64",
+          "Size": 174848,
+          "Crc": "3e70a158",
+          "Md5": "85b6fb5f15af5a0bff6cd04f56041489",
+          "Sha1": "dfc51d9c41df278f72e63bf7af33072fd6c19fd6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "HTL",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476185",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr HTL][a5].d64",
+          "Size": 174848,
+          "Crc": "2cc8a40e",
+          "Md5": "2ab49da2ec261f05b52a715af684100f",
+          "Sha1": "2a2a88b4326651f88f701c975b504539657b5c31",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "HTL",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476186",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr HTL][a6].d64",
+          "Size": 174848,
+          "Crc": "99769e3a",
+          "Md5": "0e38db8f982ccfd7f8b3d4d3b201084a",
+          "Sha1": "6d4d1a844d1b8cac77a327b69482af3cbcdaeecf",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "HTL",
+            "a": "a6"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476187",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr HTL][a7].d64",
+          "Size": 174848,
+          "Crc": "3414189f",
+          "Md5": "9ae574fc2a28db15f06b52722ef05000",
+          "Sha1": "0452b6d35edc2547618b706468f1e7b43dc35608",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "HTL",
+            "a": "a7"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476188",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr HTL][a8].d64",
+          "Size": 174848,
+          "Crc": "a16d7277",
+          "Md5": "9b2cc17fd6f3fb58133fa2209f035e97",
+          "Sha1": "c70347783b2ad05337e0f93887408d5bc0b24173",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "HTL",
+            "a": "a8"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476189",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr HTL][a9].d64",
+          "Size": 174848,
+          "Crc": "f373d078",
+          "Md5": "f3fe0a2b63295c51051fdd666affd57c",
+          "Sha1": "af9c6395177a486bc9e744b0b903ec527473942c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "HTL",
+            "a": "a9"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476180",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr HTL][a].d64",
+          "Size": 174848,
+          "Crc": "064d3356",
+          "Md5": "16c7d76d1b87de7d56892885e7775bbb",
+          "Sha1": "bfe5a523f7f07d714b5f7a899645c9f578747a96",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "HTL",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "602997",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr HTL][a].t64",
+          "Size": 116511,
+          "Crc": "82e48066",
+          "Md5": "261f0352cff5821a63d2f86ebf208437",
+          "Sha1": "57d0cc89842ac4b71a19738356bf87d60befa13f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "HTL",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476190",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Ikari].d64",
+          "Size": 174848,
+          "Crc": "2a229282",
+          "Md5": "7e82e9c53c8dfbcbd3cb68a834a9adb5",
+          "Sha1": "a5a564e1337d4e56df7381b6fa33eb6f605de775",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Ikari"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476192",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Ikari][a2].d64",
+          "Size": 174848,
+          "Crc": "ddb7910b",
+          "Md5": "ed095f3cd8b2768de3e54643e0dd01ad",
+          "Sha1": "0528a407ee3a4f4f6fc225df954294fae73bc55b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Ikari",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476193",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Ikari][a3].d64",
+          "Size": 174848,
+          "Crc": "58011140",
+          "Md5": "bbebd66574bf577e823e1eba199bfc65",
+          "Sha1": "d0add41a6433d8e7cc74d4fd48e72e3580d45509",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Ikari",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476191",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Ikari][a].d64",
+          "Size": 174848,
+          "Crc": "ee8d63c3",
+          "Md5": "7071c1dcd9292c0a3c861212967a8d6b",
+          "Sha1": "71cda7d2ce0faafe368118fca1b24d2a0a73daa9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Ikari",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476194",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Lions].d64",
+          "Size": 174848,
+          "Crc": "745efb6b",
+          "Md5": "37b4845861914c1407009161b50bbc4f",
+          "Sha1": "784f4bedbfc67d2e4859713a0d74d795ddc5a129",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Lions"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476195",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Zenith - FBR].d64",
+          "Size": 174848,
+          "Crc": "c5b59d90",
+          "Md5": "a397a5d5640fbdce3bddc3c6a70d4023",
+          "Sha1": "eb4386d058d0de374d574ba8e58acb1dbc19d3a5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Zenith - FBR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476197",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Zenith - FBR][a2].d64",
+          "Size": 174848,
+          "Crc": "f840ec5d",
+          "Md5": "c7e7d33185027c0b0e7b290a21b22804",
+          "Sha1": "799edcd4eec51ba2d2f0b0ccfda7ec411ef3b91f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Zenith - FBR",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476198",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Zenith - FBR][a3].d64",
+          "Size": 174848,
+          "Crc": "9d26abdd",
+          "Md5": "fe63779997af1865cf90ea4c362d9c33",
+          "Sha1": "1630741648d0c0e060fe3968c57fb89062f39f7d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Zenith - FBR",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476199",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Zenith - FBR][a4].d64",
+          "Size": 174848,
+          "Crc": "d36490a8",
+          "Md5": "3bfc2852cd8e6b3462b4eb3e6479319b",
+          "Sha1": "cea5e17cd75a19b477c100577c83d95e0c6b8758",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Zenith - FBR",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476200",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Zenith - FBR][a5].d64",
+          "Size": 174848,
+          "Crc": "f7e995a5",
+          "Md5": "7dcd985e447004cb03ac2ba474502a0e",
+          "Sha1": "9115039dd34e172a4aef1ce34d2f9e0fe011d52a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Zenith - FBR",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476201",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Zenith - FBR][a6].d64",
+          "Size": 174848,
+          "Crc": "ac725087",
+          "Md5": "1e8e35abd1acb975b3baa4a303f28c49",
+          "Sha1": "9009e3933027c3654bb0765237d97872970d3535",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Zenith - FBR",
+            "a": "a6"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476202",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Zenith - FBR][a7].d64",
+          "Size": 174848,
+          "Crc": "af460edb",
+          "Md5": "e16bad732ffc77af7e7d58c5b1cd9d51",
+          "Sha1": "e7836149a3b35dc1f6f065316a7d0ff150df10a3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Zenith - FBR",
+            "a": "a7"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476203",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Zenith - FBR][a8].d64",
+          "Size": 174848,
+          "Crc": "6fc6e1ff",
+          "Md5": "56fc9b6d841611ca3f09c5ef5b1bdfb8",
+          "Sha1": "b1ec6b34c0c04bbd787c049109c96861ef7c9a01",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Zenith - FBR",
+            "a": "a8"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476196",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Zenith - FBR][a].d64",
+          "Size": 174848,
+          "Crc": "4670be46",
+          "Md5": "3e6ae1585da10fe2fd81c534a89ed17d",
+          "Sha1": "b78339db609e758c7af69702b24d3bbcda255380",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Zenith - FBR",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476204",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[cr Zenith].d64",
+          "Size": 174848,
+          "Crc": "27003198",
+          "Md5": "db2a96a8014c33e6b35ba59a90cf436a",
+          "Sha1": "d492402839eb33d898737766be71409b2dcd06be",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "cr": "Zenith"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476205",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[h Ian].d64",
+          "Size": 174848,
+          "Crc": "e8a8349f",
+          "Md5": "1944adfaf2f90f3a6505e488c59e285e",
+          "Sha1": "3a6d10ef98acab14f331bd3765860126a4673847",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "Ian"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476207",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[h Ian][a2].d64",
+          "Size": 174848,
+          "Crc": "67407e78",
+          "Md5": "343643c60b525dbe003e3147eb994f15",
+          "Sha1": "c3c11c4608d1c6078647df23677a258202bba852",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "Ian",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "476206",
+          "Name": "19 Part One - Boot Camp (1988)(Cascade Games)[h Ian][a].d64",
+          "Size": 174848,
+          "Crc": "7ca60d80",
+          "Md5": "2921185183ff10b1055864d17df9b9e4",
+          "Sha1": "bb7b876485a803756c77d5e410f2371911252ee8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "h": "Ian",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 3702,
+              "Text": "conscription",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3703,
+              "Text": "personal transformation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 952,
+              "Text": "war",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 887,
+              "Text": "isometric",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 1260,
+              "Text": "military",
+              "AIGenerated": true
+            },
+            {
+              "Id": 888,
+              "Text": "simulation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1823,
+              "Text": "war",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 3700,
+              "Text": "morale system",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3699,
+              "Text": "physical challenges",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3713,
+              "Text": "realistic training",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 2564,
+              "Text": "progression",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2819,
+              "Text": "simulation",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2715,
+              "Text": "training",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "CreatedDate": "2024-05-26T10:18:51",
+  "UpdatedDate": "2026-02-03T12:19:48",
+  "Name": "19 Part One - Boot Camp"
+}

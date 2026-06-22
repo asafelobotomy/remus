@@ -1,0 +1,968 @@
+{
+  "Id": 253302,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "702018",
+      "Name": "101 in 1 Megamix",
+      "Year": "",
+      "Country": "AS",
+      "Platform": "Sony - PlayStation Portable (PSN) (Decrypted)",
+      "SourceId": "12480",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "976390",
+      "Name": "101 in 1 Megamix",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Sony - PlayStation Portable (PSN) (Decrypted)",
+      "SourceId": "12480",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "539146",
+      "Name": "101 in 1 Megamix",
+      "Year": "",
+      "Country": "AS",
+      "Platform": "Sony - PlayStation Portable (PSN) (Encrypted)",
+      "SourceId": "12482",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "977067",
+      "Name": "101 in 1 Megamix",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Sony - PlayStation Portable (PSN) (Encrypted)",
+      "SourceId": "12482",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "976389",
+      "Name": "101 in 1 Megamix",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Sony - PlayStation Portable (PSN) (Decrypted)",
+      "SourceId": "12480",
+      "MetadataSource": "4"
+    },
+    {
+      "SignatureId": "977066",
+      "Name": "101 in 1 Megamix",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Sony - PlayStation Portable (PSN) (Encrypted)",
+      "SourceId": "12482",
+      "MetadataSource": "4"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-08-24T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-08-24T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "23951",
+      "ImmutableId": "23951",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/23951",
+      "LastSearch": "2025-07-14T21:59:30",
+      "NextSearch": "2027-01-09T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-08-24T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-08-24T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-08-24T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-08-24T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-08-24T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "5459816",
+      "ImmutableId": "5459816",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "SteamGridDb",
+      "Link": "https://www.steamgriddb.com/game/5459816",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-11-13T13:37:17",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-05-09T13:37:17",
+      "NextSearch": "2026-05-10T15:32:48",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T01:32:54",
+      "NextSearch": "2026-04-25T01:32:54",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 493217,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "558D38E897A3B0C1B295128F8954CFA2FD11BB42"
+    },
+    {
+      "Id": 493216,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 161831,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "742",
+            "Platform": "PlayStation Portable"
+          },
+          {
+            "SignatureId": "1133",
+            "Platform": "PSP"
+          },
+          {
+            "SignatureId": "694",
+            "Platform": "Sony - PlayStation Portable"
+          },
+          {
+            "SignatureId": "799",
+            "Platform": "Sony - PlayStation Portable (PSN) (Decrypted)"
+          },
+          {
+            "SignatureId": "1082",
+            "Platform": "Sony - PlayStation Portable (PSN) (Decrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "629",
+            "Platform": "Sony - PlayStation Portable (PSN) (Encrypted)"
+          },
+          {
+            "SignatureId": "1083",
+            "Platform": "Sony - PlayStation Portable (PSN) (Encrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "800",
+            "Platform": "Sony - PlayStation Portable (PSN) (Minis)"
+          },
+          {
+            "SignatureId": "867",
+            "Platform": "Sony - PlayStation Portable (PSN) (Minis) (Decrypted)"
+          },
+          {
+            "SignatureId": "1084",
+            "Platform": "Sony - PlayStation Portable (PSN) (Minis) (Decrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "868",
+            "Platform": "Sony - PlayStation Portable (PSN) (Minis) (Encrypted)"
+          },
+          {
+            "SignatureId": "1085",
+            "Platform": "Sony - PlayStation Portable (PSN) (Minis) (Encrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "1125",
+            "Platform": "Sony PlayStation Portable"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "38",
+            "ImmutableId": "38",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/psp",
+            "LastSearch": "2024-11-29T23:41:21",
+            "NextSearch": "2024-12-29T23:41:21",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "13",
+            "ImmutableId": "13",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=13",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2027-01-14T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "41",
+            "ImmutableId": "41",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/41/games",
+            "LastSearch": "2025-05-06T21:46:09",
+            "NextSearch": "2025-06-06T21:46:09",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2026-07-15T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2026-07-15T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2026-07-15T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2026-07-15T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/PlayStation_Portable",
+            "ImmutableId": "https://en.wikipedia.org/wiki/PlayStation_Portable",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/PlayStation_Portable",
+            "LastSearch": "2025-12-21T10:28:14",
+            "NextSearch": "2026-01-21T10:28:14",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327257",
+            "ImmutableId": "5327257",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327257",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2027-01-14T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "61",
+            "ImmutableId": "61",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=61",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2027-01-14T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "52-sony-psp",
+            "ImmutableId": "52-sony-psp",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/52-sony-psp",
+            "LastSearch": "2026-02-24T09:56:25",
+            "NextSearch": "2026-04-24T09:56:25",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758497,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The PlayStation Portable (PSP) was Sony's foray into the handheld gaming market, released in Japan in 2004 and globally soon after. As the first handheld console to utilize an optical disc (UMD) format, it offered a significant leap in power and multimedia capabilities compared to its competitors, notably the Nintendo DS. The PSP boasted a vibrant 4.3-inch LCD screen and a sleek design, connecting to other devices and the internet via Wi-Fi. \n\nPopular titles like *Grand Theft Auto: Liberty City Stories*, *God of War: Ghost of Sparta*, and *Metal Gear Solid: Peace Walker* showcased its impressive graphics. While battery life and UMD loading times presented challenges, the PSP became a beloved portable entertainment device, selling over 80 million units. Later models included the Street and Go versions, and it was succeeded by the PlayStation Vita, retaining PSP game compatibility via the PlayStation Store until its closure in 2016."
+          },
+          {
+            "Id": 475798,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "PSP"
+          },
+          {
+            "Id": 297397,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "D4C9F2E7A39BDEF89759C3891AD9E4806C8A2A63"
+          },
+          {
+            "Id": 297398,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 19877,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "14855",
+                  "Publisher": "Sony"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "AutomaticTooManyMatches",
+                  "Source": "IGDB",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T14:40:50",
+                  "NextSearch": "2026-08-19T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:14:46",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:36",
+                  "NextSearch": "2026-03-03T13:05:36",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:32",
+                  "NextSearch": "2026-04-24T09:49:32",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [],
+              "CreatedDate": "2024-05-26T10:46:55",
+              "UpdatedDate": "2026-01-31T19:53:39",
+              "Name": "Sony"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sony Playstation Portable, Sony-Playstation-Portable"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 95327,
+                    "Text": "240p resolution",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 601,
+                    "Text": "analog stick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88571,
+                    "Text": "memory stick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 754,
+                    "Text": "umd drive",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 342,
+                    "Text": "analog stick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 93,
+                    "Text": "button pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 137,
+                    "Text": "d-pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 554,
+                    "Text": "touchpad",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 81,
+                    "Text": "bluetooth",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 80,
+                    "Text": "ethernet",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 272,
+                    "Text": "usb",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 79,
+                    "Text": "wi-fi",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 286,
+                    "Text": "classic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 132,
+                    "Text": "handheld",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 333,
+                    "Text": "portable",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-11-29T23:41:21",
+        "UpdatedDate": "2026-05-25T01:33:03",
+        "Name": "Sony Playstation Portable"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "101 in 1 Megamix, 101-in-1-Megamix, 101 in I Megamix, 101-in-I-Megamix, 101 in One Megamix, 101-in-One-Megamix"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 24,
+          "Id": "3010156",
+          "Name": "101 in 1 Megamix (Asia).iso",
+          "Size": 1067352064,
+          "Crc": "f293428d",
+          "Md5": "875837a27ae63934199b4a19008b8b9b",
+          "Sha1": "a9bc95c523c96f4ef6a89728aba0b2e5df9c8a56",
+          "Sha256": "37082c71eec4a019eafa07da2db41ff5731386c2c90e91ffec9d804a01e853b8",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "3010157",
+          "Name": "101 in 1 Megamix (Europe) (En,Fr,De,Es,It,Nl).iso",
+          "Size": 1067352064,
+          "Crc": "3c9ec3a0",
+          "Md5": "3cf9ff63a816ce3ddf9b6d0d153a2d42",
+          "Sha1": "433538fedc094773aca0c52df352548b8d3dda6c",
+          "Sha256": "0159c27534cafafbe66ffc40e12a087e0a59dd7f98fd13ca6b7867d1433aa1c6",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "3010158",
+          "Name": "101 in 1 Megamix (USA) (En,Fr,Es).iso",
+          "Size": 1067384832,
+          "Crc": "8f1d2af4",
+          "Md5": "c93db723413c8a4cd5956f7c4720ceeb",
+          "Sha1": "0b59ca0c60d3f74f90c88d014d9f7510606c3fc1",
+          "Sha256": "2d60686fa2c990ca0887990ce737f5518c2e6a7b738d530178033dc456876372",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1755736",
+          "Name": "6rJOUVjS1NnGHa67stOtBGSxKTt3jDqWEJ7Qe3hU7tsnjpc2iVoAeE88HoJ8MSkX.pkg",
+          "Size": 433066224,
+          "Crc": "2927c349",
+          "Md5": "84385c7610f575b45e7bc28b08d66d64",
+          "Sha1": "2ec67328a6b06e1ae287678d229efae1e64a9882",
+          "Sha256": "061156723f5946b308c2d772e0f1d06f48c9080b7b16962feb21969cf92e1437",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1755737",
+          "Name": "ExR95Xxdoest15r3nNatBwuNqWQr58qtj5emDBQt6MCkpfgCthONh5O5x3S9mX126p5nKH7yHeqdB49cQ8M3IREu9EBNnMJnrlywY.pkg",
+          "Size": 430393280,
+          "Crc": "c62365c5",
+          "Md5": "692037b3ef3952bd971cb97dbd2f5031",
+          "Sha1": "67cd18aa84a22e88fbada40b655cd96f5e50d615",
+          "Sha256": "e504ea8295a9845663e0f5d77ba00753e6780fbf8a578f89b8a9246f006eb973",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1755738",
+          "Name": "UP4069-NPUH10088_00-101IN1MEGAMIXPSP.rap",
+          "Size": 16,
+          "Crc": "e1b9295f",
+          "Md5": "f7405b74614394d2287735b3bf85b18e",
+          "Sha1": "fa338dd90737825010e45a632356d4c787ae9efc",
+          "Sha256": "80f19cec0470f52f2b61a0774c3248cfc0814276c6f31f07679d5b152c7d2e2d",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        },
+        {
+          "Score": 24,
+          "Id": "1755735",
+          "Name": "yJVd1KHBG7ktBCkWfbDdyDQwFe7RTYqxwXfpNlo2VOIm0tHiUUKPQQjpDG1WdPrfjvhlOntsCqITQREnBQF9bi01APr8E0ysX7EcA.pkg",
+          "Size": 433138912,
+          "Crc": "26cf704b",
+          "Md5": "38ec2bb56b90a9d4e36027fbf0bb80ea",
+          "Sha1": "8f0227d080254e83943c55058f9640498e8e9040",
+          "Sha256": "1caeccd1bf32569bfa6df4b6a6f25a3e2a15a46299a953974f8034ac6201afa4",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "NoIntros"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {}
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Asia (AS), Europe (EU), United States (US), Asia (Asia)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, English, Spanish, French, Italian, Dutch, Chinese"
+    }
+  ],
+  "CreatedDate": "2025-07-14T21:59:15",
+  "UpdatedDate": "2026-05-10T14:32:50",
+  "Name": "101 in 1 Megamix"
+}

@@ -1,0 +1,1401 @@
+{
+  "Id": 260998,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "984986",
+      "Name": "007 - Nightfire",
+      "Year": "",
+      "Country": "FR",
+      "Platform": "Nintendo - GameCube",
+      "SourceId": "38228",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "923112",
+      "Name": "007 - Nightfire",
+      "Year": "2002",
+      "Country": "DE",
+      "Platform": "Nintendo GameCube",
+      "SourceId": "13122",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "984983",
+      "Name": "007 - Nightfire",
+      "Year": "",
+      "Country": "DE",
+      "Platform": "Nintendo - GameCube",
+      "SourceId": "38228",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "947492",
+      "Name": "007 - Nightfire",
+      "Year": "2002",
+      "Country": "EU",
+      "Platform": "Nintendo GameCube",
+      "SourceId": "13122",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "984985",
+      "Name": "007 - Nightfire",
+      "Year": "",
+      "Country": "ES",
+      "Platform": "Nintendo - GameCube",
+      "SourceId": "38228",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "589494",
+      "Name": "007 - Nightfire",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Nintendo - GameCube",
+      "SourceId": "38228",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "947494",
+      "Name": "007 - Nightfire",
+      "Year": "2002",
+      "Country": "US",
+      "Platform": "Nintendo GameCube",
+      "SourceId": "13122",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "947491",
+      "Name": "007 - Nightfire",
+      "Year": "2002",
+      "Country": "ES",
+      "Platform": "Nintendo GameCube",
+      "SourceId": "13122",
+      "MetadataSource": "1"
+    },
+    {
+      "SignatureId": "984984",
+      "Name": "007 - Nightfire",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Nintendo - GameCube",
+      "SourceId": "38228",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "947493",
+      "Name": "007 - Nightfire",
+      "Year": "2002",
+      "Country": "FR",
+      "Platform": "Nintendo GameCube",
+      "SourceId": "13122",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "1631",
+      "ImmutableId": "1631",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/james-bond-007-nightfire",
+      "LastSearch": "2026-04-09T09:34:12",
+      "NextSearch": "2027-01-15T09:34:12",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "5428",
+      "ImmutableId": "5428",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=5428",
+      "LastSearch": "2026-04-09T09:34:12",
+      "NextSearch": "2027-01-15T09:34:12",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "9447",
+      "ImmutableId": "9447",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "RetroAchievements",
+      "Link": "https://retroachievements.org/game/9447",
+      "LastSearch": "2026-04-09T09:34:12",
+      "NextSearch": "2027-01-15T09:34:12",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "6647",
+      "ImmutableId": "6647",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "GiantBomb",
+      "Link": "https://www.giantbomb.com/games/3030-6647/",
+      "LastSearch": "2026-04-09T09:34:12",
+      "NextSearch": "2027-01-15T09:34:12",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-04-09T09:34:12",
+      "NextSearch": "2026-08-12T09:34:12",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-04-09T09:34:12",
+      "NextSearch": "2026-08-12T09:34:12",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-04-09T09:34:12",
+      "NextSearch": "2026-08-12T09:34:12",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://en.wikipedia.org/wiki/James_Bond_007:_Nightfire",
+      "ImmutableId": "https://en.wikipedia.org/wiki/James_Bond_007:_Nightfire",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://en.wikipedia.org/wiki/James_Bond_007:_Nightfire",
+      "LastSearch": "2026-04-09T09:34:12",
+      "NextSearch": "2026-10-09T09:34:12",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-04-09T09:34:12",
+      "NextSearch": "2026-08-12T09:34:12",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "4798",
+      "ImmutableId": "4798",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "ScreenScraper",
+      "Link": "https://www.screenscraper.fr/gameinfos.php?gameid=4798",
+      "LastSearch": "2026-04-09T09:34:12",
+      "NextSearch": "2027-01-15T09:34:12",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T20:26:53",
+      "NextSearch": "2026-04-24T20:26:53",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 758549,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## James Bond 007: Nightfire - GameCube\n\nStep into the shoes of the iconic James Bond in *James Bond 007: Nightfire* for the Nintendo GameCube! This thrilling first-person shooter plunges you into a globe-trotting adventure as 007 investigates a nefarious industrialist’s plot to dominate the world through a powerful defense satellite. Featuring Pierce Brosnan’s likeness, though voiced by Maxwell Caulfield, you'll utilize a vast arsenal of real-world inspired weaponry – with altered names – to overcome formidable foes.\n\nExperience intense first-person action, engaging single-player missions, and exhilarating multiplayer modes. Navigate diverse environments, utilize Bond’s signature gadgets, and execute daring \"Bond Moments\" to outwit your enemies. While the GameCube version boasts a compelling storyline and impressive character models, be aware that it differs from the PC version, which includes modified missions and removes driving sequences. Prepare for a pulse-pounding experience that captures the essence of the legendary secret agent!"
+    },
+    {
+      "Id": 548427,
+      "attributeType": "ShortString",
+      "attributeName": "VIMMManualId",
+      "attributeRelationType": "Game",
+      "Value": "3074"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 1229824,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "8D3DF105034E93BE06CB8FEDD8B03705FEBE22B9"
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 1229825,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "8D3DF105034E93BE06CB8FEDD8B03705FEBE22B9"
+    },
+    {
+      "Id": 506095,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 73,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "721",
+            "Platform": "GameCube"
+          },
+          {
+            "SignatureId": "677",
+            "Platform": "Nintendo - GameCube"
+          },
+          {
+            "SignatureId": "791",
+            "Platform": "Nintendo - Nintendo GameCube (Memory Card)"
+          },
+          {
+            "SignatureId": "591",
+            "Platform": "Nintendo - Nintendo GameCube (NPDP Carts)"
+          },
+          {
+            "SignatureId": "1045",
+            "Platform": "Nintendo - Nintendo GameCube (NPDP Carts) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "244",
+            "Platform": "Nintendo GameCube"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "21",
+            "ImmutableId": "21",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/ngc",
+            "LastSearch": "2024-04-29T04:21:06",
+            "NextSearch": "2024-05-29T04:21:06",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "2",
+            "ImmutableId": "2",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=2",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2027-01-16T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "16",
+            "ImmutableId": "16",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/16/games",
+            "LastSearch": "2025-05-06T21:45:16",
+            "NextSearch": "2025-06-06T21:45:16",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "23",
+            "ImmutableId": "23",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-23/",
+            "LastSearch": "2025-06-20T15:24:47",
+            "NextSearch": "2025-07-20T15:24:47",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2026-07-21T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2026-07-21T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2026-07-21T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/GameCube",
+            "ImmutableId": "https://en.wikipedia.org/wiki/GameCube",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/GameCube",
+            "LastSearch": "2025-12-21T10:26:44",
+            "NextSearch": "2026-01-21T10:26:44",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327259",
+            "ImmutableId": "5327259",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327259",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2027-01-16T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "13",
+            "ImmutableId": "13",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=13",
+            "LastSearch": "2026-05-09T13:13:15",
+            "NextSearch": "2027-01-16T13:13:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "31-nintendo-gamecube",
+            "ImmutableId": "31-nintendo-gamecube",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/31-nintendo-gamecube",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758313,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Nintendo GameCube, released in 2001, marked Nintendo’s fourth foray into home consoles and a direct competitor to the PlayStation 2 and Xbox. Departing from cartridges, it utilized proprietary miniDVD optical discs, a design choice prioritizing developer ease and cost-effectiveness. Powered by a custom IBM \"Gekko\" CPU and an ArtX \"Flipper\" GPU, the GameCube delivered impressive performance for its time. Notably, it lacked DVD playback capabilities, focusing solely on gaming. \n\nThe console fostered a strong library of exclusive titles, including critically acclaimed games like *Super Smash Bros. Melee*, *Metroid Prime*, *The Legend of Zelda: The Wind Waker*, and *Resident Evil 4*. While commercially less successful than its rivals, the GameCube’s innovative controller and unique game experiences cemented its legacy, with its design influencing subsequent Nintendo consoles and its games remaining beloved classics."
+          },
+          {
+            "Id": 110858,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "GameCube"
+          },
+          {
+            "Id": 219,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "8641C931252BA59431447F3686D077DF166170A8"
+          },
+          {
+            "Id": 56,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 61,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "9071",
+                  "Publisher": "Nintendo"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "70",
+                  "ImmutableId": "70",
+                  "Status": "Mapped",
+                  "MatchMethod": "Automatic",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/nintendo",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-12-04T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2026-03-18T07:08:26",
+                  "NextSearch": "2026-07-21T07:08:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:33",
+                  "NextSearch": "2026-03-03T13:05:33",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:48:39",
+                  "NextSearch": "2026-04-24T09:48:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 331,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "05B3FC7B69C4AF07B916BCFBF4D2EA1D5B525360"
+                }
+              ],
+              "CreatedDate": "2024-04-29T04:10:43",
+              "UpdatedDate": "2026-03-18T07:08:26",
+              "Name": "Nintendo"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Nintendo GameCube, Nintendo-GameCube"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 88530,
+                    "Text": "128-bit architecture",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 276,
+                    "Text": "dvd drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88529,
+                    "Text": "powerpc cpu",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 88531,
+                    "Text": "broadband",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 80,
+                    "Text": "ethernet",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 144,
+                    "Text": "link cable",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 13,
+                    "Text": "controller",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88532,
+                    "Text": "game boy link",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 411,
+                    "Text": "motion controls",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 105,
+                    "Text": "video game console",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-29T04:21:06",
+        "UpdatedDate": "2026-05-25T00:41:09",
+        "Name": "Nintendo GameCube"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "007 - Nightfire, 007-Nightfire, 007 Nightfire, 007: Nightfire, VII - Nightfire, VII-Nightfire, VII Nightfire, VII: Nightfire, Seven - Nightfire, Seven-Nightfire, Seven Nightfire, Seven: Nightfire"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "7463610",
+          "Name": "007 - Nightfire (France).iso",
+          "Size": 1459978240,
+          "Crc": "72ca3f54",
+          "Md5": "e55862c205c1cedf2426e7ca10675a01",
+          "Sha1": "5dadf79f76df0a25a375696c31304e10bc39b22d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "FR": "France"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "DL-DOL-GO7F-FRA"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 33,
+          "Id": "3946019",
+          "Name": "007 - Nightfire (2002)(Electronic Arts)(DE).iso",
+          "Size": 1459978240,
+          "Crc": "1bfa78a6",
+          "Md5": "4a8b63224e4889cc27749f877060430f",
+          "Sha1": "6810d2ee62966d570d2afb8ca7a60d5b66059c6e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {
+            "DE": "de"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "DE",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3946020",
+          "Name": "007 - Nightfire (2002)(Electronic Arts)(ES).iso",
+          "Size": 1459978240,
+          "Crc": "8fad7f86",
+          "Md5": "79cae3e9f1176b776e6ae2c033e62627",
+          "Sha1": "2c0ecc806a8fa4340f3e90834bc07b38a83f21b2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "ES": "Spain"
+          },
+          "Language": {
+            "ES": "es"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "ES",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3946021",
+          "Name": "007 - Nightfire (2002)(Electronic Arts)(EU)(M4).iso",
+          "Size": 1459978240,
+          "Crc": "a94b37e8",
+          "Md5": "3971f7e05cf87c6288c740caa299a000",
+          "Sha1": "a1952b927298c47b58713825e0d30b8bddc79d66",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "M4",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3946022",
+          "Name": "007 - Nightfire (2002)(Electronic Arts)(FR).iso",
+          "Size": 1459978240,
+          "Crc": "72ca3f54",
+          "Md5": "e55862c205c1cedf2426e7ca10675a01",
+          "Sha1": "5dadf79f76df0a25a375696c31304e10bc39b22d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "FR": "France"
+          },
+          "Language": {
+            "FR": "fr"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "FR",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "3946023",
+          "Name": "007 - Nightfire (2002)(Electronic Arts)(US).iso",
+          "Size": 1459978240,
+          "Crc": "737977cf",
+          "Md5": "a824f5a7a553b7598592c6c129378262",
+          "Sha1": "7275e43f04caa3c9ec6f3675a54d043d4c544bf3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Games"
+            ]
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "US",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "7463010",
+          "Name": "007 - Nightfire (Germany).iso",
+          "Size": 1459978240,
+          "Crc": "1bfa78a6",
+          "Md5": "4a8b63224e4889cc27749f877060430f",
+          "Sha1": "6810d2ee62966d570d2afb8ca7a60d5b66059c6e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "DL-DOL-GO7D-NOE, DL-DOL-GO7D-NOE-01"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7463551",
+          "Name": "007 - Nightfire (Spain).iso",
+          "Size": 1459978240,
+          "Crc": "8fad7f86",
+          "Md5": "79cae3e9f1176b776e6ae2c033e62627",
+          "Sha1": "2c0ecc806a8fa4340f3e90834bc07b38a83f21b2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "ES": "Spain"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "DL-DOL-GO7S-ESP"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "2290184",
+          "Name": "007 - Nightfire (Europe) (En,It,Nl,Sv).iso",
+          "Size": 1459978240,
+          "Crc": "a94b37e8",
+          "Md5": "3971f7e05cf87c6288c740caa299a000",
+          "Sha1": "a1952b927298c47b58713825e0d30b8bddc79d66",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "it": "Italian",
+            "nl": "Dutch",
+            "sv": "Swedish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "DL-DOL-GO7P-EUR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 22,
+          "Id": "3923542",
+          "Name": "007 - Nightfire (Europe) (En,It,Nl,Sv).rvz",
+          "Size": 1159365656,
+          "Crc": "369d53e7",
+          "Md5": "",
+          "Sha1": "f4279e7c2ea3dc21c478a245dbb70884374d0da2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "it": "Italian",
+            "nl": "Dutch",
+            "sv": "Swedish"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2291733",
+          "Name": "007 - Nightfire (France).iso",
+          "Size": 1459978240,
+          "Crc": "72ca3f54",
+          "Md5": "e55862c205c1cedf2426e7ca10675a01",
+          "Sha1": "5dadf79f76df0a25a375696c31304e10bc39b22d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "FR": "France"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "DL-DOL-GO7F-FRA"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 22,
+          "Id": "3923543",
+          "Name": "007 - Nightfire (France).rvz",
+          "Size": 1157958436,
+          "Crc": "8174c50c",
+          "Md5": "",
+          "Sha1": "bb64cc5e01d4954d050c3b27d3a9c2631baca843",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "FR": "France"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2290258",
+          "Name": "007 - Nightfire (Germany).iso",
+          "Size": 1459978240,
+          "Crc": "1bfa78a6",
+          "Md5": "4a8b63224e4889cc27749f877060430f",
+          "Sha1": "6810d2ee62966d570d2afb8ca7a60d5b66059c6e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "DL-DOL-GO7D-NOE, DL-DOL-GO7D-NOE-01"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 22,
+          "Id": "3923544",
+          "Name": "007 - Nightfire (Germany).rvz",
+          "Size": 1159193892,
+          "Crc": "ef9eb7e9",
+          "Md5": "",
+          "Sha1": "29bacf3acda56bcca8dc5966df759ab4db7372da",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "DE": "Germany"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2291564",
+          "Name": "007 - Nightfire (Spain).iso",
+          "Size": 1459978240,
+          "Crc": "8fad7f86",
+          "Md5": "79cae3e9f1176b776e6ae2c033e62627",
+          "Sha1": "2c0ecc806a8fa4340f3e90834bc07b38a83f21b2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "ES": "Spain"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "DL-DOL-GO7S-ESP"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 22,
+          "Id": "3923545",
+          "Name": "007 - Nightfire (Spain).rvz",
+          "Size": 1158415256,
+          "Crc": "790fe140",
+          "Md5": "",
+          "Sha1": "b089db6d8a05b68a9d6ae3b706ef871ced4e341b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "ES": "Spain"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2290592",
+          "Name": "007 - Nightfire (USA).iso",
+          "Size": 1459978240,
+          "Crc": "737977cf",
+          "Md5": "a824f5a7a553b7598592c6c129378262",
+          "Sha1": "7275e43f04caa3c9ec6f3675a54d043d4c544bf3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "DL-DOL-GO7E-USA"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 22,
+          "Id": "3923546",
+          "Name": "007 - Nightfire (USA).rvz",
+          "Size": 1253329676,
+          "Crc": "0c702336",
+          "Md5": "",
+          "Sha1": "0392e171846171b654b3156961a4498b24e43aeb",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "7463076",
+          "Name": "007 - Nightfire (USA).iso",
+          "Size": 1459978240,
+          "Crc": "737977cf",
+          "Md5": "a824f5a7a553b7598592c6c129378262",
+          "Sha1": "7275e43f04caa3c9ec6f3675a54d043d4c544bf3",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "DL-DOL-GO7E-USA"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 789,
+              "Text": "adventure",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1073,
+              "Text": "shooter",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1070,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1078,
+              "Text": "espionage",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1068,
+              "Text": "spy",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 1088,
+              "Text": "first-person",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 1080,
+              "Text": "first-person",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1089,
+              "Text": "mission-based",
+              "AIGenerated": true
+            },
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 1083,
+              "Text": "gadgets",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1096,
+              "Text": "robotic vehicles",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1090,
+              "Text": "unlockables",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "France (FR), Germany (DE), Spain (ES), Europe (EU), United States (US)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, Spanish, French, English, Italian, Dutch, Swedish"
+    }
+  ],
+  "CreatedDate": "2025-07-21T04:05:54",
+  "UpdatedDate": "2026-04-09T09:34:34",
+  "Name": "007 - Nightfire"
+}

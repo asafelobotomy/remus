@@ -119,12 +119,9 @@ bool enrichFromIGDB(
     gamesEnriched = 0;
     factsInserted = 0;
 
-    // Load credentials — when a path is supplied, read that file only so callers
-    // can enforce "missing file means skip" without ambient env vars.
+    // Load credentials (JSON file beside DB, then REMUS_* env, keychain, QSettings).
     const auto loadCredential = [&](const char *key) {
-        const QString qkey = QString::fromLatin1(key);
-        return credentialsPath.isEmpty() ? CredentialManager::get(qkey)
-                                         : CredentialManager::getFromFile(qkey, credentialsPath);
+        return CredentialManager::get(QString::fromLatin1(key), credentialsPath);
     };
     const QString clientId = loadCredential("igdb/client_id");
     const QString clientSecret = loadCredential("igdb/client_secret");

@@ -69,9 +69,11 @@ emit_build_heartbeat() {
                 pct=$(jq -r '"\(.overall_pct // "?")%"' "$PROGRESS_FILE" 2>/dev/null || echo "?%")
                 marker=$(jq -r '
                     if .enrichment_pass_name != null and .enrichment_pass_name != "" then
-                        "[\(.current)/\(.total)] enriching pass \(.enrichment_pass_current)/\(.enrichment_pass_total): \(.enrichment_pass_name)"
-                    else
+                        "pass \(.enrichment_pass_current // "?")/\(.enrichment_pass_total // "?"): \(.enrichment_pass_name)"
+                    elif .current != null and .total != null then
                         "[\(.current)/\(.total)] \(.status) \(.current_source) (\(.records_ingested // 0) records)"
+                    else
+                        "\(.status // "running")"
                     end' "$PROGRESS_FILE" 2>/dev/null || cat "$PROGRESS_FILE")
             else
                 pct="?"
@@ -233,12 +235,15 @@ echo "==> Generating manifest"
     --dat-dir "$DAT_DIR" \
     --output "$MANIFEST_PATH"
 
-CRED_EXAMPLE="$ROOT_DIR/data/compendium/enrichment-credentials.json.example"
 CRED_TARGET="$(dirname "$OUTPUT_DB")/enrichment-credentials.json"
-if [[ ! -f "$CRED_TARGET" ]]; then
+if [[ -x "$ROOT_DIR/scripts/sync_enrichment_credentials.sh" ]]; then
+    echo "==> Syncing enrichment-credentials.json from REMUS_* env"
+    "$ROOT_DIR/scripts/sync_enrichment_credentials.sh" "$CRED_TARGET" || true
+elif [[ ! -f "$CRED_TARGET" ]]; then
     echo "==> Note: $CRED_TARGET not found — IGDB/RA bulk enrichment will use REMUS_* env vars only."
+    CRED_EXAMPLE="$ROOT_DIR/data/compendium/enrichment-credentials.json.example"
     if [[ -f "$CRED_EXAMPLE" ]]; then
-        echo "    Copy $CRED_EXAMPLE to $CRED_TARGET to enable file-based API credentials."
+        echo "    Copy $CRED_EXAMPLE to $CRED_TARGET or run scripts/sync_enrichment_credentials.sh"
     fi
 fi
 

@@ -1,0 +1,40 @@
+{
+  "Id": "12345",
+  "ObjectType": "Game",
+  "Name": "Fixture Game v2",
+  "Metadata": [
+    { "Source": "IGDB", "Id": "77777" },
+    { "Source": "RetroAchievements", "Id": "8888" }
+  ],
+  "Attributes": [
+    {
+      "attributeName": "AIDescription",
+      "Value": "Hasheous v2 dump format fixture"
+    },
+    {
+      "attributeName": "Tags",
+      "Value": {
+        "GameGenre": [
+          { "Text": "Action" }
+        ]
+      }
+    },
+    {
+      "attributeName": "ROMs",
+      "Value": [
+        {
+          "Crc": "a1b2c3d4",
+          "Md5": "fedcba9876543210fedcba9876543210",
+          "Sha1": "1111111111111111111111111111111111111111"
+        }
+      ]
+    }
+  ],
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "999",
+      "Name": "Fixture Game v2",
+      "Platform": "Nintendo DS"
+    }
+  ]
+}

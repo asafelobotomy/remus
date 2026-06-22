@@ -30,6 +30,7 @@ private slots:
     void loadHasheousOfflineIndex_buildsLookupFromFixtureDump();
     void lookupHasheousOfflineMatch_findsByAnyHashType();
     void hasHasheousOfflineDumpFiles_detectsJsonUnderRoot();
+    void loadHasheousOfflineIndex_parsesV2AttributeListFormat();
 };
 
 void CompendiumHasheousOfflineTest::loadHasheousOfflineIndex_buildsLookupFromFixtureDump() {
@@ -80,6 +81,31 @@ void CompendiumHasheousOfflineTest::hasHasheousOfflineDumpFiles_detectsJsonUnder
     json.write("{}");
     json.close();
     QVERIFY(hasHasheousOfflineDumpFiles(dumpDir.path()));
+}
+
+void CompendiumHasheousOfflineTest::loadHasheousOfflineIndex_parsesV2AttributeListFormat() {
+    const QString fixtureFile = fixturePath(QStringLiteral("hasheous_offline/sample_entry_v2.json"));
+    QVERIFY2(!fixtureFile.isEmpty(), "Hasheous v2 offline fixture not found");
+
+    QTemporaryDir dumpDir;
+    QVERIFY(dumpDir.isValid());
+
+    const QString destPath = dumpDir.filePath(QStringLiteral("Nintendo DS/sample_entry_v2.json"));
+    QVERIFY(QDir().mkpath(QFileInfo(destPath).absolutePath()));
+    QVERIFY(QFile::copy(fixtureFile, destPath));
+
+    QHash<QString, HasheousOfflineMatch> index;
+    QString error;
+    QVERIFY2(loadHasheousOfflineIndex(dumpDir.path(), index, error), qPrintable(error));
+    QVERIFY(!index.isEmpty());
+
+    HasheousOfflineMatch match;
+    QVERIFY(lookupHasheousOfflineMatch(
+        index, QString(), QStringLiteral("fedcba9876543210fedcba9876543210"), QString(), QString(), match));
+    QCOMPARE(match.igdbId, QStringLiteral("77777"));
+    QCOMPARE(match.description, QStringLiteral("Hasheous v2 dump format fixture"));
+    QCOMPARE(match.genre, QStringLiteral("Action"));
+    QCOMPARE(match.raGameId, QStringLiteral("8888"));
 }
 
 QTEST_MAIN(CompendiumHasheousOfflineTest)

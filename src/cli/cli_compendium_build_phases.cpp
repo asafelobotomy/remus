@@ -289,6 +289,7 @@ QString computeEnrichmentInputsFingerprint(const QString &metadataDir, const QSt
     addLabeledTree("mame_catver", mameCatverPath);
     addLabeledTree("mame_listxml", mameListXmlPath);
     addLabeledTree("credentials", credPath);
+    addLabeledTree("hasheous_dumps", Remus::Compendium::findHasheousDumpDir());
 
     QStringList sortedFilter = sourceFilter;
     sortedFilter.sort(Qt::CaseInsensitive);
@@ -408,6 +409,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
     const bool hasMameListXmlPath = !mameListXmlPath.isEmpty() && QFile::exists(mameListXmlPath);
 
     const bool hasHasheousOfflineDumps = Remus::Compendium::hasHasheousOfflineDumpFiles();
+    // --online-enrichment: offline dumps only. Per-game Hasheous API requires --online-enrichment-all.
     const bool hasheousOfflineOnly = offlineOnlyEnrichment || !onlineEnrichmentAll;
 
     const QList<EnrichmentPassSpec> passes {

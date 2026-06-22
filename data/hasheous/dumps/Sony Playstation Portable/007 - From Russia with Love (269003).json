@@ -1,0 +1,1109 @@
+{
+  "Id": 269003,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "995391",
+      "Name": "007 - From Russia with Love",
+      "Year": "",
+      "Country": "GB",
+      "Platform": "Sony - PlayStation Portable",
+      "SourceId": "38239",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "614290",
+      "Name": "007 - From Russia with Love",
+      "Year": "",
+      "Country": "US",
+      "Platform": "Sony - PlayStation Portable",
+      "SourceId": "38239",
+      "MetadataSource": "5"
+    },
+    {
+      "SignatureId": "995392",
+      "Name": "007 - From Russia with Love",
+      "Year": "",
+      "Country": "EU",
+      "Platform": "Sony - PlayStation Portable",
+      "SourceId": "38239",
+      "MetadataSource": "5"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "248548",
+      "ImmutableId": "248548",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/james-bond-007-from-russia-with-love--1",
+      "LastSearch": "2026-01-17T11:19:26",
+      "NextSearch": "2026-07-17T11:19:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "25069",
+      "ImmutableId": "25069",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=25069",
+      "LastSearch": "2026-01-17T11:19:27",
+      "NextSearch": "2026-07-17T11:19:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:19:27",
+      "NextSearch": "2026-07-17T11:19:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:19:27",
+      "NextSearch": "2026-07-17T11:19:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:19:27",
+      "NextSearch": "2026-02-17T11:19:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:19:27",
+      "NextSearch": "2026-02-17T11:19:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:19:27",
+      "NextSearch": "2026-02-17T11:19:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:19:27",
+      "NextSearch": "2026-02-17T11:19:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-01-17T11:19:27",
+      "NextSearch": "2026-02-17T11:19:27",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T14:02:59",
+      "NextSearch": "2026-03-03T14:02:59",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T00:34:46",
+      "NextSearch": "2026-04-25T00:34:46",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 845868,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 007 - From Russia with Love (PSP)\n\nStep into the world of espionage and adventure with *007 - From Russia with Love* for the Sony PlayStation Portable! This thrilling action-adventure game faithfully recreates the iconic 1963 film and the classic 60s Bond era.  Assume the role of the legendary James Bond as he navigates a perilous mission to Istanbul, tasked with protecting the beautiful Soviet agent, Tatiana Romanova, and securing a vital microfilm.\n\nExperience a blend of faithful movie-based missions and original, adrenaline-fueled action sequences. Engage in a diverse range of gameplay, from intense hand-to-hand combat and stealthy infiltration to high-octane vehicle chases.  Utilize classic Bond weaponry and gadgetry, now enhanced with modern mechanics, and upgrade them to suit your style.  Enjoy social multiplayer experiences and be captivated by the allure of gorgeous women, all while unraveling a conspiracy that threatens global security.  *007 - From Russia with Love* delivers a truly immersive Bond experience, perfectly suited for on-the-go gaming."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 756941,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "C53A4C5CEC437FB95DC09D63EAD18D2A5DF59FF9"
+    },
+    {
+      "Id": 519562,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 161831,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "742",
+            "Platform": "PlayStation Portable"
+          },
+          {
+            "SignatureId": "1133",
+            "Platform": "PSP"
+          },
+          {
+            "SignatureId": "694",
+            "Platform": "Sony - PlayStation Portable"
+          },
+          {
+            "SignatureId": "799",
+            "Platform": "Sony - PlayStation Portable (PSN) (Decrypted)"
+          },
+          {
+            "SignatureId": "1082",
+            "Platform": "Sony - PlayStation Portable (PSN) (Decrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "629",
+            "Platform": "Sony - PlayStation Portable (PSN) (Encrypted)"
+          },
+          {
+            "SignatureId": "1083",
+            "Platform": "Sony - PlayStation Portable (PSN) (Encrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "800",
+            "Platform": "Sony - PlayStation Portable (PSN) (Minis)"
+          },
+          {
+            "SignatureId": "867",
+            "Platform": "Sony - PlayStation Portable (PSN) (Minis) (Decrypted)"
+          },
+          {
+            "SignatureId": "1084",
+            "Platform": "Sony - PlayStation Portable (PSN) (Minis) (Decrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "868",
+            "Platform": "Sony - PlayStation Portable (PSN) (Minis) (Encrypted)"
+          },
+          {
+            "SignatureId": "1085",
+            "Platform": "Sony - PlayStation Portable (PSN) (Minis) (Encrypted) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "1125",
+            "Platform": "Sony PlayStation Portable"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "38",
+            "ImmutableId": "38",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/psp",
+            "LastSearch": "2024-11-29T23:41:21",
+            "NextSearch": "2024-12-29T23:41:21",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "13",
+            "ImmutableId": "13",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=13",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2027-01-14T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "41",
+            "ImmutableId": "41",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/41/games",
+            "LastSearch": "2025-05-06T21:46:09",
+            "NextSearch": "2025-06-06T21:46:09",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2026-07-15T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2026-07-15T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2026-07-15T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2026-07-15T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/PlayStation_Portable",
+            "ImmutableId": "https://en.wikipedia.org/wiki/PlayStation_Portable",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/PlayStation_Portable",
+            "LastSearch": "2025-12-21T10:28:14",
+            "NextSearch": "2026-01-21T10:28:14",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327257",
+            "ImmutableId": "5327257",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327257",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2027-01-14T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "61",
+            "ImmutableId": "61",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=61",
+            "LastSearch": "2026-05-09T13:21:55",
+            "NextSearch": "2027-01-14T13:21:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "52-sony-psp",
+            "ImmutableId": "52-sony-psp",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/52-sony-psp",
+            "LastSearch": "2026-02-24T09:56:25",
+            "NextSearch": "2026-04-24T09:56:25",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758497,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The PlayStation Portable (PSP) was Sony's foray into the handheld gaming market, released in Japan in 2004 and globally soon after. As the first handheld console to utilize an optical disc (UMD) format, it offered a significant leap in power and multimedia capabilities compared to its competitors, notably the Nintendo DS. The PSP boasted a vibrant 4.3-inch LCD screen and a sleek design, connecting to other devices and the internet via Wi-Fi. \n\nPopular titles like *Grand Theft Auto: Liberty City Stories*, *God of War: Ghost of Sparta*, and *Metal Gear Solid: Peace Walker* showcased its impressive graphics. While battery life and UMD loading times presented challenges, the PSP became a beloved portable entertainment device, selling over 80 million units. Later models included the Street and Go versions, and it was succeeded by the PlayStation Vita, retaining PSP game compatibility via the PlayStation Store until its closure in 2016."
+          },
+          {
+            "Id": 475798,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "PSP"
+          },
+          {
+            "Id": 297397,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "D4C9F2E7A39BDEF89759C3891AD9E4806C8A2A63"
+          },
+          {
+            "Id": 297398,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 19877,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "14855",
+                  "Publisher": "Sony"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "AutomaticTooManyMatches",
+                  "Source": "IGDB",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T14:40:50",
+                  "NextSearch": "2026-08-19T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T20:02:56",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:14:46",
+                  "NextSearch": "2026-07-26T19:23:23",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:36",
+                  "NextSearch": "2026-03-03T13:05:36",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:32",
+                  "NextSearch": "2026-04-24T09:49:32",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [],
+              "CreatedDate": "2024-05-26T10:46:55",
+              "UpdatedDate": "2026-01-31T19:53:39",
+              "Name": "Sony"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sony Playstation Portable, Sony-Playstation-Portable"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 95327,
+                    "Text": "240p resolution",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 601,
+                    "Text": "analog stick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 88571,
+                    "Text": "memory stick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 754,
+                    "Text": "umd drive",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 342,
+                    "Text": "analog stick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 93,
+                    "Text": "button pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 137,
+                    "Text": "d-pad",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 554,
+                    "Text": "touchpad",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 81,
+                    "Text": "bluetooth",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 80,
+                    "Text": "ethernet",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 272,
+                    "Text": "usb",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 79,
+                    "Text": "wi-fi",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 286,
+                    "Text": "classic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 274,
+                    "Text": "early 2000s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 132,
+                    "Text": "handheld",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 333,
+                    "Text": "portable",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-11-29T23:41:21",
+        "UpdatedDate": "2026-05-25T01:33:03",
+        "Name": "Sony Playstation Portable"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "007 - From Russia with Love, 007-From Russia with Love, 007 From Russia with Love, 007: From Russia with Love, VII - From Russia with Love, VII-From Russia with Love, VII From Russia with Love, VII: From Russia with Love, Seven - From Russia with Love, Seven-From Russia with Love, Seven From Russia with Love, Seven: From Russia with Love"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 23,
+          "Id": "7498342",
+          "Name": "007 - From Russia with Love (UK) (En,Fr,De,Es,It).iso",
+          "Size": 792035328,
+          "Crc": "ed656b41",
+          "Md5": "d2d173f5b94f7ce21bbdc8c0af662f10",
+          "Sha1": "0bb69019b559d693d73f8e147bc0e11746889172",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "ULES-00290"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3889229",
+          "Name": "007 - From Russia with Love (Europe, Australia) (En,Fr,De,Es,It).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "f485848736e7099c1edf7fab15d6b18b8e3d03c7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2424011",
+          "Name": "007 - From Russia with Love (Europe, Australia) (En,Fr,De,Es,It).iso",
+          "Size": 792199168,
+          "Crc": "b4258d77",
+          "Md5": "691a0efef6271887510def5fcba9d74c",
+          "Sha1": "9304265be2287ff154c4b4420814596bbc18d8a5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "ULES-00288"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3889230",
+          "Name": "007 - From Russia with Love (UK) (En,Fr,De,Es,It).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "70926c46fbe8866b57d25a954c71ec093662a2df",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2423810",
+          "Name": "007 - From Russia with Love (UK) (En,Fr,De,Es,It).iso",
+          "Size": 792035328,
+          "Crc": "ed656b41",
+          "Md5": "d2d173f5b94f7ce21bbdc8c0af662f10",
+          "Sha1": "0bb69019b559d693d73f8e147bc0e11746889172",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "GB": "United Kingdom"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "ULES-00290"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 12,
+          "Id": "3889231",
+          "Name": "007 - From Russia with Love (USA).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "f5cea45a20ebc29c09ca07cbe649282997719e71",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        },
+        {
+          "Score": 23,
+          "Id": "2422637",
+          "Name": "007 - From Russia with Love (USA).iso",
+          "Size": 732495872,
+          "Crc": "ec14a394",
+          "Md5": "7ac15312ca3d6dea887d6c537bdc3acc",
+          "Sha1": "baae2c81123a73e0ad87165de698c493d2436250",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "US": "United States"
+          },
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "ULUS 10080"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        },
+        {
+          "Score": 23,
+          "Id": "7498425",
+          "Name": "007 - From Russia with Love (Europe, Australia) (En,Fr,De,Es,It).iso",
+          "Size": 792199168,
+          "Crc": "b4258d77",
+          "Md5": "691a0efef6271887510def5fcba9d74c",
+          "Sha1": "9304265be2287ff154c4b4420814596bbc18d8a5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "EU": "Europe"
+          },
+          "Language": {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "serial": "ULES-00288"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "Redump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 789,
+              "Text": "adventure",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1134,
+              "Text": "spy",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 4096,
+              "Text": "cold war",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1078,
+              "Text": "espionage",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1056,
+              "Text": "james bond",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 1168,
+              "Text": "gadget system",
+              "AIGenerated": true
+            },
+            {
+              "Id": 39735,
+              "Text": "movie missions",
+              "AIGenerated": true
+            },
+            {
+              "Id": 6891,
+              "Text": "weapon upgrade",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 1113,
+              "Text": "mission based",
+              "AIGenerated": true
+            },
+            {
+              "Id": 879,
+              "Text": "multiplayer",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1860,
+              "Text": "vehicle combat",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 813,
+              "Text": "overhead",
+              "AIGenerated": true
+            },
+            {
+              "Id": 799,
+              "Text": "third-person",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "United Kingdom (GB), Australia (AU), United States (US), Europe (EU), United Kingdom (UK)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "German, English, Spanish, French, Italian"
+    }
+  ],
+  "CreatedDate": "2025-07-22T09:58:27",
+  "UpdatedDate": "2026-01-26T20:28:00",
+  "Name": "007 - From Russia with Love"
+}

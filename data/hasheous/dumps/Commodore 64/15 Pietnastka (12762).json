@@ -1,0 +1,3026 @@
+{
+  "Id": 12762,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "190460",
+      "Name": "15 Pietnastka",
+      "Year": "1994",
+      "Country": "",
+      "Platform": "Commodore C64",
+      "SourceId": "8722",
+      "MetadataSource": "1"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2025-06-15T21:55:21",
+      "NextSearch": "2026-07-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2025-07-14T08:57:02",
+      "NextSearch": "2026-07-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-07-14T08:57:02",
+      "NextSearch": "2026-07-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-06-22T22:01:25",
+      "NextSearch": "2026-07-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-06-22T22:01:25",
+      "NextSearch": "2026-07-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-06-22T22:01:25",
+      "NextSearch": "2026-07-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-06-22T22:01:25",
+      "NextSearch": "2026-07-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "https://wikipedia.org/wiki/Q55336369",
+      "ImmutableId": "https://wikipedia.org/wiki/Q55336369",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "Wikipedia",
+      "Link": "https://wikipedia.org/wiki/Q55336369",
+      "LastSearch": "2025-06-22T22:01:25",
+      "NextSearch": "2026-07-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-04-23T11:09:52",
+      "NextSearch": "2026-07-18T04:28:19",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T23:48:15",
+      "NextSearch": "2026-03-03T23:48:15",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-24T18:31:02",
+      "NextSearch": "2026-04-24T18:31:02",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 475813,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "33D3AC6F3DA51F51AC6AA4C04F6669346F18F5D6"
+    },
+    {
+      "Id": 25027,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Publisher",
+      "attributeRelationType": "Company",
+      "Value": {
+        "Id": 12761,
+        "ObjectType": "Company",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "25046",
+            "Publisher": "R-Pils"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "IGDB",
+            "Link": "",
+            "LastSearch": "2025-07-20T12:49:02",
+            "NextSearch": "2026-07-19T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "TheGamesDb",
+            "Link": "",
+            "LastSearch": "2025-06-24T19:33:30",
+            "NextSearch": "2026-07-19T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2025-06-24T19:33:30",
+            "NextSearch": "2026-07-19T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GiantBomb",
+            "Link": "",
+            "LastSearch": "2025-06-24T19:33:30",
+            "NextSearch": "2026-07-19T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2025-06-24T19:33:30",
+            "NextSearch": "2026-07-19T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2025-06-24T19:33:30",
+            "NextSearch": "2026-07-19T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2025-06-24T19:33:30",
+            "NextSearch": "2026-07-19T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Wikipedia",
+            "Link": "",
+            "LastSearch": "2025-06-24T19:33:30",
+            "NextSearch": "2026-07-19T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "SteamGridDb",
+            "Link": "",
+            "LastSearch": "2025-04-23T11:35:36",
+            "NextSearch": "2026-07-19T12:18:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "ScreenScraper",
+            "Link": "",
+            "LastSearch": "2026-01-03T23:48:15",
+            "NextSearch": "2026-03-03T23:48:15",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Company",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T18:31:02",
+            "NextSearch": "2026-04-24T18:31:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "R-Pils, R - Pils, R Pils, R: Pils"
+          }
+        ],
+        "CreatedDate": "2024-05-26T05:32:47",
+        "UpdatedDate": "2026-01-31T13:40:13",
+        "Name": "R-Pils"
+      }
+    },
+    {
+      "Id": 25026,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 1,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "478",
+            "Platform": "Commodore - Commodore 64"
+          },
+          {
+            "SignatureId": "788",
+            "Platform": "Commodore - Commodore 64 (Headerless)"
+          },
+          {
+            "SignatureId": "935",
+            "Platform": "Commodore - Commodore 64 (Headerless) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "936",
+            "Platform": "Commodore - Commodore 64 (Parent-Clone)"
+          },
+          {
+            "SignatureId": "479",
+            "Platform": "Commodore - Commodore 64 (PP)"
+          },
+          {
+            "SignatureId": "937",
+            "Platform": "Commodore - Commodore 64 (PP) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "480",
+            "Platform": "Commodore - Commodore 64 (Tapes)"
+          },
+          {
+            "SignatureId": "938",
+            "Platform": "Commodore - Commodore 64 (Tapes) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "710",
+            "Platform": "Commodore 64"
+          },
+          {
+            "SignatureId": "80",
+            "Platform": "Commodore C64"
+          },
+          {
+            "SignatureId": "81",
+            "Platform": "Commodore C64DTV"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "15",
+            "ImmutableId": "15",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/c64",
+            "LastSearch": "2024-04-28T13:35:39",
+            "NextSearch": "2024-05-28T13:35:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40",
+            "ImmutableId": "40",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=40",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "30",
+            "ImmutableId": "30",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/30/games",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14",
+            "ImmutableId": "14",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-14/",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-09-25T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Commodore_64",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Commodore_64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Commodore_64",
+            "LastSearch": "2025-08-05T05:17:02",
+            "NextSearch": "2025-09-05T05:17:02",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5500690",
+            "ImmutableId": "5500690",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5500690",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "66",
+            "ImmutableId": "66",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=66",
+            "LastSearch": "2026-05-09T12:49:20",
+            "NextSearch": "2026-12-17T12:49:20",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "14-commodore-64",
+            "ImmutableId": "14-commodore-64",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/14-commodore-64",
+            "LastSearch": "2026-02-24T09:49:34",
+            "NextSearch": "2026-04-24T09:49:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758269,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Commodore 64, affectionately known as the C64, was an 8-bit home computer released in 1982 that became a cultural icon and the best-selling desktop computer of all time, with estimated sales between 12.5 and 17 million units. Boasting 64 kilobytes of RAM and impressive graphics and sound capabilities thanks to its VIC-II chip and SID sound chip, the C64 offered a significant leap in performance compared to its predecessors. It initially sold for $595, but its price later dropped, making it accessible to a wider audience.\n\nThe C64 dominated the home computer market throughout the 1980s, particularly in the US and UK, though it faced stiff competition from the ZX Spectrum and Amstrad CPC. Popular games like *Impossible Mission*, *The Last Ninja*, and *Elite* showcased its capabilities and cemented its legacy. Even today, emulators allow enthusiasts to relive the C64 experience."
+          },
+          {
+            "Id": 190,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "629CB9AB45447D77ECBE2C1F3AB8A3291E40052F"
+          },
+          {
+            "Id": 1,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 2,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [
+                {
+                  "SignatureId": "24910",
+                  "Publisher": "Commodore Business Machines"
+                }
+              ],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "10999",
+                  "ImmutableId": "10999",
+                  "Status": "Mapped",
+                  "MatchMethod": "ManualByAdmin",
+                  "Source": "IGDB",
+                  "Link": "https://www.igdb.com/companies/commodore-business-machines-inc",
+                  "LastSearch": "2024-04-28T13:39:01",
+                  "NextSearch": "2024-05-28T13:39:01",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T17:12:44",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T07:06:37",
+                  "NextSearch": "2026-06-26T08:35:26",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:05:35",
+                  "NextSearch": "2026-03-03T13:05:35",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:34",
+                  "NextSearch": "2026-04-24T09:49:34",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [
+                {
+                  "Id": 173,
+                  "attributeType": "ImageId",
+                  "attributeName": "Logo",
+                  "attributeRelationType": "None",
+                  "Value": "9C5599A7B44D515191A2E5331213A99061CF2F31"
+                },
+                {
+                  "attributeType": "LongString",
+                  "attributeName": "SearchAliases",
+                  "attributeRelationType": "None",
+                  "Value": "Commodore Business Machines, Commodore-Business-Machines"
+                }
+              ],
+              "CreatedDate": "2024-04-28T13:39:01",
+              "UpdatedDate": "2026-01-31T09:01:22",
+              "Name": "Commodore Business Machines"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Commodore 64, Commodore-64"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 286,
+                    "Text": "classic",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 96779,
+                    "Text": "64 kib ram",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 500,
+                    "Text": "6510 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96778,
+                    "Text": "sid sound chip",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 501,
+                    "Text": "vic-ii graphics",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 26,
+                    "Text": "8-bit system",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 17,
+                    "Text": "home computer",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 96777,
+                    "Text": "video game platform",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 125,
+                    "Text": "cartridge slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 419,
+                    "Text": "cassette tape",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 165,
+                    "Text": "floppy disk",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 32,
+                    "Text": "joystick",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2024-04-28T13:35:39",
+        "UpdatedDate": "2026-05-24T16:04:23",
+        "Name": "Commodore 64"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "15 Pietnastka, 15-Pietnastka, XV Pietnastka, XV-Pietnastka, Fifteen Pietnastka, Fifteen-Pietnastka"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 33,
+          "Id": "455930",
+          "Name": "15 Pietnastka (1994)(R-Pils)(en-pl)[cr CHR].d64",
+          "Size": 174848,
+          "Crc": "83601b6d",
+          "Md5": "2970650eec6dd0ba9ba1365d14852bfc",
+          "Sha1": "dbce3f5a07859cbc3136dc9ab5d6a3ebe4a632ca",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "en": "en",
+            "pl": "pl"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-pl",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "466774",
+          "Name": "15 Pietnastka (1994)(R-Pils)(en-pl)[cr CHR].p00",
+          "Size": 23929,
+          "Crc": "904a07a5",
+          "Md5": "2d99d8a941d134c7fbe043ade1a7d001",
+          "Sha1": "230316907a5895110494cb1f391bc2eb2bdec73b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "en": "en",
+            "pl": "pl"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "P00",
+            "cr": "CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-pl",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "470785",
+          "Name": "15 Pietnastka (1994)(R-Pils)(en-pl)[cr CHR].t64",
+          "Size": 23997,
+          "Crc": "1311a72a",
+          "Md5": "563b23b72e9101668af65dddd1534adf",
+          "Sha1": "f17d42a9b4fbc7ae66463502d5d1c27cb126ed93",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "en": "en",
+            "pl": "pl"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-pl",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "455931",
+          "Name": "15 Pietnastka (1994)(R-Pils)(en-pl)[cr CHR][a].d64",
+          "Size": 174848,
+          "Crc": "0189befb",
+          "Md5": "d27df0eed235bf8c01b54d6b249fa021",
+          "Sha1": "9c86291c4d7fc4683b4685d13cfcb5d4ef9bb36b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "en": "en",
+            "pl": "pl"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "CHR",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "en-pl",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "465522",
+          "Name": "15 Pietnastka (1994)(R-Pils)(PL)[cr ACY][t +1 ACY].lnx",
+          "Size": 25363,
+          "Crc": "5816ca68",
+          "Md5": "d81beb81d2d8a4ccbea5f116ccd506db",
+          "Sha1": "b28b0795a382064d824ce02e56bb4066938003e7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "PL": "Poland"
+          },
+          "Language": {
+            "PL": "pl"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "LNX",
+            "cr": "ACY",
+            "t": "+1 ACY"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "PL",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "455967",
+          "Name": "15 Pietnastka (1994)(R-Pils)(pl)[cr CHR][t +1 CHR][tr en].d64",
+          "Size": 174848,
+          "Crc": "51a13947",
+          "Md5": "c12f1b80c1beb6c871f22da646c05994",
+          "Sha1": "9709a9da1268d4e10658a4858bae160c8b45daca",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "pl": "pl"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "CHR",
+            "t": "+1 CHR",
+            "tr": "en"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "pl",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "465523",
+          "Name": "15 Pietnastka (1994)(R-Pils)(PL)[cr CHR][t +1 CHR][tr en].lnx",
+          "Size": 24157,
+          "Crc": "5713d56f",
+          "Md5": "b82889d60c3bf19e03608968124ab849",
+          "Sha1": "e11adc24a3891b3e2ba8eef1f00df3e0b6cdfb71",
+          "Sha256": "",
+          "Status": "",
+          "Country": {
+            "PL": "Poland"
+          },
+          "Language": {
+            "PL": "pl"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "LNX",
+            "cr": "CHR",
+            "t": "+1 CHR",
+            "tr": "en"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "PL",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 33,
+          "Id": "468154",
+          "Name": "15 Pietnastka (1994)(R-Pils)(pl)[cr CHR][t +1 CHR][tr en].prg",
+          "Size": 23903,
+          "Crc": "6ade1904",
+          "Md5": "577a92c0b9512ad12141b2b03992d6d3",
+          "Sha1": "6d2688d871b47c496838610c2f39e535a921610a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {
+            "pl": "pl"
+          },
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "CHR",
+            "t": "+1 CHR",
+            "tr": "en"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "pl",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455929",
+          "Name": "15 Pietnastka (1994)(R-Pils).d64",
+          "Size": 174848,
+          "Crc": "5474d693",
+          "Md5": "07e2e828c543f6de8db95a6a74a83c1a",
+          "Sha1": "e2df6c3a885b8f6e4251875e2c6c8ec6299b474e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468138",
+          "Name": "15 Pietnastka (1994)(R-Pils).prg",
+          "Size": 21765,
+          "Crc": "e5e75f23",
+          "Md5": "74de586460095a84721d65eee5f80186",
+          "Sha1": "7792bbb1f2b08f0b106fcbdc1a417e82f2819914",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455933",
+          "Name": "15 Pietnastka (1994)(R-Pils)[a2].d64",
+          "Size": 174848,
+          "Crc": "c5f32873",
+          "Md5": "06feb7268531edfc975a3845036f1180",
+          "Sha1": "2d7908153f2f87c37671bc6c40e71bec2fb526e0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468140",
+          "Name": "15 Pietnastka (1994)(R-Pils)[a2].prg",
+          "Size": 23003,
+          "Crc": "ec29d93c",
+          "Md5": "ca79e4782efe5d82c41451adebae98dc",
+          "Sha1": "f26fd713c6206bd286cb2d9bec6617706f37bc1c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455934",
+          "Name": "15 Pietnastka (1994)(R-Pils)[a3].d64",
+          "Size": 174848,
+          "Crc": "d649c82c",
+          "Md5": "31e95edb966a673ef1d385891374a3fe",
+          "Sha1": "71b653a86a2930053418a920e0a5a162f421e4f1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468141",
+          "Name": "15 Pietnastka (1994)(R-Pils)[a3].prg",
+          "Size": 26123,
+          "Crc": "afd7d553",
+          "Md5": "fdc0c4cc7bcd810f64f725a6342fe89e",
+          "Sha1": "a1ae531f987edc0f3f1e257cead1a493f238aed1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455935",
+          "Name": "15 Pietnastka (1994)(R-Pils)[a4].d64",
+          "Size": 174848,
+          "Crc": "22c16a73",
+          "Md5": "4f09068fd75f76ccc0bf9ff4066a6809",
+          "Sha1": "76a7d89b77fdf6969a40080c1f4466f062e530ec",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455936",
+          "Name": "15 Pietnastka (1994)(R-Pils)[a5].d64",
+          "Size": 174848,
+          "Crc": "354fa256",
+          "Md5": "3d366627c025a14fe7d3068fc715d16b",
+          "Sha1": "5a141f0eda96626e1180412fba36bc7710878f54",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455937",
+          "Name": "15 Pietnastka (1994)(R-Pils)[a6].d64",
+          "Size": 174848,
+          "Crc": "65adbafc",
+          "Md5": "0aa3ee6dc440769cce6e1c4cd6ae5b93",
+          "Sha1": "b48d8b254b649eb95c350dc2c2bb15d459018e4d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "a": "a6"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455932",
+          "Name": "15 Pietnastka (1994)(R-Pils)[a].d64",
+          "Size": 174848,
+          "Crc": "d9c60480",
+          "Md5": "373a59cc0f33e233bb255ba426175a88",
+          "Sha1": "b3261610c0ef4470dd3f624ff2d903575b5378c5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468139",
+          "Name": "15 Pietnastka (1994)(R-Pils)[a].prg",
+          "Size": 24495,
+          "Crc": "05d295de",
+          "Md5": "f1484e4618f38c8c85acf013760f241b",
+          "Sha1": "4ff1166c17c5db3f7327ed578d9736642a128b30",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455938",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Active].d64",
+          "Size": 174848,
+          "Crc": "e8e00fee",
+          "Md5": "7254466992a5e991e9faff00f1cd5b71",
+          "Sha1": "6be4a3cc4a1e3ebcc2c661657ff9a8de3a5d38f9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Active"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455939",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Active][a].d64",
+          "Size": 174848,
+          "Crc": "14b3f37a",
+          "Md5": "f38e281b1e608aa607ede8b24f1330df",
+          "Sha1": "dba69699de864f467b086c3e051426d2a48dc7e2",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Active",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455940",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Alpha Flight].d64",
+          "Size": 174848,
+          "Crc": "739d3d02",
+          "Md5": "bc0b616a0a1cf72c7d7ffd72756e68d5",
+          "Sha1": "1593669fa58ec0406c7eaf64082edca845f3f1fe",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Alpha Flight"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468142",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Alpha Flight].prg",
+          "Size": 27971,
+          "Crc": "f2242202",
+          "Md5": "43d4b471dd6e5c05ffba256af76a1fc4",
+          "Sha1": "46bd83f757f5b895519f1a72e6a661838eeb73c7",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "Alpha Flight"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455941",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Amnesia].d64",
+          "Size": 174848,
+          "Crc": "80e51164",
+          "Md5": "0ea3a1efd8927e5b955011c050c85554",
+          "Sha1": "bf9def07bba8bcf01d0eaff0642221e6096b958e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Amnesia"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468143",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Amnesia].prg",
+          "Size": 23101,
+          "Crc": "a38ee385",
+          "Md5": "b38c5c1b6214e27ea38386fc141619f4",
+          "Sha1": "46e31642cbcc369ae91dfe308c23f84c13bc218a",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "Amnesia"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470786",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Amnesia].t64",
+          "Size": 24123,
+          "Crc": "ef24b353",
+          "Md5": "75375dd77a8a86fd88e0f242e4fb522a",
+          "Sha1": "e815c0494f627baa251e55ebb96c85545fe34d17",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "Amnesia"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455942",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Amnesia][a].d64",
+          "Size": 174848,
+          "Crc": "1e27a6a3",
+          "Md5": "4eb1edcef850b060354f2082dee5a7b6",
+          "Sha1": "5d64cc94285de1a72add6aa45a124b6d1eb1be03",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Amnesia",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455943",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Atlantis].d64",
+          "Size": 174848,
+          "Crc": "2c86bb2b",
+          "Md5": "2316442df873387062063f7a7c1d7262",
+          "Sha1": "ddb0548a67b42f2ac0976474e4fc94688d26324b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Atlantis"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468144",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Atlantis].prg",
+          "Size": 23585,
+          "Crc": "ef313f08",
+          "Md5": "b5aa60d3c96b26bddb760064426e081b",
+          "Sha1": "8e1e6949f4d588783380027b0c19cf64cc94e11b",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "Atlantis"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455944",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr AVT].d64",
+          "Size": 174848,
+          "Crc": "a8a93814",
+          "Md5": "68bb43799a3d04b09dd6697ca6aa8632",
+          "Sha1": "418747fae1b98d2e6d8e53497a3e008548dd8730",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "AVT"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468145",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr AVT].prg",
+          "Size": 24012,
+          "Crc": "e9dbb5f9",
+          "Md5": "badf9aeb4b4d05c576321bdf6d2917f3",
+          "Sha1": "c01588ad9e01bb2c851d37adef6a06b63382d9e9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "AVT"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455945",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr F4CG - Empire].d64",
+          "Size": 174848,
+          "Crc": "e3a802b4",
+          "Md5": "ebcd0ee65de8945872a64706519489d2",
+          "Sha1": "8c1aa723b760526da74194d798d7f826cfd1d6c9",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "F4CG - Empire"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468146",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr F4CG - Empire].prg",
+          "Size": 27008,
+          "Crc": "c7c087b7",
+          "Md5": "da3df592eef8ef86248ee4a5d2147add",
+          "Sha1": "802c97f9e9a6e04b53658eaaa352b49f63abc5c6",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "F4CG - Empire"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455946",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr F4CG].d64",
+          "Size": 174848,
+          "Crc": "7eadf1e7",
+          "Md5": "105c8ffa07934aa9e03bda7bf4ce3c0a",
+          "Sha1": "b53db5b09018ba1e83de5bc94554018776125665",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "F4CG"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468147",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr F4CG].prg",
+          "Size": 23680,
+          "Crc": "e17ef51e",
+          "Md5": "739a0de1f773e71585ae247f34348946",
+          "Sha1": "1010429e1553d7196ec608fb838b9e8833796c85",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "F4CG"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455947",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Fairlight][t Fairlight].d64",
+          "Size": 174848,
+          "Crc": "5d619e78",
+          "Md5": "2aca06bdfc4da1888e71132caa472908",
+          "Sha1": "a24e99e57621bd4189dd41cfca6e70ee39079b89",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Fairlight",
+            "t": "Fairlight"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468148",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Fairlight][t Fairlight].prg",
+          "Size": 18435,
+          "Crc": "36c3ee99",
+          "Md5": "bdbb7b312cda77df7e947e4b9501a9ea",
+          "Sha1": "54c6cf175e28a2e5b6e0a7ca8d2f200ccc2823d8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "Fairlight",
+            "t": "Fairlight"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455948",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Garbage - Troep].d64",
+          "Size": 174848,
+          "Crc": "06ceed72",
+          "Md5": "9b8cbe7e8ad03d66e890fbabfa0a3831",
+          "Sha1": "6d3e79398e75a4f53233e23954f1c30f3ba44585",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Garbage - Troep"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468149",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Garbage - Troep].prg",
+          "Size": 21667,
+          "Crc": "2758af31",
+          "Md5": "5a7d1232a64d46fb54ae2616c59ee134",
+          "Sha1": "5a09e7caf31df89d8113fb739fc403b11bd03a62",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "Garbage - Troep"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470787",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Garbage - Troep].t64",
+          "Size": 21761,
+          "Crc": "8998c61f",
+          "Md5": "057d8d6cab6d877e5c79b4ecbe146ea1",
+          "Sha1": "a971e6998401efe4525dbc24a1985c0cc4dcb061",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "Garbage - Troep"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455950",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Garbage - Troep][a2].d64",
+          "Size": 174848,
+          "Crc": "a3e4b828",
+          "Md5": "f1e05ea3dfe0759936440467e37cbe3d",
+          "Sha1": "ce7fb69f0036e4876cf76a5c10377733dfc91f7e",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Garbage - Troep",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470789",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Garbage - Troep][a2].t64",
+          "Size": 22689,
+          "Crc": "55bcf553",
+          "Md5": "34eac4cd141541f34430a54c8df89ace",
+          "Sha1": "154acff6a3760c1b192fc13ad853b6c1d9e95b42",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "Garbage - Troep",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455951",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Garbage - Troep][a3].d64",
+          "Size": 174848,
+          "Crc": "8a1179ba",
+          "Md5": "703d169a6e8fad6a051b5249235110ed",
+          "Sha1": "8c3d454cfb6505c3babfca747276860c19ff2701",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Garbage - Troep",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470790",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Garbage - Troep][a3].t64",
+          "Size": 22689,
+          "Crc": "6225f3c3",
+          "Md5": "671284cea1d8e47afd4b7f5412d11eb8",
+          "Sha1": "2d5616a12e734332a00091fd6c0c6a5a88acbef1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "Garbage - Troep",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455952",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Garbage - Troep][a4].d64",
+          "Size": 174848,
+          "Crc": "0240b834",
+          "Md5": "512c0a56b2872f9aaf59faed443fe5f1",
+          "Sha1": "091f76ed84e9a30de0a8f37632d94edff5d25366",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Garbage - Troep",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470791",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Garbage - Troep][a4].t64",
+          "Size": 21761,
+          "Crc": "0d115063",
+          "Md5": "f86b59e370c1320da325c210e3265e82",
+          "Sha1": "a2d42343e19864d5cca1db4fe47c427d09fe7850",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "Garbage - Troep",
+            "a": "a4"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455953",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Garbage - Troep][a5].d64",
+          "Size": 174848,
+          "Crc": "b99f1859",
+          "Md5": "3d1f19c838d49775d93c66330980fd49",
+          "Sha1": "7deac53ca15edeb4f60880ac493172d1359ec4e8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Garbage - Troep",
+            "a": "a5"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455954",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Garbage - Troep][a6].d64",
+          "Size": 174848,
+          "Crc": "dd5db30b",
+          "Md5": "94a1943cf31980d64f9529cced93572a",
+          "Sha1": "5da2dc97a5dc9afa26020172098ccf0b88efecfd",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Garbage - Troep",
+            "a": "a6"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455949",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Garbage - Troep][a].d64",
+          "Size": 174848,
+          "Crc": "ec61c90e",
+          "Md5": "0c27964090e737c156ed1bd3762d7e7a",
+          "Sha1": "6f1ff657419a691b49fdb25c174eb4fd186002ef",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Garbage - Troep",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470788",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Garbage - Troep][a].t64",
+          "Size": 22689,
+          "Crc": "22d03205",
+          "Md5": "8c0f460ed98750e66e34cab4e387fe98",
+          "Sha1": "eb372a72b83d7cea3619a2d690ada7cbd6f6cba5",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "Garbage - Troep",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455955",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Genlog].d64",
+          "Size": 174848,
+          "Crc": "faa377f3",
+          "Md5": "f76c02c09fc31b41b33e5ca64a4018e2",
+          "Sha1": "3fe14b5bcdb85f60211b16ba26b57403be846765",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Genlog"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468150",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Genlog].prg",
+          "Size": 25930,
+          "Crc": "74eab1bb",
+          "Md5": "d19a1e6a57e637801a20fe1374ee5cee",
+          "Sha1": "e0c029ee6cfc6c5d7bdeeee7bbe93d45ddf5f575",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "Genlog"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455956",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Genlog][a].d64",
+          "Size": 174848,
+          "Crc": "1ec7e94d",
+          "Md5": "d30c6edb4ed626ca8a292293ca587d26",
+          "Sha1": "0cf0d21b1bba5dff0a479b5ad74d4f2268136228",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Genlog",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455957",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Rebels].d64",
+          "Size": 174848,
+          "Crc": "554a44c2",
+          "Md5": "b392ace5608dde7d47bb36f165a58b63",
+          "Sha1": "d5d0050fca6e7fb260add334617667ca487ab58f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Rebels"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468151",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Rebels].prg",
+          "Size": 26869,
+          "Crc": "b0f5932c",
+          "Md5": "161cead230380736e960b07bae1f379a",
+          "Sha1": "a97a24479efa723f1c9f1b8bd1530f4840404e5c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "Rebels"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470792",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Rebels].t64",
+          "Size": 27891,
+          "Crc": "a96baa34",
+          "Md5": "ec448e18971207f6e0f85309baa0b155",
+          "Sha1": "8feee7ad1a44ab55b13916464c2c3d547fec6a09",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "cr": "Rebels"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455958",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Rebels][a].d64",
+          "Size": 174848,
+          "Crc": "d13ad91b",
+          "Md5": "6df01261478134a0f610466bab414aed",
+          "Sha1": "b905299279e94b8ebad5ed1aec0a737812a9ce01",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Rebels",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455959",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Shadow].d64",
+          "Size": 174848,
+          "Crc": "ea50a204",
+          "Md5": "35d3bf23aa58b179b8cddf93a9f01d95",
+          "Sha1": "928244724dfede870a039199ded402f3c4a962ee",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "cr": "Shadow"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468152",
+          "Name": "15 Pietnastka (1994)(R-Pils)[cr Shadow].prg",
+          "Size": 25672,
+          "Crc": "bb141249",
+          "Md5": "fde6ed71e3ce4e0665b81848d1d744ad",
+          "Sha1": "7baa8201e3b4ef484f327e75ee15b2992fb60ee4",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "cr": "Shadow"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455960",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h Accuracy].d64",
+          "Size": 174848,
+          "Crc": "4488b402",
+          "Md5": "2c175f4cc6e7edf91b2cffe986b1740b",
+          "Sha1": "5e273289ca551ef2a9b5da7895d2f693b078353f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "h": "Accuracy"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470793",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h Accuracy].t64",
+          "Size": 25203,
+          "Crc": "ee06d22d",
+          "Md5": "20cec27ec638262d64ad64bf9d393746",
+          "Sha1": "c381c8ebb4a880bfede99d2d1f44e18e2f9ff854",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "h": "Accuracy"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455962",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h Accuracy][a2].d64",
+          "Size": 174848,
+          "Crc": "9e801246",
+          "Md5": "21bc1443bc72873c558ec71e377cdd38",
+          "Sha1": "24b0cccfad6eec42252e7d4e9f478d1a85b7a197",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "h": "Accuracy",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455961",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h Accuracy][a].d64",
+          "Size": 174848,
+          "Crc": "e1dcac91",
+          "Md5": "537928bf613305541e32fb3d9c9ee591",
+          "Sha1": "503da3a487c0d1f765026a4d49b9cdbd868d21ae",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "h": "Accuracy",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "468153",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h ACY].prg",
+          "Size": 25109,
+          "Crc": "7cabb7d0",
+          "Md5": "3b43b11315843e52d6b89a8e22ff77bf",
+          "Sha1": "311cbb3d9f416c5be7dadaeb44486469b335a102",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "PRG",
+            "h": "ACY"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470794",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h AFL].t64",
+          "Size": 24589,
+          "Crc": "dcfce2ba",
+          "Md5": "366561ca39064e3c44b0dd9e20c7bcb7",
+          "Sha1": "fd15d9468bc453911f5813e2c976519643deb784",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "h": "AFL"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470795",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h AFL][a].t64",
+          "Size": 24589,
+          "Crc": "e75446c0",
+          "Md5": "696ead92f53fc06ae1bb311dd9aba33c",
+          "Sha1": "f25b58a9b1dcd33e5af974d7eb2e9074f58fb6a1",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "h": "AFL",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455963",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h CHR].d64",
+          "Size": 174848,
+          "Crc": "b81de389",
+          "Md5": "203db280ece6e3588f289c9b740a8917",
+          "Sha1": "4b7d052b8e36e5d9f4f5c565a9ce143f33aaa420",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "h": "CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470796",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h CHR].t64",
+          "Size": 23097,
+          "Crc": "d78f63c4",
+          "Md5": "d9ea03022c362aba1c9a89c19e334ef8",
+          "Sha1": "f42bd5292ba57888125b16c645688c216cfdf41c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "h": "CHR"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470798",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h CHR][a2].t64",
+          "Size": 23097,
+          "Crc": "95246441",
+          "Md5": "265b071fba98eb614f37bb439983f9a2",
+          "Sha1": "d41d8d39cd3fd1401c90e17c38cb93ea304afc9d",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "h": "CHR",
+            "a": "a2"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470799",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h CHR][a3].t64",
+          "Size": 23997,
+          "Crc": "415c48a8",
+          "Md5": "548aa7f7d311cf3863a1af0b4e52e355",
+          "Sha1": "72ec5f0940fc2a758d2223f4fdeeabe322756dce",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "h": "CHR",
+            "a": "a3"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455964",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h CHR][a].d64",
+          "Size": 174848,
+          "Crc": "5aee201a",
+          "Md5": "f05c94e6dd350fa1cd81effd812a5a89",
+          "Sha1": "c464227521d1ad68839d02e663658f2fdc3968fa",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "h": "CHR",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470797",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h CHR][a].t64",
+          "Size": 24925,
+          "Crc": "762d520e",
+          "Md5": "97dd77fc71eecde544ffaa7f42a8939b",
+          "Sha1": "6dee8f0a5af25e44d483c63ba0babc5980c7eff8",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "h": "CHR",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470800",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h DTC].t64",
+          "Size": 26217,
+          "Crc": "ef9c397c",
+          "Md5": "7855f06021e681315e90465c6f5fc606",
+          "Sha1": "ed3112445c241f61d0eda2cc6b1816147ea06962",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "h": "DTC"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470801",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h DTC][a].t64",
+          "Size": 26217,
+          "Crc": "2b98584e",
+          "Md5": "789227236923e72dd7d1ea1bda3821d8",
+          "Sha1": "85688c973bac88636b6a9211ae4dfb6b98d89a6c",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "h": "DTC",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455965",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h Lepsi Developments].d64",
+          "Size": 174848,
+          "Crc": "e11ff838",
+          "Md5": "96eaf79cba19375e1ac4dd23275b77dd",
+          "Sha1": "93bee7763ac5f8011f6eccaaa0fc0f9f1297e93f",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "h": "Lepsi Developments"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470802",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h Lepsi Developments].t64",
+          "Size": 21859,
+          "Crc": "d7688c93",
+          "Md5": "4a2da8301d16fc3acc5a3c062e1caf9a",
+          "Sha1": "02305bd225448f7fb66aa60022f42e2fd2e9b2dd",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "h": "Lepsi Developments"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "455966",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h Lepsi Developments][a].d64",
+          "Size": 174848,
+          "Crc": "ad8ccbc6",
+          "Md5": "0dafc1de249d1a71a4453e938a6fb8e2",
+          "Sha1": "144fffb9622f9ad56a48ab1392894b1073765780",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "D64",
+            "h": "Lepsi Developments",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        },
+        {
+          "Score": 23,
+          "Id": "470803",
+          "Name": "15 Pietnastka (1994)(R-Pils)[h Lepsi Developments][a].t64",
+          "Size": 22787,
+          "Crc": "f6bae544",
+          "Md5": "84de7aff00f216f6c8943d8cbf7d4874",
+          "Sha1": "116f49656855ec1e6b0c3ad3a83cef179bdb0af0",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "categories": [
+              "Educational"
+            ],
+            "filetype": "T64",
+            "h": "Lepsi Developments",
+            "a": "a"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "TOSEC"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {}
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Country",
+      "attributeRelationType": "None",
+      "Value": "Poland (PL)"
+    },
+    {
+      "attributeType": "ShortString",
+      "attributeName": "Language",
+      "attributeRelationType": "None",
+      "Value": "English, Polish"
+    }
+  ],
+  "CreatedDate": "2024-05-26T05:32:48",
+  "UpdatedDate": "2026-01-27T05:43:05",
+  "Name": "15 Pietnastka"
+}

@@ -1,0 +1,656 @@
+{
+  "Id": 456242,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "893424",
+      "Name": "100sword\\hundred swords",
+      "Year": "",
+      "Country": null,
+      "Platform": "Sega - Dreamcast",
+      "SourceId": "11604",
+      "MetadataSource": "11"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "12435",
+      "ImmutableId": "12435",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "IGDB",
+      "Link": "https://www.igdb.com/games/hundred-swords",
+      "LastSearch": "2025-10-30T08:51:36",
+      "NextSearch": "2026-08-29T08:51:36",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "TheGamesDb",
+      "Link": "",
+      "LastSearch": "2025-10-30T08:51:36",
+      "NextSearch": "2026-07-09T08:51:36",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2025-10-30T08:51:36",
+      "NextSearch": "2026-07-09T08:51:36",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2025-10-30T08:51:36",
+      "NextSearch": "2026-07-09T08:51:36",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2025-10-30T08:51:36",
+      "NextSearch": "2026-07-09T08:51:36",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2025-10-30T08:51:36",
+      "NextSearch": "2026-07-09T08:51:36",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2025-10-30T08:51:36",
+      "NextSearch": "2026-07-09T08:51:36",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2025-10-30T08:51:36",
+      "NextSearch": "2026-07-09T08:51:36",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2025-10-30T08:51:36",
+      "NextSearch": "2026-07-09T08:51:36",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T13:56:05",
+      "NextSearch": "2026-03-03T13:56:05",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-25T01:11:52",
+      "NextSearch": "2026-04-25T01:11:52",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 884073,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## A Hundred Swords: Dreamcast\n\nForge your legend in *A Hundred Swords*, a unique and challenging tactical RPG for the Sega Dreamcast. Set in a dark medieval fantasy world, you lead a band of customizable warriors on a quest to defeat the tyrannical King Oberon and liberate the oppressed kingdom of Elysia. \n\nForget traditional turn-based combat – *A Hundred Swords* features a real-time, action-oriented battle system where positioning and timing are everything. Control a party of up to four heroes, each with distinct classes and abilities, and strategically maneuver them across the battlefield.  Experience brutal, visceral combat as you clash with hordes of enemies, utilizing special attacks and powerful skills. \n\nCustomize your heroes with a vast array of weapons and armor, enhancing their strengths and tailoring them to your preferred playstyle.  The game's distinctive art style and haunting soundtrack create a captivating atmosphere.  Prepare for a relentless and rewarding experience where every decision matters, and victory demands skill and cunning."
+    },
+    {
+      "attributeType": "ImageAttribution",
+      "attributeName": "LogoAttribution",
+      "attributeRelationType": "None",
+      "Value": "IGDB"
+    },
+    {
+      "Id": 882177,
+      "attributeType": "ImageId",
+      "attributeName": "Logo",
+      "attributeRelationType": "None",
+      "Value": "38DEE8D075CAECC4F65AB1F4A6227073B118F639"
+    },
+    {
+      "Id": 882176,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 603738,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "712",
+            "Platform": "Dreamcast"
+          },
+          {
+            "SignatureId": "685",
+            "Platform": "Sega - Dreamcast"
+          },
+          {
+            "SignatureId": "608",
+            "Platform": "Sega - Dreamcast (Development Kit Hard Drives)"
+          },
+          {
+            "SignatureId": "1063",
+            "Platform": "Sega - Dreamcast (Development Kit Hard Drives) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "609",
+            "Platform": "Sega - Dreamcast (Visual Memory Unit)"
+          },
+          {
+            "SignatureId": "1064",
+            "Platform": "Sega - Dreamcast (Visual Memory Unit) (Parent-Clone)"
+          },
+          {
+            "SignatureId": "1120",
+            "Platform": "Sega Dreamcast"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "23",
+            "ImmutableId": "23",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/dc",
+            "LastSearch": "2026-04-09T12:01:37",
+            "NextSearch": "2026-09-21T12:01:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "16",
+            "ImmutableId": "16",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=16",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2027-01-04T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40",
+            "ImmutableId": "40",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "RetroAchievements",
+            "Link": "https://retroachievements.org/system/40/games",
+            "LastSearch": "2026-04-09T12:01:37",
+            "NextSearch": "2026-09-21T12:01:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "37",
+            "ImmutableId": "37",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-37/",
+            "LastSearch": "2026-04-09T12:01:37",
+            "NextSearch": "2026-09-21T12:01:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2026-10-26T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2026-10-26T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2026-10-26T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/Dreamcast",
+            "ImmutableId": "https://en.wikipedia.org/wiki/Dreamcast",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/Dreamcast",
+            "LastSearch": "2026-04-09T12:01:37",
+            "NextSearch": "2026-09-21T12:01:37",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5327256",
+            "ImmutableId": "5327256",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5327256",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2027-01-04T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "23",
+            "ImmutableId": "23",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=23",
+            "LastSearch": "2026-05-09T13:16:59",
+            "NextSearch": "2027-01-04T13:16:59",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "40-sega-dreamcast",
+            "ImmutableId": "40-sega-dreamcast",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "LaunchBox",
+            "Link": "https://gamesdb.launchbox-app.com/platforms/games/40-sega-dreamcast",
+            "LastSearch": "2026-02-24T09:49:42",
+            "NextSearch": "2026-04-24T09:49:42",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 1230358,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The Sega Dreamcast, released in Japan in 1998 and globally in 1999, marked Sega's final foray into home console hardware. As the first sixth-generation console, it innovated with features like a built-in modem for online play and the use of GD-ROM discs to reduce production costs. Sharing architecture with Sega's NAOMI arcade system board, the Dreamcast delivered authentic arcade experiences at home. While hampered by competition from the PlayStation 2 and limited third-party support, the Dreamcast left a lasting legacy. \n\nPopular titles like *Sonic Adventure*, *Crazy Taxi*, *Shenmue*, *Jet Set Radio*, and *Phantasy Star Online* showcased its capabilities. Despite selling 9.13 million units worldwide, Sega discontinued the Dreamcast in 2001, transitioning to a third-party developer role. Today, it's celebrated for its pioneering online features and innovative game design."
+          },
+          {
+            "Id": 1231570,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "Dreamcast"
+          },
+          {
+            "Id": 1231571,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "473BE7DB3057CD0628BB11170D262DE82CD713B1"
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "Sega Dreamcast, Sega-Dreamcast"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 88,
+                    "Text": "3d graphics",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 6,
+                    "Text": "cd-rom drive",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 95365,
+                    "Text": "mpeg encoder",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 13,
+                    "Text": "controller",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 15,
+                    "Text": "mouse",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 2947,
+                    "Text": "dial-up",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 248,
+                    "Text": "modem support",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 349,
+                    "Text": "online service",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2026-04-09T12:01:37",
+        "UpdatedDate": "2026-05-25T01:12:04",
+        "Name": "Sega Dreamcast"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "100sword\\hundred swords, 100sword\\hundred-swords"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 12,
+          "Id": "3859746",
+          "Name": "100sword\\hundred swords (jpn).chd",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "",
+          "Sha1": "8129b62601a19eff64f6ecc8fbeaca6b3f31aefe",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {},
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "MAMERedump"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 1355,
+              "Text": "campaign mode",
+              "AIGenerated": true
+            },
+            {
+              "Id": 6526,
+              "Text": "custom maps",
+              "AIGenerated": true
+            },
+            {
+              "Id": 981,
+              "Text": "multiplayer mode",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 1340,
+              "Text": "fantasy strategy",
+              "AIGenerated": true
+            },
+            {
+              "Id": 24794,
+              "Text": "medieval fantasy",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1341,
+              "Text": "turn-based strategy",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 1346,
+              "Text": "fantasy warfare",
+              "AIGenerated": true
+            },
+            {
+              "Id": 983,
+              "Text": "heroic quest",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1530,
+              "Text": "medieval warfare",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 1349,
+              "Text": "isometric view",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 5807,
+              "Text": "tactical battle",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1004,
+              "Text": "turn-based combat",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3140,
+              "Text": "unit management",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "CreatedDate": "2026-01-30T08:51:36",
+  "UpdatedDate": "2026-01-30T08:51:38",
+  "Name": "100sword\\hundred swords"
+}

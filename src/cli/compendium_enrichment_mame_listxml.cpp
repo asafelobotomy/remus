@@ -155,32 +155,30 @@ bool enrichFromMameListXml(
     // still receive updated game_facts (via DELETE+INSERT) for resolver accuracy,
     // but the games table COALESCE update will be a no-op for them.
     QSqlQuery gamesQ(database);
-    gamesQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games "
-                                  "WHERE system_id = ? "
-                                  "  AND (developer IS NULL OR TRIM(developer) = '' "
-                                  "    OR publisher IS NULL OR TRIM(publisher) = '' "
-                                  "    OR release_year IS NULL "
-                                  "    OR players_max IS NULL)"));
-    gamesQ.addBindValue(Constants::Systems::ID_ARCADE);
-    if (!gamesQ.exec()) {
+    if (!gamesQ.exec(QStringLiteral("SELECT g.game_id, g.canonical_title, gn.name_text "
+                                    "FROM games g "
+                                    "LEFT JOIN game_names gn ON gn.game_id = g.game_id "
+                                    "WHERE g.system_id = %1 "
+                                    "  AND (g.developer IS NULL OR TRIM(g.developer) = '' "
+                                    "    OR g.publisher IS NULL OR TRIM(g.publisher) = '' "
+                                    "    OR g.release_year IS NULL "
+                                    "    OR g.players_max IS NULL) "
+                                    "ORDER BY g.game_id")
+                .arg(Constants::Systems::ID_ARCADE))) {
         error = QStringLiteral("Query arcade games for MAME listxml: %1").arg(gamesQ.lastError().text());
         return false;
     }
 
-    while (gamesQ.next()) {
-        const QString gameId = gamesQ.value(0).toString();
-        const QString romName = gamesQ.value(1).toString();
-        const auto it = machines.constFind(romName);
-        if (it == machines.cend())
-            continue;
+    QString currentGameId;
+    QString canonicalTitle;
+    QStringList romNameCandidates;
 
-        const MachineInfo &info = it.value();
-
+    auto applyMachineInfo = [&](const MachineInfo &info) -> bool {
         updateQ.bindValue(0, nullableText(info.manufacturer));
         updateQ.bindValue(1, nullableText(info.manufacturer));
         updateQ.bindValue(2, nullableInt(info.year));
         updateQ.bindValue(3, nullableInt(info.players));
-        updateQ.bindValue(4, gameId);
+        updateQ.bindValue(4, currentGameId);
         if (!execPrepared(updateQ, error, QStringLiteral("Update MAME listxml")))
             return false;
         if (updateQ.numRowsAffected() > 0)
@@ -189,14 +187,14 @@ bool enrichFromMameListXml(
         bool inserted = false;
 
         if (!info.manufacturer.isEmpty()) {
-            if (!insertGameFact(delQ, factQ, factSpec, gameId, QStringLiteral("developer"), info.manufacturer,
+            if (!insertGameFact(delQ, factQ, factSpec, currentGameId, QStringLiteral("developer"), info.manufacturer,
                     QStringLiteral("text"), error, QStringLiteral("mame-listxml"), &inserted))
                 return false;
             if (inserted)
                 ++factsInserted;
 
             inserted = false;
-            if (!insertGameFact(delQ, factQ, factSpec, gameId, QStringLiteral("publisher"), info.manufacturer,
+            if (!insertGameFact(delQ, factQ, factSpec, currentGameId, QStringLiteral("publisher"), info.manufacturer,
                     QStringLiteral("text"), error, QStringLiteral("mame-listxml"), &inserted))
                 return false;
             if (inserted)
@@ -205,7 +203,7 @@ bool enrichFromMameListXml(
 
         if (info.year > 0) {
             inserted = false;
-            if (!insertGameFact(delQ, factQ, factSpec, gameId, QStringLiteral("release_year"),
+            if (!insertGameFact(delQ, factQ, factSpec, currentGameId, QStringLiteral("release_year"),
                     QString::number(info.year), QStringLiteral("int"), error, QStringLiteral("mame-listxml"),
                     &inserted))
                 return false;
@@ -215,14 +213,59 @@ bool enrichFromMameListXml(
 
         if (info.players > 0) {
             inserted = false;
-            if (!insertGameFact(delQ, factQ, factSpec, gameId, QStringLiteral("players_max"),
+            if (!insertGameFact(delQ, factQ, factSpec, currentGameId, QStringLiteral("players_max"),
                     QString::number(info.players), QStringLiteral("int"), error, QStringLiteral("mame-listxml"),
                     &inserted))
                 return false;
             if (inserted)
                 ++factsInserted;
         }
+        return true;
+    };
+
+    auto flushCurrentGame = [&]() -> bool {
+        if (currentGameId.isEmpty())
+            return true;
+        for (const QString &candidate : romNameCandidates) {
+            const auto it = machines.constFind(candidate);
+            if (it == machines.cend())
+                continue;
+            const bool ok = applyMachineInfo(it.value());
+            currentGameId.clear();
+            canonicalTitle.clear();
+            romNameCandidates.clear();
+            return ok;
+        }
+        currentGameId.clear();
+        canonicalTitle.clear();
+        romNameCandidates.clear();
+        return true;
+    };
+
+    while (gamesQ.next()) {
+        const QString gameId = gamesQ.value(0).toString();
+        const QString title = gamesQ.value(1).toString().trimmed();
+        const QString alias = gamesQ.value(2).toString().trimmed();
+
+        if (gameId != currentGameId) {
+            if (!flushCurrentGame())
+                return false;
+            currentGameId = gameId;
+            canonicalTitle = title;
+            romNameCandidates.clear();
+            if (!canonicalTitle.isEmpty())
+                romNameCandidates.append(canonicalTitle);
+        }
+
+        if (!alias.isEmpty() && !romNameCandidates.contains(alias)) {
+            if (!alias.contains(QLatin1Char(' ')) && alias.size() <= 32)
+                romNameCandidates.prepend(alias);
+            else
+                romNameCandidates.append(alias);
+        }
     }
+    if (!flushCurrentGame())
+        return false;
 
     qInfo().noquote()
         << QStringLiteral("[MAME-listxml] +%1 games enriched, +%2 facts").arg(gamesEnriched).arg(factsInserted);

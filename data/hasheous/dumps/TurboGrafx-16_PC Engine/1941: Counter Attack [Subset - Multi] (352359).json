@@ -1,0 +1,835 @@
+{
+  "Id": 352359,
+  "ObjectType": "Game",
+  "SignatureDataObjects": [
+    {
+      "SignatureId": "644337",
+      "Name": "1941: Counter Attack [Subset - Multi]",
+      "Year": "",
+      "Country": null,
+      "Platform": "PC Engine/TurboGrafx-16",
+      "SourceId": "11958",
+      "MetadataSource": "7"
+    }
+  ],
+  "Metadata": [
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "IGDB",
+      "Link": "",
+      "LastSearch": "2026-03-16T05:26:29",
+      "NextSearch": "2026-06-22T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "23252",
+      "ImmutableId": "23252",
+      "Status": "Mapped",
+      "MatchMethod": "Automatic",
+      "Source": "TheGamesDb",
+      "Link": "https://thegamesdb.net/game.php?id=23252",
+      "LastSearch": "2026-03-16T05:26:29",
+      "NextSearch": "2027-01-29T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "RetroAchievements",
+      "Link": "",
+      "LastSearch": "2026-03-16T05:26:29",
+      "NextSearch": "2026-06-22T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GiantBomb",
+      "Link": "",
+      "LastSearch": "2026-03-16T05:26:29",
+      "NextSearch": "2026-06-22T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Steam",
+      "Link": "",
+      "LastSearch": "2026-03-16T05:26:29",
+      "NextSearch": "2026-06-22T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "GOG",
+      "Link": "",
+      "LastSearch": "2026-03-16T05:26:29",
+      "NextSearch": "2026-06-22T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "EpicGameStore",
+      "Link": "",
+      "LastSearch": "2026-03-16T05:26:29",
+      "NextSearch": "2026-06-22T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "Wikipedia",
+      "Link": "",
+      "LastSearch": "2026-03-16T05:26:29",
+      "NextSearch": "2026-06-22T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "SteamGridDb",
+      "Link": "",
+      "LastSearch": "2026-03-16T05:26:29",
+      "NextSearch": "2026-06-22T05:26:29",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "ScreenScraper",
+      "Link": "",
+      "LastSearch": "2026-01-03T14:06:58",
+      "NextSearch": "2026-03-03T14:06:58",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    },
+    {
+      "ObjectType": "Game",
+      "Id": "",
+      "ImmutableId": "",
+      "Status": "NotMapped",
+      "MatchMethod": "NoMatch",
+      "Source": "LaunchBox",
+      "Link": "",
+      "LastSearch": "2026-02-26T16:50:26",
+      "NextSearch": "2026-04-26T16:50:26",
+      "WinningVoteCount": 0,
+      "TotalVoteCount": 0,
+      "WinningVotePercent": 0
+    }
+  ],
+  "Attributes": [
+    {
+      "Id": 1225027,
+      "attributeType": "LongString",
+      "attributeName": "AIDescription",
+      "attributeRelationType": "None",
+      "Value": "## 1941: Counter Attack [Subset - Multi] - TurboGrafx-16/PC Engine\n\nTake to the skies in *1941: Counter Attack*, a thrilling vertical-scrolling shooter set against the backdrop of the Western Front during World War II!  Pilot either a P-38 Lightning or the brand-new Mosquito Mk IV as you battle across six intense levels, from the North Atlantic Ocean to the Brandenburg Gate and finally, The Enemy Base. \n\nFace relentless waves of iconic Axis aircraft and ground forces, including the Ju 87 Stuka, Bf 110, Tiger I tanks, and even U-boats!  Six formidable bosses stand between you and victory, including the colossal Leviathan and the infamous German battleship Bismarck. \n\n*Counter Attack* introduces a unique vitality system – take a hit and lose vitality points, but you can continue before total destruction.  Strategic lightning attacks, fueled by life energy, offer devastating power.  Manage your loops wisely; unused loops earn bonus points!  Experience the intensity of aerial combat with stunning visuals and a pulse-pounding soundtrack, all on the TurboGrafx-16/PC Engine."
+    },
+    {
+      "Id": 654056,
+      "attributeType": "ObjectRelationship",
+      "attributeName": "Platform",
+      "attributeRelationType": "Platform",
+      "Value": {
+        "Id": 245372,
+        "ObjectType": "Platform",
+        "SignatureDataObjects": [
+          {
+            "SignatureId": "540",
+            "Platform": "NEC - PC Engine - TurboGrafx-16"
+          },
+          {
+            "SignatureId": "994",
+            "Platform": "NEC - PC Engine - TurboGrafx-16 (Parent-Clone)"
+          },
+          {
+            "SignatureId": "673",
+            "Platform": "NEC - PC Engine CD & TurboGrafx CD"
+          },
+          {
+            "SignatureId": "231",
+            "Platform": "NEC PC-Engine & TurboGrafx-16"
+          },
+          {
+            "SignatureId": "1154",
+            "Platform": "PC Engine"
+          },
+          {
+            "SignatureId": "735",
+            "Platform": "PC Engine/TurboGrafx-16"
+          },
+          {
+            "SignatureId": "770",
+            "Platform": "PC-Engine"
+          },
+          {
+            "SignatureId": "774",
+            "Platform": "TurboGrafx 16"
+          }
+        ],
+        "Metadata": [
+          {
+            "ObjectType": "Platform",
+            "Id": "86",
+            "ImmutableId": "86",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "IGDB",
+            "Link": "https://www.igdb.com/platforms/turbografx16--1",
+            "LastSearch": "2025-06-11T06:17:34",
+            "NextSearch": "2025-07-11T06:17:34",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "34",
+            "ImmutableId": "34",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "TheGamesDb",
+            "Link": "https://thegamesdb.net/platform.php?id=34",
+            "LastSearch": "2025-06-11T06:17:35",
+            "NextSearch": "2025-07-11T06:17:35",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "RetroAchievements",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:24:10",
+            "NextSearch": "2026-06-25T13:24:10",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "55",
+            "ImmutableId": "55",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "GiantBomb",
+            "Link": "https://www.giantbomb.com/platforms/3045-55/",
+            "LastSearch": "2025-06-20T15:37:55",
+            "NextSearch": "2025-07-20T15:37:55",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "Steam",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:24:10",
+            "NextSearch": "2026-06-25T13:24:10",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "GOG",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:24:10",
+            "NextSearch": "2026-06-25T13:24:10",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "EpicGameStore",
+            "Link": "",
+            "LastSearch": "2026-05-09T13:24:10",
+            "NextSearch": "2026-06-25T13:24:10",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "https://en.wikipedia.org/wiki/TurboGrafx-16",
+            "ImmutableId": "https://en.wikipedia.org/wiki/TurboGrafx-16",
+            "Status": "Mapped",
+            "MatchMethod": "ManualByAdmin",
+            "Source": "Wikipedia",
+            "Link": "https://en.wikipedia.org/wiki/TurboGrafx-16",
+            "LastSearch": "2025-12-21T10:28:56",
+            "NextSearch": "2026-01-21T10:28:56",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "5459986",
+            "ImmutableId": "5459986",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "SteamGridDb",
+            "Link": "https://www.steamgriddb.com/game/5459986",
+            "LastSearch": "2026-05-09T13:24:10",
+            "NextSearch": "2026-11-25T13:24:10",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "31",
+            "ImmutableId": "31",
+            "Status": "Mapped",
+            "MatchMethod": "Automatic",
+            "Source": "ScreenScraper",
+            "Link": "https://www.screenscraper.fr/systemeinfos.php?plateforme=31",
+            "LastSearch": "2026-05-09T13:24:10",
+            "NextSearch": "2026-11-25T13:24:10",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          },
+          {
+            "ObjectType": "Platform",
+            "Id": "",
+            "ImmutableId": "",
+            "Status": "NotMapped",
+            "MatchMethod": "NoMatch",
+            "Source": "LaunchBox",
+            "Link": "",
+            "LastSearch": "2026-02-24T09:49:39",
+            "NextSearch": "2026-04-24T09:49:39",
+            "WinningVoteCount": 0,
+            "TotalVoteCount": 0,
+            "WinningVotePercent": 0
+          }
+        ],
+        "Attributes": [
+          {
+            "Id": 758501,
+            "attributeType": "LongString",
+            "attributeName": "AIDescription",
+            "attributeRelationType": "None",
+            "Value": "The TurboGrafx-16, known as the PC Engine in Japan, was a pioneering fourth-generation home video game console developed by Hudson Soft and manufactured by NEC. Released in Japan in 1987 and North America in 1989, it was the first console of its generation, initially competing with the Nintendo Family Computer. While a commercial success in Japan, its delayed North American debut hindered its performance against the Sega Genesis and Super Nintendo. \n\nFeaturing an 8-bit CPU paired with dual 16-bit graphics processors, the TurboGrafx-16 boasted impressive visuals and supported a palette of 512 colors. Popular games included *Bonk's Adventure*, *R-Type*, *Ys I & II*, and conversions of arcade hits like *Galaga '88* and *Splatterhouse*.  The system utilized HuCards for game distribution, with later expansions including CD-ROM and LaserDisc formats. Despite its innovations, the TurboGrafx-16 ultimately faded, succeeded by the PC-FX."
+          },
+          {
+            "Id": 475811,
+            "attributeType": "ShortString",
+            "attributeName": "VIMMPlatformName",
+            "attributeRelationType": "None",
+            "Value": "TG16"
+          },
+          {
+            "Id": 470523,
+            "attributeType": "ImageId",
+            "attributeName": "Logo",
+            "attributeRelationType": "None",
+            "Value": "D9D2BB7F2104F2D4E255E8B9C251CA41EBF971B7"
+          },
+          {
+            "Id": 466830,
+            "attributeType": "ObjectRelationship",
+            "attributeName": "Manufacturer",
+            "attributeRelationType": "Company",
+            "Value": {
+              "Id": 56,
+              "ObjectType": "Company",
+              "SignatureDataObjects": [],
+              "Metadata": [
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "AutomaticTooManyMatches",
+                  "Source": "IGDB",
+                  "Link": "",
+                  "LastSearch": "2025-07-20T12:43:07",
+                  "NextSearch": "2026-12-06T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "TheGamesDb",
+                  "Link": "",
+                  "LastSearch": "2025-07-15T11:30:15",
+                  "NextSearch": "2026-06-14T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "RetroAchievements",
+                  "Link": "",
+                  "LastSearch": "2025-07-15T11:30:15",
+                  "NextSearch": "2026-06-14T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GiantBomb",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:25:09",
+                  "NextSearch": "2026-06-14T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Steam",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:25:09",
+                  "NextSearch": "2026-06-14T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "GOG",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:25:09",
+                  "NextSearch": "2026-06-14T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "EpicGameStore",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:25:09",
+                  "NextSearch": "2026-06-14T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "Wikipedia",
+                  "Link": "",
+                  "LastSearch": "2025-06-24T17:25:09",
+                  "NextSearch": "2026-06-14T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "SteamGridDb",
+                  "Link": "",
+                  "LastSearch": "2025-04-23T08:02:39",
+                  "NextSearch": "2026-06-14T12:18:39",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "ScreenScraper",
+                  "Link": "",
+                  "LastSearch": "2026-01-03T13:39:57",
+                  "NextSearch": "2026-03-03T13:39:57",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                },
+                {
+                  "ObjectType": "Company",
+                  "Id": "",
+                  "ImmutableId": "",
+                  "Status": "NotMapped",
+                  "MatchMethod": "NoMatch",
+                  "Source": "LaunchBox",
+                  "Link": "",
+                  "LastSearch": "2026-02-24T09:49:28",
+                  "NextSearch": "2026-04-24T09:49:28",
+                  "WinningVoteCount": 0,
+                  "TotalVoteCount": 0,
+                  "WinningVotePercent": 0
+                }
+              ],
+              "Attributes": [],
+              "CreatedDate": "2024-04-29T04:04:10",
+              "UpdatedDate": "2026-01-31T13:29:19",
+              "Name": "NEC"
+            }
+          },
+          {
+            "attributeType": "LongString",
+            "attributeName": "SearchAliases",
+            "attributeRelationType": "None",
+            "Value": "TurboGrafx-16/PC Engine, TurboGrafx - 16/PC Engine, TurboGrafx 16/PC Engine, TurboGrafx: 16/PC Engine, TurboGrafx-XVI/PC Engine, TurboGrafx - XVI/PC Engine, TurboGrafx XVI/PC Engine, TurboGrafx: XVI/PC Engine, TurboGrafx-Sixteen/PC Engine, TurboGrafx - Sixteen/PC Engine, TurboGrafx Sixteen/PC Engine, TurboGrafx: Sixteen/PC Engine, TurboGrafx-16 PC Engine, TurboGrafx-16 - PC Engine, TurboGrafx-16, PC Engine"
+          },
+          {
+            "attributeType": "EmbeddedList",
+            "attributeName": "Tags",
+            "attributeRelationType": "None",
+            "Value": {
+              "PlatformEra": {
+                "Type": "PlatformEra",
+                "Tags": [
+                  {
+                    "Id": 18,
+                    "Text": "1980s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 4,
+                    "Text": "1990s",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 5,
+                    "Text": "retro",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformType": {
+                "Type": "PlatformType",
+                "Tags": [
+                  {
+                    "Id": 319,
+                    "Text": "cd-rom console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 2,
+                    "Text": "console",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 3,
+                    "Text": "home console",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformHardwareSpecs": {
+                "Type": "PlatformHardwareSpecs",
+                "Tags": [
+                  {
+                    "Id": 711,
+                    "Text": "cd-rom support",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 94056,
+                    "Text": "huc6270 video chip",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 765,
+                    "Text": "huc6280 cpu",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 766,
+                    "Text": "hucard format",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformConnectivity": {
+                "Type": "PlatformConnectivity",
+                "Tags": [
+                  {
+                    "Id": 499,
+                    "Text": "composite output",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 2250,
+                    "Text": "hucard slot",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 94057,
+                    "Text": "s-video output",
+                    "AIGenerated": true
+                  }
+                ]
+              },
+              "PlatformInputMethod": {
+                "Type": "PlatformInputMethod",
+                "Tags": [
+                  {
+                    "Id": 13,
+                    "Text": "controller",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 14,
+                    "Text": "keyboard",
+                    "AIGenerated": true
+                  },
+                  {
+                    "Id": 767,
+                    "Text": "multitap",
+                    "AIGenerated": true
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "CreatedDate": "2025-06-03T18:35:45",
+        "UpdatedDate": "2026-05-09T13:24:18",
+        "Name": "TurboGrafx-16/PC Engine"
+      }
+    },
+    {
+      "attributeType": "LongString",
+      "attributeName": "SearchAliases",
+      "attributeRelationType": "None",
+      "Value": "1941: Counter Attack [Subset - Multi], 1941: Counter Attack, 1941: Counter Attack [Subset-Multi], 1941: Counter Attack [Subset Multi], 1941: Counter Attack [Subset: Multi], 1941 Counter Attack [Subset - Multi], 1941 - Counter Attack [Subset - Multi], 1941:-Counter-Attack, 1941 Counter Attack, 1941 - Counter Attack"
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "ROMs",
+      "attributeRelationType": "ROM",
+      "Value": [
+        {
+          "Score": 12,
+          "Id": "2612449",
+          "Name": "1941 - Counter Attack [Subset - Multi].sgx",
+          "Size": 0,
+          "Crc": "",
+          "Md5": "a1294ee85e9962aaaa2eae1dddffd5ea",
+          "Sha1": "",
+          "Sha256": "",
+          "Status": "",
+          "Country": {},
+          "Language": {},
+          "DevelopmentStatus": "",
+          "Attributes": {
+            "labels": "nointro,rapatches"
+          },
+          "RomType": "Unknown",
+          "RomTypeMedia": "",
+          "MediaDetail": {},
+          "MediaLabel": "",
+          "SignatureSource": "RetroAchievements"
+        }
+      ]
+    },
+    {
+      "attributeType": "EmbeddedList",
+      "attributeName": "Tags",
+      "attributeRelationType": "None",
+      "Value": {
+        "GameGenre": {
+          "Type": "GameGenre",
+          "Tags": [
+            {
+              "Id": 920,
+              "Text": "action",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1061,
+              "Text": "shoot 'em up",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1657,
+              "Text": "war game",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameTheme": {
+          "Type": "GameTheme",
+          "Tags": [
+            {
+              "Id": 3744,
+              "Text": "air combat",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2148,
+              "Text": "military conflict",
+              "AIGenerated": true
+            },
+            {
+              "Id": 2147,
+              "Text": "world war ii",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameFeature": {
+          "Type": "GameFeature",
+          "Tags": [
+            {
+              "Id": 2730,
+              "Text": "bonus rewards",
+              "AIGenerated": true
+            },
+            {
+              "Id": 74558,
+              "Text": "loop mechanics",
+              "AIGenerated": true
+            },
+            {
+              "Id": 1279,
+              "Text": "two player",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GameGameplay": {
+          "Type": "GameGameplay",
+          "Tags": [
+            {
+              "Id": 1297,
+              "Text": "boss battles",
+              "AIGenerated": true
+            },
+            {
+              "Id": 959,
+              "Text": "power-ups",
+              "AIGenerated": true
+            },
+            {
+              "Id": 3739,
+              "Text": "vitality system",
+              "AIGenerated": true
+            }
+          ]
+        },
+        "GamePerspective": {
+          "Type": "GamePerspective",
+          "Tags": [
+            {
+              "Id": 1030,
+              "Text": "side-scrolling",
+              "AIGenerated": true
+            },
+            {
+              "Id": 827,
+              "Text": "top-down",
+              "AIGenerated": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "CreatedDate": "2025-10-13T19:32:20",
+  "UpdatedDate": "2026-03-16T08:38:49",
+  "Name": "1941: Counter Attack [Subset - Multi]"
+}
