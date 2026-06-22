@@ -1,0 +1,83 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug remus-cli",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/remus-cli",
+      "args": [
+        "--help"
+      ],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "cmake: build remus-cli (debug)",
+      "env": {
+        "QT_QPA_PLATFORM": "offscreen"
+      }
+    },
+    {
+      "name": "Debug remus-cli (--list)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/remus-cli",
+      "args": [
+        "--list"
+      ],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "cmake: build remus-cli (debug)",
+      "env": {
+        "QT_QPA_PLATFORM": "offscreen"
+      }
+    },
+    {
+      "name": "Debug remus-cli (custom args)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/remus-cli",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "cmake: build remus-cli (debug)",
+      "env": {
+        "QT_QPA_PLATFORM": "offscreen"
+      },
+      "initCommands": [
+        "settings set target.run-args '${input:cliArgs}'"
+      ]
+    },
+    {
+      "name": "Debug remus-gui",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/src/gui/remus-gui",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "cmake: build remus-gui (debug)",
+      "env": {
+        "PATH": "/usr/lib/qt6/bin:${env:PATH}"
+      }
+    },
+    {
+      "name": "Debug Qt Test",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/tests/${input:testTarget}",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "cmake: build test (debug)",
+      "env": {
+        "QT_QPA_PLATFORM": "offscreen"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "cliArgs",
+      "type": "promptString",
+      "description": "remus-cli arguments (space-separated)",
+      "default": "--help"
+    },
+    {
+      "id": "testTarget",
+      "type": "promptString",
+      "description": "Qt test binary name under build-debug/tests/",
+      "default": "test_cli_helpers"
+    }
+  ]
+}

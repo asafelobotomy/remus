@@ -1,0 +1,202 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "cmake: configure (debug)",
+      "type": "shell",
+      "command": "test -f build-debug/CMakeCache.txt || cmake --preset debug",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": false
+      }
+    },
+    {
+      "label": "cmake: build (debug)",
+      "type": "shell",
+      "command": "test -f build-debug/CMakeCache.txt || cmake --preset debug; cmake --build --preset debug -j$(nproc)",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "focus": false
+      }
+    },
+    {
+      "label": "cmake: build remus-cli (debug)",
+      "type": "shell",
+      "command": "test -f build-debug/CMakeCache.txt || cmake --preset debug; cmake --build build-debug --target remus-cli -j$(nproc)",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "focus": false
+      }
+    },
+    {
+      "label": "cmake: build remus-gui (debug)",
+      "type": "shell",
+      "command": "test -f build-debug/CMakeCache.txt || cmake --preset debug; cmake --build build-debug --target remus-gui -j$(nproc)",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "focus": false
+      }
+    },
+    {
+      "label": "cmake: build test (debug)",
+      "type": "shell",
+      "command": "test -f build-debug/CMakeCache.txt || cmake --preset debug; cmake --build build-debug --target ${input:testTarget} -j$(nproc)",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "focus": false
+      }
+    },
+    {
+      "label": "cmake: build (release)",
+      "type": "shell",
+      "command": "cmake --build --preset default -j$(nproc)",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": false
+      }
+    },
+    {
+      "label": "cmake: test (debug)",
+      "type": "shell",
+      "command": "ctest --preset debug --output-on-failure",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "dependsOn": [
+        "cmake: build (debug)"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      }
+    },
+    {
+      "label": "format: clang-format check",
+      "type": "shell",
+      "command": "CLANG_FORMAT_VERSION=\"$(tr -d '[:space:]' < .clang-format-version)\" && CLANG_FORMAT=\"/usr/bin/clang-format-${CLANG_FORMAT_VERSION}\" && if [[ ! -x \"$CLANG_FORMAT\" ]]; then CLANG_FORMAT=\"clang-format\"; fi && \"$CLANG_FORMAT\" --dry-run --Werror $(find src tests -type f \\( -name '*.cpp' -o -name '*.h' \\) | sort)",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "none",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      }
+    },
+    {
+      "label": "lint: shellcheck",
+      "type": "shell",
+      "command": "bash .github/scripts/run-shellcheck.sh",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "none",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      }
+    },
+    {
+      "label": "lint: qmllint",
+      "type": "shell",
+      "command": "bash .github/scripts/run-qmllint.sh",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PATH": "/usr/lib/qt6/bin:${env:PATH}"
+        }
+      },
+      "group": "none",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      }
+    },
+    {
+      "label": "setup: compendium db",
+      "type": "shell",
+      "command": "bash scripts/setup_compendium_db.sh",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "none",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "testTarget",
+      "type": "promptString",
+      "description": "CMake test target name (e.g. test_cli_helpers)",
+      "default": "test_cli_helpers"
+    }
+  ]
+}

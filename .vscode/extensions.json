@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "ms-vscode.cmake-tools",
+    "llvm-vs-code-extensions.vscode-clangd",
+    "xaver.clang-format",
+    "jeanp413.qml",
+    "timonwong.shellcheck",
+    "vadimcn.vscode-lldb",
+    "redhat.vscode-yaml",
+    "fredericbonnet.cmake-test-adapter"
+  ],
+  "unwantedRecommendations": [
+    "ms-vscode.cpptools",
+    "ms-vscode.cpptools-extension-pack"
+  ]
+}

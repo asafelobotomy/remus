@@ -1,0 +1,142 @@
+{
+  // ── CMake / CTest (CMakePresets.json) ─────────────────────────────────────
+  "cmake.useCMakePresets": "always",
+  "cmake.configureOnOpen": true,
+  "cmake.configurePreset": "debug",
+  "cmake.buildPreset": "debug",
+  "cmake.testPreset": "debug",
+  "cmake.ctestArgs": [
+    "--output-on-failure"
+  ],
+  "cmake.configureSettings": {
+    "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+  },
+  "cmake.debugConfig": {
+    "type": "lldb",
+    "request": "launch",
+    "cwd": "${workspaceFolder}",
+    "env": {
+      "PATH": "/usr/lib/qt6/bin:${env:PATH}"
+    }
+  },
+  "cmakeExplorer.cmakeIntegration": true,
+  "cmakeExplorer.buildDir": "${buildDirectory}",
+  "cmakeExplorer.buildConfig": "${buildType}",
+  "cmakeExplorer.debugConfig": "Debug Qt Test",
+  // ── C++ language server (clangd + compile_commands.json) ────────────────────
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "clangd.arguments": [
+    "--compile-commands-dir=${workspaceFolder}/build-debug",
+    "--background-index",
+    "--clang-tidy",
+    "--header-insertion=iwyu"
+  ],
+  // ── Formatting (.clang-format: WebKit, 4-space indent, 120 cols) ────────────
+  "clang-format.executable": "clang-format-22",
+  "clang-format.fallbackStyle": "WebKit",
+  "editor.formatOnSave": true,
+  "editor.rulers": [
+    120
+  ],
+  "[cpp]": {
+    "editor.defaultFormatter": "xaver.clang-format",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  },
+  "[c]": {
+    "editor.defaultFormatter": "xaver.clang-format",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  },
+  // ── QML (src/gui/qml; CI runs qmllint) ────────────────────────────────────
+  "[qml]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  },
+  "qml.format.enable": false,
+  // ── Shell scripts (CI shellcheck on scripts/ and .github/scripts/) ──────────
+  "shellcheck.enable": true,
+  "shellcheck.executablePath": "/usr/bin/shellcheck",
+  "[shellscript]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  },
+  // ── Markdown / JSON / YAML ──────────────────────────────────────────────────
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "[json]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.formatOnSave": false
+  },
+  "[jsonc]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  "[yaml]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  // ── File associations ───────────────────────────────────────────────────────
+  "files.associations": {
+    "*.h": "cpp",
+    "*.hpp": "cpp",
+    "qrc_*.cpp": "cpp",
+    "moc_*.cpp": "cpp"
+  },
+  // ── Hide generated / bulky artefacts from the explorer ─────────────────────
+  "files.exclude": {
+    "**/build/**": true,
+    "**/build-*/**": true,
+    "**/moc_*.cpp": true,
+    "**/qrc_*.cpp": true,
+    "**/ui_*.h": true,
+    "**/*_autogen/**": true,
+    "**/CMakeFiles/**": true,
+    "**/Testing/**": true,
+    "**/.cache/**": true
+  },
+  // ── Keep the file watcher responsive (large offline data trees) ─────────────
+  "files.watcherExclude": {
+    "**/build/**": true,
+    "**/build-*/**": true,
+    "**/data/hasheous/dumps/**": true,
+    "**/data/databases/**": true,
+    "**/data/openvgdb/**": true,
+    "**/data/mame/listxml.xml": true,
+    "**/data/gametdb/*.xml": true,
+    "**/data/compendium/*.db": true,
+    "**/data/compendium/*.db-*": true,
+    "**/roms/**": true,
+    "**/test_output/**": true,
+    "**/.cache/**": true
+  },
+  // ── Search: skip generated output and downloaded catalogues ─────────────────
+  "search.exclude": {
+    "**/build/**": true,
+    "**/build-*/**": true,
+    "**/data/hasheous/dumps/**": true,
+    "**/data/databases/**": true,
+    "**/data/openvgdb/**": true,
+    "**/data/mame/listxml.xml": true,
+    "**/data/gametdb/*.xml": true,
+    "**/archive/**": true,
+    "**/roms/**": true,
+    "**/test_output/**": true
+  },
+  // ── Editor hygiene ──────────────────────────────────────────────────────────
+  "editor.trimAutoWhitespace": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  // ── Terminal: Qt tools on PATH (Arch/CachyOS + Debian layouts) ────────────
+  "terminal.integrated.env.linux": {
+    "PATH": "/usr/lib/qt6/bin:${env:PATH}"
+  }
+}

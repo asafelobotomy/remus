@@ -31,6 +31,7 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "BUILD_TESTING": "ON",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "REMUS_ENABLE_CXX20": "OFF",
         "REMUS_ENABLE_CCACHE": "ON",
         "REMUS_ENABLE_UNITY_BUILD": "OFF",
