@@ -21,15 +21,16 @@ namespace CompendiumEnrichment {
 
 namespace {
 
-    // Metadata gaps that justify a full IGDB platform catalog download (rating-only
-    // gaps are excluded — those are cheaper to fill via Hasheous or left empty).
-    static const char kIgdbBulkGameGapSql[] = "description IS NULL OR TRIM(description) = '' "
-                                              "   OR genre IS NULL OR TRIM(genre) = '' "
-                                              "   OR developer IS NULL OR TRIM(developer) = '' "
-                                              "   OR publisher IS NULL OR TRIM(publisher) = '' "
-                                              "   OR release_year IS NULL "
-                                              "   OR release_date IS NULL OR TRIM(release_date) = '' "
-                                              "   OR players_max IS NULL ";
+    static QString igdbBulkGameGapSql(const QString &colPrefix = QString()) {
+        return QStringLiteral("%1description IS NULL OR TRIM(%1description) = '' "
+                              "   OR %1genre IS NULL OR TRIM(%1genre) = '' "
+                              "   OR %1developer IS NULL OR TRIM(%1developer) = '' "
+                              "   OR %1publisher IS NULL OR TRIM(%1publisher) = '' "
+                              "   OR %1release_year IS NULL "
+                              "   OR %1release_date IS NULL OR TRIM(%1release_date) = '' "
+                              "   OR %1players_max IS NULL ")
+            .arg(colPrefix);
+    }
 
     // Returns the candidate with the greatest number of non-empty enrichable fields.
     // Used to resolve title-collision ties in the IGDB index (multiple entries with
@@ -137,7 +138,7 @@ bool enrichFromIGDB(
                                   "JOIN systems s ON s.system_id = g.system_id "
                                   "WHERE %1 "
                                   "ORDER BY s.display_name")
-                .arg(QLatin1String(kIgdbBulkGameGapSql)))) {
+                .arg(igdbBulkGameGapSql(QStringLiteral("g."))))) {
         error = QStringLiteral("Query systems: %1").arg(sysQ.lastError().text());
         return false;
     }
@@ -187,7 +188,7 @@ bool enrichFromIGDB(
                                           "               WHERE gf.game_id = g.game_id "
                                           "                 AND gf.field_name = 'igdb_id')) "
                                           "ORDER BY g.game_id")
-                    .arg(QLatin1String(kIgdbBulkGameGapSql)))) {
+                    .arg(igdbBulkGameGapSql(QStringLiteral("g."))))) {
             error = QStringLiteral("Query IGDB per-id candidates: %1").arg(pendingQ.lastError().text());
             return false;
         }
@@ -306,7 +307,7 @@ bool enrichFromIGDB(
         {
             QSqlQuery bulkGapQ(database);
             bulkGapQ.prepare(QStringLiteral("SELECT 1 FROM games WHERE system_id = ? AND (%1) LIMIT 1")
-                    .arg(QLatin1String(kIgdbBulkGameGapSql)));
+                    .arg(igdbBulkGameGapSql()));
             bulkGapQ.addBindValue(sys.id);
             if (!bulkGapQ.exec()) {
                 error = QStringLiteral("IGDB bulk gap check for %1: %2").arg(sys.name, bulkGapQ.lastError().text());
@@ -325,7 +326,7 @@ bool enrichFromIGDB(
                                           "              WHERE gf.game_id = games.game_id "
                                           "                AND gf.field_name = 'igdb_id') "
                                           "LIMIT 1")
-                    .arg(QLatin1String(kIgdbBulkGameGapSql)));
+                    .arg(igdbBulkGameGapSql()));
             idGapQ.addBindValue(sys.id);
             if (!idGapQ.exec()) {
                 error = QStringLiteral("IGDB igdb_id gap check for %1: %2").arg(sys.name, idGapQ.lastError().text());
@@ -417,7 +418,7 @@ bool enrichFromIGDB(
         gamesQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games "
                                       "WHERE system_id = ? "
                                       "  AND (%1)")
-                .arg(QLatin1String(kIgdbBulkGameGapSql)));
+                .arg(igdbBulkGameGapSql()));
         gamesQ.addBindValue(sys.id);
         if (!gamesQ.exec()) {
             database.rollback();

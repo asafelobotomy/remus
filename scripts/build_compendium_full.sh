@@ -269,7 +269,8 @@ elif $ONLINE_ENRICHMENT; then
 fi
 "$ROOT_DIR/build/remus-cli" \
     "${build_cli_args[@]}" \
-    >"$BUILD_LOG" 2>&1 &
+    --log-file "$BUILD_LOG" \
+    >/dev/null 2>&1 &
 build_pid=$!
 
 emit_build_heartbeat "$build_pid" "$HEARTBEAT_SECONDS" "$build_started_at" &
