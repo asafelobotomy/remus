@@ -30,6 +30,38 @@
       }
     },
     {
+      "name": "Debug remus-cli (scan ROMs)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/remus-cli",
+      "args": [
+        "--scan",
+        "roms/NES",
+        "--hash"
+      ],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "cmake: build remus-cli (debug)",
+      "env": {
+        "QT_QPA_PLATFORM": "offscreen"
+      }
+    },
+    {
+      "name": "Debug remus-cli (match)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build-debug/remus-cli",
+      "args": [
+        "--match",
+        "--min-confidence",
+        "70"
+      ],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "cmake: build remus-cli (debug)",
+      "env": {
+        "QT_QPA_PLATFORM": "offscreen"
+      }
+    },
+    {
       "name": "Debug remus-cli (custom args)",
       "type": "lldb",
       "request": "launch",
@@ -37,10 +69,11 @@
       "cwd": "${workspaceFolder}",
       "preLaunchTask": "cmake: build remus-cli (debug)",
       "env": {
-        "QT_QPA_PLATFORM": "offscreen"
+        "QT_QPA_PLATFORM": "offscreen",
+        "REMUS_CLI_ARGS": "${input:cliArgs}"
       },
       "initCommands": [
-        "settings set target.run-args '${input:cliArgs}'"
+        "script import os, shlex; args = shlex.split(os.environ.get('REMUS_CLI_ARGS', '--help')); lldb.debugger.GetSelectedTarget().GetLaunchInfo().SetArguments(args, True)"
       ]
     },
     {
@@ -70,7 +103,7 @@
     {
       "id": "cliArgs",
       "type": "promptString",
-      "description": "remus-cli arguments (space-separated)",
+      "description": "remus-cli arguments (shell-style quoting supported, e.g. --scan \"roms/My Folder\" --hash)",
       "default": "--help"
     },
     {

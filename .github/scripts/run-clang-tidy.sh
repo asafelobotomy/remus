@@ -12,6 +12,8 @@ cmake -S . -B "$BUILD_DIR" \
     -DREMUS_ENABLE_WARNINGS=ON \
     -Wno-dev
 
+bash "$ROOT_DIR/.github/scripts/sanitize-compile-commands.sh" "$BUILD_DIR"
+
 mapfile -t sources < <(
     find src/core -name '*.cpp' -type f | sort | head -20
 )

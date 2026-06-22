@@ -4,7 +4,7 @@
     {
       "label": "cmake: configure (debug)",
       "type": "shell",
-      "command": "test -f build-debug/CMakeCache.txt || cmake --preset debug",
+      "command": "test -f build-debug/CMakeCache.txt || bash .github/scripts/cmake-configure-debug.sh",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -21,7 +21,7 @@
     {
       "label": "cmake: build (debug)",
       "type": "shell",
-      "command": "test -f build-debug/CMakeCache.txt || cmake --preset debug; cmake --build --preset debug -j$(nproc)",
+      "command": "test -f build-debug/CMakeCache.txt || bash .github/scripts/cmake-configure-debug.sh; cmake --build --preset debug -j$(nproc)",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -41,7 +41,7 @@
     {
       "label": "cmake: build remus-cli (debug)",
       "type": "shell",
-      "command": "test -f build-debug/CMakeCache.txt || cmake --preset debug; cmake --build build-debug --target remus-cli -j$(nproc)",
+      "command": "test -f build-debug/CMakeCache.txt || bash .github/scripts/cmake-configure-debug.sh; cmake --build build-debug --target remus-cli -j$(nproc)",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -58,7 +58,7 @@
     {
       "label": "cmake: build remus-gui (debug)",
       "type": "shell",
-      "command": "test -f build-debug/CMakeCache.txt || cmake --preset debug; cmake --build build-debug --target remus-gui -j$(nproc)",
+      "command": "test -f build-debug/CMakeCache.txt || bash .github/scripts/cmake-configure-debug.sh; cmake --build build-debug --target remus-gui -j$(nproc)",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -75,7 +75,7 @@
     {
       "label": "cmake: build test (debug)",
       "type": "shell",
-      "command": "test -f build-debug/CMakeCache.txt || cmake --preset debug; cmake --build build-debug --target ${input:testTarget} -j$(nproc)",
+      "command": "test -f build-debug/CMakeCache.txt || bash .github/scripts/cmake-configure-debug.sh; cmake --build build-debug --target ${input:testTarget} -j$(nproc)",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -130,7 +130,7 @@
     {
       "label": "format: clang-format check",
       "type": "shell",
-      "command": "CLANG_FORMAT_VERSION=\"$(tr -d '[:space:]' < .clang-format-version)\" && CLANG_FORMAT=\"/usr/bin/clang-format-${CLANG_FORMAT_VERSION}\" && if [[ ! -x \"$CLANG_FORMAT\" ]]; then CLANG_FORMAT=\"clang-format\"; fi && \"$CLANG_FORMAT\" --dry-run --Werror $(find src tests -type f \\( -name '*.cpp' -o -name '*.h' \\) | sort)",
+      "command": "bash .github/scripts/clang-format-bin.sh --dry-run --Werror $(find src tests -type f \\( -name '*.cpp' -o -name '*.h' \\) | sort)",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -173,6 +173,23 @@
         "reveal": "always",
         "panel": "shared",
         "focus": true
+      }
+    },
+    {
+      "label": "dev: sanitize compile_commands (clangd)",
+      "type": "shell",
+      "command": "for i in $(seq 1 60); do [[ -f build-debug/compile_commands.json ]] && break; sleep 1; done; bash .github/scripts/sanitize-compile-commands.sh build-debug",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "focus": false
       }
     },
     {

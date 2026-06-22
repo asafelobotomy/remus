@@ -32,7 +32,7 @@
     "--header-insertion=iwyu"
   ],
   // ── Formatting (.clang-format: WebKit, 4-space indent, 120 cols) ────────────
-  "clang-format.executable": "clang-format-22",
+  "clang-format.executable": "${workspaceFolder}/.github/scripts/clang-format-bin.sh",
   "clang-format.fallbackStyle": "WebKit",
   "editor.formatOnSave": true,
   "editor.rulers": [

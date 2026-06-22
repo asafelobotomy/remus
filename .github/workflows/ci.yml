@@ -115,15 +115,13 @@ jobs:
 
       - name: Check formatting (clang-format)
         run: |
-          CLANG_FORMAT_VERSION="$(tr -d '[:space:]' < .clang-format-version)"
           bash .github/scripts/install-clang-format.sh
-          CLANG_FORMAT="/usr/bin/clang-format-${CLANG_FORMAT_VERSION}"
           mapfile -t files < <(find src tests -type f \( -name '*.cpp' -o -name '*.h' \) | sort)
           if [ "${#files[@]}" -eq 0 ]; then
             echo "No C++ source files found to check."
             exit 1
           fi
-          "${CLANG_FORMAT}" --dry-run --Werror "${files[@]}"
+          bash .github/scripts/clang-format-bin.sh --dry-run --Werror "${files[@]}"
 
   sanitizer:
     runs-on: ubuntu-24.04

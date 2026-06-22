@@ -18,11 +18,7 @@ section() { echo -e "\n${BOLD}══ $* ══${NC}"; }
 FAILURES=()
 
 # ── Tool discovery ──────────────────────────────────────────────────────────
-# Arch ships clang-format as /usr/bin/clang-format (not clang-format-22).
-CLANG_FORMAT="clang-format"
-if command -v clang-format-22 &>/dev/null; then
-    CLANG_FORMAT="clang-format-22"
-fi
+CLANG_FORMAT="$ROOT_DIR/.github/scripts/clang-format-bin.sh"
 
 # Arch ships qmllint under /usr/lib/qt6/bin/
 if ! command -v qmllint &>/dev/null; then
@@ -37,7 +33,7 @@ fi
 
 # ── 0. Dependency check ─────────────────────────────────────────────────────
 section "0. Dependency check"
-REQUIRED_TOOLS=(cmake ctest c++ "$CLANG_FORMAT" shellcheck qmllint sqlite3 lcov 7z zip)
+REQUIRED_TOOLS=(cmake ctest c++ shellcheck qmllint sqlite3 lcov 7z zip)
 OPTIONAL_TOOLS=(chdman clang-tidy ccache)
 ALL_GOOD=1
 for t in "${REQUIRED_TOOLS[@]}"; do
@@ -48,6 +44,12 @@ for t in "${REQUIRED_TOOLS[@]}"; do
         ALL_GOOD=0
     fi
 done
+if [[ -x "$CLANG_FORMAT" ]]; then
+    info "clang-format → $("$CLANG_FORMAT" --version 2>/dev/null | head -1)"
+else
+    warn "clang-format → MISSING (required)"
+    ALL_GOOD=0
+fi
 for t in "${OPTIONAL_TOOLS[@]}"; do
     if command -v "$t" &>/dev/null; then
         info "$t → $(command -v "$t") [optional]"
@@ -68,6 +70,7 @@ if cmake -S . -B "$BUILD_DIR" \
         -DREMUS_ENABLE_WARNINGS=ON \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -Wno-dev 2>&1; then
+    bash "$ROOT_DIR/.github/scripts/sanitize-compile-commands.sh" "$BUILD_DIR"
     pass "cmake configure (Release)"
 else
     fail "cmake configure (Release)"
@@ -155,8 +158,12 @@ if cmake --preset coverage -Wno-dev 2>&1 \
          --rc lcov_branch_coverage=0 2>&1
     lcov --remove "$BUILD_COV/coverage.info" '/usr/*' '*/tests/*' \
          --output-file "$BUILD_COV/coverage.info" 2>&1
-    COVERAGE_THRESHOLD=54 bash .github/scripts/check-coverage-threshold.sh \
-        "$BUILD_COV/coverage.info" 2>&1 && pass "Coverage ≥ 54%" || fail "Coverage below threshold"
+    if COVERAGE_THRESHOLD=54 bash .github/scripts/check-coverage-threshold.sh \
+            "$BUILD_COV/coverage.info" 2>&1; then
+        pass "Coverage ≥ 54%"
+    else
+        fail "Coverage below threshold"
+    fi
     genhtml "$BUILD_COV/coverage.info" \
             --output-directory "$BUILD_COV/coverage-html" 2>&1 | tail -3
     info "HTML report: $ROOT_DIR/$BUILD_COV/coverage-html/index.html"
@@ -166,14 +173,14 @@ fi
 
 # ── 8. clang-tidy spot-check ─────────────────────────────────────────────────
 section "8. clang-tidy (informational)"
-if command -v clang-tidy &>/dev/null && [[ -f "$BUILD_DIR/compile_commands.json" ]]; then
-    mapfile -t tidy_sources < <(find src/core -name '*.cpp' -type f | sort | head -20)
-    info "Tidying ${#tidy_sources[@]} core sources"
-    clang-tidy -p "$BUILD_DIR" "${tidy_sources[@]}" 2>&1 | tail -30 && \
-        pass "clang-tidy: no issues in spot-check" || \
+if command -v clang-tidy &>/dev/null; then
+    if bash .github/scripts/run-clang-tidy.sh 2>&1; then
+        pass "clang-tidy: no issues in spot-check"
+    else
         warn "clang-tidy: issues found (informational, does not block)"
+    fi
 else
-    warn "clang-tidy skipped (missing tool or compile_commands.json)"
+    warn "clang-tidy skipped (clang-tidy not installed)"
 fi
 
 # ── 9. Sanitizer build ───────────────────────────────────────────────────────

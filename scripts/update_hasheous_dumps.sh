@@ -114,7 +114,8 @@ is_cache_fresh() {
 
 download_platform_zip() {
     local zip_name="$1"
-    local url="${API_BASE}/$(python3 -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$zip_name")"
+    local url
+    url="${API_BASE}/$(python3 -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$zip_name")"
     local cache_zip="$CACHE_DIR/$zip_name"
     local platform_dir="$DUMP_ROOT/${zip_name%.zip}"
 
@@ -190,10 +191,7 @@ for zip_name in "${platforms[@]}"; do
     fi
 done
 
-json_count=0
-while IFS= read -r -d '' f; do
-    json_count=$((json_count + 1))
-done < <(find "$DUMP_ROOT" -type f -name '*.json' ! -name 'PlatformMapping.json' -print0 2>/dev/null || true)
+json_count="$(find "$DUMP_ROOT" -type f -name '*.json' ! -name 'PlatformMapping.json' 2>/dev/null | wc -l | tr -d ' ')"
 
 # Drop cached offline index so the next build rebuilds from fresh dumps.
 rm -f "$ROOT_DIR/data/hasheous/hasheous_offline_index.sqlite" \
