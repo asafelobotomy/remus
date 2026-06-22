@@ -21,15 +21,18 @@ ui_*
 *.pro.user.*
 .qmake.stash
 
-# IDEs
+# IDEs — track shared workspace config; ignore local/ephemeral IDE state
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+!.cursor/settings.json
 .idea/
 .copilot/
-.cursor/
 .xanadAssistant/
 *.swp
 *.swo
@@ -101,6 +104,7 @@ data/compendium/*.report.json
 data/compendium/*.coverage.tsv
 data/compendium/*.disc-set-coverage.tsv
 data/compendium/*.progress.json
+data/compendium/*.bootstrap-backup
 data/compendium/compendium-manifest-full.json
 data/compendium/enrichment-credentials.json
 

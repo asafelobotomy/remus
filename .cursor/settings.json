@@ -1,0 +1,7 @@
+{
+  "plugins": {
+    "tavily": {
+      "enabled": true
+    }
+  }
+}

@@ -1,0 +1,37 @@
+---
+description: Compendium DB job safety — avoid terminal stalls and SQLite lock contention
+globs: data/compendium/**,scripts/*compendium*,scripts/run_compendium_job.sh,.github/scripts/validate-compendium-db.sh
+alwaysApply: false
+---
+
+# Compendium DB jobs (agent)
+
+## One job at a time
+
+- Run **at most one** sqlite3 / `--enrich-compendium` / `--build-compendium` job on `remus_compendium.db` at a time.
+- Wrap commands with `scripts/run_compendium_job.sh --db <path> -- …` (flock + busy_timeout).
+- Before starting, check: `pgrep -af 'sqlite3.*remus_compendium|remus-cli.*compendium'`
+
+## Validation tiers
+
+| Script | SQL | Budget |
+|--------|-----|--------|
+| `scripts/validate_compendium_quick.sh` | 0002 | ~1 min |
+| `scripts/validate_compendium_extended.sh` | 0003 | ~30s (after migrations) |
+
+Never launch parallel `0003` validation processes.
+
+## Long jobs
+
+- Use `--log-file /tmp/remus_enrich.log` for enrichment; **do not** redirect to `/dev/null`.
+- Poll progress with `tail -5 /tmp/remus_enrich.log`, not by re-running the job.
+- Offline enrich (post-optimization): ~4 min. Full online IGDB: user terminal only.
+- Use `required_permissions: ["all"]` for DB jobs expected to exceed 30s (avoid sandbox bootstrap hangs).
+
+## If a terminal stalls >5 min
+
+1. Check for active children: `pgrep -af sqlite3`
+2. Cancel the agent shell; do not start a duplicate job in parallel
+3. Re-run via `run_compendium_job.sh` once
+
+See `docs/setup/CURSOR-AGENT-TERMINAL.md` for IDE/zsh mitigations.
