@@ -273,11 +273,12 @@ bool enrichFromRetroAchievements(QSqlDatabase &database, const QString &credenti
             45,
             0.75,
         };
+        FactReplaceQueries replaceQueries(database);
 
         auto insertFact = [&](const QString &gameId, const QString &field, const QString &value,
                               const QString &type = QStringLiteral("text"), bool *insertedOut = nullptr) -> bool {
             bool inserted = false;
-            if (!insertGameFact(delQ, factQ, factSpec, gameId, field, value, type, error,
+            if (!insertGameFact(replaceQueries, delQ, factQ, factSpec, gameId, field, value, type, error,
                     QStringLiteral("retroachievements"), &inserted))
                 return false;
             if (inserted) {

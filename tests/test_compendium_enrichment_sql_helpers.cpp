@@ -72,6 +72,8 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_insertsRowAndReportsInse
         QVERIFY2(db.open(), qPrintable(db.lastError().text()));
         QVERIFY(createFactsSchema(db));
 
+        FactReplaceQueries replaceQueries(db);
+
         QSqlQuery factQ(db);
         factQ.prepare(QStringLiteral(
             "INSERT INTO game_facts "
@@ -90,7 +92,7 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_insertsRowAndReportsInse
 
         QString error;
         bool inserted = false;
-        QVERIFY(insertGameFact(delQ, factQ, spec, QStringLiteral("g1"), QStringLiteral("genre"),
+        QVERIFY(insertGameFact(replaceQueries, delQ, factQ, spec, QStringLiteral("g1"), QStringLiteral("genre"),
             QStringLiteral("Action"), QStringLiteral("text"), error, QStringLiteral("test"), &inserted));
         QVERIFY2(error.isEmpty(), qPrintable(error));
         QVERIFY(inserted);
@@ -112,6 +114,8 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_emptyValueNoop() {
         QVERIFY2(db.open(), qPrintable(db.lastError().text()));
         QVERIFY(createFactsSchema(db));
 
+        FactReplaceQueries replaceQueries(db);
+
         QSqlQuery factQ(db);
         factQ.prepare(QStringLiteral(
             "INSERT INTO game_facts "
@@ -130,7 +134,7 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_emptyValueNoop() {
 
         QString error;
         bool inserted = true;
-        QVERIFY(insertGameFact(delQ, factQ, spec, QStringLiteral("g1"), QStringLiteral("genre"), QString(),
+        QVERIFY(insertGameFact(replaceQueries, delQ, factQ, spec, QStringLiteral("g1"), QStringLiteral("genre"), QString(),
             QStringLiteral("text"), error, QStringLiteral("test"), &inserted));
         QVERIFY2(error.isEmpty(), qPrintable(error));
         QVERIFY(!inserted);
@@ -152,6 +156,8 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_replacesPriorFactFromSam
         QVERIFY2(db.open(), qPrintable(db.lastError().text()));
         QVERIFY(createFactsSchema(db));
 
+        FactReplaceQueries replaceQueries(db);
+
         QSqlQuery factQ(db);
         factQ.prepare(QStringLiteral(
             "INSERT INTO game_facts "
@@ -171,13 +177,13 @@ void CompendiumEnrichmentSqlHelpersTest::insertGameFact_replacesPriorFactFromSam
         QString error;
         bool inserted = false;
         // First insert: 'Action'
-        QVERIFY(insertGameFact(delQ, factQ, spec, QStringLiteral("g1"), QStringLiteral("genre"),
+        QVERIFY(insertGameFact(replaceQueries, delQ, factQ, spec, QStringLiteral("g1"), QStringLiteral("genre"),
             QStringLiteral("Action"), QStringLiteral("text"), error, QStringLiteral("test"), &inserted));
         QVERIFY(inserted);
 
         inserted = false;
         // Second insert with a different value: 'RPG' should replace 'Action'.
-        QVERIFY(insertGameFact(delQ, factQ, spec, QStringLiteral("g1"), QStringLiteral("genre"), QStringLiteral("RPG"),
+        QVERIFY(insertGameFact(replaceQueries, delQ, factQ, spec, QStringLiteral("g1"), QStringLiteral("genre"), QStringLiteral("RPG"),
             QStringLiteral("text"), error, QStringLiteral("test"), &inserted));
         QVERIFY(inserted);
 

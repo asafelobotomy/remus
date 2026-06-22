@@ -1,0 +1,38 @@
+# disc_based_games=81979 games_with_disc_sets=80686 disc_set_coverage_pct=98.4
+system_id	system_name	disc_based_games	games_with_disc_sets	coverage_pct
+40	3DO Interactive Multiplayer	577	577	100.0
+91	Acorn Archimedes	78	78	100.0
+90	Amiga CD	583	582	99.8
+86	Apple Macintosh	1236	1193	96.5
+55	Atari Jaguar CD	24	24	100.0
+97	Bandai Playdia	38	38	100.0
+52	Commodore Amiga CD32	203	203	100.0
+89	Commodore CDTV	60	60	100.0
+87	Fujitsu FM Towns	937	937	100.0
+83	IBM PC Compatible	15791	15791	100.0
+37	Microsoft Xbox	1368	1368	100.0
+38	Microsoft Xbox 360	7262	7255	99.9
+85	Microsoft Xbox One	0	0	0.0
+50	NEC PC-FX	71	71	100.0
+30	Nintendo 3DS	2761	2727	98.8
+4	Nintendo GameCube	2060	2019	98.0
+31	Nintendo Switch	0	0	0.0
+5	Nintendo Wii	7143	7033	98.5
+56	Nintendo Wii U	649	453	69.8
+51	Philips CD-i	2402	2376	98.9
+16	PlayStation Portable	6024	5884	97.7
+41	SNK Neo Geo CD	114	114	100.0
+23	Sega CD / Mega CD	390	390	100.0
+93	Sega Chihiro	19	16	84.2
+13	Sega Dreamcast	1550	1535	99.0
+95	Sega Lindbergh	71	70	98.6
+53	Sega Naomi	47	47	100.0
+12	Sega Saturn	2341	2323	99.2
+92	Sega Triforce	22	20	90.9
+14	Sony PlayStation	10593	10418	98.3
+15	Sony PlayStation 2	12318	11949	97.0
+57	Sony PlayStation 3	4701	4589	97.6
+84	Sony PlayStation 4	0	0	0.0
+94	Tandy VIS	72	72	100.0
+21	TurboGrafx-CD / PC Engine CD	474	474	100.0
+103	VM Labs Nuon	0	0	0.0

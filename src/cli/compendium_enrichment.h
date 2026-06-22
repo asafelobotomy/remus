@@ -23,7 +23,7 @@ namespace CompendiumEnrichment {
  * @p metadataDir, then for each game in the DB resolves metadata by
  * CRC32 → serial → name and applies it with COALESCE.
  *
- * @param database     Open SQLite connection (must be in a transaction).
+ * @param database     Open SQLite connection (manages batched transactions internally).
  * @param metadataDir  Path to the data/metadata/ directory tree.
  * @param gamesEnriched [out] Number of game rows actually updated.
  * @param factsInserted [out] Number of new game_facts rows inserted.
@@ -40,7 +40,7 @@ bool enrichFromLibretroMetadata(
  * 3dstdb.xml, wiiutdb.xml, switchtdb.xml, ps3tdb.xml), then for each
  * game in the DB resolves metadata by CRC32 → SHA1 → MD5 hash lookup.
  *
- * @param database     Open SQLite connection (must be in a transaction).
+ * @param database     Open SQLite connection (manages batched transactions internally).
  * @param gametdbDir   Path to the data/gametdb/ directory.
  * @param gamesEnriched [out] Number of game rows actually updated.
  * @param factsInserted [out] Number of new game_facts rows inserted.

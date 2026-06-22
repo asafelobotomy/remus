@@ -138,5 +138,6 @@
   // ── Terminal: Qt tools on PATH (Arch/CachyOS + Debian layouts) ────────────
   "terminal.integrated.env.linux": {
     "PATH": "/usr/lib/qt6/bin:${env:PATH}"
-  }
+  },
+  "terminal.integrated.shellIntegration.enabled": false
 }

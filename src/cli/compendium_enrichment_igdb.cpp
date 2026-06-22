@@ -52,9 +52,9 @@ namespace {
         return candidates.at(bestIdx);
     }
 
-    bool applyIgdbGameMetadata(QSqlDatabase &database, QSqlQuery &updateQ, QSqlQuery &factQ, QSqlQuery &delQ,
-        const FactInsertSpec &factSpec, const QString &gameId, const GameMetadata &gm, int &gamesEnriched,
-        int &factsInserted, QString &error) {
+    bool applyIgdbGameMetadata(QSqlDatabase &database, FactReplaceQueries &replaceQueries, QSqlQuery &updateQ,
+        QSqlQuery &factQ, QSqlQuery &delQ, const FactInsertSpec &factSpec, const QString &gameId,
+        const GameMetadata &gm, int &gamesEnriched, int &factsInserted, QString &error) {
         int releaseYear = 0;
         if (gm.releaseDate.size() >= 4) {
             bool ok = false;
@@ -90,7 +90,7 @@ namespace {
         auto insertFact
             = [&](const QString &field, const QString &value, const QString &type = QStringLiteral("text")) {
                   bool inserted = false;
-                  if (!insertGameFact(
+                  if (!insertGameFact(replaceQueries,
                           delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("igdb"), &inserted))
                       return false;
                   if (inserted)
@@ -264,6 +264,7 @@ bool enrichFromIGDB(
                 70,
                 0.85,
             };
+            FactReplaceQueries replaceQueries(database);
 
             int callIdx = 0;
             for (const PendingIgdbGame &pending : pendingGames) {
@@ -275,7 +276,7 @@ bool enrichFromIGDB(
                 if (gm.title.isEmpty())
                     continue;
 
-                if (!applyIgdbGameMetadata(database, updateQ, factQ, delQ, byIdFactSpec, pending.gameId, gm,
+                if (!applyIgdbGameMetadata(database, replaceQueries, updateQ, factQ, delQ, byIdFactSpec, pending.gameId, gm,
                         byIdGamesEnriched, factsInserted, error)) {
                     return false;
                 }
@@ -413,6 +414,7 @@ bool enrichFromIGDB(
             70,
             0.80,
         };
+        FactReplaceQueries replaceQueries(database);
 
         QSqlQuery gamesQ(database);
         gamesQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games "
@@ -436,7 +438,7 @@ bool enrichFromIGDB(
             const GameMetadata &gm = bestCandidate(it.value());
 
             if (!applyIgdbGameMetadata(
-                    database, updateQ, factQ, delQ, factSpec, gameId, gm, gamesEnriched, factsInserted, error)) {
+                    database, replaceQueries, updateQ, factQ, delQ, factSpec, gameId, gm, gamesEnriched, factsInserted, error)) {
                 return false;
             }
             if (updateQ.numRowsAffected() > 0)

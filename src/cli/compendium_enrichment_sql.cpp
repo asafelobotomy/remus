@@ -2,6 +2,7 @@
 
 #include <QDateTime>
 #include <QMetaType>
+#include <QSet>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -16,6 +17,31 @@ bool execPrepared(QSqlQuery &query, QString &error, const QString &context) {
     }
     return true;
 }
+
+FactReplaceQueries::FactReplaceQueries(QSqlDatabase &db)
+    : database(db)
+    , existsQ(db)
+    , clearCanonQ(db)
+    , clearConflictQ(db) {
+    existsQ.prepare(QStringLiteral("SELECT fact_id, field_value FROM game_facts "
+                                   "WHERE game_id = ? AND field_name = ? AND source_id = ? LIMIT 1"));
+    clearCanonQ.prepare(QStringLiteral("DELETE FROM canonical_resolution WHERE selected_fact_id = ?"));
+    clearConflictQ.prepare(
+        QStringLiteral("UPDATE merge_conflicts SET chosen_fact_id = NULL WHERE chosen_fact_id = ?"));
+}
+
+namespace {
+
+bool clearFactDeletionBlockers(FactReplaceQueries &replaceQ, int factId, QString &error) {
+    replaceQ.clearCanonQ.bindValue(0, factId);
+    if (!execPrepared(replaceQ.clearCanonQ, error, QStringLiteral("Clear canonical resolution for fact replace")))
+        return false;
+
+    replaceQ.clearConflictQ.bindValue(0, factId);
+    return execPrepared(replaceQ.clearConflictQ, error, QStringLiteral("Clear merge conflict fact refs"));
+}
+
+} // namespace
 
 bool upsertEnrichmentSource(QSqlDatabase &db, const SourceSpec &source, const SnapshotSpec &snapshot, QString &error) {
     QSqlQuery srcQ(db);
@@ -49,13 +75,28 @@ bool upsertEnrichmentSource(QSqlDatabase &db, const SourceSpec &source, const Sn
     return execPrepared(snapQ, error, QStringLiteral("Upsert snapshot %1").arg(snapshot.snapshotId));
 }
 
-bool insertGameFact(QSqlQuery &delQuery, QSqlQuery &factQuery, const FactInsertSpec &spec, const QString &gameId,
-    const QString &fieldName, const QString &fieldValue, const QString &valueType, QString &error,
-    const QString &contextPrefix, bool *inserted) {
+bool insertGameFact(FactReplaceQueries &replaceQueries, QSqlQuery &delQuery, QSqlQuery &factQuery,
+    const FactInsertSpec &spec, const QString &gameId, const QString &fieldName, const QString &fieldValue,
+    const QString &valueType, QString &error, const QString &contextPrefix, bool *inserted) {
     if (inserted)
         *inserted = false;
     if (fieldValue.isEmpty())
         return true;
+
+    replaceQueries.existsQ.bindValue(0, gameId);
+    replaceQueries.existsQ.bindValue(1, fieldName);
+    replaceQueries.existsQ.bindValue(2, spec.sourceId);
+    if (!execPrepared(replaceQueries.existsQ, error, QStringLiteral("Lookup fact for replace")))
+        return false;
+
+    if (replaceQueries.existsQ.next()) {
+        const int factId = replaceQueries.existsQ.value(0).toInt();
+        if (replaceQueries.existsQ.value(1).toString() == fieldValue)
+            return true;
+
+        if (!clearFactDeletionBlockers(replaceQueries, factId, error))
+            return false;
+    }
 
     // Remove any prior fact from this source for this game+field so that
     // re-runs replace stale values rather than accumulating alongside them.
@@ -122,6 +163,89 @@ QString normalizeMetadataTitle(const QString &title) {
             out.append(c);
     }
     return out;
+}
+
+bool bulkClearSourceFactBlockers(QSqlDatabase &db, const QString &sourceId, QString &error) {
+    QSqlQuery clearCanon(db);
+    clearCanon.prepare(QStringLiteral("DELETE FROM canonical_resolution WHERE selected_fact_id IN "
+                                      "(SELECT fact_id FROM game_facts WHERE source_id = ?)"));
+    clearCanon.addBindValue(sourceId);
+    if (!execPrepared(clearCanon, error, QStringLiteral("Bulk clear canonical for source")))
+        return false;
+
+    QSqlQuery clearConflict(db);
+    clearConflict.prepare(QStringLiteral("UPDATE merge_conflicts SET chosen_fact_id = NULL "
+                                        "WHERE chosen_fact_id IN "
+                                        "(SELECT fact_id FROM game_facts WHERE source_id = ?)"));
+    clearConflict.addBindValue(sourceId);
+    return execPrepared(clearConflict, error, QStringLiteral("Bulk clear merge conflicts for source"));
+}
+
+QSet<QString> loadGamesWithMinSourceFieldFacts(
+    QSqlDatabase &db, const QString &sourceId, int minDistinctFields, QString &error) {
+    QSet<QString> gameIds;
+    QSqlQuery q(db);
+    q.prepare(QStringLiteral("SELECT game_id FROM game_facts WHERE source_id = ? "
+                             "GROUP BY game_id HAVING COUNT(DISTINCT field_name) >= ?"));
+    q.addBindValue(sourceId);
+    q.addBindValue(minDistinctFields);
+    if (!execPrepared(q, error, QStringLiteral("Load source-satisfied games")))
+        return gameIds;
+    while (q.next())
+        gameIds.insert(q.value(0).toString());
+    return gameIds;
+}
+
+EnrichmentBatchWriter::EnrichmentBatchWriter(QSqlDatabase &db, int batchSize)
+    : m_db(db)
+    , m_batchSize(batchSize > 0 ? batchSize : kEnrichmentBatchCommitGames) {
+}
+
+bool EnrichmentBatchWriter::begin(QString &error) {
+    if (m_active)
+        return true;
+    if (!m_db.transaction()) {
+        error = QStringLiteral("Failed to start enrichment batch: %1").arg(m_db.lastError().text());
+        return false;
+    }
+    m_active = true;
+    m_gamesInBatch = 0;
+    return true;
+}
+
+bool EnrichmentBatchWriter::commitCurrent(QString &error) {
+    if (!m_active)
+        return true;
+    if (!m_db.commit()) {
+        error = QStringLiteral("Failed to commit enrichment batch: %1").arg(m_db.lastError().text());
+        m_db.rollback();
+        m_active = false;
+        m_gamesInBatch = 0;
+        return false;
+    }
+    m_active = false;
+    m_gamesInBatch = 0;
+    return true;
+}
+
+bool EnrichmentBatchWriter::onGameProcessed(QString &error) {
+    if (!m_active) {
+        if (!begin(error))
+            return false;
+    }
+    ++m_gamesInBatch;
+    if (m_gamesInBatch < m_batchSize)
+        return true;
+    return commitCurrent(error) && begin(error);
+}
+
+bool EnrichmentBatchWriter::finish(QString &error) {
+    return commitCurrent(error);
+}
+
+EnrichmentBatchWriter::~EnrichmentBatchWriter() {
+    if (m_active)
+        m_db.rollback();
 }
 
 } // namespace CompendiumEnrichmentSql

@@ -29,6 +29,10 @@ sqlite3 data/compendium/remus_compendium.db < data/compendium/migrations/0007_di
 ## Validate phase 1 constraints and collisions
 
 ```bash
+# Serialized quick gate (~1 min) — preferred for agent/CI
+./scripts/validate_compendium_quick.sh
+
+# Or directly:
 bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db
 ```
 
@@ -38,17 +42,13 @@ Or manually:
 sqlite3 -header -column data/compendium/remus_compendium.db < data/compendium/validation/0001_phase1_checks.sql
 ```
 
-`scripts/build_compendium_full.sh` runs this gate automatically after a successful build.
+`scripts/build_compendium_full.sh` runs validation gates automatically after a successful build (via `run_compendium_job.sh`).
 
 Phase 2 quality thresholds (informational, do not block phase 1):
 
 ```bash
-bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
-  data/compendium/validation/0002_phase2_quality_checks.sql
-bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
-  data/compendium/validation/0003_phase2_extended_checks.sql
-bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.db \
-  data/compendium/validation/0004_disc_set_checks.sql
+./scripts/validate_compendium_quick.sh
+./scripts/validate_compendium_extended.sh   # applies migrations 0008/0009 first (~30s)
 ```
 
 Disc set ingest checks (populated databases; WARN checks are informational unless `--strict`):
@@ -174,6 +174,8 @@ scripts/update_hasheous_dumps.sh --all-core   # curated platforms (~25 ZIPs from
 - External ID columns: [data/compendium/migrations/0005_game_external_ids.sql](migrations/0005_game_external_ids.sql)
 - Achievement count column: [data/compendium/migrations/0006_game_achievement_count.sql](migrations/0006_game_achievement_count.sql)
 - Disc sets + tracks: [data/compendium/migrations/0007_disc_sets.sql](migrations/0007_disc_sets.sql)
+- Game facts lookup index: [data/compendium/migrations/0008_game_facts_lookup_index.sql](migrations/0008_game_facts_lookup_index.sql)
+- Signature source-entry bridge index: [data/compendium/migrations/0009_game_signatures_source_entry_key.sql](migrations/0009_game_signatures_source_entry_key.sql)
 - Validator: [data/compendium/validation/0001_phase1_checks.sql](validation/0001_phase1_checks.sql)
 - Disc set validator: [data/compendium/validation/0004_disc_set_checks.sql](validation/0004_disc_set_checks.sql)
 - Disc set ingest validator: [data/compendium/validation/0005_disc_set_ingest_checks.sql](validation/0005_disc_set_ingest_checks.sql)

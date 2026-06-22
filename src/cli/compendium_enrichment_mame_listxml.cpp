@@ -1,5 +1,6 @@
 #include "compendium_enrichment.h"
 #include "compendium_enrichment_sql.h"
+#include "compendium_enrichment_mame_common.h"
 #include "../core/constants/system_ids.h"
 
 #include <QDebug>
@@ -12,6 +13,7 @@
 
 using namespace Remus;
 using namespace CompendiumEnrichmentSql;
+using namespace CompendiumEnrichmentMame;
 
 namespace {
 
@@ -150,6 +152,16 @@ bool enrichFromMameListXml(
         0.85,
     };
 
+    if (!bulkClearSourceFactBlockers(database, factSpec.sourceId, error))
+        return false;
+
+    const QSet<QString> skipGameIds = loadGamesWithMinSourceFieldFacts(database, factSpec.sourceId, 2, error);
+    if (!error.isEmpty())
+        return false;
+
+    FactReplaceQueries replaceQueries(database);
+    EnrichmentBatchWriter batchWriter(database);
+
     // Only query arcade games that are still missing at least one of the fields
     // this enricher provides. Games fully populated by a higher-priority source
     // still receive updated game_facts (via DELETE+INSERT) for resolver accuracy,
@@ -187,14 +199,14 @@ bool enrichFromMameListXml(
         bool inserted = false;
 
         if (!info.manufacturer.isEmpty()) {
-            if (!insertGameFact(delQ, factQ, factSpec, currentGameId, QStringLiteral("developer"), info.manufacturer,
+            if (!insertGameFact(replaceQueries, delQ, factQ, factSpec, currentGameId, QStringLiteral("developer"), info.manufacturer,
                     QStringLiteral("text"), error, QStringLiteral("mame-listxml"), &inserted))
                 return false;
             if (inserted)
                 ++factsInserted;
 
             inserted = false;
-            if (!insertGameFact(delQ, factQ, factSpec, currentGameId, QStringLiteral("publisher"), info.manufacturer,
+            if (!insertGameFact(replaceQueries, delQ, factQ, factSpec, currentGameId, QStringLiteral("publisher"), info.manufacturer,
                     QStringLiteral("text"), error, QStringLiteral("mame-listxml"), &inserted))
                 return false;
             if (inserted)
@@ -203,7 +215,7 @@ bool enrichFromMameListXml(
 
         if (info.year > 0) {
             inserted = false;
-            if (!insertGameFact(delQ, factQ, factSpec, currentGameId, QStringLiteral("release_year"),
+            if (!insertGameFact(replaceQueries, delQ, factQ, factSpec, currentGameId, QStringLiteral("release_year"),
                     QString::number(info.year), QStringLiteral("int"), error, QStringLiteral("mame-listxml"),
                     &inserted))
                 return false;
@@ -213,7 +225,7 @@ bool enrichFromMameListXml(
 
         if (info.players > 0) {
             inserted = false;
-            if (!insertGameFact(delQ, factQ, factSpec, currentGameId, QStringLiteral("players_max"),
+            if (!insertGameFact(replaceQueries, delQ, factQ, factSpec, currentGameId, QStringLiteral("players_max"),
                     QString::number(info.players), QStringLiteral("int"), error, QStringLiteral("mame-listxml"),
                     &inserted))
                 return false;
@@ -226,6 +238,12 @@ bool enrichFromMameListXml(
     auto flushCurrentGame = [&]() -> bool {
         if (currentGameId.isEmpty())
             return true;
+        if (skipGameIds.contains(currentGameId)) {
+            currentGameId.clear();
+            canonicalTitle.clear();
+            romNameCandidates.clear();
+            return batchWriter.onGameProcessed(error);
+        }
         for (const QString &candidate : romNameCandidates) {
             const auto it = machines.constFind(candidate);
             if (it == machines.cend())
@@ -234,12 +252,14 @@ bool enrichFromMameListXml(
             currentGameId.clear();
             canonicalTitle.clear();
             romNameCandidates.clear();
-            return ok;
+            if (!ok)
+                return false;
+            return batchWriter.onGameProcessed(error);
         }
         currentGameId.clear();
         canonicalTitle.clear();
         romNameCandidates.clear();
-        return true;
+        return batchWriter.onGameProcessed(error);
     };
 
     while (gamesQ.next()) {
@@ -253,18 +273,15 @@ bool enrichFromMameListXml(
             currentGameId = gameId;
             canonicalTitle = title;
             romNameCandidates.clear();
-            if (!canonicalTitle.isEmpty())
-                romNameCandidates.append(canonicalTitle);
+            appendRomNameCandidate(romNameCandidates, title);
         }
 
-        if (!alias.isEmpty() && !romNameCandidates.contains(alias)) {
-            if (!alias.contains(QLatin1Char(' ')) && alias.size() <= 32)
-                romNameCandidates.prepend(alias);
-            else
-                romNameCandidates.append(alias);
-        }
+        appendRomNameCandidate(romNameCandidates, alias);
     }
     if (!flushCurrentGame())
+        return false;
+
+    if (!batchWriter.finish(error))
         return false;
 
     qInfo().noquote()

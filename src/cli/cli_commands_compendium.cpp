@@ -151,6 +151,8 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0005_game_external_ids.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0006_game_achievement_count.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0007_disc_sets.sql")),
+        QDir(compendiumDir).filePath(QStringLiteral("migrations/0008_game_facts_lookup_index.sql")),
+        QDir(compendiumDir).filePath(QStringLiteral("migrations/0009_game_signatures_source_entry_key.sql")),
     };
 
     QString buildId;

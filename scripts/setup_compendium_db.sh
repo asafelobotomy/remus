@@ -22,6 +22,8 @@ SQL_STEPS=(
     "$ROOT_DIR/data/compendium/migrations/0005_game_external_ids.sql"
     "$ROOT_DIR/data/compendium/migrations/0006_game_achievement_count.sql"
     "$ROOT_DIR/data/compendium/migrations/0007_disc_sets.sql"
+    "$ROOT_DIR/data/compendium/migrations/0008_game_facts_lookup_index.sql"
+    "$ROOT_DIR/data/compendium/migrations/0009_game_signatures_source_entry_key.sql"
 )
 VALIDATION_SQL="$ROOT_DIR/data/compendium/validation/0001_phase1_checks.sql"
 DISC_SET_VALIDATION_SQL="$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql"

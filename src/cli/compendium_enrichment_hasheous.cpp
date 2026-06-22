@@ -282,11 +282,12 @@ bool enrichFromHasheous(QSqlDatabase &database, const QString &credentialsPath, 
         88,
         0.85,
     };
+    FactReplaceQueries replaceQueries(database);
 
     auto insertFact = [&](const QString &gameId, const QString &field, const QString &value,
                           const QString &type = QStringLiteral("text"), bool *insertedOut = nullptr) -> bool {
         bool inserted = false;
-        if (!insertGameFact(
+        if (!insertGameFact(replaceQueries,
                 delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("hasheous"), &inserted))
             return false;
         if (inserted) {

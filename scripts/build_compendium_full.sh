@@ -313,28 +313,29 @@ else
 fi
 
 if ! $SKIP_VALIDATION; then
-    bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" "$OUTPUT_DB"
+    bash "$ROOT_DIR/scripts/apply_compendium_migrations.sh" "$OUTPUT_DB"
+    run_validate() {
+        bash "$ROOT_DIR/scripts/run_compendium_job.sh" --db "$OUTPUT_DB" -- \
+            bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" "$@"
+    }
+    run_validate "$OUTPUT_DB"
     if [[ -f "$ROOT_DIR/data/compendium/validation/0002_phase2_quality_checks.sql" ]]; then
         echo "==> Phase 2 quality checks (informational thresholds)"
-        bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" \
-            "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0002_phase2_quality_checks.sql" \
+        run_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0002_phase2_quality_checks.sql" \
             || echo "warning: one or more phase-2 quality checks failed (see above)" >&2
     fi
     if [[ -f "$ROOT_DIR/data/compendium/validation/0003_phase2_extended_checks.sql" ]]; then
         echo "==> Phase 2 extended checks (informational thresholds)"
-        bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" \
-            "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0003_phase2_extended_checks.sql" \
+        run_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0003_phase2_extended_checks.sql" \
             || echo "warning: one or more phase-2 extended checks failed (see above)" >&2
     fi
     if [[ -f "$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql" ]]; then
         echo "==> Disc set schema checks (migration 0007)"
-        bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" \
-            "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql"
+        run_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql"
     fi
     if [[ -f "$ROOT_DIR/data/compendium/validation/0005_disc_set_ingest_checks.sql" ]]; then
         echo "==> Disc set ingest checks (strict: FAIL only; use --strict to fail on WARN)"
-        bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" \
-            "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0005_disc_set_ingest_checks.sql" \
+        run_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0005_disc_set_ingest_checks.sql" \
             --warn-only
     fi
 fi

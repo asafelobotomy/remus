@@ -59,11 +59,16 @@ void CompendiumSqlUtilitiesTest::discSetMigration_appliesOnUpgradedBootstrap() {
         compendiumDir + QStringLiteral("/migrations/0006_game_achievement_count.sql"),
     };
     const QString discSetMigration = compendiumDir + QStringLiteral("/migrations/0007_disc_sets.sql");
+    const QString factsIndexMigration = compendiumDir + QStringLiteral("/migrations/0008_game_facts_lookup_index.sql");
+    const QString sigEntryMigration
+        = compendiumDir + QStringLiteral("/migrations/0009_game_signatures_source_entry_key.sql");
 
     for (const QString &scriptPath : bootstrapScripts) {
         QVERIFY2(QFileInfo::exists(scriptPath), qPrintable(QStringLiteral("Missing migration: %1").arg(scriptPath)));
     }
     QVERIFY(QFileInfo::exists(discSetMigration));
+    QVERIFY(QFileInfo::exists(factsIndexMigration));
+    QVERIFY(QFileInfo::exists(sigEntryMigration));
 
     QTemporaryDir tempDir;
     QVERIFY(tempDir.isValid());

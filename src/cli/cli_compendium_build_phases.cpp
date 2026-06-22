@@ -341,6 +341,19 @@ void insertEnrichmentStatsReportFields(
     report.insert(QStringLiteral("enrichment_passes_skipped_filtered"), stats.passesSkippedFiltered);
     report.insert(QStringLiteral("enrichment_passes_skipped_offline_only"), stats.passesSkippedOfflineOnly);
     report.insert(QStringLiteral("enrichment_passes_failed_with_error"), stats.passesFailedWithError);
+    if (!stats.passErrors.isEmpty()) {
+        QJsonArray passErrorArray;
+        for (const EnrichmentStats::PassError &entry : stats.passErrors) {
+            passErrorArray.append(QJsonObject {
+                { QStringLiteral("source_key"), entry.sourceKey },
+                { QStringLiteral("pass_name"), entry.passName },
+                { QStringLiteral("error"), entry.message },
+            });
+        }
+        report.insert(QStringLiteral("enrichment_pass_errors"), passErrorArray);
+    } else {
+        report.remove(QStringLiteral("enrichment_pass_errors"));
+    }
     report.insert(QStringLiteral("post_enrich_merge_runs"), stats.mergeRuns);
     report.insert(QStringLiteral("ra_api_calls_needed"), stats.raApiCallsNeeded);
     report.insert(QStringLiteral("ra_api_calls_performed"), stats.raApiCallsPerformed);
@@ -416,7 +429,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("Libretro metadata enrichment"),
             QStringLiteral("libretro"),
-            TransactionMode::CallerWrapped,
+            TransactionMode::SelfManaged,
             [&] { return hasMetadataDir; },
             [&] { return hasLibretroMetadataGaps(db, error); },
             [&] {
@@ -427,7 +440,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("GameTDB enrichment"),
             QStringLiteral("gametdb"),
-            TransactionMode::CallerWrapped,
+            TransactionMode::SelfManaged,
             [&] { return hasGametdbDir; },
             [&] { return hasGametdbGaps(db, error); },
             [&] {
@@ -438,7 +451,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("OpenVGDB enrichment"),
             QStringLiteral("openvgdb"),
-            TransactionMode::CallerWrapped,
+            TransactionMode::SelfManaged,
             [&] { return hasOpenvgdbPath; },
             [&] { return hasOpenVgdbGaps(db, error, gametdbDir); },
             [&] {
@@ -496,7 +509,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("MAME catver enrichment"),
             QStringLiteral("mame-catver"),
-            TransactionMode::CallerWrapped,
+            TransactionMode::SelfManaged,
             [&] { return hasMameCatverPath; },
             [&] { return hasArcadeCatverGaps(db, error); },
             [&] {
@@ -507,7 +520,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("MAME listxml enrichment"),
             QStringLiteral("mame-listxml"),
-            TransactionMode::CallerWrapped,
+            TransactionMode::SelfManaged,
             [&] { return hasMameListXmlPath; },
             [&] { return hasArcadeListxmlGaps(db, error); },
             [&] {
@@ -587,6 +600,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
                                         .arg(passIdx)
                                         .arg(totalPasses)
                                         .arg(pass.name, error);
+            stats.passErrors.append({ pass.sourceKey, pass.name, error });
             error.clear();
             ++stats.passesFailedWithError;
             continue;

@@ -53,6 +53,12 @@ struct EnrichmentStats {
     int passesSkippedFiltered = 0; // passes skipped by --enrich-source filter
     int passesSkippedOfflineOnly = 0; // online passes skipped in offline-only build mode
     int passesFailedWithError = 0; // non-fatal pass failures; pipeline continues
+    struct PassError {
+        QString sourceKey;
+        QString passName;
+        QString message;
+    };
+    QList<PassError> passErrors;
     int mergeRuns = 0;
     int raApiCallsNeeded = 0;
     int raApiCallsPerformed = 0;

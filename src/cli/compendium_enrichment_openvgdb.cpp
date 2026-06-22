@@ -4,6 +4,7 @@
 #include <QDate>
 #include <QFile>
 #include <QHash>
+#include <QDebug>
 #include <QSet>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -286,12 +287,25 @@ bool enrichFromOpenVGDB(
         0.0,
     };
 
+    if (!bulkClearSourceFactBlockers(database, sourceId, error))
+        return false;
+
+    const QSet<QString> skipGameIds = loadGamesWithMinSourceFieldFacts(database, sourceId, 3, error);
+    if (!error.isEmpty())
+        return false;
+    if (!skipGameIds.isEmpty()) {
+        qInfo().noquote() << QStringLiteral("[openvgdb] Skipping %1 games already enriched by source").arg(skipGameIds.size());
+    }
+
+    FactReplaceQueries replaceQueries(database);
+    EnrichmentBatchWriter batchWriter(database);
+
     auto insertFact = [&](const QString &gameId, const QString &field, const QString &value, const QString &valueType,
                           double confidence, const QString &contextPrefix) -> bool {
         FactInsertSpec scopedFactSpec = factSpec;
         scopedFactSpec.confidence = confidence;
         bool inserted = false;
-        if (!insertGameFact(
+        if (!insertGameFact(replaceQueries,
                 delQuery, factQuery, scopedFactSpec, gameId, field, value, valueType, error, contextPrefix, &inserted))
             return false;
         if (inserted)
@@ -306,8 +320,10 @@ bool enrichFromOpenVGDB(
 
     auto applyEntryToGame = [&](const QString &gameId, const OpenVGDBEntry &e, double confidence,
                                 const QString &contextPrefix, const QString &releaseYearType) -> bool {
+        if (skipGameIds.contains(gameId))
+            return batchWriter.onGameProcessed(error);
         if (!hasData(e))
-            return true;
+            return batchWriter.onGameProcessed(error);
 
         updateQuery.bindValue(0, nullableText(e.genre));
         updateQuery.bindValue(1, nullableText(e.developer));
@@ -341,7 +357,7 @@ bool enrichFromOpenVGDB(
             && !insertFact(gameId, QStringLiteral("release_year"), QString::number(e.releaseYear), releaseYearType,
                 confidence, contextPrefix))
             return false;
-        return true;
+        return batchWriter.onGameProcessed(error);
     };
 
     for (auto it = gameIdByCrc.cbegin(); it != gameIdByCrc.cend(); ++it) {
@@ -420,6 +436,9 @@ bool enrichFromOpenVGDB(
             }
         }
     }
+
+    if (!batchWriter.finish(error))
+        return false;
 
     return true;
 }

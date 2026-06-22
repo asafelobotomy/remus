@@ -236,11 +236,12 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
         88,
         0.85,
     };
+    FactReplaceQueries replaceQueries(database);
 
     auto insertFact = [&](const QString &gameId, const QString &field, const QString &value,
                           const QString &type = QStringLiteral("text")) -> bool {
         bool inserted = false;
-        if (!insertGameFact(
+        if (!insertGameFact(replaceQueries,
                 delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("playmatch"), &inserted)) {
             return false;
         }

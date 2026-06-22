@@ -189,11 +189,12 @@ bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInse
         PRIORITY,
         CONFIDENCE,
     };
+    FactReplaceQueries replaceQueries(database);
 
     auto insertFact
         = [&](const QString &gameId, const QString &field, const QString &value, const QString &type) -> bool {
         bool inserted = false;
-        if (!insertGameFact(
+        if (!insertGameFact(replaceQueries,
                 delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("zxinfo"), &inserted)) {
             return false;
         }
