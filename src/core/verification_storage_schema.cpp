@@ -1,5 +1,6 @@
 #include "verification_engine.h"
 #include "patched_rom_parser.h"
+#include "compendium_sql_pragmas.h"
 #include "constants/systems.h"
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -48,6 +49,8 @@ void VerificationEngine::setCompendiumDb(const QString &compendiumDbPath) {
         m_compendiumConnectionName.clear();
         return;
     }
+
+    CompendiumSql::applyReadOnlyPragmas(db);
 
     m_compendiumConnectionName = targetConnection;
     qDebug() << "VerificationEngine: compendium DB attached:" << compendiumDbPath;

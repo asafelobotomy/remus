@@ -1,5 +1,8 @@
 #pragma once
 
+#include "../core/compendium_sql_pragmas.h"
+#include "../core/constants/database_schema.h"
+
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -11,6 +14,26 @@
 #include <QString>
 
 namespace CompendiumSqlUtilities {
+
+inline void applyCompendiumWritePragmas(QSqlDatabase &database) {
+    Remus::CompendiumSql::applyWritePragmas(database);
+}
+
+inline void applyCompendiumReadOnlyPragmas(QSqlDatabase &database) {
+    Remus::CompendiumSql::applyReadOnlyPragmas(database);
+}
+
+inline bool beginImmediateTransaction(QSqlDatabase &database, QString &error) {
+    return Remus::CompendiumSql::beginImmediateTransaction(database, error);
+}
+
+inline void finalizeCompendiumDatabasePragmas(QSqlDatabase &database) {
+    Remus::CompendiumSql::finalizeDatabasePragmas(database);
+}
+
+inline bool compendiumTableExists(QSqlDatabase &database, const QString &tableName) {
+    return Remus::CompendiumSql::tableExists(database, tableName);
+}
 
 inline QStringList splitSqlStatements(const QString &content) {
     QStringList statements;

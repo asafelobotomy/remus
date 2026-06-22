@@ -1,5 +1,6 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
+#include "compendium_sql_utilities.h"
 
 #include "../metadata/compendium_patch_catalog_importer.h"
 
@@ -48,17 +49,7 @@ int handleImportPatchCatalogCommand(CliContext &ctx) {
         return 1;
     }
 
-    {
-        QSqlQuery pragmaQuery(database);
-        pragmaQuery.exec(QStringLiteral("PRAGMA journal_mode = WAL"));
-        pragmaQuery.exec(QStringLiteral("PRAGMA busy_timeout = 5000"));
-        if (!pragmaQuery.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
-            qCritical() << "✗ Failed to enable foreign keys:" << pragmaQuery.lastError().text();
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-    }
+    CompendiumSqlUtilities::applyCompendiumWritePragmas(database);
 
     Remus::CompendiumPatchCatalog::ImportStats stats;
     QString importError;

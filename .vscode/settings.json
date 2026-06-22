@@ -35,7 +35,7 @@
   // Linux: use clang-format on PATH (Arch/CachyOS: /usr/bin/clang-format v22).
   // Do not use ${workspaceFolder} here — xaver.clang-format resolves it only when
   // a tab is focused. CI/tasks use .github/scripts/clang-format-bin.sh instead.
-  "clang-format.executable.linux": "clang-format",
+  "clang-format.executable.linux": "/usr/bin/clang-format",
   "clang-format.fallbackStyle": "WebKit",
   "editor.formatOnSave": true,
   "editor.rulers": [
@@ -56,7 +56,20 @@
     "editor.tabSize": 4,
     "editor.insertSpaces": true
   },
-  "qml.format.enable": false,
+  "qt-qml.qmlls.enabled": true,
+  "qt-qml.qmlls.customExePath": "/usr/lib/qt6/bin/qmlls",
+  // SQLTools SQLite resolves relative paths from the workspace root (not ${workspaceFolder}).
+  "sqltools.connections": [
+    {
+      "name": "Compendium",
+      "driver": "SQLite",
+      "database": "./data/compendium/remus_compendium.db"
+    }
+  ],
+  "[sql]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
   // ── Shell scripts (CI shellcheck on scripts/ and .github/scripts/) ──────────
   "shellcheck.enable": true,
   "shellcheck.executablePath": "/usr/bin/shellcheck",
@@ -142,5 +155,11 @@
   "terminal.integrated.env.linux": {
     "PATH": "/usr/lib/qt6/bin:${env:PATH}"
   },
-  "terminal.integrated.shellIntegration.enabled": false
+  // Tasks use bash (CMake/shell scripts); interactive terminal may stay fish.
+  "terminal.integrated.automationProfile.linux": {
+    "path": "/bin/bash"
+  },
+  "terminal.integrated.shellIntegration.enabled": false,
+  "clang-format.executable": "/usr/bin/clang-format",
+  "sqltools.useNodeRuntime": true
 }

@@ -233,11 +233,19 @@ namespace Constants {
 
         namespace Compendium {
             /// Latest applied SQL migration under data/compendium/migrations/
-            inline constexpr int MIGRATION_VERSION = 7;
+            inline constexpr int MIGRATION_VERSION = 11;
+
+            /// busy_timeout for compendium write connections (milliseconds).
+            inline constexpr int BUSY_TIMEOUT_WRITE_MS = 30000;
+
+            /// busy_timeout for compendium read-only analytics/validation (milliseconds).
+            inline constexpr int BUSY_TIMEOUT_READ_MS = 60000;
 
             namespace Tables {
                 inline constexpr const char *GAME_DISC_SETS = "game_disc_sets";
                 inline constexpr const char *GAME_DISC_TRACKS = "game_disc_tracks";
+                inline constexpr const char *COVERAGE_STATS = "compendium_coverage_stats";
+                inline constexpr const char *SOURCE_COVERAGE = "compendium_source_coverage";
             }
         } // namespace Compendium
 

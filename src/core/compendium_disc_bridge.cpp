@@ -1,6 +1,7 @@
 #include "compendium_disc_bridge.h"
 
 #include "disc_title_parser.h"
+#include "compendium_sql_pragmas.h"
 
 #include <QDateTime>
 #include <algorithm>
@@ -38,6 +39,7 @@ namespace {
             connectionName.clear();
             return false;
         }
+        CompendiumSql::applyReadOnlyPragmas(db);
         return true;
     }
 

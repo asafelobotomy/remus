@@ -1,5 +1,6 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
+#include "compendium_sql_utilities.h"
 
 #include "../metadata/compendium_compiler_service.h"
 #include "../metadata/compendium_merge_resolver.h"
@@ -41,20 +42,11 @@ int handleDedupCompendiumCommand(CliContext &ctx) {
         return 1;
     }
 
-    {
-        QSqlQuery pragmaQuery(database);
-        pragmaQuery.exec(QStringLiteral("PRAGMA journal_mode = WAL"));
-        pragmaQuery.exec(QStringLiteral("PRAGMA busy_timeout = 5000"));
-        if (!pragmaQuery.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
-            qCritical() << "✗ Failed to enable foreign keys:" << pragmaQuery.lastError().text();
-            database.close();
-            QSqlDatabase::removeDatabase(connectionName);
-            return 1;
-        }
-    }
+    CompendiumSqlUtilities::applyCompendiumWritePragmas(database);
 
-    if (!database.transaction()) {
-        qCritical() << "✗ Failed to start transaction:" << database.lastError().text();
+    QString txError;
+    if (!CompendiumSqlUtilities::beginImmediateTransaction(database, txError)) {
+        qCritical() << "✗ Failed to start transaction:" << txError;
         database.close();
         QSqlDatabase::removeDatabase(connectionName);
         return 1;

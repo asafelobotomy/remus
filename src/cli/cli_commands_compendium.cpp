@@ -154,6 +154,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0008_game_facts_lookup_index.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0009_game_signatures_source_entry_key.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0010_game_extended_metadata.sql")),
+        QDir(compendiumDir).filePath(QStringLiteral("migrations/0011_materialized_coverage.sql")),
     };
 
     QString buildId;
@@ -180,8 +181,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     const QString launchboxMetadataPath = findLaunchBoxMetadataPath();
     const QString credPath = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
     const bool onlineEnrichmentAll = ctx.parser.isSet(QStringLiteral("online-enrichment-all"));
-    const bool onlineEnrichment
-        = onlineEnrichmentAll || ctx.parser.isSet(QStringLiteral("online-enrichment"));
+    const bool onlineEnrichment = onlineEnrichmentAll || ctx.parser.isSet(QStringLiteral("online-enrichment"));
     const bool offlineOnlyEnrichment = !onlineEnrichment;
     QStringList effectiveSourceFilter = sourceFilter;
     if (onlineEnrichment && effectiveSourceFilter.isEmpty() && !onlineEnrichmentAll) {
@@ -191,9 +191,9 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
             "Pass --online-enrichment-all to include per-game APIs: %1.")
                                  .arg(perGameOnlineEnrichmentSourceKeys().join(QStringLiteral(", ")));
     }
-    const QString enrichmentFingerprint = computeEnrichmentInputsFingerprint(
-        metadataDir, gametdbDir, openvgdbPath, mameCatverPath, mameListXmlPath, launchboxMetadataPath, credPath,
-        effectiveSourceFilter, offlineOnlyEnrichment, onlineEnrichmentAll);
+    const QString enrichmentFingerprint
+        = computeEnrichmentInputsFingerprint(metadataDir, gametdbDir, openvgdbPath, mameCatverPath, mameListXmlPath,
+            launchboxMetadataPath, credPath, effectiveSourceFilter, offlineOnlyEnrichment, onlineEnrichmentAll);
     if (offlineOnlyEnrichment) {
         qInfo() << "[build-compendium] Offline-only enrichment (local DAT/metadata). "
                 << "Pass --online-enrichment for IGDB/RA bulk passes (requires REMUS_* credentials).";
@@ -640,9 +640,9 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
             return 1;
         }
         if (ctx.parser.isSet(QStringLiteral("fail-on-enrichment-errors")) && enrichStats.passesFailedWithError > 0) {
-            qCritical().noquote()
-                << QStringLiteral("✗ %1 enrichment pass(es) failed with errors (--fail-on-enrichment-errors)")
-                       .arg(enrichStats.passesFailedWithError);
+            qCritical().noquote() << QStringLiteral(
+                "✗ %1 enrichment pass(es) failed with errors (--fail-on-enrichment-errors)")
+                                         .arg(enrichStats.passesFailedWithError);
             for (const EnrichmentStats::PassError &pe : enrichStats.passErrors) {
                 qCritical().noquote() << QStringLiteral("  - [%1] %2: %3").arg(pe.sourceKey, pe.passName, pe.message);
             }
@@ -685,6 +685,8 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         QSqlDatabase::removeDatabase(connectionName);
         return 1;
     }
+
+    finalizeCompendiumBuildArtifacts(database);
 
     const QString reportPath = stagedReportPath;
     QJsonObject report;

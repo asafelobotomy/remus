@@ -3,14 +3,18 @@
     "ms-vscode.cmake-tools",
     "llvm-vs-code-extensions.vscode-clangd",
     "xaver.clang-format",
-    "jeanp413.qml",
+    "theqtcompany.qt-qml",
     "timonwong.shellcheck",
     "vadimcn.vscode-lldb",
     "redhat.vscode-yaml",
-    "fredericbonnet.cmake-test-adapter"
+    "fredericbonnet.cmake-test-adapter",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-sqlite"
   ],
   "unwantedRecommendations": [
     "ms-vscode.cpptools",
-    "ms-vscode.cpptools-extension-pack"
+    "ms-vscode.cpptools-extension-pack",
+    "ms-mssql.mssql",
+    "jeanp413.qml"
   ]
 }

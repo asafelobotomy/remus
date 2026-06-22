@@ -191,6 +191,7 @@ regenerated with `scripts/generate_compendium_manifest.sh`.
 - Game facts lookup index: [data/compendium/migrations/0008_game_facts_lookup_index.sql](migrations/0008_game_facts_lookup_index.sql)
 - Signature source-entry bridge index: [data/compendium/migrations/0009_game_signatures_source_entry_key.sql](migrations/0009_game_signatures_source_entry_key.sql)
 - Extended metadata columns: [data/compendium/migrations/0010_game_extended_metadata.sql](migrations/0010_game_extended_metadata.sql)
+- Materialized coverage snapshot: [data/compendium/migrations/0011_materialized_coverage.sql](migrations/0011_materialized_coverage.sql)
 - Validator: [data/compendium/validation/0001_phase1_checks.sql](validation/0001_phase1_checks.sql)
 - Disc set validator: [data/compendium/validation/0004_disc_set_checks.sql](validation/0004_disc_set_checks.sql)
 - Disc set ingest validator: [data/compendium/validation/0005_disc_set_ingest_checks.sql](validation/0005_disc_set_ingest_checks.sql)

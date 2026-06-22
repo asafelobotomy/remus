@@ -16,6 +16,7 @@ class CompendiumSqlUtilitiesTest : public QObject {
 private slots:
     void executeSqlScript_ignoresSemicolonInsideLineComments();
     void discSetMigration_appliesOnUpgradedBootstrap();
+    void materializedCoverageMigration_createsSnapshotTables();
 };
 
 static QString repoRootPath() {
@@ -90,6 +91,35 @@ void CompendiumSqlUtilitiesTest::discSetMigration_appliesOnUpgradedBootstrap() {
         QVERIFY2(CompendiumSqlUtilities::executeSqlScript(database, discSetMigration, error), qPrintable(error));
         QVERIFY(tableExists(database, QStringLiteral("game_disc_sets")));
         QVERIFY(tableExists(database, QStringLiteral("game_disc_tracks")));
+
+        database.close();
+    }
+
+    QSqlDatabase::removeDatabase(connectionName);
+}
+
+void CompendiumSqlUtilitiesTest::materializedCoverageMigration_createsSnapshotTables() {
+    const QString rootPath = repoRootPath();
+    QVERIFY2(!rootPath.isEmpty(), "Could not locate repository root for compendium migrations");
+
+    const QString compendiumDir = rootPath + QStringLiteral("/data/compendium");
+    const QString coverageMigration = compendiumDir + QStringLiteral("/migrations/0011_materialized_coverage.sql");
+    QVERIFY(QFileInfo::exists(coverageMigration));
+
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+
+    const QString dbPath = tempDir.path() + QStringLiteral("/compendium.db");
+    const QString connectionName = QStringLiteral("compendium_coverage_migration_test");
+    {
+        QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        database.setDatabaseName(dbPath);
+        QVERIFY2(database.open(), qPrintable(database.lastError().text()));
+
+        QString error;
+        QVERIFY2(CompendiumSqlUtilities::executeSqlScript(database, coverageMigration, error), qPrintable(error));
+        QVERIFY(tableExists(database, QStringLiteral("compendium_coverage_stats")));
+        QVERIFY(tableExists(database, QStringLiteral("compendium_source_coverage")));
 
         database.close();
     }

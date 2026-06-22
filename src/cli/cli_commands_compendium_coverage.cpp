@@ -1,7 +1,9 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
+#include "compendium_sql_utilities.h"
 
 #include "../core/compendium_disc_bridge.h"
+#include "../core/constants/database_schema.h"
 
 #include <QDebug>
 #include <QFileInfo>
@@ -35,6 +37,8 @@ struct CompendiumCoverageDb {
             connectionName.clear();
             return false;
         }
+
+        CompendiumSqlUtilities::applyCompendiumReadOnlyPragmas(database);
         return true;
     }
 
@@ -97,6 +101,150 @@ bool queryDiscSetCoverageStats(QSqlDatabase &database, DiscSetCoverageStats &sta
     return true;
 }
 
+bool materializedCoverageAvailable(QSqlDatabase &database) {
+    namespace CompendiumTables = Remus::Constants::DatabaseSchema::Compendium::Tables;
+    if (!CompendiumSqlUtilities::compendiumTableExists(database, QString::fromLatin1(CompendiumTables::COVERAGE_STATS)))
+        return false;
+
+    QSqlQuery q(database);
+    if (!q.exec(QStringLiteral("SELECT COUNT(*) FROM compendium_coverage_stats WHERE id = 1")) || !q.next())
+        return false;
+    return q.value(0).toInt() > 0;
+}
+
+bool emitCoverageFromMaterializedTables(QSqlDatabase &database, QTextStream &out, QString &error) {
+    QSqlQuery statsQuery(database);
+    if (!statsQuery.exec(QStringLiteral("SELECT total_games, total_signatures, total_systems, active_sources, "
+                                        "shadowed_sources, disc_based_games, games_with_disc_sets, "
+                                        "disc_set_coverage_pct "
+                                        "FROM compendium_coverage_stats WHERE id = 1"))
+        || !statsQuery.next()) {
+        error = statsQuery.lastError().text();
+        return false;
+    }
+
+    out << QStringLiteral("# games=%1 signatures=%2 systems=%3 active_sources=%4 shadowed_sources=%5 "
+                          "disc_based_games=%6 games_with_disc_sets=%7 disc_set_coverage_pct=%8\n")
+               .arg(statsQuery.value(0).toLongLong())
+               .arg(statsQuery.value(1).toLongLong())
+               .arg(statsQuery.value(2).toLongLong())
+               .arg(statsQuery.value(3).toLongLong())
+               .arg(statsQuery.value(4).toLongLong())
+               .arg(statsQuery.value(5).toLongLong())
+               .arg(statsQuery.value(6).toLongLong())
+               .arg(QString::number(statsQuery.value(7).toDouble(), 'f', 1));
+    out << QStringLiteral(
+        "source_id\tenabled\tpriority\tsource_items\tsigs_owned\tgames_covered\tcoverage_pct\tsig_yield_pct\t"
+        "shadowed\n");
+
+    QSqlQuery sourceQuery(database);
+    if (!sourceQuery.exec(
+            QStringLiteral("SELECT source_id, enabled, priority, source_items, sigs_owned, games_covered, "
+                           "       coverage_pct, sig_yield_pct, shadowed "
+                           "FROM compendium_source_coverage "
+                           "ORDER BY shadowed DESC, sig_yield_pct ASC, coverage_pct ASC, source_items DESC"))) {
+        error = sourceQuery.lastError().text();
+        return false;
+    }
+
+    while (sourceQuery.next()) {
+        out << sourceQuery.value(0).toString() << '\t' << sourceQuery.value(1).toInt() << '\t'
+            << sourceQuery.value(2).toInt() << '\t' << sourceQuery.value(3).toLongLong() << '\t'
+            << sourceQuery.value(4).toLongLong() << '\t' << sourceQuery.value(5).toLongLong() << '\t'
+            << sourceQuery.value(6).toString() << '\t' << sourceQuery.value(7).toString() << '\t'
+            << sourceQuery.value(8).toInt() << '\n';
+    }
+    return true;
+}
+
+bool emitCoverageFromLiveQueries(QSqlDatabase &database, QTextStream &out, QString &error) {
+    QSqlQuery q(database);
+    CompendiumCoverageDb helper;
+    const auto scalar = [&](const QString &sql) -> qint64 { return helper.scalar(q, sql); };
+
+    const qint64 totalGames = scalar(QStringLiteral("SELECT COUNT(*) FROM games"));
+    const qint64 totalSignatures = scalar(QStringLiteral("SELECT COUNT(*) FROM game_signatures"));
+    const qint64 totalSystems = scalar(QStringLiteral("SELECT COUNT(*) FROM systems"));
+    const qint64 totalSources = scalar(QStringLiteral("SELECT COUNT(*) FROM sources WHERE enabled = 1"));
+    const qint64 shadowedSources = scalar(QStringLiteral(
+        "SELECT COUNT(*) FROM ("
+        "  SELECT si.source_id FROM source_items si "
+        "  JOIN sources s ON s.source_id = si.source_id AND s.enabled = 1 "
+        "  GROUP BY si.source_id "
+        "  HAVING COUNT(*) > 100 "
+        "    AND COALESCE((SELECT COUNT(*) FROM game_signatures gs WHERE gs.source_id = si.source_id), 0) = 0"
+        ")"));
+
+    DiscSetCoverageStats discSetStats;
+    if (!queryDiscSetCoverageStats(database, discSetStats, error))
+        return false;
+
+    if (totalGames < 0) {
+        error = q.lastError().text();
+        return false;
+    }
+
+    const bool ok = q.exec(QStringLiteral(
+        "WITH "
+        "si AS ( "
+        "  SELECT source_id, COUNT(*) AS source_items "
+        "  FROM source_items GROUP BY source_id "
+        "), "
+        "gs_owned AS ( "
+        "  SELECT source_id, COUNT(*) AS sigs_owned "
+        "  FROM game_signatures GROUP BY source_id "
+        "), "
+        "games_with_sig AS ( "
+        "  SELECT DISTINCT game_id FROM game_signatures "
+        "), "
+        "gf_covered AS ( "
+        "  SELECT gf.source_id, COUNT(DISTINCT gf.game_id) AS games_covered "
+        "  FROM game_facts gf "
+        "  INNER JOIN games_with_sig gws ON gws.game_id = gf.game_id "
+        "  GROUP BY gf.source_id "
+        ") "
+        "SELECT si.source_id, "
+        "       COALESCE(s.enabled, 1) AS enabled, "
+        "       COALESCE(s.priority, 0) AS priority, "
+        "       si.source_items, "
+        "       COALESCE(gs_owned.sigs_owned, 0) AS sigs_owned, "
+        "       COALESCE(gf_covered.games_covered, 0) AS games_covered, "
+        "       ROUND(COALESCE(gf_covered.games_covered, 0) * 100.0 / si.source_items, 1) AS coverage_pct, "
+        "       ROUND(COALESCE(gs_owned.sigs_owned, 0) * 100.0 / si.source_items, 1) AS sig_yield_pct, "
+        "       CASE WHEN si.source_items > 100 AND COALESCE(gs_owned.sigs_owned, 0) = 0 THEN 1 ELSE 0 END "
+        "           AS shadowed "
+        "FROM si "
+        "LEFT JOIN sources s ON s.source_id = si.source_id "
+        "LEFT JOIN gs_owned   ON gs_owned.source_id   = si.source_id "
+        "LEFT JOIN gf_covered ON gf_covered.source_id = si.source_id "
+        "WHERE COALESCE(s.enabled, 1) = 1 "
+        "ORDER BY shadowed DESC, sig_yield_pct ASC, coverage_pct ASC, si.source_items DESC"));
+    if (!ok) {
+        error = q.lastError().text();
+        return false;
+    }
+
+    out << QStringLiteral("# games=%1 signatures=%2 systems=%3 active_sources=%4 shadowed_sources=%5 "
+                          "disc_based_games=%6 games_with_disc_sets=%7 disc_set_coverage_pct=%8\n")
+               .arg(totalGames)
+               .arg(totalSignatures)
+               .arg(totalSystems)
+               .arg(totalSources)
+               .arg(shadowedSources)
+               .arg(discSetStats.discBasedGames)
+               .arg(discSetStats.gamesWithDiscSets)
+               .arg(QString::number(discSetStats.coveragePct, 'f', 1));
+    out << QStringLiteral(
+        "source_id\tenabled\tpriority\tsource_items\tsigs_owned\tgames_covered\tcoverage_pct\tsig_yield_pct\t"
+        "shadowed\n");
+    while (q.next()) {
+        out << q.value(0).toString() << '\t' << q.value(1).toInt() << '\t' << q.value(2).toInt() << '\t'
+            << q.value(3).toLongLong() << '\t' << q.value(4).toLongLong() << '\t' << q.value(5).toLongLong() << '\t'
+            << q.value(6).toString() << '\t' << q.value(7).toString() << '\t' << q.value(8).toInt() << '\n';
+    }
+    return true;
+}
+
 } // namespace
 
 int handleDiscSetCoverageCommand(CliContext &ctx) {
@@ -117,7 +265,20 @@ int handleDiscSetCoverageCommand(CliContext &ctx) {
     }
 
     DiscSetCoverageStats stats;
-    if (!queryDiscSetCoverageStats(db.database, stats, error)) {
+    if (materializedCoverageAvailable(db.database)) {
+        QSqlQuery q(db.database);
+        if (q.exec(QStringLiteral("SELECT disc_based_games, games_with_disc_sets, disc_set_coverage_pct "
+                                  "FROM compendium_coverage_stats WHERE id = 1"))
+            && q.next()) {
+            stats.discBasedGames = q.value(0).toLongLong();
+            stats.gamesWithDiscSets = q.value(1).toLongLong();
+            stats.coveragePct = q.value(2).toDouble();
+        } else if (!queryDiscSetCoverageStats(db.database, stats, error)) {
+            qCritical() << "✗ Failed to query disc set coverage:" << error;
+            db.close();
+            return 1;
+        }
+    } else if (!queryDiscSetCoverageStats(db.database, stats, error)) {
         qCritical() << "✗ Failed to query disc set coverage:" << error;
         db.close();
         return 1;
@@ -173,99 +334,16 @@ int handleCoverageReportCommand(CliContext &ctx) {
         return 1;
     }
 
-    {
-        QSqlQuery q(db.database);
-        const auto scalar = [&](const QString &sql) -> qint64 { return db.scalar(q, sql); };
-
-        const qint64 totalGames = scalar(QStringLiteral("SELECT COUNT(*) FROM games"));
-        const qint64 totalSignatures = scalar(QStringLiteral("SELECT COUNT(*) FROM game_signatures"));
-        const qint64 totalSystems = scalar(QStringLiteral("SELECT COUNT(*) FROM systems"));
-        const qint64 totalSources = scalar(QStringLiteral("SELECT COUNT(*) FROM sources WHERE enabled = 1"));
-        const qint64 shadowedSources = scalar(QStringLiteral(
-            "SELECT COUNT(*) FROM ("
-            "  SELECT si.source_id FROM source_items si "
-            "  JOIN sources s ON s.source_id = si.source_id AND s.enabled = 1 "
-            "  GROUP BY si.source_id "
-            "  HAVING COUNT(*) > 100 "
-            "    AND COALESCE((SELECT COUNT(*) FROM game_signatures gs WHERE gs.source_id = si.source_id), 0) = 0"
-            ")"));
-
-        DiscSetCoverageStats discSetStats;
-        if (!queryDiscSetCoverageStats(db.database, discSetStats, error)) {
-            qCritical() << "✗ Failed to query disc set coverage:" << error;
-            db.close();
-            return 1;
-        }
-
-        if (totalGames < 0) {
-            qCritical() << "✗ Failed to query database:" << q.lastError().text();
-            db.close();
-            return 1;
-        }
-
-        const bool ok = q.exec(QStringLiteral(
-            "WITH "
-            "si AS ( "
-            "  SELECT source_id, COUNT(*) AS source_items "
-            "  FROM source_items GROUP BY source_id "
-            "), "
-            "gs_owned AS ( "
-            "  SELECT source_id, COUNT(*) AS sigs_owned "
-            "  FROM game_signatures GROUP BY source_id "
-            "), "
-            "games_with_sig AS ( "
-            "  SELECT DISTINCT game_id FROM game_signatures "
-            "), "
-            "gf_covered AS ( "
-            "  SELECT gf.source_id, COUNT(DISTINCT gf.game_id) AS games_covered "
-            "  FROM game_facts gf "
-            "  INNER JOIN games_with_sig gws ON gws.game_id = gf.game_id "
-            "  GROUP BY gf.source_id "
-            ") "
-            "SELECT si.source_id, "
-            "       COALESCE(s.enabled, 1) AS enabled, "
-            "       COALESCE(s.priority, 0) AS priority, "
-            "       si.source_items, "
-            "       COALESCE(gs_owned.sigs_owned, 0) AS sigs_owned, "
-            "       COALESCE(gf_covered.games_covered, 0) AS games_covered, "
-            "       ROUND(COALESCE(gf_covered.games_covered, 0) * 100.0 / si.source_items, 1) AS coverage_pct, "
-            "       ROUND(COALESCE(gs_owned.sigs_owned, 0) * 100.0 / si.source_items, 1) AS sig_yield_pct, "
-            "       CASE WHEN si.source_items > 100 AND COALESCE(gs_owned.sigs_owned, 0) = 0 THEN 1 ELSE 0 END "
-            "           AS shadowed "
-            "FROM si "
-            "LEFT JOIN sources s ON s.source_id = si.source_id "
-            "LEFT JOIN gs_owned   ON gs_owned.source_id   = si.source_id "
-            "LEFT JOIN gf_covered ON gf_covered.source_id = si.source_id "
-            "WHERE COALESCE(s.enabled, 1) = 1 "
-            "ORDER BY shadowed DESC, sig_yield_pct ASC, coverage_pct ASC, si.source_items DESC"));
-        if (!ok) {
-            qCritical() << "✗ Failed to query source coverage:" << q.lastError().text();
-            db.close();
-            return 1;
-        }
-
-        QTextStream out(stdout);
-        out << QStringLiteral("# games=%1 signatures=%2 systems=%3 active_sources=%4 shadowed_sources=%5 "
-                              "disc_based_games=%6 games_with_disc_sets=%7 disc_set_coverage_pct=%8\n")
-                   .arg(totalGames)
-                   .arg(totalSignatures)
-                   .arg(totalSystems)
-                   .arg(totalSources)
-                   .arg(shadowedSources)
-                   .arg(discSetStats.discBasedGames)
-                   .arg(discSetStats.gamesWithDiscSets)
-                   .arg(QString::number(discSetStats.coveragePct, 'f', 1));
-        out << QStringLiteral(
-            "source_id\tenabled\tpriority\tsource_items\tsigs_owned\tgames_covered\tcoverage_pct\tsig_yield_pct\t"
-            "shadowed\n");
-        while (q.next()) {
-            out << q.value(0).toString() << '\t' << q.value(1).toInt() << '\t' << q.value(2).toInt() << '\t'
-                << q.value(3).toLongLong() << '\t' << q.value(4).toLongLong() << '\t' << q.value(5).toLongLong() << '\t'
-                << q.value(6).toString() << '\t' << q.value(7).toString() << '\t' << q.value(8).toInt() << '\n';
-        }
-        out.flush();
-    }
+    QTextStream out(stdout);
+    const bool ok = materializedCoverageAvailable(db.database)
+        ? emitCoverageFromMaterializedTables(db.database, out, error)
+        : emitCoverageFromLiveQueries(db.database, out, error);
+    out.flush();
 
     db.close();
+    if (!ok) {
+        qCritical() << "✗ Failed to query source coverage:" << error;
+        return 1;
+    }
     return 0;
 }

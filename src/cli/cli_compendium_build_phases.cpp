@@ -1,7 +1,10 @@
 #include "cli_compendium_build_phases.h"
 
 #include "compendium_enrichment.h"
+#include "compendium_sql_utilities.h"
+#include "../core/compendium_disc_bridge.h"
 #include "../core/compendium_manifest_parser.h"
+#include "../core/constants/database_schema.h"
 #include "../core/constants/settings.h"
 #include "../core/constants/system_ids.h"
 #include "../metadata/compendium_merge_resolver.h"
@@ -998,6 +1001,8 @@ void applyCompendiumBuildPragmas(QSqlDatabase &database) {
         QStringLiteral("PRAGMA temp_store = MEMORY"),
         QStringLiteral("PRAGMA cache_size = -131072"),
         QStringLiteral("PRAGMA mmap_size = 268435456"),
+        QStringLiteral("PRAGMA busy_timeout = %1")
+            .arg(Remus::Constants::DatabaseSchema::Compendium::BUSY_TIMEOUT_WRITE_MS),
     };
     for (const QString &pragma : buildPragmas) {
         if (!pragmaQuery.exec(pragma)) {
@@ -1005,6 +1010,168 @@ void applyCompendiumBuildPragmas(QSqlDatabase &database) {
                        << pragmaQuery.lastError().text();
         }
     }
+}
+
+bool populateCompendiumCoverageSnapshot(QSqlDatabase &database, QString &error) {
+    namespace CompendiumTables = Remus::Constants::DatabaseSchema::Compendium::Tables;
+    if (!CompendiumSqlUtilities::compendiumTableExists(database, QString::fromLatin1(CompendiumTables::COVERAGE_STATS))
+        || !CompendiumSqlUtilities::compendiumTableExists(
+            database, QString::fromLatin1(CompendiumTables::SOURCE_COVERAGE))) {
+        error = QStringLiteral("Materialized coverage tables are missing (apply migration 0011)");
+        return false;
+    }
+
+    const auto scalar = [&](const QString &sql) -> qint64 {
+        QSqlQuery q(database);
+        if (!q.exec(sql) || !q.next())
+            return -1;
+        return q.value(0).toLongLong();
+    };
+
+    const qint64 totalGames = scalar(QStringLiteral("SELECT COUNT(*) FROM games"));
+    const qint64 totalSignatures = scalar(QStringLiteral("SELECT COUNT(*) FROM game_signatures"));
+    const qint64 totalSystems = scalar(QStringLiteral("SELECT COUNT(*) FROM systems"));
+    const qint64 totalSources = scalar(QStringLiteral("SELECT COUNT(*) FROM sources WHERE enabled = 1"));
+    const qint64 shadowedSources = scalar(QStringLiteral(
+        "SELECT COUNT(*) FROM ("
+        "  SELECT si.source_id FROM source_items si "
+        "  JOIN sources s ON s.source_id = si.source_id AND s.enabled = 1 "
+        "  GROUP BY si.source_id "
+        "  HAVING COUNT(*) > 100 "
+        "    AND COALESCE((SELECT COUNT(*) FROM game_signatures gs WHERE gs.source_id = si.source_id), 0) = 0"
+        ")"));
+    if (totalGames < 0) {
+        error = QStringLiteral("Failed to query compendium counts for coverage snapshot");
+        return false;
+    }
+
+    qint64 discBasedGames = 0;
+    qint64 gamesWithDiscSets = 0;
+    double discSetCoveragePct = 0.0;
+    if (compendiumDiscSetsAvailable(database)) {
+        discBasedGames = scalar(QStringLiteral("SELECT COUNT(*) FROM games g "
+                                               "JOIN systems s ON s.system_id = g.system_id "
+                                               "WHERE s.is_disc_based = 1"));
+        gamesWithDiscSets = scalar(QStringLiteral("SELECT COUNT(DISTINCT gds.game_id) "
+                                                  "FROM game_disc_sets gds "
+                                                  "JOIN games g ON g.game_id = gds.game_id "
+                                                  "JOIN systems s ON s.system_id = g.system_id "
+                                                  "WHERE s.is_disc_based = 1"));
+        if (discBasedGames < 0 || gamesWithDiscSets < 0) {
+            error = QStringLiteral("Failed to query disc set coverage for snapshot");
+            return false;
+        }
+        if (discBasedGames > 0)
+            discSetCoveragePct = 100.0 * static_cast<double>(gamesWithDiscSets) / static_cast<double>(discBasedGames);
+    }
+
+    QString txError;
+    if (!CompendiumSqlUtilities::beginImmediateTransaction(database, txError)) {
+        error = QStringLiteral("Failed to start coverage snapshot transaction: %1").arg(txError);
+        return false;
+    }
+
+    {
+        QSqlQuery clearQuery(database);
+        if (!clearQuery.exec(QStringLiteral("DELETE FROM compendium_source_coverage"))) {
+            error = clearQuery.lastError().text();
+            database.rollback();
+            return false;
+        }
+    }
+
+    {
+        QSqlQuery insertSources(database);
+        if (!insertSources.exec(QStringLiteral(
+                "INSERT INTO compendium_source_coverage "
+                "    (source_id, enabled, priority, source_items, sigs_owned, games_covered, "
+                "     coverage_pct, sig_yield_pct, shadowed) "
+                "WITH "
+                "si AS ( "
+                "  SELECT source_id, COUNT(*) AS source_items "
+                "  FROM source_items GROUP BY source_id "
+                "), "
+                "gs_owned AS ( "
+                "  SELECT source_id, COUNT(*) AS sigs_owned "
+                "  FROM game_signatures GROUP BY source_id "
+                "), "
+                "games_with_sig AS ( "
+                "  SELECT DISTINCT game_id FROM game_signatures "
+                "), "
+                "gf_covered AS ( "
+                "  SELECT gf.source_id, COUNT(DISTINCT gf.game_id) AS games_covered "
+                "  FROM game_facts gf "
+                "  INNER JOIN games_with_sig gws ON gws.game_id = gf.game_id "
+                "  GROUP BY gf.source_id "
+                ") "
+                "SELECT si.source_id, "
+                "       COALESCE(s.enabled, 1), "
+                "       COALESCE(s.priority, 0), "
+                "       si.source_items, "
+                "       COALESCE(gs_owned.sigs_owned, 0), "
+                "       COALESCE(gf_covered.games_covered, 0), "
+                "       ROUND(COALESCE(gf_covered.games_covered, 0) * 100.0 / si.source_items, 1), "
+                "       ROUND(COALESCE(gs_owned.sigs_owned, 0) * 100.0 / si.source_items, 1), "
+                "       CASE WHEN si.source_items > 100 AND COALESCE(gs_owned.sigs_owned, 0) = 0 THEN 1 ELSE 0 END "
+                "FROM si "
+                "LEFT JOIN sources s ON s.source_id = si.source_id "
+                "LEFT JOIN gs_owned ON gs_owned.source_id = si.source_id "
+                "LEFT JOIN gf_covered ON gf_covered.source_id = si.source_id "
+                "WHERE COALESCE(s.enabled, 1) = 1"))) {
+            error = insertSources.lastError().text();
+            database.rollback();
+            return false;
+        }
+    }
+
+    {
+        QSqlQuery upsertStats(database);
+        upsertStats.prepare(
+            QStringLiteral("INSERT INTO compendium_coverage_stats "
+                           "    (id, built_at, total_games, total_signatures, total_systems, active_sources, "
+                           "     shadowed_sources, disc_based_games, games_with_disc_sets, disc_set_coverage_pct) "
+                           "VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+                           "ON CONFLICT(id) DO UPDATE SET "
+                           "    built_at = excluded.built_at, "
+                           "    total_games = excluded.total_games, "
+                           "    total_signatures = excluded.total_signatures, "
+                           "    total_systems = excluded.total_systems, "
+                           "    active_sources = excluded.active_sources, "
+                           "    shadowed_sources = excluded.shadowed_sources, "
+                           "    disc_based_games = excluded.disc_based_games, "
+                           "    games_with_disc_sets = excluded.games_with_disc_sets, "
+                           "    disc_set_coverage_pct = excluded.disc_set_coverage_pct"));
+        upsertStats.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
+        upsertStats.addBindValue(totalGames);
+        upsertStats.addBindValue(totalSignatures);
+        upsertStats.addBindValue(totalSystems);
+        upsertStats.addBindValue(totalSources);
+        upsertStats.addBindValue(shadowedSources);
+        upsertStats.addBindValue(discBasedGames);
+        upsertStats.addBindValue(gamesWithDiscSets);
+        upsertStats.addBindValue(discSetCoveragePct);
+        if (!upsertStats.exec()) {
+            error = upsertStats.lastError().text();
+            database.rollback();
+            return false;
+        }
+    }
+
+    if (!database.commit()) {
+        error = database.lastError().text();
+        return false;
+    }
+
+    qInfo() << "[buildCompendium] Coverage snapshot refreshed.";
+    return true;
+}
+
+void finalizeCompendiumBuildArtifacts(QSqlDatabase &database) {
+    QString coverageError;
+    if (!populateCompendiumCoverageSnapshot(database, coverageError)) {
+        qWarning() << "[buildCompendium] Coverage snapshot refresh skipped:" << coverageError;
+    }
+    CompendiumSqlUtilities::finalizeCompendiumDatabasePragmas(database);
 }
 
 int runCompendiumEnrichmentOnlyRefresh(QSqlDatabase &database, const QString &buildId, const QString &reportPath,
@@ -1023,6 +1190,8 @@ int runCompendiumEnrichmentOnlyRefresh(QSqlDatabase &database, const QString &bu
     if (!populateCompendiumFtsIndex(database, enrichStats.ftsRowsIndexed, error)) {
         return 1;
     }
+
+    finalizeCompendiumBuildArtifacts(database);
 
     reportOut = existingReportBase;
     insertEnrichmentStatsReportFields(reportOut, enrichStats, QStringLiteral("post_enrich_resolved_fields"));

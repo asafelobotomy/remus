@@ -275,6 +275,12 @@ bool syncManifestSourcesToDatabase(QSqlDatabase &db, const QList<Remus::Compendi
 /// Apply build pragmas used during compendium builds.
 void applyCompendiumBuildPragmas(QSqlDatabase &database);
 
+/// Refresh materialized coverage tables from live compendium data.
+bool populateCompendiumCoverageSnapshot(QSqlDatabase &database, QString &error);
+
+/// Post-build: refresh coverage snapshot and restore read-friendly WAL state.
+void finalizeCompendiumBuildArtifacts(QSqlDatabase &database);
+
 /// Run enrichment + FTS on an existing DB, update build notes/report fingerprint.
 int runCompendiumEnrichmentOnlyRefresh(QSqlDatabase &database, const QString &buildId, const QString &reportPath,
     const QJsonObject &existingReportBase, const QString &enrichmentFingerprint, const QString &metadataDir,

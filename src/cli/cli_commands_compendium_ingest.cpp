@@ -92,15 +92,14 @@ int handleIngestSourceCommand(CliContext &ctx) {
         QSqlDatabase::removeDatabase(connectionName);
     };
 
+    CompendiumSqlUtilities::applyCompendiumWritePragmas(database);
     QSqlQuery pragma(database);
     for (const QString &p : {
-             QStringLiteral("PRAGMA foreign_keys = ON"),
-             QStringLiteral("PRAGMA journal_mode = WAL"),
              QStringLiteral("PRAGMA synchronous = NORMAL"),
              QStringLiteral("PRAGMA temp_store = MEMORY"),
              QStringLiteral("PRAGMA cache_size = -65536"),
          }) {
-        pragma.exec(p); // non-fatal; WAL already set by --build-compendium
+        pragma.exec(p);
     }
 
     // Idempotency: skip if this exact DAT (by checksum) was already ingested
@@ -130,8 +129,9 @@ int handleIngestSourceCommand(CliContext &ctx) {
     // partially-integrated ingest as complete on retry.
     // FTS rebuild is excluded: it manages its own transaction and is a derived
     // index that can always be rebuilt idempotently.
-    if (!database.transaction()) {
-        qCritical() << "✗ Failed to start ingestion transaction:" << database.lastError().text();
+    QString txError;
+    if (!CompendiumSqlUtilities::beginImmediateTransaction(database, txError)) {
+        qCritical() << "✗ Failed to start ingestion transaction:" << txError;
         cleanup();
         return 1;
     }
@@ -273,6 +273,8 @@ int handleIngestSourceCommand(CliContext &ctx) {
             return 1;
         }
     }
+
+    finalizeCompendiumBuildArtifacts(database);
 
     qInfo() << "";
     qInfo() << "=== Ingest Source Complete ===";

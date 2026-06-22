@@ -3,6 +3,8 @@
 #include "cli_helpers.h"
 #include "compendium_sql_utilities.h"
 
+#include "../core/constants/database_schema.h"
+
 #include <QDebug>
 #include <QElapsedTimer>
 #include <QFile>
@@ -91,12 +93,8 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
 
     {
         QSqlQuery pragmaQuery(database);
-        // WAL mode allows concurrent readers + one writer; prevents SQLITE_LOCKED
-        // when the nested QEventLoop in waitForReply() re-enters the event loop.
-        pragmaQuery.exec(QStringLiteral("PRAGMA journal_mode = WAL"));
-        // Retry for up to 5 s on transient lock contention instead of failing immediately.
-        pragmaQuery.exec(QStringLiteral("PRAGMA busy_timeout = 5000"));
-        if (!pragmaQuery.exec(QStringLiteral("PRAGMA foreign_keys = ON"))) {
+        CompendiumSqlUtilities::applyCompendiumWritePragmas(database);
+        if (!pragmaQuery.exec(Remus::Constants::DatabaseSchema::PRAGMA_FOREIGN_KEYS)) {
             qCritical() << "✗ Failed to enable foreign keys:" << pragmaQuery.lastError().text();
             database.close();
             database = QSqlDatabase();
@@ -108,8 +106,7 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
     qInfo() << "Running enrichment on" << outputInfo.absoluteFilePath();
 
     const bool onlineEnrichmentAll = ctx.parser.isSet(QStringLiteral("online-enrichment-all"));
-    const bool onlineEnrichment
-        = onlineEnrichmentAll || ctx.parser.isSet(QStringLiteral("online-enrichment"));
+    const bool onlineEnrichment = onlineEnrichmentAll || ctx.parser.isSet(QStringLiteral("online-enrichment"));
     const bool offlineOnlyEnrichment = !onlineEnrichment;
     QStringList effectiveSourceFilter = sourceFilter;
     if (onlineEnrichment && effectiveSourceFilter.isEmpty() && !onlineEnrichmentAll) {
@@ -139,9 +136,9 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
             return 1;
         }
         if (ctx.parser.isSet(QStringLiteral("fail-on-enrichment-errors")) && stats.passesFailedWithError > 0) {
-            qCritical().noquote()
-                << QStringLiteral("✗ %1 enrichment pass(es) failed with errors (--fail-on-enrichment-errors)")
-                       .arg(stats.passesFailedWithError);
+            qCritical().noquote() << QStringLiteral(
+                "✗ %1 enrichment pass(es) failed with errors (--fail-on-enrichment-errors)")
+                                         .arg(stats.passesFailedWithError);
             for (const EnrichmentStats::PassError &pe : stats.passErrors) {
                 qCritical().noquote() << QStringLiteral("  - [%1] %2: %3").arg(pe.sourceKey, pe.passName, pe.message);
             }
@@ -163,6 +160,8 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
             return 1;
         }
     }
+
+    finalizeCompendiumBuildArtifacts(database);
 
     // Update (or create) the report JSON alongside the DB.
     const QString reportPath = CompendiumSqlUtilities::reportPathForDatabase(outputInfo.absoluteFilePath());
