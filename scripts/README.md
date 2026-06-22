@@ -20,6 +20,7 @@ Shell helpers for build, compendium, packaging, testing, and workspace hygiene. 
 | [`run_compendium_job.sh`](run_compendium_job.sh) | **Serialize** compendium sqlite/cli jobs (flock, optional timeout, busy_timeout) |
 | [`validate_compendium_quick.sh`](validate_compendium_quick.sh) | Fast quality gate: phase-2 checks only (~1 min) |
 | [`validate_compendium_extended.sh`](validate_compendium_extended.sh) | Extended checks (0003) after migrations (~30s) |
+| [`verify_compendium_supplemental.sh`](verify_compendium_supplemental.sh) | Smoke: supplemental manifest prefixes + LaunchBox enrich on fixture |
 | [`build_compendium_full.sh`](build_compendium_full.sh) | Full pipeline: refresh DATs, generate manifest, build populated DB, validate, per-source + disc-set coverage TSV |
 | [`ci_compendium_fixture_build.sh`](ci_compendium_fixture_build.sh) | CI smoke: fixture DAT ingest + disc-set validation gates |
 | [`generate_compendium_manifest.sh`](generate_compendium_manifest.sh) | Build `compendium-manifest-full.json` from DAT files (includes `supplemental/homebrew`, `supplemental/libretro-dats`, optional `supplemental/tosec`) |

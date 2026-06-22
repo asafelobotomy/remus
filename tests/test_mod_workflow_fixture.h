@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtTest/QtTest>
+#include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QTemporaryDir>
 #include <QDir>
@@ -28,6 +29,12 @@ inline bool removeIfExists(const QString &path) {
 
 class ModWorkflowTest : public QObject {
     Q_OBJECT
+
+private:
+    static QTemporaryDir s_modCatalogCacheRoot;
+
+private slots:
+    void initTestCase();
 
 protected:
     QString catalogPath() const {

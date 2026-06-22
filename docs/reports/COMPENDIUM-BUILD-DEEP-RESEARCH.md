@@ -197,20 +197,16 @@ already resolved via another source's `igdb_id` fact if Hasheous wrote nothing.
 
 **Complementary:** Align Hasheous skip with PlayMatch (any `igdb_id`) OR document why not.
 
-#### `passesFailedWithError` not in build report
+#### `passesFailedWithError` not in build report **(fixed 2026-06-22)**
 
-`EnrichmentStats::passesFailedWithError` incremented L476 but **not** exported in
-`insertEnrichmentStatsReportFields()` L220–257.
+`insertEnrichmentStatsReportFields()` now exports `enrichment_passes_failed_with_error`.
+Use `--fail-on-enrichment-errors` to exit non-zero when any pass failed.
 
-**Effect:** ZXInfo/Hasheous failures invisible in JSON report; full build exits 0.
+#### Manifest rebuild skip ignores enrichment inputs **(fixed 2026-06-22)**
 
-#### Manifest rebuild skip ignores enrichment inputs
-
-`cli_commands_compendium.cpp` L172–196 — skip when `compendium_builds.source_manifest_json`
-matches. Changes to GameTDB XML, OpenVGDB sqlite, listxml, libretro metadata, or credentials
-do **not** invalidate cache.
-
-**Complementary:** Extend skip key with content hashes of enrichment input directories/files.
+`computeEnrichmentInputsFingerprint()` hashes local enrichment trees (metadata, GameTDB,
+OpenVGDB, MAME payloads, LaunchBox XML, credentials, source filter) and is stored in
+`compendium_builds.notes` for rebuild skip invalidation.
 
 #### Deferred merge policies in seed data
 
@@ -224,10 +220,20 @@ not implemented. Title conflicts use length/priority heuristics only.
 `scripts/update_dats.sh` downloads catver.ini from progetto-SNAPS when network is available.
 MAME catver enrichment expects `data/mame/catver.ini`.
 
-#### Hasheous offline dumps
+#### Hasheous offline dumps **(runbook)**
 
-`scripts/update_hasheous_dumps.sh` downloads platform ZIPs; `compendium_enrichment_hasheous.cpp`
-uses the offline index when `--online-enrichment` is set without `--online-enrichment-all`.
+`scripts/update_hasheous_dumps.sh --all-core` populates `data/hasheous/dumps/` (gitignored).
+See `data/hasheous/dumps/README.md`. Offline index used when `--online-enrichment` is set
+without `--online-enrichment-all`.
+
+#### Bulk enrichers wired **(2026-06-22)**
+
+LaunchBox (`compendium_enrichment_launchbox.cpp`), Wikidata, ScreenScraper, and opt-in
+TheGamesDB bulk passes are in `runCompendiumEnrichmentPasses()`. See COMPENDIUM-DATA-SOURCES.md.
+
+#### `test_enricher.sh` source list **(updated 2026-06-22)**
+
+Includes `launchbox`, `wikidata`, `screenscraper`, `thegamesdb`, `hasheous`, and `playmatch`.
 
 #### Wii U digital No-Intro
 
@@ -254,10 +260,6 @@ Checks that often fail in practice:
 #### Patch import warn-only
 
 `build_compendium_full.sh` L260–261 — patch catalog failure does not fail build.
-
-#### `test_enricher.sh` stale source list
-
-Omits `hasheous` and `playmatch` (present in `cli_options.cpp` L198).
 
 ---
 
@@ -404,7 +406,7 @@ Hasheous offline dumps would complete the same pattern for hash→metadata bridg
 | Multi-disc / SHA256 research doc | Done |
 | This deep research doc | Done |
 | COMPENDIUM-DATA-SOURCES deferred cross-link | Done |
-| Manifest skip invalidation rules | **Todo** |
+| Manifest skip invalidation rules | Done — `computeEnrichmentInputsFingerprint()` |
 | Hasheous offline dump runbook | Done — see `data/compendium/README.md` |
 
 ---
@@ -422,10 +424,10 @@ Hasheous offline dumps would complete the same pattern for hash→metadata bridg
 
 1. **IGDB gap predicate** — respect existing `igdb_id` from bridges
 2. **`catver.ini` in `update_dats.sh`**
-3. **Export `passesFailedWithError`** in build report; optional fail when >0
-4. **Enrichment-input-aware rebuild skip**
+3. **Export `passesFailedWithError`** in build report; optional fail when >0 — **done**
+4. **Enrichment-input-aware rebuild skip** — **done** (`computeEnrichmentInputsFingerprint`)
 5. **Phase-2 extended validation** (unmapped items, sha256 baseline, igdb_id %)
-6. **Hasheous offline dump enricher** (from completeness plan)
+6. **Hasheous offline dump enricher** (from completeness plan) — **done**; dumps gitignored, download via script
 
 ### P2 — Efficiency & ops
 

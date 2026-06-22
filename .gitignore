@@ -99,6 +99,7 @@ current_run_dir.txt
 data/compendium/*.lock
 data/compendium/*.report.json
 data/compendium/*.coverage.tsv
+data/compendium/*.disc-set-coverage.tsv
 data/compendium/*.progress.json
 data/compendium/compendium-manifest-full.json
 data/compendium/enrichment-credentials.json
@@ -148,9 +149,16 @@ data/metadata/
 # OpenVGDB SQLite (downloaded by update_dats.sh — large binary, not tracked)
 data/openvgdb/**
 
+# Hasheous offline platform dumps (downloaded by update_hasheous_dumps.sh — not tracked)
+data/hasheous/dumps/**
+!data/hasheous/dumps/README.md
+
 # MAME enrichment payloads (listxml ~300 MB; catver version-stamped)
 data/mame/listxml.xml
 data/mame/catver.ini
+
+# LaunchBox metadata (local install only; not redistributed)
+data/launchbox/Metadata.xml
 
 # Patch/hack DATs (synced from libretro metadat/hacks by update_dats.sh)
 data/patches/**/*.dat

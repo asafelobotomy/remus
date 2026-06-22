@@ -6,8 +6,9 @@
 #
 # Arguments:
 #   <source>           Enricher key(s), comma-separated.
-#                      Valid: libretro, gametdb, openvgdb, hasheous, playmatch,
-#                             igdb, ra, mame-catver, mame-listxml, zxinfo
+#                      Valid: libretro, gametdb, openvgdb, launchbox, wikidata, thegamesdb,
+#                             screenscraper, hasheous, playmatch, igdb, ra,
+#                             mame-catver, mame-listxml, zxinfo
 #
 # Options:
 #   --manifest <path>  Path to manifest JSON (default: data/compendium/compendium-manifest.json)
@@ -52,7 +53,7 @@ done
 if [[ -z "${SOURCE}" ]]; then
     echo "Error: enricher source name required." >&2
     echo "Usage: $0 <source> [--manifest <path>] [--output <path>] [--no-rebuild]" >&2
-    echo "Valid sources: libretro, gametdb, openvgdb, hasheous, playmatch, igdb, ra, mame-catver, mame-listxml, zxinfo" >&2
+    echo "Valid sources: libretro, gametdb, openvgdb, launchbox, wikidata, thegamesdb, screenscraper, hasheous, playmatch, igdb, ra, mame-catver, mame-listxml, zxinfo" >&2
     exit 1
 fi
 

@@ -162,7 +162,8 @@ scripts/update_hasheous_dumps.sh --all-core   # curated platforms (~25 ZIPs from
 # scripts/update_hasheous_dumps.sh --all      # all 111 platform dumps (large)
 ```
 
-(`scripts/update_dats.sh --all` runs `--all-core` at the end when the script is present.)
+Dumps live under `data/hasheous/dumps/` (gitignored; see `data/hasheous/dumps/README.md`).
+Unit tests use `tests/fixtures/hasheous_offline/` only.
 
 LaunchBox bulk enrichment (local XML, not redistributed):
 

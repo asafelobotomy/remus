@@ -1,5 +1,14 @@
 #include "test_mod_workflow_fixture.h"
 
+QTemporaryDir ModWorkflowTest::s_modCatalogCacheRoot;
+
+void ModWorkflowTest::initTestCase() {
+    QVERIFY2(s_modCatalogCacheRoot.isValid(), "Failed to create mod catalog cache temp dir");
+    qputenv("XDG_DATA_HOME", s_modCatalogCacheRoot.path().toUtf8());
+    QCoreApplication::setOrganizationName(QStringLiteral("Remus"));
+    QCoreApplication::setApplicationName(QStringLiteral("remus-test"));
+}
+
 // ── ModCatalogProvider tests ─────────────────────────────────────────────
 
 void ModWorkflowTest::loadCatalog_validJson() {

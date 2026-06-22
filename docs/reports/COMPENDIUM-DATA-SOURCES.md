@@ -127,7 +127,8 @@ cannot supply reliably:
 | Identity | No-Intro, Redump, libretro DATs, compendium | Hashes, title, region, serial |
 | Offline metadata | Libretro metadata, GameTDB, OpenVGDB*, MAME catver/listxml, LaunchBox XML | Text fields via COALESCE |
 | Offline bridges | Hasheous offline dumps | `igdb_id` + sparse metadata (no API) |
-| Bulk online | IGDB, RetroAchievements, Wikidata, TheGamesDB, ScreenScraper | Platform/title bulk or hash lookup |
+| Bulk online | IGDB, RetroAchievements, Wikidata, ScreenScraper | Platform/title bulk or hash lookup |
+| Bulk online (opt-in) | TheGamesDB | `--enrich-source thegamesdb` only; monthly cap |
 | Per-game online | Hasheous API, PlayMatch, ZXInfo | `--online-enrichment-all` only |
 | Runtime text | Compendium → SS → Hasheous/PlayMatch → IGDB → TGDB → Wikidata | Name/hash waterfall (capability-gated) |
 | Runtime art | SS → GameTDB → SteamGridDB → IGDB → RA → Wikidata | `getArtworkWithFallback` only |
@@ -139,7 +140,8 @@ cannot supply reliably:
 | Profile | Command | Online API use |
 |---------|---------|----------------|
 | Offline (~90 min) | `build_compendium_full.sh --skip-update` | None |
-| Recommended | `+ --online-enrichment` | Hasheous **offline dumps** + IGDB + RA + Wikidata + TGDB + ScreenScraper bulk |
+| Recommended | `+ --online-enrichment` | Hasheous **offline dumps** + IGDB + RA + Wikidata + ScreenScraper bulk |
+| TGDB opt-in | `+ --enrich-source thegamesdb` | TheGamesDB platform bulk (3000 req/month; **not** in default bulk list) |
 | Full bridges (days) | `+ --online-enrichment-all` | + Hasheous/PlayMatch/ZXInfo per-game APIs |
 
 `--enrich-compendium` defaults to **offline-only** (same flags as `--build-compendium`).
@@ -193,4 +195,5 @@ bash .github/scripts/validate-compendium-db.sh data/compendium/remus_compendium.
 | P4 | Zero-game systems (Switch, PS4…) | Needs DAT sources + IGDB slug mapping |
 | P5 | Duplicate canonical titles | `--dedup-compendium` on existing DB |
 | P6 | Hasheous bulk gap-fill | Offline dumps + optional MetadataProxy |
-| P7 | ScreenScraper / TGDB bulk | Implemented; respect API/monthly limits |
+| P7 | ScreenScraper bulk | Implemented; in default `--online-enrichment` bulk set |
+| P7b | TheGamesDB bulk | Implemented; opt-in via `--enrich-source thegamesdb` (monthly cap) |
