@@ -28,6 +28,7 @@ STRICT_OFFLINE=false
 PRUNE_ACQUISITION=false
 SNAP_LOSSLESS=false
 SKIP_CONSOLIDATE=false
+FORCE_FULL_REBUILD=false
 ONLINE_ENRICHMENT_ALL=false
 DAT_DIR="$ROOT_DIR/data/databases"
 MANIFEST_PATH="$ROOT_DIR/data/compendium/compendium-manifest-full.json"
@@ -142,6 +143,7 @@ Options:
   --thumbnail-snap-lossless
                             Transcode Named_Snaps with WebP lossless (default: lossy q=85)
   --skip-consolidate        Skip the standalone artwork consolidate pass
+  --force-full-rebuild      Ignore recoverable staged/backup DBs and re-ingest from scratch
   --online-enrichment       Legacy no-op (bulk online gap-fill is the default)
   --online-enrichment-all   Also run Hasheous/PlayMatch/ZXInfo per-game APIs (very slow)
                               Default: offline sources first, then online gap-fill when creds exist.
@@ -189,6 +191,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --skip-consolidate)
             SKIP_CONSOLIDATE=true
+            shift
+            ;;
+        --force-full-rebuild)
+            FORCE_FULL_REBUILD=true
             shift
             ;;
         --online-enrichment)
@@ -266,8 +272,14 @@ mkdir -p "$(dirname "$COVERAGE_REPORT")"
 mkdir -p "$(dirname "$DISC_SET_COVERAGE_REPORT")"
 
 exec 9>"$LOCK_PATH"
+if compendium_full_build_is_running "$LOCK_PATH"; then
+    holder="$(compendium_full_build_lock_holder "$LOCK_PATH")"
+    echo "error: another full compendium build is already running (lock: $LOCK_PATH pid=${holder:-unknown})" >&2
+    echo "hint: tail -f $BUILD_LOG or wait for the current build to finish" >&2
+    exit 1
+fi
 if ! flock -n 9; then
-    echo "error: another full compendium build is already running (lock: $LOCK_PATH)" >&2
+    echo "error: could not acquire compendium build lock: $LOCK_PATH" >&2
     exit 1
 fi
 
@@ -308,6 +320,12 @@ fi
 
 compendium_backup_if_populated "$OUTPUT_DB" "pre-refresh"
 
+if $FORCE_FULL_REBUILD; then
+    echo "==> Skipping in-progress recovery (--force-full-rebuild)"
+else
+    compendium_try_resume_in_progress_build "$OUTPUT_DB"
+fi
+
 echo "==> Building compendium DB"
 if $ONLINE_ENRICHMENT_ALL; then
     echo "    enrichment=offline + full online (includes Hasheous/PlayMatch/ZXInfo per-game APIs)"
@@ -337,6 +355,9 @@ if $SNAP_LOSSLESS; then
 fi
 if $ONLINE_ENRICHMENT_ALL; then
     build_cli_args+=(--online-enrichment-all)
+fi
+if $FORCE_FULL_REBUILD; then
+    build_cli_args+=(--force-full-rebuild)
 fi
 build_cli_args+=(--skip-consolidate-thumbnails)
 "$ROOT_DIR/scripts/run_compendium_job.sh" --db "$OUTPUT_DB" -- \

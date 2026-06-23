@@ -31,6 +31,8 @@ using namespace Remus;
 
 namespace {
 
+void releaseDatabase(QSqlDatabase &database, const QString &connectionName);
+
 QString normalizeManifestJson(const QString &manifestJson) {
     QJsonParseError parseError;
     const QJsonDocument document = QJsonDocument::fromJson(manifestJson.toUtf8(), &parseError);
@@ -54,6 +56,39 @@ void removeStagedArtifactFiles(const QString &stagedDbPath, const QString &stage
         QFile::remove(stagedReportPath);
 }
 
+bool stagedDbHasPopulatedContent(const QString &stagedDbPath) {
+    if (!QFileInfo::exists(stagedDbPath)) {
+        return false;
+    }
+
+    const QString connectionName
+        = QStringLiteral("compendium-staged-purge-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+    database.setDatabaseName(stagedDbPath);
+    if (!database.open()) {
+        qWarning().noquote() << QStringLiteral("[build-compendium] Keeping staged DB (could not open for purge check): %1")
+                                    .arg(stagedDbPath);
+        return true;
+    }
+
+    QSqlQuery checkpointQ(database);
+    checkpointQ.exec(QStringLiteral("PRAGMA wal_checkpoint(PASSIVE)"));
+
+    QSqlQuery countQ(database);
+    int gameCount = 0;
+    if (countQ.exec(QStringLiteral("SELECT COUNT(*) FROM games")) && countQ.next()) {
+        gameCount = countQ.value(0).toInt();
+    } else {
+        qWarning().noquote() << QStringLiteral("[build-compendium] Keeping staged DB (games table unreadable): %1")
+                                    .arg(stagedDbPath);
+        releaseDatabase(database, connectionName);
+        return true;
+    }
+
+    releaseDatabase(database, connectionName);
+    return gameCount > 0;
+}
+
 void purgeStaleStagedSiblings(const QString &finalOutputPath) {
     const QFileInfo finalInfo(finalOutputPath);
     const QDir dir = finalInfo.dir();
@@ -64,10 +99,15 @@ void purgeStaleStagedSiblings(const QString &finalOutputPath) {
         if (!name.startsWith(prefix))
             continue;
         if (name.endsWith(QStringLiteral("-shm")) || name.endsWith(QStringLiteral("-wal"))) {
-            QFile::remove(entry.absoluteFilePath());
             continue;
         }
-        removeStagedArtifactFiles(entry.absoluteFilePath(), reportPathForDatabase(entry.absoluteFilePath()));
+        const QString stagedDbPath = entry.absoluteFilePath();
+        if (stagedDbHasPopulatedContent(stagedDbPath)) {
+            qInfo().noquote() << QStringLiteral("[build-compendium] Preserving recoverable staged DB: %1")
+                                     .arg(stagedDbPath);
+            continue;
+        }
+        removeStagedArtifactFiles(stagedDbPath, reportPathForDatabase(stagedDbPath));
     }
 }
 
@@ -124,8 +164,6 @@ private:
     bool m_active = true;
     bool m_ingestCommitted = false;
 };
-
-void releaseDatabase(QSqlDatabase &database, const QString &connectionName);
 
 bool copyDatabaseArtifact(const QString &srcDbPath, const QString &destDbPath, QString &error) {
     if (QFileInfo::exists(destDbPath) && !QFile::remove(destDbPath)) {

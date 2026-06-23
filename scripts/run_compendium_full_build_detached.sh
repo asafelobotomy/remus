@@ -6,6 +6,10 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOG_FILE="${REMUS_COMPENDIUM_BUILD_LOG:-/tmp/remus_compendium_full_build.log}"
 PID_FILE="${REMUS_COMPENDIUM_BUILD_PID:-/tmp/remus_compendium_build.pid}"
+LOCK_PATH="$ROOT_DIR/data/compendium/remus_compendium_full.lock"
+
+# shellcheck disable=SC1091
+source "$ROOT_DIR/scripts/compendium_db_guard.sh"
 
 if [[ -f "$PID_FILE" ]]; then
     old_pid="$(cat "$PID_FILE" 2>/dev/null || true)"
@@ -14,6 +18,13 @@ if [[ -f "$PID_FILE" ]]; then
         echo "hint: tail -f $LOG_FILE" >&2
         exit 1
     fi
+fi
+
+if compendium_full_build_is_running "$LOCK_PATH"; then
+    holder="$(compendium_full_build_lock_holder "$LOCK_PATH")"
+    echo "error: full compendium build already running (pid=${holder:-unknown})" >&2
+    echo "hint: tail -f $LOG_FILE" >&2
+    exit 1
 fi
 
 mkdir -p "$(dirname "$LOG_FILE")"
