@@ -10,6 +10,9 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=compendium_offline_helpers.sh
+source "${SCRIPT_DIR}/compendium_offline_helpers.sh"
 DUMP_ROOT="$ROOT_DIR/data/hasheous/dumps"
 CACHE_DIR="${XDG_CACHE_HOME:-$ROOT_DIR/.cache}/remus/hasheous_dumps"
 API_BASE="https://hasheous.org/api/v1/Dumps/platforms"
@@ -118,6 +121,7 @@ download_platform_zip() {
     url="${API_BASE}/$(python3 -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$zip_name")"
     local cache_zip="$CACHE_DIR/$zip_name"
     local platform_dir="$DUMP_ROOT/${zip_name%.zip}"
+    local zip_downloaded=false
 
     if is_cache_fresh "$cache_zip"; then
         echo "  Using cached $zip_name"
@@ -133,6 +137,20 @@ download_platform_zip() {
             return 1
         fi
         mv "$tmp_zip" "$cache_zip"
+        zip_downloaded=true
+    fi
+
+    local marker="$platform_dir/.hasheous_zip_sha256"
+    local zip_hash json_count
+    zip_hash="$(compendium_sha256_of "$cache_zip")"
+    json_count="$(find "$platform_dir" -maxdepth 1 -type f -name '*.json' 2>/dev/null | wc -l | tr -d ' ')"
+
+    if ! $zip_downloaded \
+       && [[ -f "$marker" ]] \
+       && [[ "$(cat "$marker")" == "$zip_hash" ]] \
+       && [[ "$json_count" -gt 0 ]]; then
+        echo "  Unchanged $zip_name ($json_count JSON files)"
+        return 2
     fi
 
     mkdir -p "$platform_dir"
@@ -143,6 +161,8 @@ download_platform_zip() {
         return 1
     fi
     json_after="$(find "$platform_dir" -maxdepth 1 -type f -name '*.json' 2>/dev/null | wc -l | tr -d ' ')"
+    printf '%s\n' "$zip_hash" > "$marker"
+    HASHEOUS_ANY_CHANGED=true
     echo "  Extracted $json_after JSON file(s) → $platform_dir (was $json_before)"
     return 0
 }
@@ -177,30 +197,36 @@ resolve_platform_list() {
 echo "==> Hasheous offline dumps → $DUMP_ROOT"
 echo "    cache=$CACHE_DIR"
 
+HASHEOUS_ANY_CHANGED=false
 platforms=()
 resolve_platform_list platforms
 
 downloaded=0
+unchanged=0
 failed=0
 for zip_name in "${platforms[@]}"; do
     [[ -n "$zip_name" ]] || continue
-    if download_platform_zip "$zip_name"; then
-        downloaded=$((downloaded + 1))
-    else
-        failed=$((failed + 1))
-    fi
+    dl_rc=0
+    download_platform_zip "$zip_name" || dl_rc=$?
+    case "$dl_rc" in
+        0) downloaded=$((downloaded + 1)) ;;
+        2) unchanged=$((unchanged + 1)) ;;
+        *) failed=$((failed + 1)) ;;
+    esac
 done
 
 json_count="$(find "$DUMP_ROOT" -type f -name '*.json' ! -name 'PlatformMapping.json' 2>/dev/null | wc -l | tr -d ' ')"
 
-# Drop cached offline index so the next build rebuilds from fresh dumps.
-rm -f "$ROOT_DIR/data/hasheous/hasheous_offline_index.sqlite" \
-    "$ROOT_DIR/data/hasheous/hasheous_offline_index.sqlite-shm" \
-    "$ROOT_DIR/data/hasheous/hasheous_offline_index.sqlite-wal" 2>/dev/null || true
+if $HASHEOUS_ANY_CHANGED; then
+    # Drop cached offline index so the next build rebuilds from fresh dumps.
+    rm -f "$ROOT_DIR/data/hasheous/hasheous_offline_index.sqlite" \
+        "$ROOT_DIR/data/hasheous/hasheous_offline_index.sqlite-shm" \
+        "$ROOT_DIR/data/hasheous/hasheous_offline_index.sqlite-wal" 2>/dev/null || true
+fi
 
 echo ""
 echo "==> Hasheous dump summary"
-echo "    platforms processed: ${#platforms[@]} (${downloaded} ok, ${failed} failed)"
+echo "    platforms processed: ${#platforms[@]} (${downloaded} updated, ${unchanged} unchanged, ${failed} failed)"
 echo "    game JSON files:     $json_count"
 if [[ "$json_count" -eq 0 ]]; then
     echo "  Offline Hasheous enrichment will be skipped during compendium builds."

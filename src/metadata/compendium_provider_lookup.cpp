@@ -394,22 +394,18 @@ ArtworkUrls CompendiumProvider::getArtwork(const QString &id) {
         return { };
     }
 
+    const QString repoRoot = Metadata::ThumbnailUrlHelper::repoRootFromCompendiumDb(m_databasePath);
+
     ArtworkUrls artwork;
-    const QStringList boxCandidates = Metadata::ThumbnailUrlHelper::generateThumbnailCandidates(
-        libretroName, title, QStringLiteral("Named_Boxarts"));
-    const QStringList snapCandidates
-        = Metadata::ThumbnailUrlHelper::generateThumbnailCandidates(libretroName, title, QStringLiteral("Named_Snaps"));
-    const QStringList titleCandidates = Metadata::ThumbnailUrlHelper::generateThumbnailCandidates(
-        libretroName, title, QStringLiteral("Named_Titles"));
-    if (!boxCandidates.isEmpty()) {
-        artwork.boxFront = QUrl(boxCandidates.first());
-    }
-    if (!snapCandidates.isEmpty()) {
-        artwork.screenshot = QUrl(snapCandidates.first());
-    }
-    if (!titleCandidates.isEmpty()) {
-        artwork.titleScreen = QUrl(titleCandidates.first());
-    }
+    const auto resolve = [&](const QString &assetType) -> QUrl {
+        const QString url
+            = Metadata::ThumbnailUrlHelper::resolveArtworkUrl(db, repoRoot, id, libretroName, title, assetType, false);
+        return url.isEmpty() ? QUrl() : QUrl(url);
+    };
+
+    artwork.boxFront = resolve(QStringLiteral("box"));
+    artwork.screenshot = resolve(QStringLiteral("snap"));
+    artwork.titleScreen = resolve(QStringLiteral("title"));
     return artwork;
 }
 

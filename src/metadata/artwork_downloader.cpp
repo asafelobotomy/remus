@@ -179,6 +179,25 @@ QByteArray ArtworkDownloader::downloadToMemory(const QUrl &url) {
         return { };
     }
 
+    if (url.isLocalFile()) {
+        QFile file(url.toLocalFile());
+        if (!file.open(QIODevice::ReadOnly)) {
+            emit downloadFailed(url, QStringLiteral("Failed to read local file: %1").arg(url.toLocalFile()));
+            return { };
+        }
+        return file.readAll();
+    }
+
+    if (url.scheme().compare(QStringLiteral("file"), Qt::CaseInsensitive) == 0) {
+        const QString localPath = url.path();
+        QFile file(localPath);
+        if (!file.open(QIODevice::ReadOnly)) {
+            emit downloadFailed(url, QStringLiteral("Failed to read local file: %1").arg(localPath));
+            return { };
+        }
+        return file.readAll();
+    }
+
     QUrl currentUrl = url;
     for (int redirectCount = 0; redirectCount <= MAX_REMOTE_REDIRECTS; ++redirectCount) {
         if (!currentUrl.isLocalFile()) {

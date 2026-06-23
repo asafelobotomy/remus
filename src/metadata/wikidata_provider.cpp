@@ -146,6 +146,14 @@ QString WikidataProvider::platformFilterClause(const QString &system) const {
     if (system.isEmpty())
         return QString();
 
+    const QString trimmed = system.trimmed();
+    if (trimmed.startsWith(QLatin1Char('Q')) && trimmed.size() > 1) {
+        bool ok = false;
+        trimmed.mid(1).toInt(&ok);
+        if (ok)
+            return QStringLiteral("  ?item wdt:P400 wd:%1 .\n").arg(trimmed);
+    }
+
     QStringList variants;
     const QStringList parts = system.split(QStringLiteral(" / "));
     for (const QString &part : parts) {

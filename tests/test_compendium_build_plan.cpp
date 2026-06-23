@@ -124,7 +124,7 @@ class CompendiumBuildPlanTest : public QObject {
 private slots:
     void plan_skipsWhenChecksumAndFingerprintMatch();
     void plan_enrichmentOnlyWhenFingerprintDiffers();
-    void plan_fullWhenReportMissingButChecksumsMatch();
+    void plan_skipsWhenReportMissingButChecksumsMatch();
     void plan_incrementalWhenChecksumDiffers();
     void plan_incrementalWhenSourceMissingFromDatabase();
     void plan_fullWhenDatabaseMissing();
@@ -168,7 +168,7 @@ void CompendiumBuildPlanTest::plan_enrichmentOnlyWhenFingerprintDiffers() {
     QVERIFY(plan.sourcesToIngest.isEmpty());
 }
 
-void CompendiumBuildPlanTest::plan_fullWhenReportMissingButChecksumsMatch() {
+void CompendiumBuildPlanTest::plan_skipsWhenReportMissingButChecksumsMatch() {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -182,8 +182,8 @@ void CompendiumBuildPlanTest::plan_fullWhenReportMissingButChecksumsMatch() {
     const QList<CompendiumSourceDescriptor> sources = { makeDatSource(QStringLiteral("src-a"), checksum) };
     QVERIFY(planCompendiumBuild(dbPath, 1, sources, fingerprint, false, /*reportExists=*/false, plan, error));
     QVERIFY2(error.isEmpty(), qPrintable(error));
-    QCOMPARE(plan.mode, CompendiumBuildMode::Full);
-    QVERIFY(plan.sourcesToIngest.contains(QStringLiteral("src-a")));
+    QCOMPARE(plan.mode, CompendiumBuildMode::Skip);
+    QVERIFY(plan.sourcesToIngest.isEmpty());
 }
 
 void CompendiumBuildPlanTest::plan_incrementalWhenChecksumDiffers() {

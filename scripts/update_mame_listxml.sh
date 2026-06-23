@@ -24,11 +24,38 @@ source "${SCRIPT_DIR}/gh_git_env.sh"
 MAME_DATA_DIR="$PROJECT_ROOT/data/mame"
 OUT_FILE="$MAME_DATA_DIR/listxml.xml"
 CACHE_DIR="${XDG_CACHE_HOME:-$PROJECT_ROOT/.cache}/remus/mame"
+MIN_SKIP_BYTES=104857600
+FORCE=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --force)
+            FORCE=true
+            shift
+            ;;
+        -h|--help)
+            sed -n '1,18p' "$0"
+            exit 0
+            ;;
+        *)
+            echo "error: unknown argument: $1" >&2
+            exit 1
+            ;;
+    esac
+done
 
 mame_bin_tmp=""
 trap 'rm -rf "${mame_bin_tmp:-}"' EXIT
 
 mkdir -p "$MAME_DATA_DIR"
+
+if [[ -f "$OUT_FILE" ]] && ! $FORCE; then
+    out_size="$(stat -c%s "$OUT_FILE" 2>/dev/null || echo 0)"
+    if [[ "$out_size" -gt "$MIN_SKIP_BYTES" ]]; then
+        echo "MAME listxml already present ($(du -sh "$OUT_FILE" | cut -f1)) — skipping (use --force to regenerate)"
+        exit 0
+    fi
+fi
 
 # ── Step 1: look for a locally installed MAME binary ─────────────────────────
 mame_bin=""

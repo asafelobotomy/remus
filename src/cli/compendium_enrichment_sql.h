@@ -53,8 +53,8 @@ struct FactReplaceQueries {
 
     QSqlDatabase &database;
     QSqlQuery existsQ;
-    QSqlQuery clearCanonQ;
-    QSqlQuery clearConflictQ;
+    QSqlQuery clearFieldCanonQ;
+    QSqlQuery clearFieldConflictQ;
 };
 
 /** Default number of games processed before committing an enrichment batch. */

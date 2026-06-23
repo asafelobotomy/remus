@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <QCommandLineParser>
+#include <QDir>
 #include <QList>
 #include <QSet>
 #include <QString>
@@ -61,6 +62,20 @@ inline QString findMameListXmlPath() {
 inline QString findLaunchBoxMetadataPath() {
     const QString dir = findDataSubdir(QStringLiteral("launchbox"));
     return dir.isEmpty() ? QString() : dir + QStringLiteral("/Metadata.xml");
+}
+inline QString findLibretroAcquisitionDir() {
+    const QString dataDir = findDataSubdir(QStringLiteral("acquisition"));
+    return dataDir.isEmpty() ? QString() : dataDir + QStringLiteral("/libretro-thumbnails");
+}
+inline QString findRemusThumbnailsDir() {
+    return findDataSubdir(QStringLiteral("remus-thumbnails"));
+}
+inline QString findRepoRoot() {
+    const QString compendiumDir = findDataSubdir(QStringLiteral("compendium"));
+    if (compendiumDir.isEmpty()) {
+        return QString();
+    }
+    return QDir(compendiumDir).absoluteFilePath(QStringLiteral("../.."));
 }
 
 // Probe for artwork that may have been renamed to match the detected image

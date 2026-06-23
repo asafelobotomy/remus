@@ -1,6 +1,7 @@
 #include "cli_compendium_build_phases.h"
 
 #include "compendium_enrichment.h"
+#include "compendium_consolidate_thumbnails.h"
 #include "compendium_sql_utilities.h"
 #include "../core/compendium_disc_bridge.h"
 #include "../core/compendium_manifest_parser.h"
@@ -12,11 +13,13 @@
 #include "../metadata/compendium_types.h"
 #include "../services/credential_manager.h"
 
+#include <QCommandLineParser>
 #include <QDateTime>
 #include <QDebug>
 #include <QDir>
 #include <QDirIterator>
 #include <QFile>
+#include <QFileInfo>
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -169,6 +172,35 @@ bool hasLaunchBoxGaps(QSqlDatabase &db, QString &error) {
                        "  ) "
                        "LIMIT 1")
             .arg(QLatin1String(kGeneralMetadataGapSql)),
+        error);
+}
+
+bool hasRemusThumbnailsAssets(QSqlDatabase &db) {
+    QSqlQuery q(db);
+    if (!q.exec(QStringLiteral("SELECT 1 FROM sqlite_master WHERE type='table' AND name='game_assets' LIMIT 1"))
+        || !q.next()) {
+        return false;
+    }
+    QSqlQuery countQ(db);
+    if (!countQ.exec(QStringLiteral("SELECT 1 FROM game_assets WHERE asset_type = 'box' LIMIT 1"))) {
+        return false;
+    }
+    return countQ.next();
+}
+
+bool hasArtworkGaps(QSqlDatabase &db, QString &error) {
+    QSqlQuery tableQ(db);
+    if (!tableQ.exec(QStringLiteral("SELECT 1 FROM sqlite_master WHERE type='table' AND name='game_assets' LIMIT 1"))
+        || !tableQ.next()) {
+        return true;
+    }
+    return queryHasRows(db,
+        QStringLiteral("SELECT 1 FROM games g "
+                       "WHERE (g.cover_url IS NULL OR TRIM(g.cover_url) = '' "
+                       "       OR g.cover_url LIKE 'https://%' OR g.cover_url LIKE 'http://%') "
+                       "  AND EXISTS (SELECT 1 FROM game_assets ga "
+                       "              WHERE ga.game_id = g.game_id AND ga.asset_type = 'box') "
+                       "LIMIT 1"),
         error);
 }
 
@@ -418,6 +450,19 @@ void insertEnrichmentStatsReportFields(
     } else {
         report.remove(QStringLiteral("enrichment_pass_errors"));
     }
+    if (!stats.passSkips.isEmpty()) {
+        QJsonArray passSkipArray;
+        for (const EnrichmentStats::PassSkip &entry : stats.passSkips) {
+            passSkipArray.append(QJsonObject {
+                { QStringLiteral("source_key"), entry.sourceKey },
+                { QStringLiteral("pass_name"), entry.passName },
+                { QStringLiteral("skip_reason"), entry.skipReason },
+            });
+        }
+        report.insert(QStringLiteral("enrichment_pass_skips"), passSkipArray);
+    } else {
+        report.remove(QStringLiteral("enrichment_pass_skips"));
+    }
     report.insert(QStringLiteral("post_enrich_merge_runs"), stats.mergeRuns);
     report.insert(QStringLiteral("ra_api_calls_needed"), stats.raApiCallsNeeded);
     report.insert(QStringLiteral("ra_api_calls_performed"), stats.raApiCallsPerformed);
@@ -438,9 +483,34 @@ void insertEnrichmentStatsReportFields(
     report.insert(QStringLiteral("wikidata_facts_inserted"), stats.wikidataFactsInserted);
     report.insert(QStringLiteral("launchbox_games_enriched"), stats.launchboxGamesEnriched);
     report.insert(QStringLiteral("launchbox_facts_inserted"), stats.launchboxFactsInserted);
+    report.insert(QStringLiteral("remus_thumbnails_games_enriched"), stats.remusThumbnailsGamesEnriched);
+    report.insert(QStringLiteral("remus_thumbnails_facts_inserted"), stats.remusThumbnailsFactsInserted);
     report.insert(QStringLiteral("thegamesdb_games_enriched"), stats.thegamesdbGamesEnriched);
     report.insert(QStringLiteral("thegamesdb_facts_inserted"), stats.thegamesdbFactsInserted);
     report.insert(QStringLiteral("post_enrich_fts_rows_indexed"), stats.ftsRowsIndexed);
+}
+
+EnrichmentCliOptions resolveEnrichmentCliOptions(const QCommandLineParser &parser, const QStringList &sourceFilter) {
+    EnrichmentCliOptions opts;
+    opts.onlineEnrichmentAll = parser.isSet(QStringLiteral("online-enrichment-all"));
+    opts.offlineOnlyEnrichment = parser.isSet(QStringLiteral("offline-only-enrichment"));
+    opts.strictOfflineEnrichment = parser.isSet(QStringLiteral("strict-offline"));
+    opts.sourceFilter = sourceFilter;
+
+    if (opts.offlineOnlyEnrichment) {
+        qInfo() << "[compendium] Offline-only enrichment (local DAT/metadata/files). "
+                << "Omit --offline-only-enrichment to allow online gap-fill when credentials exist.";
+    } else if (opts.onlineEnrichmentAll) {
+        qInfo() << "[compendium] Full online enrichment (includes per-game Hasheous/PlayMatch/ZXInfo APIs).";
+    } else {
+        qInfo() << "[compendium] Enrichment: offline sources first, then online gap-fill (IGDB/RA/ScreenScraper/etc.). "
+                << "Hasheous uses local dumps unless --online-enrichment-all is set.";
+        if (parser.isSet(QStringLiteral("online-enrichment"))) {
+            qInfo()
+                << "[compendium] Note: --online-enrichment is default; use --offline-only-enrichment to skip online.";
+        }
+    }
+    return opts;
 }
 
 bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir, const QString &gametdbDir,
@@ -489,6 +559,16 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             },
         },
         {
+            QStringLiteral("Remus thumbnails enrichment"),
+            QStringLiteral("remus-thumbnails"),
+            [&] { return hasRemusThumbnailsAssets(db); },
+            [&] { return hasArtworkGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromRemusThumbnails(
+                    db, stats.remusThumbnailsGamesEnriched, stats.remusThumbnailsFactsInserted, error);
+            },
+        },
+        {
             QStringLiteral("GameTDB enrichment"),
             QStringLiteral("gametdb"),
             [&] { return hasGametdbDir; },
@@ -519,80 +599,6 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             },
         },
         {
-            QStringLiteral("Wikidata enrichment"),
-            QStringLiteral("wikidata"),
-            [] { return true; },
-            [&] { return hasWikidataGaps(db, error); },
-            [&] {
-                return CompendiumEnrichment::enrichFromWikidata(
-                    db, stats.wikidataGamesEnriched, stats.wikidataFactsInserted, error);
-            },
-        },
-        {
-            QStringLiteral("TheGamesDB enrichment"),
-            QStringLiteral("thegamesdb"),
-            [] { return true; },
-            [&] { return hasTheGamesDBGaps(db, error); },
-            [&] {
-                return CompendiumEnrichment::enrichFromTheGamesDB(
-                    db, credPath, stats.thegamesdbGamesEnriched, stats.thegamesdbFactsInserted, error);
-            },
-        },
-        {
-            QStringLiteral("ScreenScraper enrichment"),
-            QStringLiteral("screenscraper"),
-            [&] { return hasScreenScraperCreds && !offlineOnlyEnrichment; },
-            [&] { return hasAnyScreenScraperGaps(db, error); },
-            [&] {
-                return CompendiumEnrichment::enrichFromScreenScraper(db, credPath, stats.screenscraperGamesEnriched,
-                    stats.screenscraperFactsInserted, error, &stats.screenscraperApiCallsNeeded,
-                    &stats.screenscraperApiCallsPerformed);
-            },
-        },
-        {
-            QStringLiteral("Hasheous enrichment"),
-            QStringLiteral("hasheous"),
-            [&] { return hasheousOfflineOnly ? hasHasheousOfflineDumps : true; },
-            [&] { return hasAnyHasheousGaps(db, error); },
-            [&] {
-                return CompendiumEnrichment::enrichFromHasheous(db, credPath, stats.hasheousGamesEnriched,
-                    stats.hasheousFactsInserted, error, &stats.hasheousApiCallsNeeded, &stats.hasheousApiCallsPerformed,
-                    hasheousOfflineOnly);
-            },
-        },
-        {
-            QStringLiteral("PlayMatch enrichment"),
-            QStringLiteral("playmatch"),
-            [] { return true; },
-            [&] { return hasAnyPlayMatchGaps(db, error); },
-            [&] {
-                return CompendiumEnrichment::enrichFromPlayMatch(db, stats.playmatchGamesEnriched,
-                    stats.playmatchFactsInserted, error, &stats.playmatchApiCallsNeeded,
-                    &stats.playmatchApiCallsPerformed);
-            },
-        },
-        {
-            QStringLiteral("IGDB enrichment"),
-            QStringLiteral("igdb"),
-            [&] { return hasIgdbCreds; },
-            [&] { return hasIgdbBulkMetadataGaps(db, error); },
-            [&] {
-                return CompendiumEnrichment::enrichFromIGDB(
-                    db, credPath, stats.igdbGamesEnriched, stats.igdbFactsInserted, error);
-            },
-        },
-        {
-            QStringLiteral("RetroAchievements enrichment"),
-            QStringLiteral("ra"),
-            [&] { return hasRaCreds; },
-            [&] { return hasAnyRaGaps(db, error); },
-            [&] {
-                return CompendiumEnrichment::enrichFromRetroAchievements(db, credPath, stats.raGamesEnriched,
-                    stats.raFactsInserted, error, &stats.raApiCallsNeeded, &stats.raApiCallsPerformed,
-                    &stats.raApiCallsSuppressed);
-            },
-        },
-        {
             QStringLiteral("MAME catver enrichment"),
             QStringLiteral("mame-catver"),
             [&] { return hasMameCatverPath; },
@@ -613,9 +619,83 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             },
         },
         {
+            QStringLiteral("Hasheous enrichment"),
+            QStringLiteral("hasheous"),
+            [&] { return hasheousOfflineOnly ? hasHasheousOfflineDumps : true; },
+            [&] { return hasAnyHasheousGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromHasheous(db, credPath, stats.hasheousGamesEnriched,
+                    stats.hasheousFactsInserted, error, &stats.hasheousApiCallsNeeded, &stats.hasheousApiCallsPerformed,
+                    hasheousOfflineOnly);
+            },
+        },
+        {
+            QStringLiteral("ScreenScraper enrichment"),
+            QStringLiteral("screenscraper"),
+            [&] { return hasScreenScraperCreds && !offlineOnlyEnrichment; },
+            [&] { return hasAnyScreenScraperGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromScreenScraper(db, credPath, stats.screenscraperGamesEnriched,
+                    stats.screenscraperFactsInserted, error, &stats.screenscraperApiCallsNeeded,
+                    &stats.screenscraperApiCallsPerformed);
+            },
+        },
+        {
+            QStringLiteral("IGDB enrichment"),
+            QStringLiteral("igdb"),
+            [&] { return hasIgdbCreds && !offlineOnlyEnrichment; },
+            [&] { return hasIgdbBulkMetadataGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromIGDB(
+                    db, credPath, stats.igdbGamesEnriched, stats.igdbFactsInserted, error);
+            },
+        },
+        {
+            QStringLiteral("RetroAchievements enrichment"),
+            QStringLiteral("ra"),
+            [&] { return hasRaCreds && !offlineOnlyEnrichment; },
+            [&] { return hasAnyRaGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromRetroAchievements(db, credPath, stats.raGamesEnriched,
+                    stats.raFactsInserted, error, &stats.raApiCallsNeeded, &stats.raApiCallsPerformed,
+                    &stats.raApiCallsSuppressed);
+            },
+        },
+        {
+            QStringLiteral("TheGamesDB enrichment"),
+            QStringLiteral("thegamesdb"),
+            [&] { return !offlineOnlyEnrichment; },
+            [&] { return hasTheGamesDBGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromTheGamesDB(
+                    db, credPath, stats.thegamesdbGamesEnriched, stats.thegamesdbFactsInserted, error);
+            },
+        },
+        {
+            QStringLiteral("Wikidata enrichment"),
+            QStringLiteral("wikidata"),
+            [&] { return !offlineOnlyEnrichment; },
+            [&] { return hasWikidataGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromWikidata(
+                    db, stats.wikidataGamesEnriched, stats.wikidataFactsInserted, error);
+            },
+        },
+        {
+            QStringLiteral("PlayMatch enrichment"),
+            QStringLiteral("playmatch"),
+            [&] { return !offlineOnlyEnrichment && onlineEnrichmentAll; },
+            [&] { return hasAnyPlayMatchGaps(db, error); },
+            [&] {
+                return CompendiumEnrichment::enrichFromPlayMatch(db, stats.playmatchGamesEnriched,
+                    stats.playmatchFactsInserted, error, &stats.playmatchApiCallsNeeded,
+                    &stats.playmatchApiCallsPerformed);
+            },
+        },
+        {
             QStringLiteral("ZXInfo enrichment"),
             QStringLiteral("zxinfo"),
-            [] { return true; },
+            [&] { return !offlineOnlyEnrichment && onlineEnrichmentAll; },
             [&] { return hasZxSpectrumGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromZXInfo(
@@ -630,11 +710,23 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         ++passIdx;
         if (offlineOnlyEnrichment && onlineEnrichmentSourceKeys().contains(pass.sourceKey)
             && pass.sourceKey != QStringLiteral("hasheous")) {
-            qInfo().noquote() << QStringLiteral(
-                "[ENRICH] Pass %1/%2: %3 — skipped (offline-only build; use --online-enrichment to enable)")
+            qInfo().noquote() << QStringLiteral("[ENRICH] Pass %1/%2: %3 — skipped (offline-only build; omit "
+                                                "--offline-only-enrichment for online gap-fill)")
                                      .arg(passIdx)
                                      .arg(totalPasses)
                                      .arg(pass.name);
+            stats.passSkips.append({ pass.sourceKey, pass.name, QStringLiteral("offline_only") });
+            ++stats.passesSkippedOfflineOnly;
+            continue;
+        }
+        if (!onlineEnrichmentAll && perGameOnlineEnrichmentSourceKeys().contains(pass.sourceKey)
+            && pass.sourceKey != QStringLiteral("hasheous")) {
+            qInfo().noquote() << QStringLiteral(
+                "[ENRICH] Pass %1/%2: %3 — skipped (per-game API; use --online-enrichment-all)")
+                                     .arg(passIdx)
+                                     .arg(totalPasses)
+                                     .arg(pass.name);
+            stats.passSkips.append({ pass.sourceKey, pass.name, QStringLiteral("online_all_required") });
             ++stats.passesSkippedOfflineOnly;
             continue;
         }
@@ -643,6 +735,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
                                      .arg(passIdx)
                                      .arg(totalPasses)
                                      .arg(pass.name);
+            stats.passSkips.append({ pass.sourceKey, pass.name, QStringLiteral("source_filter") });
             ++stats.passesSkippedFiltered;
             continue;
         }
@@ -651,6 +744,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
                                      .arg(passIdx)
                                      .arg(totalPasses)
                                      .arg(pass.name);
+            stats.passSkips.append({ pass.sourceKey, pass.name, QStringLiteral("no_input") });
             ++stats.passesSkippedNoInput;
             continue;
         }
@@ -669,6 +763,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
                                      .arg(passIdx)
                                      .arg(totalPasses)
                                      .arg(pass.name);
+            stats.passSkips.append({ pass.sourceKey, pass.name, QStringLiteral("no_gaps") });
             ++stats.passesSkippedNoGaps;
             continue;
         }
@@ -897,18 +992,12 @@ bool planCompendiumBuild(const QString &dbPath, int schemaVersion, const QList<C
         = !plan.storedEnrichmentFingerprint.isEmpty() && plan.storedEnrichmentFingerprint == enrichmentFingerprint;
 
     if (plan.sourcesToIngest.isEmpty()) {
-        if (enrichmentMatches && reportExists) {
+        if (enrichmentMatches) {
             plan.mode = CompendiumBuildMode::Skip;
-        } else if (enrichmentMatches) {
-            plan.mode = CompendiumBuildMode::Full;
-            for (const CompendiumSourceDescriptor &source : sources) {
-                if (source.enabled && source.sourceType == QStringLiteral("dat")) {
-                    plan.sourcesToIngest.insert(source.sourceId);
-                }
-            }
         } else {
             plan.mode = CompendiumBuildMode::EnrichmentOnly;
         }
+        Q_UNUSED(reportExists);
     } else {
         plan.mode = CompendiumBuildMode::IncrementalIngest;
     }

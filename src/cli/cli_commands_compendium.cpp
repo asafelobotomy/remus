@@ -1,6 +1,8 @@
 #include "cli_commands.h"
 #include "cli_compendium_build_phases.h"
 #include "cli_helpers.h"
+#include "compendium_consolidate_thumbnails.h"
+#include "compendium_enrichment.h"
 #include "compendium_sql_utilities.h"
 
 #include "../core/compendium_manifest_parser.h"
@@ -42,6 +44,73 @@ QString makeStagedSiblingPath(const QString &finalPath) {
     return finalPath + QStringLiteral(".staged-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
 }
 
+void removeStagedArtifactFiles(const QString &stagedDbPath, const QString &stagedReportPath = QString()) {
+    if (stagedDbPath.isEmpty())
+        return;
+    QFile::remove(stagedDbPath);
+    QFile::remove(stagedDbPath + QStringLiteral("-shm"));
+    QFile::remove(stagedDbPath + QStringLiteral("-wal"));
+    if (!stagedReportPath.isEmpty())
+        QFile::remove(stagedReportPath);
+}
+
+void purgeStaleStagedSiblings(const QString &finalOutputPath) {
+    const QFileInfo finalInfo(finalOutputPath);
+    const QDir dir = finalInfo.dir();
+    const QString prefix = finalInfo.fileName() + QStringLiteral(".staged-");
+    const QFileInfoList entries = dir.entryInfoList(QDir::Files);
+    for (const QFileInfo &entry : entries) {
+        const QString name = entry.fileName();
+        if (!name.startsWith(prefix))
+            continue;
+        if (name.endsWith(QStringLiteral("-shm")) || name.endsWith(QStringLiteral("-wal"))) {
+            QFile::remove(entry.absoluteFilePath());
+            continue;
+        }
+        removeStagedArtifactFiles(entry.absoluteFilePath(), reportPathForDatabase(entry.absoluteFilePath()));
+    }
+}
+
+void writeTerminalProgress(const QString &progressPath, const QString &status, qint64 elapsedMs) {
+    const QJsonObject obj {
+        { QStringLiteral("status"), status },
+        { QStringLiteral("elapsed_ms"), elapsedMs },
+        { QStringLiteral("updated_at"), QDateTime::currentDateTimeUtc().toString(Qt::ISODate) },
+    };
+    QFile progressFile(progressPath);
+    if (progressFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+        progressFile.write(QJsonDocument(obj).toJson());
+}
+
+class StagedBuildGuard {
+public:
+    StagedBuildGuard(const QString &stagedDbPath, const QString &stagedReportPath,
+        const QString &progressPath = QString(), QElapsedTimer *timer = nullptr)
+        : m_stagedDbPath(stagedDbPath)
+        , m_stagedReportPath(stagedReportPath)
+        , m_progressPath(progressPath)
+        , m_timer(timer) { }
+
+    ~StagedBuildGuard() {
+        if (!m_active)
+            return;
+        if (!m_progressPath.isEmpty() && m_timer != nullptr)
+            writeTerminalProgress(m_progressPath, QStringLiteral("failed"), m_timer->elapsed());
+        removeStagedArtifactFiles(m_stagedDbPath, m_stagedReportPath);
+    }
+
+    void release() {
+        m_active = false;
+    }
+
+private:
+    QString m_stagedDbPath;
+    QString m_stagedReportPath;
+    QString m_progressPath;
+    QElapsedTimer *m_timer = nullptr;
+    bool m_active = true;
+};
+
 bool promoteStagedFile(const QString &stagedPath, const QString &finalPath, QString &error) {
     if (stagedPath == finalPath) {
         return true;
@@ -65,7 +134,11 @@ bool promoteStagedFile(const QString &stagedPath, const QString &finalPath, QStr
     }
 
     if (hadExistingTarget) {
-        QFile::remove(backupPath);
+        const QString timestampedBackup = finalPath + QStringLiteral(".pre-rebuild-")
+            + QDateTime::currentDateTimeUtc().toString(QStringLiteral("yyyyMMdd-HHmmss")) + QStringLiteral(".bak");
+        if (!QFile::rename(backupPath, timestampedBackup)) {
+            qWarning().noquote() << QStringLiteral("[build-compendium] Kept rollback backup at %1").arg(backupPath);
+        }
     }
     return true;
 }
@@ -155,6 +228,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0009_game_signatures_source_entry_key.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0010_game_extended_metadata.sql")),
         QDir(compendiumDir).filePath(QStringLiteral("migrations/0011_materialized_coverage.sql")),
+        QDir(compendiumDir).filePath(QStringLiteral("migrations/0012_game_assets.sql")),
     };
 
     QString buildId;
@@ -180,26 +254,14 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     const QString mameListXmlPath = findMameListXmlPath();
     const QString launchboxMetadataPath = findLaunchBoxMetadataPath();
     const QString credPath = outputInfo.dir().filePath(QStringLiteral("enrichment-credentials.json"));
-    const bool onlineEnrichmentAll = ctx.parser.isSet(QStringLiteral("online-enrichment-all"));
-    const bool onlineEnrichment = onlineEnrichmentAll || ctx.parser.isSet(QStringLiteral("online-enrichment"));
-    const bool offlineOnlyEnrichment = !onlineEnrichment;
-    QStringList effectiveSourceFilter = sourceFilter;
-    if (onlineEnrichment && effectiveSourceFilter.isEmpty() && !onlineEnrichmentAll) {
-        effectiveSourceFilter = defaultBulkOnlineEnrichmentSourceKeys();
-        qInfo().noquote() << QStringLiteral(
-            "[build-compendium] Bulk online enrichment (local passes + Hasheous offline dumps + IGDB + RA). "
-            "Pass --online-enrichment-all to include per-game APIs: %1.")
-                                 .arg(perGameOnlineEnrichmentSourceKeys().join(QStringLiteral(", ")));
-    }
+    const EnrichmentCliOptions enrichOpts = resolveEnrichmentCliOptions(ctx.parser, sourceFilter);
+    const bool offlineOnlyEnrichment = enrichOpts.offlineOnlyEnrichment;
+    const bool onlineEnrichmentAll = enrichOpts.onlineEnrichmentAll;
+    const bool strictOfflineEnrichment = enrichOpts.strictOfflineEnrichment;
+    const QStringList effectiveSourceFilter = enrichOpts.sourceFilter;
     const QString enrichmentFingerprint
         = computeEnrichmentInputsFingerprint(metadataDir, gametdbDir, openvgdbPath, mameCatverPath, mameListXmlPath,
             launchboxMetadataPath, credPath, effectiveSourceFilter, offlineOnlyEnrichment, onlineEnrichmentAll);
-    if (offlineOnlyEnrichment) {
-        qInfo() << "[build-compendium] Offline-only enrichment (local DAT/metadata). "
-                << "Pass --online-enrichment for IGDB/RA bulk passes (requires REMUS_* credentials).";
-    } else if (onlineEnrichmentAll) {
-        qInfo() << "[build-compendium] Full online enrichment enabled (includes per-game bridge APIs).";
-    }
 
     const bool forceFullRebuild = ctx.parser.isSet(QStringLiteral("force-full-rebuild"));
     CompendiumBuildPlan buildPlan;
@@ -271,11 +333,14 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     QElapsedTimer timer;
     timer.start();
     const QString progressPath = finalOutputPath + QStringLiteral(".progress.json");
+    purgeStaleStagedSiblings(finalOutputPath);
+    StagedBuildGuard stagedGuard(stagedOutputPath, stagedReportPath, progressPath, &timer);
 
     if (buildPlan.mode == CompendiumBuildMode::EnrichmentOnly) {
         qInfo() << "[build-compendium] Source checksums unchanged — running enrichment-only refresh.";
         if (!QFile::copy(finalOutputPath, stagedOutputPath)) {
             qCritical() << "✗ Failed to stage existing database for enrichment refresh:" << finalOutputPath;
+            writeTerminalProgress(progressPath, QStringLiteral("failed"), timer.elapsed());
             return 1;
         }
 
@@ -339,7 +404,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
             != 0) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
             releaseDatabase(database, connectionName);
-            QFile::remove(stagedOutputPath);
+            writeTerminalProgress(progressPath, QStringLiteral("failed"), timer.elapsed());
             return 1;
         }
 
@@ -352,7 +417,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         if (conflictsCount < 0) {
             qCritical().noquote() << QStringLiteral("✗ Failed to count unresolved conflicts: %1").arg(error);
             releaseDatabase(database, connectionName);
-            QFile::remove(stagedOutputPath);
+            writeTerminalProgress(progressPath, QStringLiteral("failed"), timer.elapsed());
             return 1;
         }
         report.insert(QStringLiteral("unresolved_conflicts"), conflictsCount);
@@ -360,19 +425,23 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         if (!writeReport(stagedReportPath, report, error)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
             releaseDatabase(database, connectionName);
-            QFile::remove(stagedOutputPath);
+            writeTerminalProgress(progressPath, QStringLiteral("failed"), timer.elapsed());
             return 1;
         }
 
         releaseDatabase(database, connectionName);
         if (!promoteStagedFile(stagedOutputPath, finalOutputPath, error)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+            writeTerminalProgress(progressPath, QStringLiteral("failed"), timer.elapsed());
             return 1;
         }
         if (!promoteStagedFile(stagedReportPath, finalReportPath, error)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+            writeTerminalProgress(progressPath, QStringLiteral("failed"), timer.elapsed());
             return 1;
         }
+        stagedGuard.release();
+        writeTerminalProgress(progressPath, QStringLiteral("complete"), timer.elapsed());
         return conflictsCount > 0 ? 2 : 0;
     }
 
@@ -386,8 +455,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         }
     } else {
         qInfo() << "[build-compendium] Running full compendium rebuild.";
-        QFile::remove(stagedOutputPath);
-        QFile::remove(stagedReportPath);
+        removeStagedArtifactFiles(stagedOutputPath, stagedReportPath);
     }
 
     const QString connectionName = QStringLiteral("compendium-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
@@ -603,6 +671,54 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     }
     writeProgress(QStringLiteral("enriching"), totalEnabled, { }, stats, /*overallPct=*/10);
 
+    // ── Consolidate libretro acquisition → remus-thumbnails blobs ─────────────
+    if (!ctx.parser.isSet(QStringLiteral("skip-consolidate-thumbnails"))) {
+        const QString acquisitionDir = findLibretroAcquisitionDir();
+        const QString thumbnailDir = findRemusThumbnailsDir();
+        if (strictOfflineEnrichment && !CompendiumThumbnails::remusThumbnailsManifestExists(thumbnailDir)
+            && (acquisitionDir.isEmpty() || !QDir(acquisitionDir).exists())) {
+            qCritical() << "✗ --strict-offline: remus-thumbnails manifest missing and no acquisition tree";
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+        if (!acquisitionDir.isEmpty() && QDir(acquisitionDir).exists()) {
+            ConsolidateThumbnailsOptions cOpts;
+            cOpts.acquisitionDir = acquisitionDir;
+            cOpts.outputDir = thumbnailDir;
+            cOpts.pruneAcquisitionSources = ctx.parser.isSet(QStringLiteral("prune-acquisition-sources"));
+            const QString sysArg = ctx.parser.value(QStringLiteral("thumbnail-system")).trimmed();
+            if (!sysArg.isEmpty()) {
+                cOpts.systems = sysArg.split(QLatin1Char(','), Qt::SkipEmptyParts);
+            }
+            cOpts.snapQuality = ctx.parser.value(QStringLiteral("thumbnail-snap-quality")).toInt();
+            if (cOpts.snapQuality <= 0) {
+                cOpts.snapQuality = 85;
+            }
+            cOpts.snapLossless = ctx.parser.isSet(QStringLiteral("thumbnail-snap-lossless"));
+            ConsolidateThumbnailsStats cStats;
+            QString cError;
+            qInfo() << "[consolidate-thumbnails] Starting consolidate pass";
+            if (!CompendiumThumbnails::consolidateThumbnails(database, cOpts, cStats, cError)) {
+                qCritical().noquote() << QStringLiteral("✗ consolidate-thumbnails failed: %1").arg(cError);
+                database.close();
+                QSqlDatabase::removeDatabase(connectionName);
+                return 1;
+            }
+            qInfo().noquote() << QStringLiteral("[consolidate-thumbnails] games=%1 written=%2 dedup=%3 misses=%4")
+                                     .arg(cStats.gamesScanned)
+                                     .arg(cStats.assetsWritten)
+                                     .arg(cStats.assetsDeduplicated)
+                                     .arg(cStats.misses);
+        }
+        if (strictOfflineEnrichment && !CompendiumThumbnails::remusThumbnailsManifestExists(thumbnailDir)) {
+            qCritical() << "✗ --strict-offline: remus-thumbnails manifest missing after consolidate";
+            database.close();
+            QSqlDatabase::removeDatabase(connectionName);
+            return 1;
+        }
+    }
+
     // ── Enrichment passes (Libretro, GameTDB, OpenVGDB, IGDB) + merge resolve ──
     // Fires before each pass to keep progress.json live during the long enrichment phase.
     // overall_pct model: DAT ingest = 0-10%, enrichment passes = 10-95%, FTS = 95-99%, done = 100%.
@@ -650,6 +766,23 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
             QSqlDatabase::removeDatabase(connectionName);
             return 1;
         }
+    }
+
+    if (ctx.parser.isSet(QStringLiteral("ingest-remote-artwork")) && !offlineOnlyEnrichment) {
+        int remoteArtGames = 0;
+        QString remoteArtError;
+        const QStringList remoteSources {
+            QStringLiteral("igdb"),
+            QStringLiteral("screenscraper"),
+            QStringLiteral("launchbox"),
+        };
+        for (const QString &sourceId : remoteSources) {
+            if (!CompendiumEnrichment::ingestRemoteCoverArtIntoBlobStore(
+                    database, findRepoRoot(), findRemusThumbnailsDir(), sourceId, remoteArtGames, remoteArtError)) {
+                qWarning().noquote() << QStringLiteral("[ingest-remote-artwork] %1: %2").arg(sourceId, remoteArtError);
+            }
+        }
+        qInfo().noquote() << QStringLiteral("[ingest-remote-artwork] games_updated=%1").arg(remoteArtGames);
     }
 
     {
@@ -749,13 +882,12 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
 
     if (!promoteStagedFile(stagedOutputPath, finalOutputPath, error)) {
         qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
-        QFile::remove(stagedOutputPath);
-        QFile::remove(stagedReportPath);
+        writeTerminalProgress(progressPath, QStringLiteral("failed"), timer.elapsed());
         return 1;
     }
     if (!promoteStagedFile(stagedReportPath, finalReportPath, error)) {
         qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
-        QFile::remove(stagedReportPath);
+        writeTerminalProgress(progressPath, QStringLiteral("failed"), timer.elapsed());
         // Roll back the DB promotion so the next invocation is forced to rebuild.
         if (!QFile::rename(finalOutputPath, stagedOutputPath)) {
             qCritical() << "[build-compendium] Could not roll back DB promotion —"
@@ -764,5 +896,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         return 1;
     }
 
+    stagedGuard.release();
+    writeTerminalProgress(progressPath, QStringLiteral("complete"), timer.elapsed());
     return conflictsCount > 0 ? 2 : 0;
 }

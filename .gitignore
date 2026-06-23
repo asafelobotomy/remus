@@ -1,4 +1,5 @@
 # Build artifacts
+node_modules/
 build/
 build-*/
 /build_output.txt
@@ -105,8 +106,18 @@ data/compendium/*.coverage.tsv
 data/compendium/*.disc-set-coverage.tsv
 data/compendium/*.progress.json
 data/compendium/*.bootstrap-backup
+data/compendium/*.pre-rebuild-*.bak
+data/compendium/*.bak
+data/compendium/backups/
 data/compendium/compendium-manifest-full.json
 data/compendium/enrichment-credentials.json
+data/compendium/remus_artwork_slice.db
+
+# Libretro thumbnail acquisition + canonical remus-thumbnails blobs (build artefacts)
+data/acquisition/libretro-thumbnails/
+data/remus-thumbnails/blobs/
+data/remus-thumbnails/manifest.json
+data/remus-thumbnails/archives/
 
 # Patch artefacts
 *.orig

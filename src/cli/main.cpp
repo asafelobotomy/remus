@@ -321,6 +321,14 @@ int main(int argc, char *argv[]) {
         return rc;
     if (int rc = handleBuildCompendiumCommand(ctx))
         return rc;
+    if (int rc = handleConsolidateThumbnailsCommand(ctx))
+        return rc;
+    if (int rc = handleGcThumbnailsCommand(ctx))
+        return rc;
+    if (int rc = handleExportRetroArchArtworkCommand(ctx))
+        return rc;
+    if (int rc = handleIngestRemoteArtworkCommand(ctx))
+        return rc;
     if (int rc = handleDedupCompendiumCommand(ctx))
         return rc;
     if (int rc = handleImportPatchCatalogCommand(ctx))

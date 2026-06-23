@@ -140,6 +140,12 @@ set(REMUS_CLI_SOURCES
     src/cli/compendium_enrichment_wikidata.cpp
     src/cli/compendium_enrichment_launchbox.cpp
     src/cli/compendium_enrichment_thegamesdb.cpp
+    src/cli/compendium_enrichment_thumbnails.cpp
+    src/cli/compendium_consolidate_thumbnails.cpp
+    src/cli/compendium_cwebp_resolver.cpp
+    src/cli/compendium_artwork_transcode.cpp
+    src/cli/compendium_artwork_blob_store.cpp
+    src/cli/cli_commands_compendium_thumbnails.cpp
 )
 
 add_executable(remus-cli ${REMUS_CLI_SOURCES})

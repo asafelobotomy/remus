@@ -14,11 +14,19 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # Load provider credentials for compendium enrichment (REMUS_* → CredentialManager).
 # shellcheck disable=SC1091
 source "$ROOT_DIR/scripts/load_env_local.sh"
+# shellcheck disable=SC1091
+source "$ROOT_DIR/scripts/ensure_npm_build_tools.sh"
+ensure_npm_build_tools
+# shellcheck disable=SC1091
+source "$ROOT_DIR/scripts/compendium_db_guard.sh"
 
 SKIP_UPDATE=false
 ALLOW_UNRESOLVED_CONFLICTS=false
 SKIP_VALIDATION=false
-ONLINE_ENRICHMENT=false
+OFFLINE_ONLY=false
+STRICT_OFFLINE=false
+PRUNE_ACQUISITION=false
+SNAP_LOSSLESS=false
 ONLINE_ENRICHMENT_ALL=false
 DAT_DIR="$ROOT_DIR/data/databases"
 MANIFEST_PATH="$ROOT_DIR/data/compendium/compendium-manifest-full.json"
@@ -90,6 +98,13 @@ emit_build_heartbeat() {
     done
 }
 
+run_compendium_validate() {
+    local db_path="$1"
+    shift
+    bash "$ROOT_DIR/scripts/run_compendium_job.sh" --db "$db_path" -- \
+        bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" "$@"
+}
+
 trap 'cleanup_monitor; cleanup_lock' EXIT
 
 usage() {
@@ -98,13 +113,19 @@ Usage:
   scripts/build_compendium_full.sh [options]
 
 Options:
-  --skip-update             Skip `scripts/update_dats.sh --all`
+  --skip-update             Skip offline source refresh (`update_compendium_offline_sources.sh`)
   --allow-unresolved-conflicts
                             Treat exit code 2 (unresolved merge conflicts) as success
   --skip-validation         Skip post-build phase-1 validation SQL
-  --online-enrichment         Enable bulk online enrichment (IGDB + RA; uses .env.local credentials)
-  --online-enrichment-all     Also run Hasheous/PlayMatch/ZXInfo (very slow on full catalogues)
-                              Default: offline-only local DAT/metadata (~90 min builds).
+  --offline-only            Skip online enrichment (local DAT/metadata/files only)
+  --strict-offline          Require remus-thumbnails manifest for offline artwork
+  --prune-acquisition-sources
+                            Remove libretro acquisition trees after consolidate
+  --thumbnail-snap-lossless
+                            Transcode Named_Snaps with WebP lossless (default: lossy q=85)
+  --online-enrichment       Legacy no-op (bulk online gap-fill is the default)
+  --online-enrichment-all   Also run Hasheous/PlayMatch/ZXInfo per-game APIs (very slow)
+                              Default: offline sources first, then online gap-fill when creds exist.
   --dat-dir <path>          DAT directory for manifest generation
   --manifest <path>         Manifest output/input path
   --output-db <path>        Compendium SQLite output path
@@ -130,12 +151,27 @@ while [[ $# -gt 0 ]]; do
             SKIP_VALIDATION=true
             shift
             ;;
+        --offline-only)
+            OFFLINE_ONLY=true
+            shift
+            ;;
+        --strict-offline)
+            STRICT_OFFLINE=true
+            OFFLINE_ONLY=true
+            shift
+            ;;
+        --prune-acquisition-sources)
+            PRUNE_ACQUISITION=true
+            shift
+            ;;
+        --thumbnail-snap-lossless)
+            SNAP_LOSSLESS=true
+            shift
+            ;;
         --online-enrichment)
-            ONLINE_ENRICHMENT=true
             shift
             ;;
         --online-enrichment-all)
-            ONLINE_ENRICHMENT=true
             ONLINE_ENRICHMENT_ALL=true
             shift
             ;;
@@ -224,10 +260,10 @@ echo "    lock=$LOCK_PATH"
 echo "    heartbeat_seconds=$HEARTBEAT_SECONDS"
 
 if ! $SKIP_UPDATE; then
-    echo "==> Updating all DAT sources"
-    "$ROOT_DIR/scripts/update_dats.sh" --all
+    echo "==> Updating offline compendium sources"
+    bash "$ROOT_DIR/scripts/update_compendium_offline_sources.sh"
 else
-    echo "==> Skipping DAT update (--skip-update)"
+    echo "==> Skipping offline source refresh (--skip-update)"
 fi
 
 echo "==> Generating manifest"
@@ -247,13 +283,15 @@ elif [[ ! -f "$CRED_TARGET" ]]; then
     fi
 fi
 
+compendium_backup_if_populated "$OUTPUT_DB" "pre-refresh"
+
 echo "==> Building compendium DB"
 if $ONLINE_ENRICHMENT_ALL; then
-    echo "    enrichment=online-all (includes Hasheous/PlayMatch/ZXInfo — may take days)"
-elif $ONLINE_ENRICHMENT; then
-    echo "    enrichment=offline + bulk online (IGDB + RA from .env.local)"
+    echo "    enrichment=offline + full online (includes Hasheous/PlayMatch/ZXInfo per-game APIs)"
+elif $OFFLINE_ONLY; then
+    echo "    enrichment=offline-only (local DAT/metadata/files)"
 else
-    echo "    enrichment=offline-only (local DAT/metadata; add --online-enrichment for IGDB/RA)"
+    echo "    enrichment=offline first, then online gap-fill (IGDB/RA/ScreenScraper/etc. from .env.local)"
 fi
 build_started_at=$(date +%s)
 set +e
@@ -262,12 +300,23 @@ build_cli_args=(
     --compendium-manifest "$MANIFEST_PATH"
     --compendium-output "$OUTPUT_DB"
 )
+if $OFFLINE_ONLY; then
+    build_cli_args+=(--offline-only-enrichment)
+fi
+if $STRICT_OFFLINE; then
+    build_cli_args+=(--strict-offline)
+fi
+if $PRUNE_ACQUISITION; then
+    build_cli_args+=(--prune-acquisition-sources)
+fi
+if $SNAP_LOSSLESS; then
+    build_cli_args+=(--thumbnail-snap-lossless)
+fi
 if $ONLINE_ENRICHMENT_ALL; then
     build_cli_args+=(--online-enrichment-all)
-elif $ONLINE_ENRICHMENT; then
-    build_cli_args+=(--online-enrichment)
 fi
-"$ROOT_DIR/build/remus-cli" \
+"$ROOT_DIR/scripts/run_compendium_job.sh" --db "$OUTPUT_DB" -- \
+    "$ROOT_DIR/build/remus-cli" \
     "${build_cli_args[@]}" \
     --log-file "$BUILD_LOG" \
     >/dev/null 2>&1 &
@@ -304,42 +353,35 @@ else
     echo "==> Build completed cleanly (exit code 0)"
 fi
 
-if [[ -x "$ROOT_DIR/build/remus-cli" ]]; then
-    echo "==> Importing patch catalog (libretro hacks DATs)"
-    bash "$ROOT_DIR/scripts/import_patch_catalog.sh" "$OUTPUT_DB" \
-        || echo "warning: patch catalog import failed or skipped (see above)" >&2
-else
-    echo "warning: remus-cli not found — skipping patch catalog import" >&2
-fi
+echo "==> Importing patch catalog (libretro hacks DATs)"
+bash "$ROOT_DIR/scripts/import_patch_catalog.sh" "$OUTPUT_DB" \
+    || echo "warning: patch catalog import failed or skipped (see above)" >&2
 
 if ! $SKIP_VALIDATION; then
-    bash "$ROOT_DIR/scripts/apply_compendium_migrations.sh" "$OUTPUT_DB"
-    run_validate() {
-        bash "$ROOT_DIR/scripts/run_compendium_job.sh" --db "$OUTPUT_DB" -- \
-            bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" "$@"
-    }
-    run_validate "$OUTPUT_DB"
+    bash "$ROOT_DIR/scripts/run_compendium_job.sh" --db "$OUTPUT_DB" -- \
+        bash "$ROOT_DIR/scripts/apply_compendium_migrations.sh" "$OUTPUT_DB"
+    run_compendium_validate "$OUTPUT_DB"
     if [[ -f "$ROOT_DIR/data/compendium/validation/0002_phase2_quality_checks.sql" ]]; then
         echo "==> Phase 2 quality checks (informational thresholds)"
-        run_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0002_phase2_quality_checks.sql" \
+        run_compendium_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0002_phase2_quality_checks.sql" \
             || echo "warning: one or more phase-2 quality checks failed (see above)" >&2
     fi
     if [[ -f "$ROOT_DIR/data/compendium/validation/0003_phase2_extended_checks.sql" ]]; then
         echo "==> Phase 2 extended checks (informational thresholds)"
-        run_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0003_phase2_extended_checks.sql" \
+        run_compendium_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0003_phase2_extended_checks.sql" \
             || echo "warning: one or more phase-2 extended checks failed (see above)" >&2
     fi
     if [[ -f "$ROOT_DIR/data/compendium/validation/0006_enabled_source_gate.sql" ]]; then
         echo "==> Enabled ingest sources with zero items (strict)"
-        run_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0006_enabled_source_gate.sql"
+        run_compendium_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0006_enabled_source_gate.sql"
     fi
     if [[ -f "$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql" ]]; then
         echo "==> Disc set schema checks (migration 0007)"
-        run_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql"
+        run_compendium_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql"
     fi
     if [[ -f "$ROOT_DIR/data/compendium/validation/0005_disc_set_ingest_checks.sql" ]]; then
         echo "==> Disc set ingest checks (strict: FAIL only; use --strict to fail on WARN)"
-        run_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0005_disc_set_ingest_checks.sql" \
+        run_compendium_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0005_disc_set_ingest_checks.sql" \
             --warn-only
     fi
 fi

@@ -197,11 +197,12 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addActionOption(QCommandLineOption("build-compendium", "Build a canonical compendium database from a manifest"));
     addActionOption(QCommandLineOption("force-full-rebuild",
         "Force a full compendium rebuild even when incremental or enrichment-only refresh is possible"));
+    addActionOption(QCommandLineOption("offline-only-enrichment",
+        "Skip online enrichment passes during --build-compendium or --enrich-compendium "
+        "(local DAT/metadata/files only). Default runs offline first, then online gap-fill."));
     addActionOption(QCommandLineOption("online-enrichment",
-        "Enable bulk online enrichment during --build-compendium or --enrich-compendium "
-        "(Hasheous offline dumps + IGDB + RetroAchievements). "
-        "Local offline passes always run. Per-game Hasheous/PlayMatch/ZXInfo APIs are excluded unless "
-        "--online-enrichment-all is set."));
+        "Legacy flag: bulk online gap-fill is already the default when credentials exist. "
+        "Use --offline-only-enrichment to disable online passes."));
     addActionOption(QCommandLineOption("online-enrichment-all",
         "Enable all online enrichment passes including Hasheous, PlayMatch, and ZXInfo APIs "
         "(can take days on full catalogues — use only for targeted rebuilds). Applies to "
@@ -216,10 +217,38 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addOption(QCommandLineOption("patch-dir", "Directory containing patch DAT files (default: data/patches)", "path"));
     addActionOption(QCommandLineOption(
         "enrich-compendium", "Run enrichment passes against an existing compendium database without rebuilding"));
+    addActionOption(QCommandLineOption(
+        "consolidate-thumbnails", "Transcode libretro acquisition PNGs into data/remus-thumbnails/ blob store"));
+    addActionOption(QCommandLineOption("gc-thumbnails", "Garbage-collect unreferenced remus-thumbnails blobs"));
+    addActionOption(
+        QCommandLineOption("export-retroarch-artwork", "Export remus-thumbnails blobs as libretro-style PNG tree"));
+    addActionOption(QCommandLineOption("ingest-remote-artwork",
+        "Download remote cover_url values (IGDB/ScreenScraper/LaunchBox) into remus-thumbnails blobs"));
+    addActionOption(QCommandLineOption("strict-offline",
+        "Require remus-thumbnails manifest (or acquisition tree) for offline-capable artwork builds"));
+    addActionOption(
+        QCommandLineOption("skip-consolidate-thumbnails", "Skip consolidate pass during --build-compendium"));
+    addActionOption(QCommandLineOption(
+        "prune-acquisition-sources", "Remove libretro acquisition trees after successful consolidate"));
+    addOption(QCommandLineOption("acquisition-dir",
+        "Libretro thumbnails acquisition root (default: data/acquisition/libretro-thumbnails)", "path"));
+    addOption(QCommandLineOption(
+        "thumbnail-output-dir", "Remus thumbnails output root (default: data/remus-thumbnails)", "path"));
+    addOption(QCommandLineOption(
+        "thumbnail-system", "Limit consolidate/export to libretro system name(s), comma-separated", "name"));
+    addOption(QCommandLineOption("thumbnail-format", "Thumbnail transcode format (default: webp)", "format", "webp"));
+    addOption(
+        QCommandLineOption("thumbnail-snap-quality", "Lossy WebP quality for snaps (default: 85)", "quality", "85"));
+    addOption(QCommandLineOption(
+        "thumbnail-snap-lossless", "Transcode Named_Snaps with WebP lossless instead of lossy quality"));
+    addOption(QCommandLineOption("thumbnail-dry-run", "Consolidate/GC dry-run (no writes)"));
+    addOption(QCommandLineOption("retroarch-artwork-dir", "Export directory for --export-retroarch-artwork", "path"));
+    addOption(QCommandLineOption(
+        "artwork-source-id", "Source id filter for --ingest-remote-artwork (default: igdb)", "source"));
     addOption(QCommandLineOption("enrich-source",
         "Comma-separated list of enrichment source(s) to run (default: all). Valid keys: libretro, gametdb, openvgdb, "
         "launchbox, wikidata, thegamesdb, igdb, ra, hasheous, playmatch, screenscraper, mame-catver, mame-listxml, "
-        "zxinfo",
+        "zxinfo, remus-thumbnails",
         "sources"));
     addActionOption(QCommandLineOption(
         "ingest-source", "Incrementally ingest a single DAT file into an existing compendium database", "dat-file"));

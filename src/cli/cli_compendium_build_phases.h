@@ -7,6 +7,8 @@
 
 #include "../core/compendium_manifest_parser.h"
 
+class QCommandLineParser;
+
 class QJsonArray;
 class QJsonObject;
 
@@ -18,6 +20,24 @@ class QJsonObject;
 // totalPasses: total number of configured passes (including skipped ones).
 // passName:   human-readable name of the pass.
 using EnrichmentProgressCallback = std::function<void(int passIdx, int totalPasses, const QString &passName)>;
+
+/** Resolved enrichment mode from CLI flags (--offline-only-enrichment, --online-enrichment-all). */
+struct EnrichmentCliOptions {
+    bool offlineOnlyEnrichment = false;
+    bool onlineEnrichmentAll = false;
+    bool strictOfflineEnrichment = false;
+    QStringList sourceFilter;
+};
+
+/**
+ * @brief Parse enrichment CLI flags for --build-compendium and --enrich-compendium.
+ *
+ * Default: offline passes first, then bulk online gap-fill when credentials/data exist.
+ * Per-game bridge APIs (PlayMatch, ZXInfo, Hasheous HTTP) require --online-enrichment-all.
+ * --online-enrichment is accepted for backward compatibility (bulk online is already default).
+ */
+EnrichmentCliOptions resolveEnrichmentCliOptions(
+    const QCommandLineParser &parser, const QStringList &sourceFilter = { });
 
 /**
  * @brief Post-build enrichment and FTS index population phases for --build-compendium.
@@ -58,7 +78,13 @@ struct EnrichmentStats {
         QString passName;
         QString message;
     };
+    struct PassSkip {
+        QString sourceKey;
+        QString passName;
+        QString skipReason;
+    };
     QList<PassError> passErrors;
+    QList<PassSkip> passSkips;
     int mergeRuns = 0;
     int raApiCallsNeeded = 0;
     int raApiCallsPerformed = 0;
@@ -79,6 +105,8 @@ struct EnrichmentStats {
     int wikidataFactsInserted = 0;
     int launchboxGamesEnriched = 0;
     int launchboxFactsInserted = 0;
+    int remusThumbnailsGamesEnriched = 0;
+    int remusThumbnailsFactsInserted = 0;
     int thegamesdbGamesEnriched = 0;
     int thegamesdbFactsInserted = 0;
     int ftsRowsIndexed = 0;
@@ -106,10 +134,9 @@ struct EnrichmentStats {
  * @param sourceFilter   Optional list of source keys; only matching passes run.
  *                       Empty list (default) means run all passes.
  *                       Valid keys: see knownEnrichmentSourceKeys().
- * @param offlineOnlyEnrichment When true, skip online API passes (Hasheous API, PlayMatch,
- *                       ZXInfo, IGDB, RA). Hasheous runs only against local dump JSON when present.
+ * @param offlineOnlyEnrichment When true, skip all online API passes (--offline-only-enrichment).
  * @param onlineEnrichmentAll When true, Hasheous/PlayMatch/ZXInfo may call per-game APIs.
- *                       When false with bulk online enrichment, Hasheous uses offline dumps only.
+ *                       When false, Hasheous uses offline dumps only; other online passes fill gaps.
  * @return true on success, false on error.
  */
 bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir, const QString &gametdbDir,
@@ -149,19 +176,18 @@ inline QStringList offlineEnrichmentSourceKeys() {
 }
 
 /**
- * @brief Recommended online passes for full builds: bulk platform/system fetches (IGDB, RA).
- * Excludes per-game bridge APIs (Hasheous, PlayMatch) and ZXInfo.
+ * @brief Recommended bulk online gap-fill passes (runs after offline passes by default).
+ * Excludes per-game bridge APIs (PlayMatch, ZXInfo HTTP) and TheGamesDB (runtime-oriented).
  */
 inline QStringList defaultBulkOnlineEnrichmentSourceKeys() {
-    QStringList keys = offlineEnrichmentSourceKeys();
-    keys.append({
+    return {
         QStringLiteral("screenscraper"),
-        QStringLiteral("wikidata"),
-        QStringLiteral("hasheous"), // offline dump JSON only unless --online-enrichment-all
         QStringLiteral("igdb"),
         QStringLiteral("ra"),
-    });
-    return keys;
+        QStringLiteral("thegamesdb"),
+        QStringLiteral("wikidata"),
+        QStringLiteral("hasheous"), // offline dump JSON unless --online-enrichment-all
+    };
 }
 
 /**
@@ -241,6 +267,7 @@ inline QStringList knownEnrichmentSourceKeys() {
         QStringLiteral("mame-catver"),
         QStringLiteral("mame-listxml"),
         QStringLiteral("zxinfo"),
+        QStringLiteral("remus-thumbnails"),
     };
 }
 

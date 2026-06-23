@@ -1,5 +1,7 @@
 #include "compendium_enrichment.h"
 #include "compendium_enrichment_sql.h"
+#include "../core/system_resolver.h"
+#include "../core/constants/providers.h"
 #include "../metadata/wikidata_provider.h"
 #include "../metadata/http_metadata_provider.h"
 
@@ -36,7 +38,8 @@ namespace {
         for (int i = 0; i < candidates.size(); ++i) {
             const GameMetadata &c = candidates.at(i);
             const int score = (!c.description.isEmpty() ? 1 : 0) + (!c.developer.isEmpty() ? 1 : 0)
-                + (!c.publisher.isEmpty() ? 1 : 0) + (!c.genres.isEmpty() ? 1 : 0) + (c.releaseDate.size() >= 4 ? 1 : 0);
+                + (!c.publisher.isEmpty() ? 1 : 0) + (!c.genres.isEmpty() ? 1 : 0)
+                + (c.releaseDate.size() >= 4 ? 1 : 0);
             if (score > bestScore) {
                 bestScore = score;
                 bestIdx = i;
@@ -76,8 +79,8 @@ namespace {
         auto insertFact
             = [&](const QString &field, const QString &value, const QString &type = QStringLiteral("text")) {
                   bool inserted = false;
-                  if (!insertGameFact(replaceQueries,
-                          delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("wikidata"), &inserted))
+                  if (!insertGameFact(replaceQueries, delQ, factQ, factSpec, gameId, field, value, type, error,
+                          QStringLiteral("wikidata"), &inserted))
                       return false;
                   if (inserted)
                       ++factsInserted;
@@ -154,10 +157,13 @@ bool enrichFromWikidata(QSqlDatabase &database, int &gamesEnriched, int &factsIn
         if (pending.isEmpty())
             continue;
 
+        const QString wikidataPlatform = SystemResolver::providerName(sys.id, Constants::Providers::WIKIDATA);
+        const QString platformKey = wikidataPlatform.isEmpty() ? sys.name : wikidataPlatform;
+
         QHash<QString, QList<GameMetadata>> wikidataIndex;
         int offset = 0;
         while (true) {
-            const QList<GameMetadata> page = provider.fetchGamesForPlatform(sys.name, PAGE_SIZE, offset);
+            const QList<GameMetadata> page = provider.fetchGamesForPlatform(platformKey, PAGE_SIZE, offset);
             for (const GameMetadata &gm : page) {
                 if (!gm.title.isEmpty())
                     wikidataIndex[normalizeMetadataTitle(gm.title)].append(gm);
@@ -170,12 +176,13 @@ bool enrichFromWikidata(QSqlDatabase &database, int &gamesEnriched, int &factsIn
         }
 
         if (wikidataIndex.isEmpty()) {
-            qInfo().noquote() << QStringLiteral("[Wikidata] %1: no platform matches in Wikidata — skipping").arg(sys.name);
+            qInfo().noquote() << QStringLiteral("[Wikidata] %1 (%2): no platform matches in Wikidata — skipping")
+                                     .arg(sys.name, platformKey);
             continue;
         }
 
-        qInfo().noquote() << QStringLiteral("[Wikidata] %1: %2 entries indexed, %3 games pending")
-                                 .arg(sys.name)
+        qInfo().noquote() << QStringLiteral("[Wikidata] %1 (%2): %3 entries indexed, %4 games pending")
+                                 .arg(sys.name, platformKey)
                                  .arg(wikidataIndex.size())
                                  .arg(pending.size());
 

@@ -1,7 +1,11 @@
 #include "thumbnail_url_helper.h"
 
+#include <QFileInfo>
+#include <QDir>
 #include <QRegularExpression>
 #include <QSet>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 #include <QUrl>
 
 namespace Remus {
@@ -66,6 +70,90 @@ namespace Metadata {
         }
 
         return candidates;
+    }
+
+    QString ThumbnailUrlHelper::libretroFolderForAssetType(const QString &assetType) {
+        if (assetType == QStringLiteral("box")) {
+            return QStringLiteral("Named_Boxarts");
+        }
+        if (assetType == QStringLiteral("snap")) {
+            return QStringLiteral("Named_Snaps");
+        }
+        if (assetType == QStringLiteral("title")) {
+            return QStringLiteral("Named_Titles");
+        }
+        if (assetType == QStringLiteral("logo")) {
+            return QStringLiteral("Named_Logos");
+        }
+        return { };
+    }
+
+    QString ThumbnailUrlHelper::resolveStoragePath(const QString &repoRoot, const QString &storagePath) {
+        if (storagePath.isEmpty()) {
+            return { };
+        }
+        QFileInfo info(storagePath);
+        if (info.isAbsolute()) {
+            return info.absoluteFilePath();
+        }
+        return QDir(repoRoot).filePath(storagePath);
+    }
+
+    QString ThumbnailUrlHelper::repoRootFromCompendiumDb(const QString &databasePath) {
+        QFileInfo info(databasePath);
+        return QDir::cleanPath(QDir(info.absolutePath()).absoluteFilePath(QStringLiteral("../..")));
+    }
+
+    QString ThumbnailUrlHelper::lookupGameAssetPath(QSqlDatabase &db, const QString &gameId, const QString &assetType) {
+        if (!db.isOpen() || gameId.isEmpty()) {
+            return { };
+        }
+        QSqlQuery q(db);
+        q.prepare(QStringLiteral("SELECT storage_path FROM game_assets WHERE game_id = ? AND asset_type = ?"));
+        q.addBindValue(gameId);
+        q.addBindValue(assetType);
+        if (!q.exec() || !q.next()) {
+            return { };
+        }
+        return q.value(0).toString();
+    }
+
+    QString ThumbnailUrlHelper::resolveArtworkUrl(QSqlDatabase &db, const QString &repoRoot, const QString &gameId,
+        const QString &systemName, const QString &canonicalTitle, const QString &assetType, bool strictOffline) {
+        const QString folder = libretroFolderForAssetType(assetType);
+        if (folder.isEmpty()) {
+            return { };
+        }
+
+        const QString assetPath = lookupGameAssetPath(db, gameId, assetType);
+        if (!assetPath.isEmpty()) {
+            const QString abs = resolveStoragePath(repoRoot, assetPath);
+            if (QFileInfo::exists(abs)) {
+                return QUrl::fromLocalFile(abs).toString();
+            }
+        }
+
+        if (assetType == QStringLiteral("box")) {
+            QSqlQuery coverQ(db);
+            coverQ.prepare(QStringLiteral("SELECT cover_url FROM games WHERE game_id = ?"));
+            coverQ.addBindValue(gameId);
+            if (coverQ.exec() && coverQ.next()) {
+                const QString coverUrl = coverQ.value(0).toString();
+                if (coverUrl.startsWith(QStringLiteral("data/remus-thumbnails/"))) {
+                    const QString abs = resolveStoragePath(repoRoot, coverUrl);
+                    if (QFileInfo::exists(abs)) {
+                        return QUrl::fromLocalFile(abs).toString();
+                    }
+                }
+            }
+        }
+
+        if (strictOffline) {
+            return { };
+        }
+
+        const QStringList candidates = generateThumbnailCandidates(systemName, canonicalTitle, folder);
+        return candidates.isEmpty() ? QString() : candidates.first();
     }
 
 } // namespace Metadata

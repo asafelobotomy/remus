@@ -105,22 +105,10 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
 
     qInfo() << "Running enrichment on" << outputInfo.absoluteFilePath();
 
-    const bool onlineEnrichmentAll = ctx.parser.isSet(QStringLiteral("online-enrichment-all"));
-    const bool onlineEnrichment = onlineEnrichmentAll || ctx.parser.isSet(QStringLiteral("online-enrichment"));
-    const bool offlineOnlyEnrichment = !onlineEnrichment;
-    QStringList effectiveSourceFilter = sourceFilter;
-    if (onlineEnrichment && effectiveSourceFilter.isEmpty() && !onlineEnrichmentAll) {
-        effectiveSourceFilter = defaultBulkOnlineEnrichmentSourceKeys();
-        qInfo().noquote() << QStringLiteral(
-            "[enrich] Bulk online enrichment (local passes + Hasheous offline dumps + IGDB + RA). "
-            "Pass --online-enrichment-all for per-game APIs: %1.")
-                                 .arg(perGameOnlineEnrichmentSourceKeys().join(QStringLiteral(", ")));
-    } else if (offlineOnlyEnrichment && effectiveSourceFilter.isEmpty()) {
-        qInfo() << "[enrich] Offline-only enrichment (local DAT/metadata). "
-                << "Pass --online-enrichment for IGDB/RA bulk passes (requires REMUS_* credentials).";
-    } else if (onlineEnrichmentAll) {
-        qInfo() << "[enrich] Full online enrichment enabled (includes per-game bridge APIs).";
-    }
+    const EnrichmentCliOptions enrichOpts = resolveEnrichmentCliOptions(ctx.parser, sourceFilter);
+    const bool offlineOnlyEnrichment = enrichOpts.offlineOnlyEnrichment;
+    const bool onlineEnrichmentAll = enrichOpts.onlineEnrichmentAll;
+    const QStringList effectiveSourceFilter = enrichOpts.sourceFilter;
 
     // ── Run all enrichment passes and merge resolution ───────────────────────
     EnrichmentStats stats;

@@ -1,0 +1,8 @@
+{
+  "name": "remus-tools",
+  "private": true,
+  "description": "Build-time tooling for Remus (cwebp for compendium thumbnail consolidation)",
+  "devDependencies": {
+    "cwebp-bin": "^8.0.0"
+  }
+}

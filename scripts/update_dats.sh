@@ -26,6 +26,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 # shellcheck source=gh_git_env.sh
 source "${SCRIPT_DIR}/gh_git_env.sh"
+# shellcheck source=compendium_offline_helpers.sh
+source "${SCRIPT_DIR}/compendium_offline_helpers.sh"
 TARGET_DIR="$PROJECT_ROOT/data/databases"
 NO_INTRO_DIR="$TARGET_DIR/no-intro"
 REDUMP_DIR="$TARGET_DIR/redump"
@@ -190,18 +192,6 @@ fi
 copied=0
 skipped=0
 
-sha256_of() {
-    local file="$1"
-    if command -v sha256sum >/dev/null 2>&1; then
-        sha256sum "$file" | awk '{print $1}'
-    elif command -v shasum >/dev/null 2>&1; then
-        shasum -a 256 "$file" | awk '{print $1}'
-    else
-        echo "error: no sha256 utility (sha256sum or shasum) found" >&2
-        return 1
-    fi
-}
-
 # Helper: copy a DAT file to a target directory (skip when content unchanged)
 copy_dat() {
     local src="$1"
@@ -216,8 +206,8 @@ copy_dat() {
 
     if [[ -f "$dest_path" ]]; then
         local src_hash dest_hash
-        src_hash="$(sha256_of "$src")"
-        dest_hash="$(sha256_of "$dest_path")"
+        src_hash="$(compendium_sha256_of "$src")"
+        dest_hash="$(compendium_sha256_of "$dest_path")"
         if [[ "$src_hash" == "$dest_hash" ]]; then
             skipped=$((skipped + 1))
             return
@@ -635,17 +625,31 @@ PYEOF
     # Also keep the raw listxml for the MAME listxml enrichment pass.
     mame_listxml_dest="$PROJECT_ROOT/data/mame/listxml.xml"
     mkdir -p "$(dirname "$mame_listxml_dest")"
-    if cp "$mame_xml_tmp" "$mame_listxml_dest" 2>/dev/null; then
-        echo "  MAME listxml: $mame_listxml_dest ($(du -sh "$mame_listxml_dest" | cut -f1))"
-    fi
+    case "$(install_file_if_changed "$mame_xml_tmp" "$mame_listxml_dest" 2>/dev/null || echo failed)" in
+        updated)
+            echo "  MAME listxml updated: $mame_listxml_dest ($(du -sh "$mame_listxml_dest" | cut -f1))"
+            ;;
+        unchanged)
+            echo "  MAME listxml unchanged: $mame_listxml_dest ($(du -sh "$mame_listxml_dest" | cut -f1))"
+            ;;
+        *)
+            echo "  Warning: failed to install MAME listxml at $mame_listxml_dest"
+            ;;
+    esac
     # catver.ini — progetto-SNAPS category database for MAME arcade genre enrichment.
     mame_catver_dest="$PROJECT_ROOT/data/mame/catver.ini"
     mame_catver_url="https://raw.githubusercontent.com/AntoPISA/MAME_SupportFiles/main/catver.ini/catver.ini"
     mame_catver_cache="$DOWNLOAD_CACHE_DIR/mame/catver.ini"
     echo "  Updating MAME catver.ini..."
     if download_with_cache "$mame_catver_url" "$mame_catver_cache" 120 "MAME catver.ini"; then
-        cp "$mame_catver_cache" "$mame_catver_dest"
-        echo "  MAME catver: $mame_catver_dest ($(du -sh "$mame_catver_dest" | cut -f1))"
+        case "$(install_file_if_changed "$mame_catver_cache" "$mame_catver_dest")" in
+            updated)
+                echo "  MAME catver updated: $mame_catver_dest ($(du -sh "$mame_catver_dest" | cut -f1))"
+                ;;
+            unchanged)
+                echo "  MAME catver unchanged: $mame_catver_dest"
+                ;;
+        esac
     else
         echo "  Warning: failed to download catver.ini from $mame_catver_url"
     fi
@@ -668,8 +672,14 @@ else
     echo ""
     echo "Updating MAME catver.ini..."
     if download_with_cache "$mame_catver_url" "$mame_catver_cache" 120 "MAME catver.ini"; then
-        cp "$mame_catver_cache" "$mame_catver_dest"
-        echo "  MAME catver: $mame_catver_dest ($(du -sh "$mame_catver_dest" | cut -f1))"
+        case "$(install_file_if_changed "$mame_catver_cache" "$mame_catver_dest")" in
+            updated)
+                echo "  MAME catver updated: $mame_catver_dest ($(du -sh "$mame_catver_dest" | cut -f1))"
+                ;;
+            unchanged)
+                echo "  MAME catver unchanged: $mame_catver_dest"
+                ;;
+        esac
     else
         echo "  Warning: failed to download catver.ini from $mame_catver_url"
     fi
@@ -692,14 +702,15 @@ if download_with_cache "$mame_redump_api_url" "$mame_redump_cache_json" 120 "MAM
         download_url="https://raw.githubusercontent.com/MetalSlug/MAMERedump/main/MAME%20Redump/${dat_name// /%20}"
         cache_path="$DOWNLOAD_CACHE_DIR/mame-redump-chd/$dat_name"
 
-        if [[ -f "$dest_path" ]] && is_cache_fresh "$dest_path"; then
-            mame_redump_skipped=$((mame_redump_skipped + 1))
-            continue
-        fi
-
         if download_with_cache "$download_url" "$cache_path" 120 "MAME Redump $dat_name"; then
-            cp "$cache_path" "$dest_path"
-            mame_redump_downloaded=$((mame_redump_downloaded + 1))
+            case "$(install_file_if_changed "$cache_path" "$dest_path")" in
+                updated)
+                    mame_redump_downloaded=$((mame_redump_downloaded + 1))
+                    ;;
+                unchanged)
+                    mame_redump_skipped=$((mame_redump_skipped + 1))
+                    ;;
+            esac
         else
             echo "    Warning: failed to download MAME Redump DAT: $dat_name"
         fi
@@ -723,24 +734,32 @@ fi
 
 # 5. metadat/hacks/ — ROM hack / translation patch DATs (libretro curated, romhacking.net URLs)
 PATCHES_DIR="$PROJECT_ROOT/data/patches/hacks"
-hacks_copied=0
+hacks_updated=0
+hacks_unchanged=0
 if [[ -d "$CLONE_DIR/metadat/hacks" ]]; then
     mkdir -p "$PATCHES_DIR"
     for dat in "$CLONE_DIR/metadat/hacks/"*.dat; do
         [[ -f "$dat" ]] || continue
         if should_include "$dat"; then
-            cp "$dat" "$PATCHES_DIR/$(basename "$dat")"
-            hacks_copied=$((hacks_copied + 1))
+            c_before=$copied
+            s_before=$skipped
+            copy_dat "$dat" "$PATCHES_DIR"
+            if [[ $copied -gt $c_before ]]; then
+                hacks_updated=$((hacks_updated + 1))
+            elif [[ $skipped -gt $s_before ]]; then
+                hacks_unchanged=$((hacks_unchanged + 1))
+            fi
         fi
     done
-    echo "  Patch/hack DATs:    $hacks_copied files in $PATCHES_DIR"
+    echo "  Patch/hack DATs:    $hacks_updated updated, $hacks_unchanged unchanged in $PATCHES_DIR"
 else
     echo "  Skipping hacks (metadat/hacks not found in libretro-database clone)"
 fi
 
 # 5b. Supplemental DAT sets — homebrew, libretro-dats (libretro curated); TOSEC is manual drop-in
 SUPPLEMENTAL_DIR="$PROJECT_ROOT/data/databases/supplemental"
-supplemental_copied=0
+supplemental_updated=0
+supplemental_unchanged=0
 for supplemental_type in homebrew libretro-dats; do
     src_supplemental="$CLONE_DIR/metadat/$supplemental_type"
     dest_supplemental="$SUPPLEMENTAL_DIR/$supplemental_type"
@@ -753,9 +772,16 @@ for supplemental_type in homebrew libretro-dats; do
     for dat in "$src_supplemental/"*.dat; do
         [[ -f "$dat" ]] || continue
         if should_include "$dat"; then
-            cp "$dat" "$dest_supplemental/$(basename "$dat")"
-            supplemental_copied=$((supplemental_copied + 1))
-            type_count=$((type_count + 1))
+            c_before=$copied
+            s_before=$skipped
+            copy_dat "$dat" "$dest_supplemental"
+            if [[ $copied -gt $c_before ]]; then
+                supplemental_updated=$((supplemental_updated + 1))
+                type_count=$((type_count + 1))
+            elif [[ $skipped -gt $s_before ]]; then
+                supplemental_unchanged=$((supplemental_unchanged + 1))
+                type_count=$((type_count + 1))
+            fi
         fi
     done
     echo "  Supplemental/$supplemental_type: $type_count files"
@@ -768,7 +794,8 @@ fi
 # 6. Metadata DATs (genre, developer, publisher, maxusers, releaseyear)
 METADATA_DIR="$PROJECT_ROOT/data/metadata"
 METADAT_TYPES=("genre" "developer" "publisher" "maxusers" "releaseyear" "description")
-meta_copied=0
+meta_updated=0
+meta_unchanged=0
 
 for meta_type in "${METADAT_TYPES[@]}"; do
     src_dir="$CLONE_DIR/metadat/$meta_type"
@@ -781,8 +808,14 @@ for meta_type in "${METADAT_TYPES[@]}"; do
     for dat in "$src_dir/"*.dat; do
         [[ -f "$dat" ]] || continue
         if should_include "$dat"; then
-            cp "$dat" "$dest_dir/$(basename "$dat")"
-            meta_copied=$((meta_copied + 1))
+            c_before=$copied
+            s_before=$skipped
+            copy_dat "$dat" "$dest_dir"
+            if [[ $copied -gt $c_before ]]; then
+                meta_updated=$((meta_updated + 1))
+            elif [[ $skipped -gt $s_before ]]; then
+                meta_unchanged=$((meta_unchanged + 1))
+            fi
         fi
     done
 done
@@ -829,7 +862,7 @@ for entry in "${GAMETDB_DBS[@]}"; do
 done
 
 echo ""
-echo "Done: $copied DATs copied, $skipped skipped, $meta_copied metadata DATs copied, $gametdb_copied GameTDB databases downloaded"
+echo "Done: $copied DATs copied, $skipped skipped, $meta_updated metadata DATs updated ($meta_unchanged unchanged), $gametdb_copied GameTDB databases downloaded"
 
 if [[ -x "$PROJECT_ROOT/scripts/update_hasheous_dumps.sh" ]]; then
     echo ""
@@ -854,8 +887,14 @@ openvgdb_cache_zip="$DOWNLOAD_CACHE_DIR/openvgdb/openvgdb.zip"
 if download_with_cache "$OPENVGDB_URL" "$openvgdb_cache_zip" 300 "OpenVGDB ZIP"; then
     cp "$openvgdb_cache_zip" "$openvgdb_tmp/openvgdb.zip"
     if unzip -o -q "$openvgdb_tmp/openvgdb.zip" "openvgdb.sqlite" -d "$openvgdb_tmp" 2>/dev/null; then
-        mv "$openvgdb_tmp/openvgdb.sqlite" "$OPENVGDB_DEST"
-        echo "  OpenVGDB updated: $OPENVGDB_DEST"
+        case "$(install_file_if_changed "$openvgdb_tmp/openvgdb.sqlite" "$OPENVGDB_DEST")" in
+            updated)
+                echo "  OpenVGDB updated: $OPENVGDB_DEST"
+                ;;
+            unchanged)
+                echo "  OpenVGDB unchanged: $OPENVGDB_DEST"
+                ;;
+        esac
     else
         # Extraction failed — evict the cached ZIP so next run redownloads.
         rm -f "$openvgdb_cache_zip"

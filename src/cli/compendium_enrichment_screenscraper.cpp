@@ -24,6 +24,7 @@ namespace {
         QString crc32;
         QString md5;
         QString sha1;
+        QString sha256;
     };
 
     bool loadPendingGames(QSqlDatabase &database, QList<PendingGame> &pending, QString &error) {
@@ -83,11 +84,15 @@ namespace {
                 game->md5 = value;
             else if (type == QStringLiteral("sha1"))
                 game->sha1 = value;
+            else if (type == QStringLiteral("sha256"))
+                game->sha256 = value;
         }
         return true;
     }
 
     QString firstHashForLookup(const PendingGame &game) {
+        if (!game.sha256.isEmpty())
+            return game.sha256;
         if (!game.md5.isEmpty())
             return game.md5;
         if (!game.sha1.isEmpty())
@@ -106,9 +111,8 @@ bool enrichFromScreenScraper(QSqlDatabase &database, const QString &credentialsP
     int apiCallsNeeded = 0;
     int apiCallsPerformed = 0;
 
-    const auto loadCredential = [&](const char *key) {
-        return CredentialManager::get(QString::fromLatin1(key), credentialsPath);
-    };
+    const auto loadCredential
+        = [&](const char *key) { return CredentialManager::get(QString::fromLatin1(key), credentialsPath); };
     const QString username = loadCredential("screenscraper/username");
     const QString password = loadCredential("screenscraper/password");
     const QString devId = loadCredential("screenscraper/devid");
@@ -212,8 +216,8 @@ bool enrichFromScreenScraper(QSqlDatabase &database, const QString &credentialsP
     auto insertFact = [&](const QString &gameId, const QString &field, const QString &value,
                           const QString &type = QStringLiteral("text")) -> bool {
         bool inserted = false;
-        if (!insertGameFact(replaceQueries,
-                delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("screenscraper"), &inserted))
+        if (!insertGameFact(replaceQueries, delQ, factQ, factSpec, gameId, field, value, type, error,
+                QStringLiteral("screenscraper"), &inserted))
             return false;
         if (inserted)
             ++factsInserted;

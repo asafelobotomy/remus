@@ -151,9 +151,16 @@ void CredentialManagerTest::testEnrichmentJsonKeysResolve() {
         { QStringLiteral("username"), QStringLiteral("json_ra_user") },
         { QStringLiteral("api_key"), QStringLiteral("json_ra_key") },
     };
+    QJsonObject screenscraper {
+        { QStringLiteral("username"), QStringLiteral("json_ss_user") },
+        { QStringLiteral("password"), QStringLiteral("json_ss_pass") },
+        { QStringLiteral("devid"), QStringLiteral("json_ss_devid") },
+        { QStringLiteral("devpassword"), QStringLiteral("json_ss_devpass") },
+    };
     const QJsonObject root {
         { QStringLiteral("igdb"), igdb },
         { QStringLiteral("retroachievements"), ra },
+        { QStringLiteral("screenscraper"), screenscraper },
     };
 
     const QString path = dir.filePath(QStringLiteral("enrichment-credentials.json"));
@@ -168,6 +175,11 @@ void CredentialManagerTest::testEnrichmentJsonKeysResolve() {
     QCOMPARE(
         CredentialManager::get(QStringLiteral("retroachievements/username"), path), QStringLiteral("json_ra_user"));
     QCOMPARE(CredentialManager::get(QStringLiteral("retroachievements/api_key"), path), QStringLiteral("json_ra_key"));
+    QCOMPARE(CredentialManager::get(QStringLiteral("screenscraper/username"), path), QStringLiteral("json_ss_user"));
+    QCOMPARE(CredentialManager::get(QStringLiteral("screenscraper/password"), path), QStringLiteral("json_ss_pass"));
+    QCOMPARE(CredentialManager::get(QStringLiteral("screenscraper/devid"), path), QStringLiteral("json_ss_devid"));
+    QCOMPARE(
+        CredentialManager::get(QStringLiteral("screenscraper/devpassword"), path), QStringLiteral("json_ss_devpass"));
 }
 
 /// A key absent from every source must produce an empty string, not a crash.

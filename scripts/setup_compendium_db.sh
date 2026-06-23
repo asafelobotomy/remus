@@ -3,13 +3,46 @@ set -euo pipefail
 
 # Tool: setup_compendium_db.sh
 # Purpose: Build a fresh Phase 1 compendium SQLite database from the full schema stack.
-# Usage: ./scripts/setup_compendium_db.sh [db_path]
+# Usage: ./scripts/setup_compendium_db.sh [--force] [db_path]
 # Inputs: Optional SQLite file path; default is data/compendium/remus_compendium.db.
 # Outputs: A recreated SQLite database and printed sanity checks.
-# Safety: Removes the target database file before recreating it.
+# Safety: Refuses to overwrite a populated database unless --force or COMPENDIUM_ALLOW_DESTRUCTIVE=1.
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DB_PATH="${1:-$ROOT_DIR/data/compendium/remus_compendium.db}"
+# shellcheck disable=SC1091
+source "$ROOT_DIR/scripts/compendium_db_guard.sh"
+
+FORCE=0
+DB_PATH="$ROOT_DIR/data/compendium/remus_compendium.db"
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --force)
+            FORCE=1
+            shift
+            ;;
+        --help|-h)
+            cat <<'EOF'
+Usage: ./scripts/setup_compendium_db.sh [--force] [db_path]
+
+Creates a fresh bootstrap compendium database (schema + seeds only).
+
+Refuses to delete a populated database (games > 0) unless:
+  --force
+  COMPENDIUM_ALLOW_DESTRUCTIVE=1
+EOF
+            exit 0
+            ;;
+        -*)
+            echo "error: unknown option: $1" >&2
+            exit 1
+            ;;
+        *)
+            DB_PATH="$1"
+            shift
+            ;;
+    esac
+done
 
 SQL_STEPS=(
     "$ROOT_DIR/data/compendium/migrations/0001_phase1_canonical_schema.sql"
@@ -26,6 +59,7 @@ SQL_STEPS=(
     "$ROOT_DIR/data/compendium/migrations/0009_game_signatures_source_entry_key.sql"
     "$ROOT_DIR/data/compendium/migrations/0010_game_extended_metadata.sql"
     "$ROOT_DIR/data/compendium/migrations/0011_materialized_coverage.sql"
+    "$ROOT_DIR/data/compendium/migrations/0012_game_assets.sql"
 )
 VALIDATION_SQL="$ROOT_DIR/data/compendium/validation/0001_phase1_checks.sql"
 DISC_SET_VALIDATION_SQL="$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql"
@@ -41,6 +75,11 @@ for sql_file in "${SQL_STEPS[@]}" "$VALIDATION_SQL" "$DISC_SET_VALIDATION_SQL"; 
         exit 1
     fi
 done
+
+compendium_abort_if_populated_without_force "$DB_PATH" "recreate bootstrap compendium database" "$FORCE"
+if compendium_db_is_populated "$DB_PATH"; then
+    compendium_backup_if_populated "$DB_PATH" "pre-bootstrap"
+fi
 
 mkdir -p "$(dirname "$DB_PATH")"
 rm -f "$DB_PATH"

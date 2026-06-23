@@ -89,8 +89,9 @@ namespace Compendium {
                 if (!entry.isObject())
                     continue;
                 const QJsonObject obj = entry.toObject();
-                if (obj.value(QStringLiteral("attributeName")).toString().compare(QStringLiteral("ROMs"),
-                        Qt::CaseInsensitive)
+                if (obj.value(QStringLiteral("attributeName"))
+                        .toString()
+                        .compare(QStringLiteral("ROMs"), Qt::CaseInsensitive)
                     != 0)
                     continue;
                 const QJsonValue value = obj.value(QStringLiteral("Value"));
@@ -121,8 +122,10 @@ namespace Compendium {
                 for (const QJsonValue &entry : attributes) {
                     if (!entry.isObject())
                         continue;
-                    if (entry.toObject().value(QStringLiteral("attributeName")).toString().compare(
-                            QStringLiteral("Tags"), Qt::CaseInsensitive)
+                    if (entry.toObject()
+                            .value(QStringLiteral("attributeName"))
+                            .toString()
+                            .compare(QStringLiteral("Tags"), Qt::CaseInsensitive)
                         != 0)
                         continue;
                     const QString genre = firstGenreFromTagsValue(entry.toObject().value(QStringLiteral("Value")));
@@ -154,6 +157,12 @@ namespace Compendium {
                         QString::fromLatin1(hk.type), rom.value(QString::fromLatin1(hk.jsonKey)).toString());
                     if (!key.isEmpty())
                         index.insert(key, match);
+                }
+                const QString originSha256 = rom.value(QStringLiteral("OriginSha256")).toString().trimmed();
+                if (!originSha256.isEmpty()) {
+                    const QString originKey = normalizedHashKey(QStringLiteral("sha256"), originSha256);
+                    if (!originKey.isEmpty())
+                        index.insert(originKey, match);
                 }
             }
         }

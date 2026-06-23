@@ -36,6 +36,10 @@ void SystemResolverTest::testProviderName() {
         QStringLiteral("1"));
     QCOMPARE(SystemResolver::providerName(Constants::Systems::ID_GENESIS, Constants::Providers::IGDB),
         QStringLiteral("genesis"));
+    QCOMPARE(SystemResolver::providerName(Constants::Systems::ID_GENESIS, Constants::Providers::WIKIDATA),
+        QStringLiteral("Q170624"));
+    QCOMPARE(SystemResolver::providerName(Constants::Systems::ID_NES, Constants::Providers::WIKIDATA),
+        QStringLiteral("Q172742"));
     QCOMPARE(SystemResolver::providerName(Constants::Systems::ID_GENESIS, Constants::Providers::HASHEOUS),
         QStringLiteral("Genesis"));
     QCOMPARE(SystemResolver::providerName(-1, Constants::Providers::IGDB), QString());

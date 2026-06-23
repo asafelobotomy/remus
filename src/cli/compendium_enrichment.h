@@ -249,6 +249,17 @@ bool enrichFromLaunchBox(
     QSqlDatabase &database, const QString &metadataXmlPath, int &gamesEnriched, int &factsInserted, QString &error);
 
 /**
+ * @brief Gap-fill cover_url and game_facts from consolidated remus-thumbnails game_assets rows.
+ */
+bool enrichFromRemusThumbnails(QSqlDatabase &database, int &gamesEnriched, int &factsInserted, QString &error);
+
+/**
+ * @brief Download remote cover_url values (IGDB/ScreenScraper/etc.) into remus-thumbnails blob store.
+ */
+bool ingestRemoteCoverArtIntoBlobStore(QSqlDatabase &database, const QString &repoRoot,
+    const QString &thumbnailOutputDir, const QString &sourceId, int &gamesEnriched, QString &error);
+
+/**
  * @brief Enrich games using TheGamesDB platform bulk API (title matching).
  *
  * Optional `thegamesdb/api_key` in credentials JSON. Respects the provider monthly request cap (3000).

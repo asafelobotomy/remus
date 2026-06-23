@@ -17,7 +17,7 @@ LOCK_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 if ! mkdir -p "$LOCK_DIR" 2>/dev/null; then
     LOCK_DIR="/tmp"
 fi
-LOCK_FILE="$LOCK_DIR/remus_compendium.db.lock"
+LOCK_FILE="$LOCK_DIR/$(basename "$DB_PATH").lock"
 
 usage() {
     cat <<EOF

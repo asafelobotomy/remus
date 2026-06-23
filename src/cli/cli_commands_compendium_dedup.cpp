@@ -1,4 +1,5 @@
 #include "cli_commands.h"
+#include "cli_compendium_build_phases.h"
 #include "cli_helpers.h"
 #include "compendium_sql_utilities.h"
 
@@ -84,6 +85,8 @@ int handleDedupCompendiumCommand(CliContext &ctx) {
     qInfo() << "Database:" << outputInfo.absoluteFilePath();
     qInfo() << "Merged game rows:" << merged;
     qInfo().nospace() << "Duration: " << timer.elapsed() << " ms";
+
+    finalizeCompendiumBuildArtifacts(database);
 
     database.close();
     QSqlDatabase::removeDatabase(connectionName);

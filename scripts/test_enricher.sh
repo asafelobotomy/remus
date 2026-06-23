@@ -85,10 +85,7 @@ fi
 # ── Build ─────────────────────────────────────────────────────────────────────
 if [[ ${NO_REBUILD} -eq 0 ]]; then
     echo "==> Building compendium (--enrich-source ${SOURCE}) …"
-    rm -f "${OUTPUT}" \
-          "${OUTPUT%.db}_staged.db" \
-          "${OUTPUT%.db}.report.json" \
-          "${OUTPUT%.db}_staged.report.json"
+    find "$(dirname "${OUTPUT}")" -maxdepth 1 -name "$(basename "${OUTPUT}").staged-*" -delete 2>/dev/null || true
 
     "${BINARY}" \
         --build-compendium \

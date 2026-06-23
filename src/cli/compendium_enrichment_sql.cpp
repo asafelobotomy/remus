@@ -21,25 +21,50 @@ bool execPrepared(QSqlQuery &query, QString &error, const QString &context) {
 FactReplaceQueries::FactReplaceQueries(QSqlDatabase &db)
     : database(db)
     , existsQ(db)
-    , clearCanonQ(db)
-    , clearConflictQ(db) {
+    , clearFieldCanonQ(db)
+    , clearFieldConflictQ(db) {
     existsQ.prepare(QStringLiteral("SELECT fact_id, field_value FROM game_facts "
                                    "WHERE game_id = ? AND field_name = ? AND source_id = ? LIMIT 1"));
-    clearCanonQ.prepare(QStringLiteral("DELETE FROM canonical_resolution WHERE selected_fact_id = ?"));
-    clearConflictQ.prepare(
-        QStringLiteral("UPDATE merge_conflicts SET chosen_fact_id = NULL WHERE chosen_fact_id = ?"));
+    clearFieldCanonQ.prepare(QStringLiteral("DELETE FROM canonical_resolution WHERE selected_fact_id IN "
+                                            "(SELECT fact_id FROM game_facts "
+                                            " WHERE game_id = ? AND field_name = ? AND source_id = ?)"));
+    clearFieldConflictQ.prepare(QStringLiteral("UPDATE merge_conflicts SET chosen_fact_id = NULL "
+                                               "WHERE chosen_fact_id IN "
+                                               "(SELECT fact_id FROM game_facts "
+                                               " WHERE game_id = ? AND field_name = ? AND source_id = ?)"));
 }
 
 namespace {
 
-bool clearFactDeletionBlockers(FactReplaceQueries &replaceQ, int factId, QString &error) {
-    replaceQ.clearCanonQ.bindValue(0, factId);
-    if (!execPrepared(replaceQ.clearCanonQ, error, QStringLiteral("Clear canonical resolution for fact replace")))
-        return false;
+    bool compendiumTableExists(QSqlDatabase &db, const QString &tableName) {
+        QSqlQuery query(db);
+        query.prepare(QStringLiteral("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ? LIMIT 1"));
+        query.addBindValue(tableName);
+        return query.exec() && query.next();
+    }
 
-    replaceQ.clearConflictQ.bindValue(0, factId);
-    return execPrepared(replaceQ.clearConflictQ, error, QStringLiteral("Clear merge conflict fact refs"));
-}
+    bool clearFieldFactDeletionBlockers(FactReplaceQueries &replaceQ, const QString &gameId, const QString &fieldName,
+        const QString &sourceId, QString &error) {
+        if (compendiumTableExists(replaceQ.database, QStringLiteral("canonical_resolution"))) {
+            replaceQ.clearFieldCanonQ.bindValue(0, gameId);
+            replaceQ.clearFieldCanonQ.bindValue(1, fieldName);
+            replaceQ.clearFieldCanonQ.bindValue(2, sourceId);
+            if (!execPrepared(
+                    replaceQ.clearFieldCanonQ, error, QStringLiteral("Clear canonical resolution for field replace")))
+                return false;
+        }
+
+        if (compendiumTableExists(replaceQ.database, QStringLiteral("merge_conflicts"))) {
+            replaceQ.clearFieldConflictQ.bindValue(0, gameId);
+            replaceQ.clearFieldConflictQ.bindValue(1, fieldName);
+            replaceQ.clearFieldConflictQ.bindValue(2, sourceId);
+            if (!execPrepared(
+                    replaceQ.clearFieldConflictQ, error, QStringLiteral("Clear merge conflict refs for field replace")))
+                return false;
+        }
+
+        return true;
+    }
 
 } // namespace
 
@@ -90,13 +115,12 @@ bool insertGameFact(FactReplaceQueries &replaceQueries, QSqlQuery &delQuery, QSq
         return false;
 
     if (replaceQueries.existsQ.next()) {
-        const int factId = replaceQueries.existsQ.value(0).toInt();
         if (replaceQueries.existsQ.value(1).toString() == fieldValue)
             return true;
-
-        if (!clearFactDeletionBlockers(replaceQueries, factId, error))
-            return false;
     }
+
+    if (!clearFieldFactDeletionBlockers(replaceQueries, gameId, fieldName, spec.sourceId, error))
+        return false;
 
     // Remove any prior fact from this source for this game+field so that
     // re-runs replace stale values rather than accumulating alongside them.
@@ -175,8 +199,8 @@ bool bulkClearSourceFactBlockers(QSqlDatabase &db, const QString &sourceId, QStr
 
     QSqlQuery clearConflict(db);
     clearConflict.prepare(QStringLiteral("UPDATE merge_conflicts SET chosen_fact_id = NULL "
-                                        "WHERE chosen_fact_id IN "
-                                        "(SELECT fact_id FROM game_facts WHERE source_id = ?)"));
+                                         "WHERE chosen_fact_id IN "
+                                         "(SELECT fact_id FROM game_facts WHERE source_id = ?)"));
     clearConflict.addBindValue(sourceId);
     return execPrepared(clearConflict, error, QStringLiteral("Bulk clear merge conflicts for source"));
 }
@@ -198,8 +222,7 @@ QSet<QString> loadGamesWithMinSourceFieldFacts(
 
 EnrichmentBatchWriter::EnrichmentBatchWriter(QSqlDatabase &db, int batchSize)
     : m_db(db)
-    , m_batchSize(batchSize > 0 ? batchSize : kEnrichmentBatchCommitGames) {
-}
+    , m_batchSize(batchSize > 0 ? batchSize : kEnrichmentBatchCommitGames) { }
 
 bool EnrichmentBatchWriter::begin(QString &error) {
     if (m_active)

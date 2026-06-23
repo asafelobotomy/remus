@@ -1,4 +1,5 @@
 #include "cli_commands.h"
+#include "cli_compendium_build_phases.h"
 #include "cli_helpers.h"
 #include "compendium_sql_utilities.h"
 
@@ -59,6 +60,8 @@ int handleImportPatchCatalogCommand(CliContext &ctx) {
         QSqlDatabase::removeDatabase(connectionName);
         return 1;
     }
+
+    finalizeCompendiumBuildArtifacts(database);
 
     database.close();
     QSqlDatabase::removeDatabase(connectionName);

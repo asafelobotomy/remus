@@ -15,3 +15,6 @@ if [[ "${#scripts[@]}" -eq 0 ]]; then
 fi
 
 shellcheck --severity=warning "${scripts[@]}"
+
+echo "==> Syntax-check build_compendium_full.sh"
+bash -n scripts/build_compendium_full.sh

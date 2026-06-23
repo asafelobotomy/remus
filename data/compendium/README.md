@@ -82,7 +82,7 @@ Expected values:
 
 - systems_count: `112`
 - regions_count: `21`
-- merge_policy_count: `21`
+- merge_policy_count: `25`
 
 A fresh bootstrap database contains schema, seeds, and indexes only. The full
 validator is intended for a populated build output, so `content.*` checks will
@@ -147,10 +147,10 @@ on what changed, it chooses one of:
 
 | Mode | When | Work performed |
 |------|------|----------------|
-| **Skip** | All checksums match, enrichment fingerprint matches, report exists | No-op |
+| **Skip** | All checksums match, enrichment fingerprint matches | No-op (missing sidecar report does not trigger rebuild) |
 | **Enrichment-only** | Checksums match, enrichment inputs changed | Re-run enrichment passes + FTS on existing DB |
 | **Incremental ingest** | One or more DAT checksums changed | Purge/re-ingest changed sources only, then dedup/merge/enrichment |
-| **Full** | No DB, schema mismatch, `--force-full-rebuild`, or missing report with matching inputs | Drop schema, ingest all DATs |
+| **Full** | No DB, schema mismatch, or `--force-full-rebuild` | Drop schema, ingest all DATs |
 
 Use `--force-full-rebuild` to bypass incremental planning and always drop schema + re-ingest
 every enabled DAT.

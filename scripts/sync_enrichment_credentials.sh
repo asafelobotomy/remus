@@ -22,6 +22,12 @@ payload = {
         "username": os.environ.get("REMUS_RA_USERNAME") or os.environ.get("REMUS_RA_USER", ""),
         "api_key": os.environ.get("REMUS_RA_API_KEY", ""),
     },
+    "screenscraper": {
+        "username": os.environ.get("REMUS_SS_USER", ""),
+        "password": os.environ.get("REMUS_SS_PASS", ""),
+        "devid": os.environ.get("REMUS_SS_DEVID", ""),
+        "devpassword": os.environ.get("REMUS_SS_DEVPASS", ""),
+    },
     "hasheous": {
         "client_api_key": os.environ.get("REMUS_HASHEOUS_API_KEY", ""),
     },

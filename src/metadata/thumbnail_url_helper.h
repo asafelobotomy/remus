@@ -2,6 +2,8 @@
 
 #include <QStringList>
 
+class QSqlDatabase;
+
 namespace Remus {
 namespace Metadata {
 
@@ -50,6 +52,32 @@ namespace Metadata {
          */
         static QStringList generateThumbnailCandidates(
             const QString &systemName, const QString &gameName, const QString &type);
+
+        /**
+         * @brief Map asset type shorthand to libretro thumbnail folder name.
+         */
+        static QString libretroFolderForAssetType(const QString &assetType);
+
+        /**
+         * @brief Resolve repo-relative storage path to absolute filesystem path.
+         */
+        static QString resolveStoragePath(const QString &repoRoot, const QString &storagePath);
+
+        /**
+         * @brief Derive repository root from a compendium database path (data/compendium/name.db).
+         */
+        static QString repoRootFromCompendiumDb(const QString &databasePath);
+
+        /**
+         * @brief Look up local blob path from game_assets for a game.
+         */
+        static QString lookupGameAssetPath(QSqlDatabase &db, const QString &gameId, const QString &assetType);
+
+        /**
+         * @brief Resolve artwork URL with local blob preference.
+         */
+        static QString resolveArtworkUrl(QSqlDatabase &db, const QString &repoRoot, const QString &gameId,
+            const QString &systemName, const QString &canonicalTitle, const QString &assetType, bool strictOffline);
     };
 
 } // namespace Metadata
