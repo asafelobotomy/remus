@@ -125,6 +125,32 @@ private:
     bool m_ingestCommitted = false;
 };
 
+void releaseDatabase(QSqlDatabase &database, const QString &connectionName);
+
+bool copyDatabaseArtifact(const QString &srcDbPath, const QString &destDbPath, QString &error) {
+    if (QFileInfo::exists(destDbPath) && !QFile::remove(destDbPath)) {
+        error = QStringLiteral("Failed to replace %1").arg(destDbPath);
+        return false;
+    }
+    if (!QFile::copy(srcDbPath, destDbPath)) {
+        error = QStringLiteral("Failed to copy %1 to %2").arg(srcDbPath, destDbPath);
+        return false;
+    }
+    for (const QString &suffix : { QStringLiteral("-wal"), QStringLiteral("-shm") }) {
+        const QString srcSide = srcDbPath + suffix;
+        if (!QFileInfo::exists(srcSide)) {
+            continue;
+        }
+        const QString destSide = destDbPath + suffix;
+        QFile::remove(destSide);
+        if (!QFile::copy(srcSide, destSide)) {
+            error = QStringLiteral("Failed to copy %1").arg(srcSide);
+            return false;
+        }
+    }
+    return true;
+}
+
 bool promoteStagedFile(const QString &stagedPath, const QString &finalPath, QString &error) {
     if (stagedPath == finalPath) {
         return true;
@@ -154,6 +180,55 @@ bool promoteStagedFile(const QString &stagedPath, const QString &finalPath, QStr
             qWarning().noquote() << QStringLiteral("[build-compendium] Kept rollback backup at %1").arg(backupPath);
         }
     }
+    return true;
+}
+
+bool checkpointAndPromoteIngestDatabase(QSqlDatabase &database, const QString &connectionName,
+    const QString &stagedOutputPath, const QString &finalOutputPath, const QString &buildId,
+    StagedBuildGuard &stagedGuard, bool &ingestPromotedEarly, QString &error) {
+    QSqlQuery checkpointQ(database);
+    if (!checkpointQ.exec(QStringLiteral("PRAGMA wal_checkpoint(FULL)"))) {
+        error = checkpointQ.lastError().text();
+        return false;
+    }
+
+    const QFileInfo finalInfo(finalOutputPath);
+    const QString backupDir = finalInfo.dir().filePath(QStringLiteral("backups"));
+    if (!QDir().mkpath(backupDir)) {
+        error = QStringLiteral("Failed to create backup directory: %1").arg(backupDir);
+        return false;
+    }
+
+    QString safeBuildId = buildId;
+    for (const QChar ch : QStringLiteral("/\\:?*\"<>|")) {
+        safeBuildId.replace(ch, QLatin1Char('_'));
+    }
+    const QString stamp = QDateTime::currentDateTimeUtc().toString(QStringLiteral("yyyyMMddTHHmmssZ"));
+    const QString backupPath = QDir(backupDir).filePath(finalInfo.baseName() + QStringLiteral(".post-ingest.")
+            + safeBuildId + QLatin1Char('.') + stamp + QStringLiteral(".db"));
+
+    releaseDatabase(database, connectionName);
+
+    if (!copyDatabaseArtifact(stagedOutputPath, backupPath, error)) {
+        return false;
+    }
+    if (!promoteStagedFile(stagedOutputPath, finalOutputPath, error)) {
+        return false;
+    }
+
+    stagedGuard.release();
+    ingestPromotedEarly = true;
+
+    database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+    database.setDatabaseName(finalOutputPath);
+    if (!database.open()) {
+        error = database.lastError().text();
+        return false;
+    }
+    applyCompendiumBuildPragmas(database);
+
+    qInfo().noquote() << QStringLiteral("[build-compendium] Ingest promoted to %1 (backup: %2)")
+                             .arg(finalOutputPath, backupPath);
     return true;
 }
 
@@ -473,6 +548,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     }
 
     const QString connectionName = QStringLiteral("compendium-") + QUuid::createUuid().toString(QUuid::WithoutBraces);
+    bool ingestPromotedEarly = false;
 
     QSqlDatabase database = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
     database.setDatabaseName(stagedOutputPath);
@@ -684,6 +760,13 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         return 1;
     }
     stagedGuard.markIngestCommitted();
+    if (!checkpointAndPromoteIngestDatabase(database, connectionName, stagedOutputPath, finalOutputPath, buildId,
+            stagedGuard, ingestPromotedEarly, error)) {
+        qCritical().noquote() << QStringLiteral("✗ Post-ingest checkpoint failed: %1").arg(error);
+        database.close();
+        QSqlDatabase::removeDatabase(connectionName);
+        return 1;
+    }
     writeProgress(QStringLiteral("enriching"), totalEnabled, { }, stats, /*overallPct=*/10);
 
     // ── Consolidate libretro acquisition → remus-thumbnails blobs ─────────────
@@ -895,18 +978,25 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
 
     releaseDatabase(database, connectionName);
 
-    if (!promoteStagedFile(stagedOutputPath, finalOutputPath, error)) {
-        qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
-        writeTerminalProgress(progressPath, QStringLiteral("failed"), timer.elapsed());
-        return 1;
+    if (!ingestPromotedEarly) {
+        if (!promoteStagedFile(stagedOutputPath, finalOutputPath, error)) {
+            qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
+            writeTerminalProgress(progressPath, QStringLiteral("failed"), timer.elapsed());
+            return 1;
+        }
     }
     if (!promoteStagedFile(stagedReportPath, finalReportPath, error)) {
         qCritical().noquote() << QStringLiteral("✗ %1").arg(error);
         writeTerminalProgress(progressPath, QStringLiteral("failed"), timer.elapsed());
-        // Roll back the DB promotion so the next invocation is forced to rebuild.
-        if (!QFile::rename(finalOutputPath, stagedOutputPath)) {
-            qCritical() << "[build-compendium] Could not roll back DB promotion —"
-                        << "delete" << finalOutputPath << "and rerun to recover.";
+        if (!ingestPromotedEarly) {
+            // Roll back the DB promotion so the next invocation is forced to rebuild.
+            if (!QFile::rename(finalOutputPath, stagedOutputPath)) {
+                qCritical() << "[build-compendium] Could not roll back DB promotion —"
+                            << "delete" << finalOutputPath << "and rerun to recover.";
+            }
+        } else {
+            qCritical().noquote() << QStringLiteral("[build-compendium] Ingest DB preserved at %1")
+                                         .arg(finalOutputPath);
         }
         return 1;
     }

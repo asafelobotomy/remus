@@ -87,3 +87,37 @@ compendium_backup_if_populated() {
         rm -f -- "${old_backups[$i]}" "${old_backups[$i]}-wal" "${old_backups[$i]}-shm"
     done
 }
+
+compendium_latest_post_ingest_backup() {
+    local db="$1"
+    local backup_dir base
+    backup_dir="$(dirname "$db")/backups"
+    base="$(basename "$db" .db)"
+    ls -1t "$backup_dir/${base}.post-ingest."*.db 2>/dev/null | head -1 || true
+}
+
+compendium_restore_post_ingest_backup() {
+    local db="$1"
+    local backup="${2:-$(compendium_latest_post_ingest_backup "$db")}"
+
+    if [[ -z "$backup" || ! -f "$backup" ]]; then
+        echo "error: no post-ingest backup found for $db" >&2
+        echo "hint: backups live in $(dirname "$db")/backups/*.post-ingest.*.db" >&2
+        return 1
+    fi
+
+    echo "==> Restoring post-ingest backup"
+    echo "    from=$backup"
+    echo "    to=$db"
+    cp -a -- "$backup" "$db"
+    if [[ -f "${backup}-wal" ]]; then
+        cp -a -- "${backup}-wal" "${db}-wal"
+    else
+        rm -f -- "${db}-wal"
+    fi
+    if [[ -f "${backup}-shm" ]]; then
+        cp -a -- "${backup}-shm" "${db}-shm"
+    else
+        rm -f -- "${db}-shm"
+    fi
+}

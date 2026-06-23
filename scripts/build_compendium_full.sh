@@ -27,6 +27,7 @@ OFFLINE_ONLY=false
 STRICT_OFFLINE=false
 PRUNE_ACQUISITION=false
 SNAP_LOSSLESS=false
+SKIP_CONSOLIDATE=false
 ONLINE_ENRICHMENT_ALL=false
 DAT_DIR="$ROOT_DIR/data/databases"
 MANIFEST_PATH="$ROOT_DIR/data/compendium/compendium-manifest-full.json"
@@ -105,6 +106,23 @@ run_compendium_validate() {
         bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" "$@"
 }
 
+run_consolidate_artwork() {
+    local db_path="$1"
+    echo "==> Consolidating artwork (standalone pass; safe to retry without re-ingest)"
+    local consolidate_args=(
+        --consolidate-thumbnails
+        --compendium-output "$db_path"
+    )
+    if $SNAP_LOSSLESS; then
+        consolidate_args+=(--thumbnail-snap-lossless)
+    fi
+    if $PRUNE_ACQUISITION; then
+        consolidate_args+=(--prune-acquisition-sources)
+    fi
+    "$ROOT_DIR/scripts/run_compendium_job.sh" --db "$db_path" -- \
+        "$ROOT_DIR/build/remus-cli" "${consolidate_args[@]}"
+}
+
 trap 'cleanup_monitor; cleanup_lock' EXIT
 
 usage() {
@@ -123,6 +141,7 @@ Options:
                             Remove libretro acquisition trees after consolidate
   --thumbnail-snap-lossless
                             Transcode Named_Snaps with WebP lossless (default: lossy q=85)
+  --skip-consolidate        Skip the standalone artwork consolidate pass
   --online-enrichment       Legacy no-op (bulk online gap-fill is the default)
   --online-enrichment-all   Also run Hasheous/PlayMatch/ZXInfo per-game APIs (very slow)
                               Default: offline sources first, then online gap-fill when creds exist.
@@ -166,6 +185,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --thumbnail-snap-lossless)
             SNAP_LOSSLESS=true
+            shift
+            ;;
+        --skip-consolidate)
+            SKIP_CONSOLIDATE=true
             shift
             ;;
         --online-enrichment)
@@ -315,6 +338,7 @@ fi
 if $ONLINE_ENRICHMENT_ALL; then
     build_cli_args+=(--online-enrichment-all)
 fi
+build_cli_args+=(--skip-consolidate-thumbnails)
 "$ROOT_DIR/scripts/run_compendium_job.sh" --db "$OUTPUT_DB" -- \
     "$ROOT_DIR/build/remus-cli" \
     "${build_cli_args[@]}" \
@@ -351,6 +375,12 @@ if [[ "$build_rc" -eq 2 ]]; then
     fi
 else
     echo "==> Build completed cleanly (exit code 0)"
+fi
+
+if ! $SKIP_CONSOLIDATE; then
+    run_consolidate_artwork "$OUTPUT_DB"
+else
+    echo "==> Skipping artwork consolidate (--skip-consolidate)"
 fi
 
 echo "==> Importing patch catalog (libretro hacks DATs)"
