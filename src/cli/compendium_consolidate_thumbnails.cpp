@@ -519,8 +519,10 @@ bool consolidateThumbnails(QSqlDatabase &database, const ConsolidateThumbnailsOp
             int height = 0;
             if (!transcodeImage(srcPath, tempBlob, format, repoRoot, lossless, options.snapQuality, options.maxWidth,
                     width, height, error)) {
-                database.rollback();
-                return false;
+                qWarning().noquote() << QStringLiteral("[consolidate-thumbnails] Skipping unloadable source: %1 (%2)")
+                                            .arg(srcPath, error);
+                ++stats.misses;
+                continue;
             }
 
             QFile tempFile(tempBlob);

@@ -94,6 +94,15 @@ public:
     ~StagedBuildGuard() {
         if (!m_active)
             return;
+        if (m_ingestCommitted) {
+            if (!m_progressPath.isEmpty() && m_timer != nullptr) {
+                writeTerminalProgress(m_progressPath, QStringLiteral("partial"), m_timer->elapsed());
+            }
+            qWarning().noquote() << QStringLiteral("[build-compendium] Staged database preserved at %1 "
+                                                   "(ingest committed; rerun build to resume)")
+                                        .arg(m_stagedDbPath);
+            return;
+        }
         if (!m_progressPath.isEmpty() && m_timer != nullptr)
             writeTerminalProgress(m_progressPath, QStringLiteral("failed"), m_timer->elapsed());
         removeStagedArtifactFiles(m_stagedDbPath, m_stagedReportPath);
@@ -103,12 +112,17 @@ public:
         m_active = false;
     }
 
+    void markIngestCommitted() {
+        m_ingestCommitted = true;
+    }
+
 private:
     QString m_stagedDbPath;
     QString m_stagedReportPath;
     QString m_progressPath;
     QElapsedTimer *m_timer = nullptr;
     bool m_active = true;
+    bool m_ingestCommitted = false;
 };
 
 bool promoteStagedFile(const QString &stagedPath, const QString &finalPath, QString &error) {
@@ -669,6 +683,7 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         QSqlDatabase::removeDatabase(connectionName);
         return 1;
     }
+    stagedGuard.markIngestCommitted();
     writeProgress(QStringLiteral("enriching"), totalEnabled, { }, stats, /*overallPct=*/10);
 
     // ── Consolidate libretro acquisition → remus-thumbnails blobs ─────────────

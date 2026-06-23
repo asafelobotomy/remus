@@ -15,7 +15,7 @@ compendium_db_game_count() {
         echo 0
         return 0
     fi
-    sqlite3 -batch "$db" "PRAGMA busy_timeout=5000; SELECT COUNT(*) FROM games;" 2>/dev/null || echo 0
+    sqlite3 -batch -cmd "PRAGMA busy_timeout=5000;" "$db" "SELECT COUNT(*) FROM games;" 2>/dev/null | tail -1 || echo 0
 }
 
 compendium_db_is_populated() {

@@ -249,6 +249,7 @@ add_remus_test(test_consolidate_thumbnails ConsolidateThumbnailsTest
     SOURCES test_consolidate_thumbnails.cpp
         ../src/cli/compendium_artwork_transcode.cpp
         ../src/cli/compendium_cwebp_resolver.cpp
+        ../src/cli/compendium_consolidate_thumbnails.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata
 )
 
