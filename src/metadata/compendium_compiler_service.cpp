@@ -11,6 +11,7 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QAtomicInt>
 #include <QThread>
 #include <QtConcurrent>
 
@@ -263,18 +264,28 @@ namespace Compendium {
             return batch;
         };
 
+        QAtomicInt extractCompleted { 0 };
+        const auto extractSourceWithProgress = [&](const CompendiumSourceConfig &src) -> SourceExtractBatch {
+            SourceExtractBatch batch = extractSource(src);
+            if (options.onExtractProgress) {
+                const int done = extractCompleted.fetchAndAddRelaxed(1) + 1;
+                options.onExtractProgress(done, totalEnabled, src.sourceId);
+            }
+            return batch;
+        };
+
         QList<SourceExtractBatch> batches;
         if (parallelism <= 1 || toProcess.size() <= 1) {
             batches.reserve(toProcess.size());
             for (const CompendiumSourceConfig &src : toProcess) {
-                batches.append(extractSource(src));
+                batches.append(extractSourceWithProgress(src));
             }
         } else {
             qInfo().noquote() << QStringLiteral(
                 "[CompendiumCompilerService] Parallel DAT extraction (%1 workers, %2 sources)")
                                      .arg(parallelism)
                                      .arg(toProcess.size());
-            batches = QtConcurrent::blockingMapped(toProcess, extractSource);
+            batches = QtConcurrent::blockingMapped(toProcess, extractSourceWithProgress);
         }
 
         for (SourceExtractBatch &batch : batches) {

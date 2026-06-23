@@ -768,19 +768,24 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
         if (pf.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
             pf.write(QJsonDocument(obj).toJson());
     };
-    Remus::Compendium::ProgressCallback onProgress
-        = [&](int current, int /*total*/, const QString &srcId, const Remus::Compendium::CompilerStats &s) {
-              qInfo().noquote() << QStringLiteral("[%1/%2] \u2714 %3").arg(current, 3).arg(totalEnabled, 3).arg(srcId);
-              writeProgress(QStringLiteral("in_progress"), current, srcId, s);
-          };
-    writeProgress(QStringLiteral("in_progress"), 0, { }, { });
-
     Remus::Compendium::CompilerRunOptions runOptions;
     if (incrementalIngest) {
         runOptions.ingestSourceIds = buildPlan.sourcesToIngest;
         runOptions.purgeChangedSources = true;
         runOptions.preloadIdentityLinker = true;
     }
+    Remus::Compendium::ProgressCallback onProgress
+        = [&](int current, int /*total*/, const QString &srcId, const Remus::Compendium::CompilerStats &s) {
+              qInfo().noquote() << QStringLiteral("[%1/%2] \u2714 %3").arg(current, 3).arg(totalEnabled, 3).arg(srcId);
+              const int pct = totalEnabled > 0 ? 5 + (current * 5 / totalEnabled) : 5;
+              writeProgress(QStringLiteral("in_progress"), current, srcId, s, pct);
+          };
+    runOptions.onExtractProgress = [&](int current, int total, const QString &srcId) {
+        qInfo().noquote() << QStringLiteral("[extract %1/%2] %3").arg(current, 3).arg(total, 3).arg(srcId);
+        const int pct = total > 0 ? current * 5 / total : 0;
+        writeProgress(QStringLiteral("extracting"), current, srcId, { }, pct);
+    };
+    writeProgress(QStringLiteral("extracting"), 0, { }, { }, 0);
 
     const Remus::Compendium::CompilerStats stats = service.run(buildConfig, database, error, onProgress, runOptions);
     if (!error.isEmpty()) {

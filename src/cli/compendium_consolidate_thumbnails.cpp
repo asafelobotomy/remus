@@ -24,9 +24,40 @@
 #include <QSqlQuery>
 #include <QTemporaryDir>
 
+#include <fcntl.h>
+#include <unistd.h>
+
 using Remus::Metadata::ThumbnailUrlHelper;
 
 namespace {
+
+class LibpngStderrSuppressScope {
+public:
+    LibpngStderrSuppressScope() {
+        fflush(stderr);
+        savedFd_ = dup(STDERR_FILENO);
+        if (savedFd_ < 0) {
+            return;
+        }
+        const int nullFd = open("/dev/null", O_WRONLY);
+        if (nullFd >= 0) {
+            dup2(nullFd, STDERR_FILENO);
+            close(nullFd);
+        }
+    }
+
+    ~LibpngStderrSuppressScope() {
+        if (savedFd_ < 0) {
+            return;
+        }
+        fflush(stderr);
+        dup2(savedFd_, STDERR_FILENO);
+        close(savedFd_);
+    }
+
+private:
+    int savedFd_ = -1;
+};
 
 QString libretroFolderForAssetType(const QString &assetType) {
     if (assetType == QStringLiteral("box")) {
@@ -174,7 +205,11 @@ bool transcodeToPng(const QImage &image, const QString &destPath, QString &error
 bool transcodeImage(const QString &srcPath, const QString &destPath, const TranscodeFormat &format,
     const QString &repoRoot, bool lossless, int snapQuality, int maxWidth, int &outWidth, int &outHeight,
     QString &error) {
-    QImage image(srcPath);
+    QImage image;
+    {
+        const LibpngStderrSuppressScope suppressLibpng;
+        image = QImage(srcPath);
+    }
     if (image.isNull()) {
         error = QStringLiteral("Failed to load image: %1").arg(srcPath);
         return false;

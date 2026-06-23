@@ -81,7 +81,11 @@ emit_build_heartbeat() {
                     if .enrichment_pass_name != null and .enrichment_pass_name != "" then
                         "pass \(.enrichment_pass_current // "?")/\(.enrichment_pass_total // "?"): \(.enrichment_pass_name)"
                     elif .current != null and .total != null then
-                        "[\(.current)/\(.total)] \(.status) \(.current_source) (\(.records_ingested // 0) records)"
+                        if .status == "extracting" then
+                            "[extract \(.current)/\(.total)] \(.current_source // "")"
+                        else
+                            "[\(.current)/\(.total)] \(.status) \(.current_source // "") (\(.records_ingested // 0) records)"
+                        end
                     else
                         "\(.status // "running")"
                     end' "$PROGRESS_FILE" 2>/dev/null || cat "$PROGRESS_FILE")

@@ -49,9 +49,11 @@ namespace Compendium {
         bool purgeChangedSources = false;
         /// Load identity maps from the DB before linking (incremental builds).
         bool preloadIdentityLinker = false;
-        /// Parallel DAT extraction workers (0 = @c QThread::idealThreadCount(), 1 = serial).
-        int extractParallelism = 0;
-    };
+    /// Parallel DAT extraction workers (0 = @c QThread::idealThreadCount(), 1 = serial).
+    int extractParallelism = 0;
+    /// Fired as each DAT finishes parallel/serial extraction (before DB insert).
+    std::function<void(int current, int total, const QString &sourceId)> onExtractProgress;
+};
 
     class CompendiumCompilerService {
     public:

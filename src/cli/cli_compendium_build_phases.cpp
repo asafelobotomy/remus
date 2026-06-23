@@ -919,6 +919,13 @@ bool databaseHasPopulatedContent(QSqlDatabase &db) {
     return q.exec(QStringLiteral("SELECT 1 FROM games LIMIT 1")) && q.next();
 }
 
+void releasePlanDatabase(QSqlDatabase &db) {
+    const QString connectionName = db.connectionName();
+    db.close();
+    db = QSqlDatabase();
+    QSqlDatabase::removeDatabase(connectionName);
+}
+
 } // namespace
 
 bool planCompendiumBuild(const QString &dbPath, int schemaVersion, const QList<CompendiumSourceDescriptor> &sources,
@@ -944,8 +951,7 @@ bool planCompendiumBuild(const QString &dbPath, int schemaVersion, const QList<C
     }
 
     if (!databaseHasPopulatedContent(db)) {
-        db.close();
-        QSqlDatabase::removeDatabase(QStringLiteral("compendium-plan"));
+        releasePlanDatabase(db);
         for (const CompendiumSourceDescriptor &source : sources) {
             if (source.enabled && source.sourceType == QStringLiteral("dat")) {
                 plan.sourcesToIngest.insert(source.sourceId);
@@ -958,8 +964,7 @@ bool planCompendiumBuild(const QString &dbPath, int schemaVersion, const QList<C
     schemaQ.prepare(QStringLiteral("SELECT 1 FROM compendium_builds WHERE schema_version = ? LIMIT 1"));
     schemaQ.addBindValue(schemaVersion);
     if (!schemaQ.exec() || !schemaQ.next()) {
-        db.close();
-        QSqlDatabase::removeDatabase(QStringLiteral("compendium-plan"));
+        releasePlanDatabase(db);
         for (const CompendiumSourceDescriptor &source : sources) {
             if (source.enabled && source.sourceType == QStringLiteral("dat")) {
                 plan.sourcesToIngest.insert(source.sourceId);
@@ -985,8 +990,7 @@ bool planCompendiumBuild(const QString &dbPath, int schemaVersion, const QList<C
         }
     }
 
-    db.close();
-    QSqlDatabase::removeDatabase(QStringLiteral("compendium-plan"));
+    releasePlanDatabase(db);
 
     const bool enrichmentMatches
         = !plan.storedEnrichmentFingerprint.isEmpty() && plan.storedEnrichmentFingerprint == enrichmentFingerprint;

@@ -33,7 +33,14 @@ DatParseResult DatParser::parse(const QString &filePath) {
     QString content = file.readAll();
     file.close();
 
-    return parseContent(content);
+    result = parseContent(content);
+    if (result.success) {
+        qInfo().noquote() << QStringLiteral("Parsed DAT file: \"%1\" with %2 entries (%3)")
+                                 .arg(result.header.name)
+                                 .arg(result.entryCount)
+                                 .arg(QFileInfo(filePath).fileName());
+    }
+    return result;
 }
 
 DatParseResult DatParser::parseContent(const QString &content) {
@@ -83,8 +90,6 @@ DatParseResult DatParser::parseContent(const QString &content) {
 
     result.entryCount = result.entries.size();
     result.success = true;
-
-    qInfo() << "Parsed DAT file:" << result.header.name << "with" << result.entryCount << "entries";
 
     return result;
 }

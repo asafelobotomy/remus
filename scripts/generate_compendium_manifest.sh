@@ -288,6 +288,44 @@ PY
 )
 fi
 
+filter_duplicate_mame_official_sources() {
+    declare -A mame_checksum_seen=()
+    local -a filtered_files=()
+    local -a filtered_prefixes=()
+    local -a filtered_priorities=()
+    local i dat_file checksum keeper
+
+    for i in "${!ALL_FILES[@]}"; do
+        dat_file="${ALL_FILES[$i]}"
+        if [[ "${ALL_PREFIXES[$i]}" != "mame-official" ]]; then
+            filtered_files+=("$dat_file")
+            filtered_prefixes+=("${ALL_PREFIXES[$i]}")
+            filtered_priorities+=("${ALL_PRIORITIES[$i]}")
+            continue
+        fi
+        checksum="${CHECKSUM_BY_FILE[$dat_file]:-}"
+        if [[ -z "$checksum" ]]; then
+            checksum="$(sha256_of "$dat_file")"
+            CHECKSUM_BY_FILE["$dat_file"]="$checksum"
+        fi
+        if [[ -n "${mame_checksum_seen[$checksum]:-}" ]]; then
+            keeper="${mame_checksum_seen[$checksum]}"
+            echo "note: skipping duplicate mame-official DAT: $(basename "$dat_file") (same checksum as $(basename "$keeper"))" >&2
+            continue
+        fi
+        mame_checksum_seen[$checksum]="$dat_file"
+        filtered_files+=("$dat_file")
+        filtered_prefixes+=("${ALL_PREFIXES[$i]}")
+        filtered_priorities+=("${ALL_PRIORITIES[$i]}")
+    done
+
+    ALL_FILES=("${filtered_files[@]}")
+    ALL_PREFIXES=("${filtered_prefixes[@]}")
+    ALL_PRIORITIES=("${filtered_priorities[@]}")
+}
+
+filter_duplicate_mame_official_sources
+
 {
     printf '{\n'
     printf '  "build_id": "%s",\n' "$(json_escape "$BUILD_ID")"

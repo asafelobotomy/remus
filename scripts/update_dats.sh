@@ -618,6 +618,14 @@ print(f"  MAME DAT: {dst} ({count} machines)")
 PYEOF
     then
         copied=$((copied + 1))
+        shopt -s nullglob
+        for stale_dat in "$MAME_DIR"/MAME*.dat; do
+            if [[ "$stale_dat" != "$mame_out_dat" ]]; then
+                echo "  Removing stale MAME DAT: $(basename "$stale_dat")"
+                rm -f -- "$stale_dat"
+            fi
+        done
+        shopt -u nullglob
     else
         echo "  Warning: MAME XML → DAT conversion failed"
         rm -f "$mame_out_dat"
