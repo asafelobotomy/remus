@@ -101,6 +101,7 @@ set(REMUS_CLI_SOURCES
     src/cli/cli_helpers.cpp
     src/cli/cli_helpers_providers.cpp
     src/cli/cli_options.cpp
+    src/cli/cli_primary_actions.cpp
     src/cli/cli_mod_support.cpp
     src/cli/cli_mod_support_format.cpp
     src/cli/cli_commands_info.cpp
@@ -119,6 +120,7 @@ set(REMUS_CLI_SOURCES
     src/cli/cli_commands_dat.cpp
     src/cli/cli_commands_compendium.cpp
     src/cli/cli_compendium_build_phases.cpp
+    src/cli/compendium_progress.cpp
     src/cli/cli_commands_compendium_dedup.cpp
     src/cli/cli_commands_compendium_patch.cpp
     src/cli/cli_commands_compendium_enrich.cpp
@@ -141,6 +143,7 @@ set(REMUS_CLI_SOURCES
     src/cli/compendium_enrichment_launchbox.cpp
     src/cli/compendium_enrichment_thegamesdb.cpp
     src/cli/compendium_enrichment_thumbnails.cpp
+    src/cli/compendium_platform_index_cache.cpp
     src/cli/compendium_consolidate_thumbnails.cpp
     src/cli/compendium_cwebp_resolver.cpp
     src/cli/compendium_artwork_transcode.cpp

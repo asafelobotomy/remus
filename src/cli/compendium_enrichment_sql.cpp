@@ -1,7 +1,11 @@
 #include "compendium_enrichment_sql.h"
 
+#include "../metadata/metadata_title_normalize.h"
+
 #include <QDateTime>
+#include <QHash>
 #include <QMetaType>
+#include <QRegularExpression>
 #include <QSet>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -159,34 +163,74 @@ QVariant nullableDouble(double value) {
     return value > 0.0 ? QVariant(value) : QVariant(QMetaType(QMetaType::Double));
 }
 
+QString metadataTitleMatchTokens(const QString &title) {
+    return Remus::MetadataTitleNormalize::metadataTitleMatchTokens(title);
+}
+
+QStringList metadataTitleIndexKeys(const QString &title) {
+    return Remus::MetadataTitleNormalize::metadataTitleIndexKeys(title);
+}
+
 QString normalizeMetadataTitle(const QString &title) {
-    QString s = title.trimmed();
-    // Strip all trailing parenthetical groups, e.g.
-    // "Foo Game (Europe) (En,Fr,De) (Rev 1)" → "Foo Game".
-    // DAT titles routinely carry 2–4 stacked region/language/revision
-    // suffixes that metadata sources (IGDB, OpenVGDB) don't include.
-    while (s.endsWith(QLatin1Char(')'))) {
-        const int paren = s.lastIndexOf(QLatin1Char('('));
-        if (paren <= 0)
-            break;
-        s = s.left(paren).trimmed();
+    return Remus::MetadataTitleNormalize::normalizeMetadataTitle(title);
+}
+
+QString gameMetadataGapSqlForFields(const QStringList &fields) {
+    if (fields.isEmpty())
+        return QLatin1String(kGameMetadataGapSql);
+
+    static const QHash<QString, QString> fieldSql {
+        { QStringLiteral("genre"), QStringLiteral("g.genre IS NULL OR TRIM(g.genre) = ''") },
+        { QStringLiteral("developer"), QStringLiteral("g.developer IS NULL OR TRIM(g.developer) = ''") },
+        { QStringLiteral("publisher"), QStringLiteral("g.publisher IS NULL OR TRIM(g.publisher) = ''") },
+        { QStringLiteral("release_year"), QStringLiteral("g.release_year IS NULL") },
+        { QStringLiteral("release_date"), QStringLiteral("g.release_date IS NULL OR TRIM(g.release_date) = ''") },
+        { QStringLiteral("description"), QStringLiteral("g.description IS NULL OR TRIM(g.description) = ''") },
+        { QStringLiteral("players_max"), QStringLiteral("g.players_max IS NULL") },
+    };
+
+    QStringList clauses;
+    clauses.reserve(fields.size());
+    for (const QString &field : fields) {
+        const auto it = fieldSql.constFind(field);
+        if (it != fieldSql.cend())
+            clauses.append(it.value());
     }
-    s = s.toLower();
-    static const QStringList articles { QStringLiteral("the "), QStringLiteral("a "), QStringLiteral("an ") };
-    for (const QString &art : articles) {
-        if (s.startsWith(art)) {
-            s = s.mid(art.size());
-            break;
-        }
+    if (clauses.isEmpty())
+        return QLatin1String(kGameMetadataGapSql);
+    return clauses.join(QStringLiteral(" OR "));
+}
+
+QString launchBoxPendingGamesSql(const QString &gapSqlFragment) {
+    return QStringLiteral("SELECT g.game_id, g.system_id, s.display_name, g.canonical_title, si_rom.rom_name "
+                          "FROM games g "
+                          "JOIN systems s ON s.system_id = g.system_id "
+                          "LEFT JOIN ("
+                          "  SELECT gs.game_id, MIN(json_extract(si.payload_json, '$.rom_name')) AS rom_name "
+                          "  FROM game_signatures gs "
+                          "  JOIN source_items si ON si.external_key = gs.source_entry_key "
+                          "  WHERE json_extract(si.payload_json, '$.rom_name') IS NOT NULL "
+                          "    AND TRIM(json_extract(si.payload_json, '$.rom_name')) <> '' "
+                          "  GROUP BY gs.game_id"
+                          ") si_rom ON si_rom.game_id = g.game_id "
+                          "WHERE (%1) "
+                          "  AND (TRIM(g.canonical_title) <> '' OR si_rom.rom_name IS NOT NULL) "
+                          "ORDER BY g.game_id")
+        .arg(gapSqlFragment);
+}
+
+QSet<QString> loadGamesWithLaunchBoxNoMatchFacts(QSqlDatabase &db, QString &error) {
+    QSet<QString> gameIds;
+    QSqlQuery q(db);
+    if (!q.exec(QStringLiteral("SELECT game_id, field_value FROM game_facts "
+                               "WHERE source_id = 'launchbox' AND field_name = 'enrichment_match' "
+                               "  AND field_value LIKE '%\"tier\":\"no_match\"%'"))) {
+        error = QStringLiteral("Load LaunchBox no_match games: %1").arg(q.lastError().text());
+        return gameIds;
     }
-    // Keep only letters and digits (drop spaces for consistent token comparison).
-    QString out;
-    out.reserve(s.size());
-    for (const QChar &c : s) {
-        if (c.isLetterOrNumber())
-            out.append(c);
-    }
-    return out;
+    while (q.next())
+        gameIds.insert(q.value(0).toString());
+    return gameIds;
 }
 
 bool bulkClearSourceFactBlockers(QSqlDatabase &db, const QString &sourceId, QString &error) {

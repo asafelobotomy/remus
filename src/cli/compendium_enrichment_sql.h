@@ -21,6 +21,48 @@
 
 namespace CompendiumEnrichmentSql {
 
+/**
+ * @brief SQL fragment for games missing canonical metadata fields.
+ *
+ * Must be used with the games table aliased as `g` (systems joins expose
+ * identically named columns such as release_year).
+ */
+inline const char kGameMetadataGapSql[] = "g.genre IS NULL OR TRIM(g.genre) = '' "
+                                          "   OR g.developer IS NULL OR TRIM(g.developer) = '' "
+                                          "   OR g.publisher IS NULL OR TRIM(g.publisher) = '' "
+                                          "   OR g.release_year IS NULL "
+                                          "   OR g.release_date IS NULL OR TRIM(g.release_date) = '' "
+                                          "   OR g.description IS NULL OR TRIM(g.description) = '' "
+                                          "   OR g.players_max IS NULL ";
+
+inline const char kGenreGapSql[] = "g.genre IS NULL OR TRIM(g.genre) = '' ";
+
+inline const char kGeneralMetadataGapSql[] = "genre IS NULL OR TRIM(genre) = '' "
+                                             "   OR developer IS NULL OR TRIM(developer) = '' "
+                                             "   OR publisher IS NULL OR TRIM(publisher) = '' "
+                                             "   OR release_year IS NULL "
+                                             "   OR release_date IS NULL OR TRIM(release_date) = '' "
+                                             "   OR description IS NULL OR TRIM(description) = '' "
+                                             "   OR players_max IS NULL ";
+
+/**
+ * @brief Build a games-table gap predicate (alias `g`) from field names.
+ *
+ * Supported: genre, developer, publisher, release_year, release_date, description, players_max.
+ * Empty @p fields returns kGameMetadataGapSql.
+ */
+QString gameMetadataGapSqlForFields(const QStringList &fields);
+
+/**
+ * @brief SQL for LaunchBox pending candidates (games g + rom_name subquery alias si_rom).
+ */
+QString launchBoxPendingGamesSql(const QString &gapSqlFragment);
+
+/**
+ * @brief game_ids with a prior LaunchBox enrichment_match tier=no_match fact.
+ */
+QSet<QString> loadGamesWithLaunchBoxNoMatchFacts(QSqlDatabase &db, QString &error);
+
 struct SourceSpec {
     QString sourceId;
     QString displayName;
@@ -153,5 +195,20 @@ QVariant nullableDouble(double value);
  *   "F-Zero (GX) (Japan)"      → "fzerogx"
  */
 QString normalizeMetadataTitle(const QString &title);
+
+/**
+ * @brief Spaced, lowercased token string for fuzzy title similarity scoring.
+ */
+QString metadataTitleMatchTokens(const QString &title);
+
+/**
+ * @brief Compact index keys for exact title lookup (full title + subtitle variant).
+ */
+QStringList metadataTitleIndexKeys(const QString &title);
+
+/// Alias for normalizeMetadataTitle — canonical index key for compendium enrichers.
+inline QString normalizeMetadataTitleForIndex(const QString &title) {
+    return normalizeMetadataTitle(title);
+}
 
 } // namespace CompendiumEnrichmentSql
