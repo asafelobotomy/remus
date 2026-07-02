@@ -12,7 +12,7 @@ Item {
         id: modifiedRomDialog
         title: "Select modified ROM"
         onAccepted: {
-            modifiedPathField.text = decodeURIComponent(selectedFile.toString().replace(/^file:\/\//, ""))
+            modifiedPathField.text = decodeURIComponent(selectedFile.toString().replace(/^file:\/\//, ""));
         }
     }
 
@@ -22,7 +22,7 @@ Item {
         fileMode: FileDialog.SaveFile
         nameFilters: ["Patch files (*.bps *.ips *.ups *.xdelta *.ppf)"]
         onAccepted: {
-            patchOutputField.text = decodeURIComponent(selectedFile.toString().replace(/^file:\/\//, ""))
+            patchOutputField.text = decodeURIComponent(selectedFile.toString().replace(/^file:\/\//, ""));
         }
     }
 
@@ -87,7 +87,9 @@ Item {
         }
 
         RowLayout {
-            Label { text: "Format" }
+            Label {
+                text: "Format"
+            }
             ComboBox {
                 id: patchFormatCombo
                 model: ["bps", "ips", "ups", "xdelta"]
@@ -104,15 +106,8 @@ Item {
             }
             Button {
                 text: "Create Patch"
-                enabled: !patchController.patching
-                        && appController.selectedFileData.path
-                        && modifiedPathField.text.length > 0
-                        && patchOutputField.text.length > 0
-                onClicked: patchController.createPatch(
-                    appController.selectedFileData.path,
-                    modifiedPathField.text,
-                    patchOutputField.text,
-                    patchFormatCombo.currentText)
+                enabled: !patchController.patching && appController.selectedFileData.path && modifiedPathField.text.length > 0 && patchOutputField.text.length > 0
+                onClicked: patchController.createPatch(appController.selectedFileData.path, modifiedPathField.text, patchOutputField.text, patchFormatCombo.currentText)
             }
         }
 
@@ -120,17 +115,25 @@ Item {
             title: "Patch Progress"
             progressValue: patchController.progress
             progressTotal: 100
-            message: patchController.currentOperation
+            message: patchController.lastError.length > 0 ? patchController.lastError : patchController.currentOperation
         }
 
         Frame {
             Layout.fillWidth: true
             ColumnLayout {
                 anchors.fill: parent
-                Label { text: "IPS: " + (patchController.toolStatus.ips ? "ready" : "missing") }
-                Label { text: "BPS/UPS: " + (patchController.toolStatus.bps ? "ready" : "missing") }
-                Label { text: "xdelta3: " + (patchController.toolStatus.xdelta3 ? "ready" : "missing") }
-                Label { text: "PPF: " + (patchController.toolStatus.ppf ? "ready" : "missing") }
+                Label {
+                    text: "IPS: " + (patchController.toolStatus.ips ? "ready" : "missing")
+                }
+                Label {
+                    text: "BPS/UPS: " + (patchController.toolStatus.bps ? "ready" : "missing")
+                }
+                Label {
+                    text: "xdelta3: " + (patchController.toolStatus.xdelta3 ? "ready" : "missing")
+                }
+                Label {
+                    text: "PPF: " + (patchController.toolStatus.ppf ? "ready" : "missing")
+                }
             }
         }
     }

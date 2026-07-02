@@ -10,39 +10,62 @@ RowLayout {
 
     spacing: 4
 
-    signal pipelineDrawerRequested()
-    signal runAllRequested()
-    signal settingsRequested()
+    Shortcut {
+        sequence: "Ctrl+O"
+        onActivated: appController.currentView = 0
+    }
+
+    Shortcut {
+        sequence: "Ctrl+R"
+        enabled: libraryReady && !scanController.scanning
+        onActivated: {
+            const dir = root.romSourceDirectory();
+            if (dir.length > 0)
+                scanController.startScan(dir);
+            else
+                scanFolderDialog.open();
+        }
+    }
+
+    Shortcut {
+        sequence: "Ctrl+M"
+        enabled: libraryReady && appController.selectedFileId > 0
+        onActivated: root.matchEnrichRequested()
+    }
+
+    signal pipelineDrawerRequested
+    signal runAllRequested
+    signal settingsRequested
     signal utilityToolRequested(int tabIndex)
-    signal editRequested()
-    signal matchEnrichRequested()
-    signal renameOrganizeRequested()
+    signal editRequested
+    signal matchEnrichRequested
+    signal renameOrganizeRequested
 
     property bool pendingEnrich: false
     readonly property bool libraryReady: appController.libraryOpen
 
     function romSourceDirectory() {
-        const fromSettings = settingsController.stringValue("gui/rom_source_directory", "")
+        const fromSettings = settingsController.stringValue("gui/rom_source_directory", "");
         if (fromSettings.length > 0)
-            return fromSettings
-        return scanController.lastDirectory
+            return fromSettings;
+        return scanController.lastDirectory;
     }
 
     function persistRomSourceDirectory(dir) {
-        const cleaned = dir.trimmed()
+        const cleaned = dir.trimmed();
         if (cleaned.length === 0)
-            return
-        settingsController.setValue("gui/rom_source_directory", cleaned)
-        scanController.lastDirectory = cleaned
+            return;
+        settingsController.setValue("gui/rom_source_directory", cleaned);
+        scanController.lastDirectory = cleaned;
     }
 
     FolderDialog {
         id: scanFolderDialog
         title: "Select ROM source folder"
         onAccepted: {
-            const dir = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""))
-            root.persistRomSourceDirectory(dir)
-            scanController.startScan(dir)
+            const dir = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""));
+            root.persistRomSourceDirectory(dir);
+            scanController.startScan(dir);
         }
     }
 
@@ -50,41 +73,41 @@ RowLayout {
         target: matchController
         function onMatchingChanged() {
             if (!root.pendingEnrich || matchController.matching)
-                return
-            root.pendingEnrich = false
+                return;
+            root.pendingEnrich = false;
             if (appController.selectedFileId > 0)
-                artworkController.downloadSelected()
+                artworkController.downloadSelected();
             else
-                artworkController.downloadAllMatched()
+                artworkController.downloadAllMatched();
         }
     }
 
     TmmToolButton {
         text: "Update library"
         iconName: "view-refresh-symbolic"
+        Accessible.name: "Update library"
+        ToolTip.visible: hovered
+        ToolTip.text: "Rescan ROM folder (Ctrl+R)"
         enabled: libraryReady && !scanController.scanning
         onClicked: {
-            const dir = root.romSourceDirectory()
+            const dir = root.romSourceDirectory();
             if (dir.length > 0)
-                scanController.startScan(dir)
+                scanController.startScan(dir);
             else
-                scanFolderDialog.open()
+                scanFolderDialog.open();
         }
     }
 
     TmmToolButton {
         text: "Match & enrich"
         iconName: "system-search-symbolic"
-        enabled: libraryReady &&
-                 !hashController.hashing &&
-                 !matchController.matching &&
-                 !artworkController.downloading
+        enabled: libraryReady && !hashController.hashing && !matchController.matching && !artworkController.downloading
         onClicked: {
             if (appController.selectedFileId > 0) {
-                root.matchEnrichRequested()
+                root.matchEnrichRequested();
             } else {
-                pendingEnrich = true
-                workflowController.hashAndMatchAll()
+                pendingEnrich = true;
+                workflowController.hashAndMatchAll();
             }
         }
     }
@@ -99,13 +122,14 @@ RowLayout {
     TmmToolButton {
         text: "Rename & organize"
         iconName: "folder-download-symbolic"
-        enabled: libraryReady &&
-                 !exportController.exporting &&
-                 !organizeController.organizing
+        enabled: libraryReady && !exportController.exporting && !organizeController.organizing
         onClicked: root.renameOrganizeRequested()
     }
 
-    ToolSeparator { Layout.topMargin: 4; Layout.bottomMargin: 4 }
+    ToolSeparator {
+        Layout.topMargin: 4
+        Layout.bottomMargin: 4
+    }
 
     TmmToolButton {
         text: "Tools"
@@ -160,5 +184,7 @@ RowLayout {
         }
     }
 
-    Item { Layout.fillWidth: true }
+    Item {
+        Layout.fillWidth: true
+    }
 }

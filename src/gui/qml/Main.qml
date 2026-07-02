@@ -14,24 +14,24 @@ ApplicationWindow {
     title: "Remus"
 
     color: Theme.background
-    palette.window:           Theme.background
-    palette.windowText:       Theme.textBody
-    palette.base:             Theme.surface
-    palette.alternateBase:    Theme.surfaceAlt
-    palette.text:             Theme.textBody
-    palette.button:           "#3c3836"
-    palette.buttonText:       Theme.textPrimary
-    palette.brightText:       Theme.textPrimary
-    palette.highlight:        Theme.accent
-    palette.highlightedText:  Theme.textPrimary
-    palette.placeholderText:  Theme.textMuted
-    palette.toolTipBase:      "#3c3836"
-    palette.toolTipText:      Theme.textPrimary
-    palette.link:             Theme.accentAlt
-    palette.dark:             Theme.surface
-    palette.mid:              Theme.border
-    palette.midlight:         Theme.textDisabled
-    palette.light:            Theme.textDisabled
+    palette.window: Theme.background
+    palette.windowText: Theme.textBody
+    palette.base: Theme.surface
+    palette.alternateBase: Theme.surfaceAlt
+    palette.text: Theme.textBody
+    palette.button: "#3c3836"
+    palette.buttonText: Theme.textPrimary
+    palette.brightText: Theme.textPrimary
+    palette.highlight: Theme.accent
+    palette.highlightedText: Theme.textPrimary
+    palette.placeholderText: Theme.textMuted
+    palette.toolTipBase: "#3c3836"
+    palette.toolTipText: Theme.textPrimary
+    palette.link: Theme.accentAlt
+    palette.dark: Theme.surface
+    palette.mid: Theme.border
+    palette.midlight: Theme.textDisabled
+    palette.light: Theme.textDisabled
 
     background: Rectangle {
         color: Theme.background
@@ -41,7 +41,7 @@ ApplicationWindow {
         contentHeight: topBarLayout.implicitHeight + 12
 
         background: Rectangle {
-            color:        Theme.surface
+            color: Theme.surface
             border.color: Theme.border
         }
 
@@ -75,12 +75,14 @@ ApplicationWindow {
                     text: "Open Library"
                     onClicked: {
                         if (appController.openLibrary(libraryField.text)) {
-                            settingsController.setValue("gui/default_library_path", libraryField.text)
+                            settingsController.setValue("gui/default_library_path", libraryField.text);
                         }
                     }
                 }
 
-                Item { Layout.fillWidth: true }
+                Item {
+                    Layout.fillWidth: true
+                }
 
                 Label {
                     visible: appController.libraryOpen
@@ -97,15 +99,15 @@ ApplicationWindow {
                 Layout.fillWidth: true
 
                 onPipelineDrawerRequested: pipelineDrawer.open()
-                onRunAllRequested:         libraryWorkbench.requestRunAll()
-                onSettingsRequested:         appController.currentView = 1
-                onUtilityToolRequested:      function(tab) {
-                    utilitiesPanel.openTab(tab)
-                    utilitiesDrawer.open()
+                onRunAllRequested: libraryWorkbench.requestRunAll()
+                onSettingsRequested: appController.currentView = 1
+                onUtilityToolRequested: function (tab) {
+                    utilitiesPanel.openTab(tab);
+                    utilitiesDrawer.open();
                 }
-                onEditRequested:             libraryWorkbench.openEditDialog()
-                onMatchEnrichRequested:      libraryWorkbench.openMatchEnrichDialog()
-                onRenameOrganizeRequested:   libraryWorkbench.openRenameOrganizeDialog()
+                onEditRequested: libraryWorkbench.openEditDialog()
+                onMatchEnrichRequested: libraryWorkbench.openMatchEnrichDialog()
+                onRenameOrganizeRequested: libraryWorkbench.openRenameOrganizeDialog()
             }
         }
     }
@@ -118,8 +120,8 @@ ApplicationWindow {
         Sidebar {
             SplitView.preferredWidth: 220
             currentIndex: appController.currentView
-            onViewRequested: function(index) {
-                appController.currentView = index
+            onViewRequested: function (index) {
+                appController.currentView = index;
             }
         }
 
@@ -130,8 +132,14 @@ ApplicationWindow {
             background: Rectangle {
                 radius: 24
                 gradient: Gradient {
-                    GradientStop { position: 0.0; color: Theme.surface }
-                    GradientStop { position: 1.0; color: Theme.surfaceAlt }
+                    GradientStop {
+                        position: 0.0
+                        color: Theme.surface
+                    }
+                    GradientStop {
+                        position: 1.0
+                        color: Theme.surfaceAlt
+                    }
                 }
                 border.color: Theme.border
             }
@@ -151,14 +159,14 @@ ApplicationWindow {
     Drawer {
         id: pipelineDrawer
         parent: Overlay.overlay
-        edge:       Qt.RightEdge
-        width:      Math.min(window.width * 0.55, 640)
-        height:     window.height
-        modal:      true
+        edge: Qt.RightEdge
+        width: Math.min(window.width * 0.55, 640)
+        height: window.height
+        modal: true
         interactive: true
 
         background: Rectangle {
-            color:        Theme.surface
+            color: Theme.surface
             border.color: Theme.border
         }
 
@@ -177,7 +185,9 @@ ApplicationWindow {
                         font.bold: true
                         color: Theme.textPrimary
                     }
-                    Item { Layout.fillWidth: true }
+                    Item {
+                        Layout.fillWidth: true
+                    }
                     ToolButton {
                         text: "Close"
                         onClicked: pipelineDrawer.close()
@@ -186,7 +196,7 @@ ApplicationWindow {
             }
 
             PipelinePanel {
-                Layout.fillWidth:  true
+                Layout.fillWidth: true
                 Layout.fillHeight: true
             }
         }
@@ -195,14 +205,14 @@ ApplicationWindow {
     Drawer {
         id: utilitiesDrawer
         parent: Overlay.overlay
-        edge:       Qt.RightEdge
-        width:      Math.min(window.width * 0.55, 720)
-        height:     window.height
-        modal:      true
+        edge: Qt.RightEdge
+        width: Math.min(window.width * 0.55, 720)
+        height: window.height
+        modal: true
         interactive: true
 
         background: Rectangle {
-            color:        Theme.surface
+            color: Theme.surface
             border.color: Theme.border
         }
 
@@ -221,7 +231,9 @@ ApplicationWindow {
                         font.bold: true
                         color: Theme.textPrimary
                     }
-                    Item { Layout.fillWidth: true }
+                    Item {
+                        Layout.fillWidth: true
+                    }
                     ToolButton {
                         text: "Close"
                         onClicked: utilitiesDrawer.close()
@@ -231,9 +243,38 @@ ApplicationWindow {
 
             UtilitiesView {
                 id: utilitiesPanel
-                Layout.fillWidth:  true
+                Layout.fillWidth: true
                 Layout.fillHeight: true
             }
+        }
+    }
+
+    ErrorBanner {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 18
+        message: appController.errorMessage
+    }
+
+    Connections {
+        target: scanController
+        function onScanError(message) {
+            appController.showError(message);
+        }
+    }
+
+    Connections {
+        target: hashController
+        function onHashError(message) {
+            appController.showError(message);
+        }
+    }
+
+    Connections {
+        target: matchController
+        function onMatchError(message) {
+            appController.showError(message);
         }
     }
 }

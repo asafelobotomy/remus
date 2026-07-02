@@ -67,6 +67,7 @@ PatchController::~PatchController() {
 
 bool PatchController::applyPatch(const QString &basePath, const QString &patchPath, const QString &outputPath) {
     if (m_patching) {
+        setLastError(QStringLiteral("A patch operation is already running."));
         return false;
     }
 
@@ -77,11 +78,13 @@ bool PatchController::applyPatch(const QString &basePath, const QString &patchPa
 
     const PatchInfo info = m_patchService->detectFormat(patchPath);
     if (!info.valid || !m_patchService->isFormatSupported(info.format)) {
+        setLastError(QStringLiteral("Unsupported or invalid patch format."));
         return false;
     }
 
     m_patching = true;
     m_progress = 0;
+    setLastError(QString());
     m_currentOperation = QStringLiteral("Applying %1 patch").arg(info.formatName);
     emit patchingChanged();
     emit progressChanged();
@@ -100,6 +103,7 @@ bool PatchController::applyPatch(const QString &basePath, const QString &patchPa
     if (!result.success) {
         m_currentOperation = result.error;
         emit currentOperationChanged();
+        setLastError(result.error.isEmpty() ? QStringLiteral("Patch application failed.") : result.error);
         return false;
     }
 
@@ -169,6 +173,15 @@ PatchFormat PatchController::stringToFormat(const QString &format) const {
         return PatchFormat::PPF;
     }
     return PatchFormat::Unknown;
+}
+
+void PatchController::setLastError(const QString &message) {
+    if (m_lastError == message) {
+        return;
+    }
+
+    m_lastError = message;
+    emit lastErrorChanged();
 }
 
 } // namespace Remus

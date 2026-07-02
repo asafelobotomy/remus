@@ -12,6 +12,13 @@ OrganizeController::OrganizeController(AppController *appController, QObject *pa
     : QObject(parent)
     , m_appController(appController)
     , m_engine(std::make_unique<OrganizeEngine>(*appController->database(), this)) {
+    connect(m_engine.get(), &OrganizeEngine::progressUpdate, this, [this](int current, int total) {
+        m_organizedFiles = current;
+        m_totalOrganizeFiles = total;
+        m_progressMessage = QStringLiteral("Organizing %1 / %2\u2026").arg(current).arg(total);
+        emit organizeProgressChanged();
+        emit progressMessageChanged();
+    });
     connect(this, &OrganizeController::libraryChanged, m_appController, &AppController::refreshSelectedFile);
     QSettings settings(
         QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION));

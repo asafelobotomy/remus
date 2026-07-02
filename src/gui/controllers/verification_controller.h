@@ -21,6 +21,7 @@ class VerificationController : public QObject {
 
 public:
     explicit VerificationController(AppController *appController, QObject *parent = nullptr);
+    ~VerificationController() override;
 
     bool isVerifying() const {
         return m_verifying;
@@ -55,11 +56,13 @@ signals:
     void currentFileChanged();
     void summaryChanged();
     void lastErrorChanged();
+    void verificationFinished();
 
 private:
     void populateResults(const QList<VerificationResult> &results);
     static QString statusToString(VerificationStatus status);
     void setLastError(const QString &message);
+    void finishVerification(const QList<VerificationResult> &results);
 
     AppController *m_appController;
     VerificationEngine m_engine;
@@ -70,6 +73,8 @@ private:
     QString m_currentFile;
     QVariantMap m_summary;
     QString m_lastError;
+    QThread *m_thread = nullptr;
+    QList<int> m_pendingFileIds;
 };
 
 } // namespace Remus

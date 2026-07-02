@@ -139,6 +139,7 @@ void MatchController::doMatchNext() {
         m_matchAllFiles.clear();
         refreshModel();
         emit libraryChanged();
+        emit matchAllFinished();
         return;
     }
 

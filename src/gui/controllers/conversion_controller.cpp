@@ -214,6 +214,7 @@ void ConversionController::convertAll(const QString &format, const QString &outp
     const QList<FileRecord> files = m_appController->database()->getAllFiles();
     if (files.isEmpty()) {
         setLastMessage(QStringLiteral("No files in library to convert."));
+        emit conversionFinished();
         return;
     }
 
@@ -333,8 +334,8 @@ void ConversionController::convertAll(const QString &format, const QString &outp
     emit progressMessageChanged();
 
     setLastMessage(QStringLiteral("Converted %1 | Skipped %2 | Failed %3").arg(converted).arg(skipped).arg(failed));
+    emit conversionFinished();
     if (converted > 0) {
-        emit conversionFinished();
         emit libraryChanged();
     }
 }

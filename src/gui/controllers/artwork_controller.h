@@ -4,6 +4,7 @@
 #include <QUrl>
 
 #include "../../metadata/artwork_downloader.h"
+#include "../../core/database.h"
 
 namespace Remus {
 
@@ -56,12 +57,14 @@ signals:
     void previewChanged();
     void lastErrorChanged();
     void artworkDownloaded();
+    void batchDownloadFinished();
 
 private:
     bool refreshArtworkForFile(int fileId, bool requireDownloadableUrl, bool requireConfirmed = true);
     QString defaultArtworkDir() const;
     QString artworkPathForFile(int fileId) const;
     void setLastError(const QString &message);
+    void doDownloadNext();
 
     AppController *m_appController;
     ArtworkDownloader m_downloader;
@@ -73,6 +76,10 @@ private:
     QUrl m_previewUrl;
     QString m_localArtworkPath;
     QString m_lastError;
+    QList<FileRecord> m_batchFiles;
+    int m_batchIndex = 0;
+    int m_batchSucceeded = 0;
+    int m_batchFailed = 0;
 };
 
 } // namespace Remus

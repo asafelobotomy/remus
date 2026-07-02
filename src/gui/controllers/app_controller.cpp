@@ -365,6 +365,25 @@ void AppController::setStatusMessage(const QString &message) {
     emit statusMessageChanged();
 }
 
+void AppController::showError(const QString &message) {
+    if (message.isEmpty()) {
+        dismissError();
+        return;
+    }
+
+    m_errorMessage = message;
+    emit errorMessageChanged();
+}
+
+void AppController::dismissError() {
+    if (m_errorMessage.isEmpty()) {
+        return;
+    }
+
+    m_errorMessage.clear();
+    emit errorMessageChanged();
+}
+
 void AppController::refreshSelectedMatch() {
     int nextGameId = 0;
     if (m_libraryOpen && m_selectedFileId > 0) {

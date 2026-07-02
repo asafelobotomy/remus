@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import Remus.Gui
+
 // Note: Theme singleton is available via Remus.Gui module
 
 ScrollView {
@@ -15,8 +16,8 @@ ScrollView {
         title: "Select Tool Executable"
         property string targetKey: ""
         onAccepted: {
-            const path = decodeURIComponent(selectedFile.toString().replace(/^file:\/\//, ""))
-            settingsController.setValue(targetKey, path)
+            const path = decodeURIComponent(selectedFile.toString().replace(/^file:\/\//, ""));
+            settingsController.setValue(targetKey, path);
         }
     }
 
@@ -25,8 +26,8 @@ ScrollView {
         title: "Select Directory"
         property string targetKey: ""
         onAccepted: {
-            const path = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""))
-            settingsController.setValue(targetKey, path)
+            const path = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""));
+            settingsController.setValue(targetKey, path);
         }
     }
 
@@ -34,8 +35,8 @@ ScrollView {
         id: organizeDestFolderDialog
         title: "Select organize destination"
         onAccepted: {
-            const path = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""))
-            settingsController.setValue("gui/organize_destination", path)
+            const path = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""));
+            settingsController.setValue("gui/organize_destination", path);
         }
     }
 
@@ -43,10 +44,10 @@ ScrollView {
         id: romSourceFolderDialog
         title: "Select ROM source folder"
         onAccepted: {
-            const path = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""))
-            settingsController.setValue("gui/rom_source_directory", path)
+            const path = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""));
+            settingsController.setValue("gui/rom_source_directory", path);
             if (path.length > 0)
-                scanController.lastDirectory = path
+                scanController.lastDirectory = path;
         }
     }
 
@@ -54,7 +55,7 @@ ScrollView {
     Connections {
         target: settingsController
         function onSettingsError(message) {
-            saveErrorPopup.open()
+            saveErrorPopup.open();
         }
     }
 
@@ -82,8 +83,38 @@ ScrollView {
             color: Theme.textPrimary
         }
 
+        GroupBox {
+            title: "Compendium (CLI)"
+            Layout.fillWidth: true
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 8
+
+                Label {
+                    Layout.fillWidth: true
+                    wrapMode: Text.WordWrap
+                    color: Theme.textBody
+                    text: "Building and enriching the bundled compendium database is CLI-only. " + "See data/compendium/README.md in the repository."
+                }
+
+                Label {
+                    Layout.fillWidth: true
+                    wrapMode: Text.WordWrap
+                    font.family: "monospace"
+                    font.pixelSize: Theme.fontSm
+                    color: Theme.textMuted
+                    text: "remus-cli --build-compendium --compendium-manifest data/compendium/manifest.json"
+                }
+            }
+        }
+
         // ── Library ──────────────────────────────────────────────────────────
-        Label { text: "Library"; font.bold: true; color: Theme.textBody }
+        Label {
+            text: "Library"
+            font.bold: true
+            color: Theme.textBody
+        }
 
         Label {
             Layout.fillWidth: true
@@ -110,16 +141,15 @@ ScrollView {
                 placeholderText: "Select the folder containing your ROM collection"
                 text: settingsController.stringValue("gui/rom_source_directory", scanController.lastDirectory)
                 onEditingFinished: {
-                    settingsController.setValue("gui/rom_source_directory", text.trim())
+                    settingsController.setValue("gui/rom_source_directory", text.trim());
                     if (text.trim().length > 0)
-                        scanController.lastDirectory = text.trim()
+                        scanController.lastDirectory = text.trim();
                 }
 
                 Connections {
                     target: settingsController
                     function onSettingsChanged() {
-                        romSourceField.text = settingsController.stringValue(
-                            "gui/rom_source_directory", scanController.lastDirectory)
+                        romSourceField.text = settingsController.stringValue("gui/rom_source_directory", scanController.lastDirectory);
                     }
                 }
             }
@@ -154,8 +184,7 @@ ScrollView {
                 Connections {
                     target: settingsController
                     function onSettingsChanged() {
-                        defaultDbField.text = settingsController.stringValue(
-                            "gui/default_library_path", appController.defaultLibraryPath())
+                        defaultDbField.text = settingsController.stringValue("gui/default_library_path", appController.defaultLibraryPath());
                     }
                 }
             }
@@ -168,7 +197,11 @@ ScrollView {
         }
 
         // ── Metadata Providers ───────────────────────────────────────────────
-        Label { text: "Metadata Providers"; font.bold: true; color: Theme.textBody }
+        Label {
+            text: "Metadata Providers"
+            font.bold: true
+            color: Theme.textBody
+        }
 
         Repeater {
             model: settingsController.providerGroups
@@ -221,9 +254,9 @@ ScrollView {
                         font.pixelSize: Theme.fontSm
                         padding: 6
                         onClicked: {
-                            const msg = settingsController.authenticateProvider(modelData.groupKey)
-                            authResultLabel.text = msg
-                            authResultLabel.color = msg === "Credentials saved." ? Theme.success : Theme.error
+                            const msg = settingsController.authenticateProvider(modelData.groupKey);
+                            authResultLabel.text = msg;
+                            authResultLabel.color = msg === "Credentials saved." ? Theme.success : Theme.error;
                         }
                     }
 
@@ -233,7 +266,9 @@ ScrollView {
                         color: Theme.textMuted
                     }
 
-                    Item { Layout.fillWidth: true }
+                    Item {
+                        Layout.fillWidth: true
+                    }
                 }
 
                 Rectangle {
@@ -244,7 +279,12 @@ ScrollView {
             }
         }
 
-        Label { text: "Metadata rate limits (ms)"; font.bold: true; font.pixelSize: Theme.fontMd; color: Theme.textBody }
+        Label {
+            text: "Metadata rate limits (ms)"
+            font.bold: true
+            font.pixelSize: Theme.fontMd
+            color: Theme.textBody
+        }
 
         Label {
             Layout.fillWidth: true
@@ -256,13 +296,34 @@ ScrollView {
 
         Repeater {
             model: [
-                { key: "metadata/rate_limit_ms", label: "Global override" },
-                { key: "metadata/rate_limit/hasheous", label: "Hasheous" },
-                { key: "metadata/rate_limit/screenscraper", label: "ScreenScraper" },
-                { key: "metadata/rate_limit/igdb", label: "IGDB" },
-                { key: "metadata/rate_limit/thegamesdb", label: "TheGamesDB" },
-                { key: "metadata/rate_limit/playmatch", label: "PlayMatch" },
-                { key: "metadata/rate_limit/retroachievements", label: "RetroAchievements" }
+                {
+                    key: "metadata/rate_limit_ms",
+                    label: "Global override"
+                },
+                {
+                    key: "metadata/rate_limit/hasheous",
+                    label: "Hasheous"
+                },
+                {
+                    key: "metadata/rate_limit/screenscraper",
+                    label: "ScreenScraper"
+                },
+                {
+                    key: "metadata/rate_limit/igdb",
+                    label: "IGDB"
+                },
+                {
+                    key: "metadata/rate_limit/thegamesdb",
+                    label: "TheGamesDB"
+                },
+                {
+                    key: "metadata/rate_limit/playmatch",
+                    label: "PlayMatch"
+                },
+                {
+                    key: "metadata/rate_limit/retroachievements",
+                    label: "RetroAchievements"
+                }
             ]
 
             delegate: RowLayout {
@@ -287,7 +348,7 @@ ScrollView {
                     Connections {
                         target: settingsController
                         function onSettingsChanged() {
-                            rateLimitField.text = settingsController.stringValue(modelData.key, "")
+                            rateLimitField.text = settingsController.stringValue(modelData.key, "");
                         }
                     }
                 }
@@ -297,9 +358,14 @@ ScrollView {
         // ── Tools and Paths ──────────────────────────────────────────────────
         RowLayout {
             Layout.fillWidth: true
-            Label { text: "Tools and Paths"; font.bold: true; Layout.fillWidth: true; color: Theme.textBody }
+            Label {
+                text: "Tools and Paths"
+                font.bold: true
+                Layout.fillWidth: true
+                color: Theme.textBody
+            }
             Button {
-                text:    "Auto-Detect Tools"
+                text: "Auto-Detect Tools"
                 font.pixelSize: Theme.fontSm
                 padding: 6
                 onClicked: settingsController.autoDetectTools()
@@ -329,24 +395,24 @@ ScrollView {
                     Connections {
                         target: settingsController
                         function onSettingsChanged() {
-                            toolField.text = settingsController.stringValue(modelData.key)
+                            toolField.text = settingsController.stringValue(modelData.key);
                         }
                     }
                 }
 
                 Button {
                     visible: modelData.browsable
-                    text:    "Browse"
-                    flat:    true
+                    text: "Browse"
+                    flat: true
                     font.pixelSize: Theme.fontSm
                     padding: 6
                     onClicked: {
                         if (modelData.isDirectory) {
-                            toolFolderDialog.targetKey = modelData.key
-                            toolFolderDialog.open()
+                            toolFolderDialog.targetKey = modelData.key;
+                            toolFolderDialog.open();
                         } else {
-                            toolFileDialog.targetKey = modelData.key
-                            toolFileDialog.open()
+                            toolFileDialog.targetKey = modelData.key;
+                            toolFileDialog.open();
                         }
                     }
                 }
@@ -365,7 +431,11 @@ ScrollView {
         }
 
         // ── Rename & Organize ────────────────────────────────────────────────
-        Label { text: "Rename & Organize"; font.bold: true; color: Theme.textBody }
+        Label {
+            text: "Rename & Organize"
+            font.bold: true
+            color: Theme.textBody
+        }
 
         RowLayout {
             Layout.fillWidth: true
@@ -381,40 +451,37 @@ ScrollView {
                 id: namingTemplateCombo
                 Layout.fillWidth: true
                 editable: true
-                model: ["{title} ({region})",
-                        "{title}",
-                        "{title} ({year})",
-                        "{title} ({system})",
-                        "{title} ({region}) [{system}]"]
+                model: ["{title} ({region})", "{title}", "{title} ({year})", "{title} ({system})", "{title} ({region}) [{system}]"]
                 font.pixelSize: 12
                 Component.onCompleted: syncNamingTemplate()
                 onActivated: saveNamingTemplate()
                 onEditTextChanged: {
                     if (editable && activeFocus)
-                        organizeController.namingTemplate = editText.length > 0 ? editText : model[0]
+                        organizeController.namingTemplate = editText.length > 0 ? editText : model[0];
                 }
                 // ComboBox dropped editingFinished in Qt 6.7+; use accepted (Return key)
                 // and focus loss instead.
                 onAccepted: saveNamingTemplate()
-                onActiveFocusChanged: if (!activeFocus) saveNamingTemplate()
+                onActiveFocusChanged: if (!activeFocus)
+                    saveNamingTemplate()
 
                 function syncNamingTemplate() {
-                    const current = organizeController.namingTemplate
-                    const idx = model.indexOf(current)
+                    const current = organizeController.namingTemplate;
+                    const idx = model.indexOf(current);
                     if (idx >= 0)
-                        currentIndex = idx
+                        currentIndex = idx;
                     else
-                        editText = current
+                        editText = current;
                 }
 
                 function saveNamingTemplate() {
-                    organizeController.namingTemplate = editText.length > 0 ? editText : model[0]
+                    organizeController.namingTemplate = editText.length > 0 ? editText : model[0];
                 }
 
                 Connections {
                     target: organizeController
                     function onNamingTemplateChanged() {
-                        namingTemplateCombo.syncNamingTemplate()
+                        namingTemplateCombo.syncNamingTemplate();
                     }
                 }
             }
@@ -448,24 +515,26 @@ ScrollView {
                 Component.onCompleted: syncFolderScheme()
                 onActivated: {
                     if (currentIndex >= 0 && model[currentIndex])
-                        settingsController.setValue("organize/folder_scheme", model[currentIndex].value)
+                        settingsController.setValue("organize/folder_scheme", model[currentIndex].value);
                 }
 
                 function syncFolderScheme() {
-                    const current = settingsController.stringValue("organize/folder_scheme", "default")
-                    let idx = 0
+                    const current = settingsController.stringValue("organize/folder_scheme", "default");
+                    let idx = 0;
                     for (let i = 0; i < count; ++i) {
                         if (model[i] && model[i].value === current) {
-                            idx = i
-                            break
+                            idx = i;
+                            break;
                         }
                     }
-                    currentIndex = idx
+                    currentIndex = idx;
                 }
 
                 Connections {
                     target: settingsController
-                    function onSettingsChanged() { folderSchemeCombo.syncFolderScheme() }
+                    function onSettingsChanged() {
+                        folderSchemeCombo.syncFolderScheme();
+                    }
                 }
             }
         }
@@ -491,7 +560,7 @@ ScrollView {
                 Connections {
                     target: settingsController
                     function onSettingsChanged() {
-                        organizeDestField.text = settingsController.stringValue("gui/organize_destination", "")
+                        organizeDestField.text = settingsController.stringValue("gui/organize_destination", "");
                     }
                 }
             }
@@ -524,7 +593,7 @@ ScrollView {
             Connections {
                 target: settingsController
                 function onSettingsChanged() {
-                    chkOrganizeBySystem.checked = settingsController.boolValue("organize/by_system", true)
+                    chkOrganizeBySystem.checked = settingsController.boolValue("organize/by_system", true);
                 }
             }
         }
@@ -538,14 +607,12 @@ ScrollView {
             Connections {
                 target: settingsController
                 function onSettingsChanged() {
-                    chkTrashOriginal.checked = settingsController.boolValue("gui/trash_original_after_bundle")
+                    chkTrashOriginal.checked = settingsController.boolValue("gui/trash_original_after_bundle");
                 }
             }
         }
         Label {
-            text: chkTrashOriginal.checked
-                  ? "After bundling, the original ROM will be sent to the system trash."
-                  : "After bundling, the original ROM will be moved to an 'original_roms' folder in the scan directory."
+            text: chkTrashOriginal.checked ? "After bundling, the original ROM will be sent to the system trash." : "After bundling, the original ROM will be moved to an 'original_roms' folder in the scan directory."
             font.pixelSize: Theme.fontSm
             color: Theme.textDim
             leftPadding: 28
@@ -591,8 +658,7 @@ ScrollView {
 
             // Disable OK when nothing is checked
             onAboutToShow: {
-                standardButton(Dialog.Ok).enabled =
-                    chkFiles.checked || chkMatches.checked || chkApiCache.checked || chkArtwork.checked
+                standardButton(Dialog.Ok).enabled = chkFiles.checked || chkMatches.checked || chkApiCache.checked || chkArtwork.checked;
             }
 
             ColumnLayout {
@@ -613,15 +679,19 @@ ScrollView {
                     font.bold: true
                     checked: chkFiles.checked && chkMatches.checked && chkApiCache.checked && chkArtwork.checked
                     onClicked: {
-                        const v = checked
-                        chkFiles.checked    = v
-                        chkMatches.checked  = v
-                        chkApiCache.checked = v
-                        chkArtwork.checked  = v
+                        const v = checked;
+                        chkFiles.checked = v;
+                        chkMatches.checked = v;
+                        chkApiCache.checked = v;
+                        chkArtwork.checked = v;
                     }
                 }
 
-                Rectangle { height: 1; color: Theme.border; Layout.fillWidth: true }
+                Rectangle {
+                    height: 1
+                    color: Theme.border
+                    Layout.fillWidth: true
+                }
 
                 // ── Individual options ────────────────────────────────────
                 CheckBox {
@@ -630,8 +700,9 @@ ScrollView {
                     checked: true
                     onCheckedChanged: {
                         // File records removal implies match data is gone too (cascade)
-                        if (checked) chkMatches.checked = true
-                        updateOkButton()
+                        if (checked)
+                            chkMatches.checked = true;
+                        updateOkButton();
                     }
                 }
                 Label {
@@ -701,16 +772,10 @@ ScrollView {
 
             function updateOkButton() {
                 if (visible)
-                    standardButton(Dialog.Ok).enabled =
-                        chkFiles.checked || chkMatches.checked || chkApiCache.checked || chkArtwork.checked
+                    standardButton(Dialog.Ok).enabled = chkFiles.checked || chkMatches.checked || chkApiCache.checked || chkArtwork.checked;
             }
 
-            onAccepted: appController.eraseLibraryDatabase(
-                chkFiles.checked,
-                chkMatches.checked,
-                chkApiCache.checked,
-                chkArtwork.checked
-            )
+            onAccepted: appController.eraseLibraryDatabase(chkFiles.checked, chkMatches.checked, chkApiCache.checked, chkArtwork.checked)
         }
     }
 }

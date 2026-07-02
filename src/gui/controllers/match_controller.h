@@ -115,6 +115,7 @@ signals:
     void lastMessageChanged();
     void libraryChanged();
     void matchError(const QString &message);
+    void matchAllFinished();
     void searchContextChanged();
     void searchQueryChanged();
     void searchProviderChanged();

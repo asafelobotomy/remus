@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
+#include <QMetaObject>
 #include <QRegularExpression>
 #include <QSettings>
 #include <QSqlQuery>
@@ -138,51 +139,75 @@ bool ArtworkController::downloadSelected() {
 
 void ArtworkController::downloadAllMatched() {
     if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
+        emit batchDownloadFinished();
         return;
     }
 
-    const QList<FileRecord> files = m_appController->database()->getFilesWithConfirmedMatch();
+    if (m_downloading) {
+        return;
+    }
+
+    m_batchFiles = m_appController->database()->getFilesWithConfirmedMatch();
+    m_batchIndex = 0;
+    m_batchSucceeded = 0;
+    m_batchFailed = 0;
     m_downloading = true;
     m_downloadProgress = 0;
-    m_downloadTotal = files.size();
+    m_downloadTotal = m_batchFiles.size();
     m_progressMessage = QStringLiteral("Downloading artwork for all confirmed-match ROMs\u2026");
+    m_batchDownloading = true;
     emit downloadingChanged();
     emit progressChanged();
     emit progressMessageChanged();
 
-    int done = 0;
-    int downloadSucceeded = 0;
-    int downloadFailed = 0;
-    m_batchDownloading = true;
-    Database *db = m_appController->database();
-    for (const FileRecord &file : files) {
-        m_progressMessage = QStringLiteral("Processing %1 / %2").arg(done + 1).arg(files.size());
+    QMetaObject::invokeMethod(this, &ArtworkController::doDownloadNext, Qt::QueuedConnection);
+}
+
+void ArtworkController::doDownloadNext() {
+    if (m_batchIndex >= m_batchFiles.size()) {
+        m_batchDownloading = false;
+        refreshSelectedArtwork();
+        m_downloading = false;
+        m_progressMessage = QStringLiteral("Completed: %1 downloaded, %2 failed, %3 skipped.")
+                                .arg(m_batchSucceeded)
+                                .arg(m_batchFailed)
+                                .arg(m_batchFiles.size() - m_batchSucceeded - m_batchFailed);
+        emit downloadingChanged();
         emit progressMessageChanged();
-        if (refreshArtworkForFile(file.id, true) && m_previewUrl.isValid() && !m_previewUrl.isLocalFile()) {
-            QString savedPath;
-            if (m_downloader.download(m_previewUrl, artworkPathForFile(file.id), &savedPath)) {
-                ++downloadSucceeded;
-                if (db)
-                    db->updateFileArtworkFlag(file.id, true);
-            } else {
-                ++downloadFailed;
-            }
-        }
-        m_downloadProgress = ++done;
-        emit progressChanged();
-        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+        emit artworkDownloaded();
+        emit batchDownloadFinished();
+        m_batchFiles.clear();
+        return;
     }
 
-    m_batchDownloading = false;
-    refreshSelectedArtwork();
-    m_downloading = false;
-    m_progressMessage = QStringLiteral("Completed: %1 downloaded, %2 failed, %3 skipped.")
-                            .arg(downloadSucceeded)
-                            .arg(downloadFailed)
-                            .arg(done - downloadSucceeded - downloadFailed);
-    emit downloadingChanged();
+    if (m_appController == nullptr || !m_appController->isLibraryOpen()) {
+        m_batchFiles.clear();
+        m_downloading = false;
+        emit downloadingChanged();
+        emit batchDownloadFinished();
+        return;
+    }
+
+    const FileRecord file = m_batchFiles.at(m_batchIndex);
+    m_progressMessage = QStringLiteral("Processing %1 / %2").arg(m_batchIndex + 1).arg(m_batchFiles.size());
     emit progressMessageChanged();
-    emit artworkDownloaded();
+
+    Database *db = m_appController->database();
+    if (refreshArtworkForFile(file.id, true) && m_previewUrl.isValid() && !m_previewUrl.isLocalFile()) {
+        QString savedPath;
+        if (m_downloader.download(m_previewUrl, artworkPathForFile(file.id), &savedPath)) {
+            ++m_batchSucceeded;
+            if (db) {
+                db->updateFileArtworkFlag(file.id, true);
+            }
+        } else {
+            ++m_batchFailed;
+        }
+    }
+
+    m_downloadProgress = ++m_batchIndex;
+    emit progressChanged();
+    QMetaObject::invokeMethod(this, &ArtworkController::doDownloadNext, Qt::QueuedConnection);
 }
 
 void ArtworkController::clearArtworkCache() {

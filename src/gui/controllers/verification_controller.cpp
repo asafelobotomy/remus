@@ -1,9 +1,12 @@
 #include "verification_controller.h"
 
 #include <QFileInfo>
+#include <QMetaObject>
+#include <QThread>
 
 #include "app_controller.h"
 #include "../models/verification_result_model.h"
+#include "../../core/database.h"
 
 namespace Remus {
 
@@ -33,6 +36,12 @@ VerificationController::VerificationController(AppController *appController, QOb
     connect(appController, &AppController::libraryOpened, &m_engine, &VerificationEngine::createVerificationSchema);
 }
 
+VerificationController::~VerificationController() {
+    if (m_thread && m_thread->isRunning()) {
+        m_thread->wait();
+    }
+}
+
 void VerificationController::verifyAll() {
     if (m_verifying) {
         setLastError(QStringLiteral("Verification is already running."));
@@ -44,15 +53,44 @@ void VerificationController::verifyAll() {
     m_total = 0;
     m_currentFile.clear();
     m_summary.clear();
+    m_pendingFileIds.clear();
     emit verifyingChanged();
     emit progressChanged();
     emit currentFileChanged();
     emit summaryChanged();
 
-    populateResults(m_engine.verifyLibrary());
+    const QString dbPath = m_appController ? m_appController->libraryPath() : QString();
+    m_thread = QThread::create([this, dbPath]() {
+        Database workerDb;
+        const QString connectionName
+            = QStringLiteral("remus-verify-%1").arg(reinterpret_cast<quintptr>(QThread::currentThreadId()));
+        QList<VerificationResult> results;
+        if (workerDb.initialize(dbPath, connectionName)) {
+            VerificationEngine workerEngine(&workerDb);
+            QObject::connect(
+                &workerEngine, &VerificationEngine::verificationProgress, this,
+                [this](int current, int total, const QString &file) {
+                    QMetaObject::invokeMethod(
+                        this,
+                        [this, current, total, file]() {
+                            m_progress = current;
+                            m_total = total;
+                            m_currentFile = QFileInfo(file).fileName();
+                            emit progressChanged();
+                            emit currentFileChanged();
+                        },
+                        Qt::QueuedConnection);
+                },
+                Qt::DirectConnection);
+            results = workerEngine.verifyLibrary();
+            workerDb.close();
+        }
 
-    m_verifying = false;
-    emit verifyingChanged();
+        QMetaObject::invokeMethod(this, [this, results]() { finishVerification(results); }, Qt::QueuedConnection);
+    });
+
+    connect(m_thread, &QThread::finished, m_thread, &QObject::deleteLater);
+    m_thread->start();
 }
 
 void VerificationController::verifySelected() {
@@ -73,10 +111,31 @@ void VerificationController::verifySelected() {
     emit verifyingChanged();
     emit progressChanged();
 
-    populateResults(m_engine.verifyFiles({ fileId }));
+    const QString dbPath = m_appController->libraryPath();
+    m_thread = QThread::create([this, dbPath, fileId]() {
+        Database workerDb;
+        const QString connectionName
+            = QStringLiteral("remus-verify-%1").arg(reinterpret_cast<quintptr>(QThread::currentThreadId()));
+        QList<VerificationResult> results;
+        if (workerDb.initialize(dbPath, connectionName)) {
+            VerificationEngine workerEngine(&workerDb);
+            results = workerEngine.verifyFiles({ fileId });
+            workerDb.close();
+        }
 
+        QMetaObject::invokeMethod(this, [this, results]() { finishVerification(results); }, Qt::QueuedConnection);
+    });
+
+    connect(m_thread, &QThread::finished, m_thread, &QObject::deleteLater);
+    m_thread->start();
+}
+
+void VerificationController::finishVerification(const QList<VerificationResult> &results) {
+    populateResults(results);
     m_verifying = false;
+    m_thread = nullptr;
     emit verifyingChanged();
+    emit verificationFinished();
 }
 
 void VerificationController::clearResults() {
@@ -120,8 +179,6 @@ QString VerificationController::statusToString(VerificationStatus status) {
         return QStringLiteral("hash_missing");
     case VerificationStatus::Corrupt:
         return QStringLiteral("corrupt");
-    case VerificationStatus::HeaderMismatch:
-        return QStringLiteral("header_mismatch");
     default:
         return QStringLiteral("unknown");
     }

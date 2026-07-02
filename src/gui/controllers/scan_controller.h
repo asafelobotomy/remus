@@ -59,6 +59,7 @@ signals:
     void lastDirectoryChanged();
     void scanCompleted(int insertedFiles);
     void scanError(const QString &message);
+    void scanCancelled();
     void libraryChanged();
 
 private:

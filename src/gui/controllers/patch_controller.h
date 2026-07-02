@@ -14,6 +14,7 @@ class PatchController : public QObject {
     Q_PROPERTY(bool patching READ isPatching NOTIFY patchingChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(QString currentOperation READ currentOperation NOTIFY currentOperationChanged)
+    Q_PROPERTY(QString lastError READ lastError NOTIFY lastErrorChanged)
     Q_PROPERTY(QVariantMap toolStatus READ toolStatus NOTIFY toolStatusChanged)
 
 public:
@@ -29,6 +30,9 @@ public:
     QString currentOperation() const {
         return m_currentOperation;
     }
+    QString lastError() const {
+        return m_lastError;
+    }
     QVariantMap toolStatus() const {
         return m_toolStatus;
     }
@@ -43,6 +47,7 @@ signals:
     void patchingChanged();
     void progressChanged();
     void currentOperationChanged();
+    void lastErrorChanged();
     void toolStatusChanged();
     void libraryChanged();
 
@@ -50,12 +55,14 @@ private:
     void updateToolStatus();
     void applyToolPaths();
     PatchFormat stringToFormat(const QString &format) const;
+    void setLastError(const QString &message);
 
     AppController *m_appController;
     PatchService *m_patchService = nullptr;
     bool m_patching = false;
     int m_progress = 0;
     QString m_currentOperation;
+    QString m_lastError;
     QVariantMap m_toolStatus;
 };
 

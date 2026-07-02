@@ -490,7 +490,13 @@ bool ExportController::exportFrontend(const QString &format, const QString &outp
     emit progressMessageChanged();
 
     QString error;
-    const bool ok = LibraryExporter::exportToFile(*m_appController->database(), format, outputPath, filters, &error);
+    const bool ok = LibraryExporter::exportToFile(
+        *m_appController->database(), format, outputPath, filters, &error, [this](int current, int total) {
+            m_exportProgress = current;
+            m_exportTotal = total;
+            emit exportProgressChanged();
+            emit exportTotalChanged();
+        });
 
     m_exporting = false;
     m_exportProgress = m_exportTotal;

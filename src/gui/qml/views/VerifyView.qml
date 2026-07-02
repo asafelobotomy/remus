@@ -8,16 +8,6 @@ Item {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
-    FileDialog {
-        id: datFileDialog
-        title: "Import DAT catalog"
-        nameFilters: ["DAT/XML files (*.dat *.xml)"]
-        onAccepted: {
-            const path = decodeURIComponent(selectedFile.toString().replace(/^file:\/\//, ""))
-            datManagerController.importDat(path, datSystemField.text)
-        }
-    }
-
     ColumnLayout {
         anchors.fill: parent
         spacing: 14
@@ -50,24 +40,11 @@ Item {
             Layout.fillWidth: true
             spacing: 8
 
-            Label { text: "Import DAT" }
-            TextField {
-                id: datSystemField
-                Layout.preferredWidth: 140
-                placeholderText: "System (e.g. NES)"
-            }
-            Button {
-                text: "Choose DAT…"
-                enabled: !datManagerController.importing
-                onClicked: datFileDialog.open()
-            }
             Label {
                 Layout.fillWidth: true
-                elide: Text.ElideRight
+                wrapMode: Text.WordWrap
                 color: Theme.textMuted
-                text: datManagerController.lastError.length > 0
-                      ? datManagerController.lastError
-                      : "Adds an external No-Intro/Redump catalog for verification."
+                text: "Import supplemental DAT catalogs from the Tools \u2192 DAT Import tab before verifying."
             }
         }
 
@@ -79,9 +56,7 @@ Item {
         }
 
         Label {
-            text: "Verified: " + (verificationController.summary.verified || 0)
-                + " • Mismatch: " + (verificationController.summary.mismatched || 0)
-                + " • Missing: " + (verificationController.summary.notInDat || 0)
+            text: "Verified: " + (verificationController.summary.verified || 0) + " • Mismatch: " + (verificationController.summary.mismatched || 0) + " • Missing: " + (verificationController.summary.notInDat || 0)
         }
 
         ListView {
@@ -112,7 +87,12 @@ Item {
                     width: resultDelegate.availableWidth
                     spacing: 4
 
-                    Label { Layout.fillWidth: true; text: resultDelegate.filename; font.bold: true; elide: Text.ElideMiddle }
+                    Label {
+                        Layout.fillWidth: true
+                        text: resultDelegate.filename
+                        font.bold: true
+                        elide: Text.ElideMiddle
+                    }
                     Label {
                         Layout.fillWidth: true
                         text: resultDelegate.system + " • " + resultDelegate.status + " • " + resultDelegate.hashType

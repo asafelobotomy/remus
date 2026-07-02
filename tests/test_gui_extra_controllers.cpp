@@ -29,6 +29,8 @@ private slots:
     void exportController_generateM3uRequiresLibrary();
     void organizeController_exposesFolderSchemes();
     void patchController_checkToolsPopulatesStatus();
+    void patchController_lastErrorOnInvalidPatch();
+    void appController_showErrorAndDismiss();
     void modController_loadCatalogFromFixture();
 };
 
@@ -141,6 +143,22 @@ void GuiExtraControllersTest::patchController_checkToolsPopulatesStatus() {
     PatchController patch(&app);
     patch.checkTools();
     QVERIFY(!patch.toolStatus().isEmpty());
+}
+
+void GuiExtraControllersTest::patchController_lastErrorOnInvalidPatch() {
+    AppController app;
+    PatchController patch(&app);
+    QVERIFY(!patch.applyPatch(QString(), QStringLiteral("/nonexistent/patch.bps"), QString()));
+    QVERIFY(!patch.lastError().isEmpty());
+}
+
+void GuiExtraControllersTest::appController_showErrorAndDismiss() {
+    AppController app;
+    QVERIFY(app.errorMessage().isEmpty());
+    app.showError(QStringLiteral("Test error"));
+    QCOMPARE(app.errorMessage(), QStringLiteral("Test error"));
+    app.dismissError();
+    QVERIFY(app.errorMessage().isEmpty());
 }
 
 void GuiExtraControllersTest::modController_loadCatalogFromFixture() {

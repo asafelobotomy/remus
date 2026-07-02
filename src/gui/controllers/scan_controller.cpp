@@ -230,7 +230,7 @@ void ScanController::finishScanCancelled() {
     emit scanningChanged();
     emit progressMessageChanged();
     m_appController->setStatusMessage(QStringLiteral("Scan cancelled."));
-    emit scanError(QStringLiteral("Scan cancelled."));
+    emit scanCancelled();
 }
 
 void ScanController::finishScanError(const QString &message) {

@@ -19,42 +19,45 @@ Item {
 
     // Derive the active stage from the selected ROM's processing state.
     readonly property int autoStage: {
-        const _e = workflowController.enrichCount
-        const _d = workflowController.doneCount
+        const _e = workflowController.enrichCount;
+        const _d = workflowController.doneCount;
         if (!appController.libraryOpen || appController.selectedFileId <= 0)
-            return 1
-        const f = appController.selectedFileData
-        const m = appController.selectedMatchData
+            return 1;
+        const f = appController.selectedFileData;
+        const m = appController.selectedMatchData;
         if (!f["md5"] || f["md5"] === "")
-            return 2
+            return 2;
         if (!m || !m["confirmed"])
-            return 2
+            return 2;
         if (f["isOrganized"] || false)
-            return 6
+            return 6;
         if (f["isBundled"] || false)
-            return 6
+            return 6;
         if (!workflowController.artworkExistsForFile(appController.selectedFileId))
-            return 3
+            return 3;
         if (!(f["isConverted"] || false))
-            return 4
-        return 5
+            return 4;
+        return 5;
     }
 
     onAutoStageChanged: {
-        if (workflowController.running) return
-        if (appController.selectedFileId <= 0) return
+        if (workflowController.running)
+            return;
+        if (appController.selectedFileId <= 0)
+            return;
         if (appController.selectedFileId !== lastAutoStagedFileId) {
-            lastAutoStagedFileId = appController.selectedFileId
-            openStage = autoStage
+            lastAutoStagedFileId = appController.selectedFileId;
+            openStage = autoStage;
         }
     }
 
     Connections {
         target: appController
         function onSelectedFileIdChanged() {
-            if (workflowController.running) return
-            lastAutoStagedFileId = appController.selectedFileId
-            openStage = autoStage
+            if (workflowController.running)
+                return;
+            lastAutoStagedFileId = appController.selectedFileId;
+            openStage = autoStage;
         }
     }
 
@@ -62,11 +65,11 @@ Item {
         target: workflowController
         function onActiveStageChanged() {
             if (workflowController.running)
-                openStage = workflowController.activeStage
+                openStage = workflowController.activeStage;
         }
         function onRunningChanged() {
             if (!workflowController.running)
-                openStage = 0
+                openStage = 0;
         }
     }
 
@@ -78,8 +81,7 @@ Item {
     FolderDialog {
         id: scanFolderDialog
         title: "Select directory to scan"
-        onAccepted: scanDirField.text = decodeURIComponent(
-                        selectedFolder.toString().replace(/^file:\/\//, ""))
+        onAccepted: scanDirField.text = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""))
     }
 
     // ── Apply: no organize directory warning ─────────────────────────────────
@@ -124,24 +126,21 @@ Item {
 
             Label {
                 visible: matchController.unconfirmedMatchCount > 0
-                text: "\u2022 Confirm " + matchController.unconfirmedMatchCount +
-                      " pending Hash & Match result(s)"
+                text: "\u2022 Confirm " + matchController.unconfirmedMatchCount + " pending Hash & Match result(s)"
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
                 color: Theme.warn
             }
 
             Label {
-                text: "\u2022 Bundle & Rename using template: <i>" +
-                      root.namingTemplate + "</i>"
+                text: "\u2022 Bundle & Rename using template: <i>" + root.namingTemplate + "</i>"
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
                 textFormat: Text.RichText
             }
 
             Label {
-                text: "\u2022 Organize ROMs into: <i>" +
-                      root.organizeLibraryPath + "</i>"
+                text: "\u2022 Organize ROMs into: <i>" + root.organizeLibraryPath + "</i>"
                 visible: root.organizeDest.length > 0
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
@@ -169,417 +168,400 @@ Item {
         standardButtons: Dialog.Ok | Dialog.Cancel
 
         onAccepted: {
-            matchController.confirmAll()
-            exportController.bundleAll(scanController.lastDirectory, root.namingTemplate)
-            organizeController.applyOrganize(root.organizeLibraryPath)
+            matchController.confirmAll();
+            exportController.bundleAll(scanController.lastDirectory, root.namingTemplate);
+            organizeController.applyOrganize(root.organizeLibraryPath);
         }
     }
 
     ScrollView {
         anchors.fill: parent
-        contentWidth:  availableWidth
-        clip:          true
+        contentWidth: availableWidth
+        clip: true
 
         ColumnLayout {
-            x:       8
-            width:   Math.max(0, parent.width - 16)
+            x: 8
+            width: Math.max(0, parent.width - 16)
             spacing: 10
 
+            Item {
+                Layout.preferredHeight: 10
+            }
+
+            // Run-all toolbar
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 8
+
+                Button {
+                    text: workflowController.running ? "Cancel" : "\u25B6 Run All Stages"
+                    onClicked: {
+                        if (workflowController.running) {
+                            workflowController.cancel();
+                        } else {
+                            workflowController.runAll(scanController.lastDirectory, root.organizeLibraryPath, root.namingTemplate);
+                        }
+                    }
+                }
+                Button {
+                    text: "\u21BB Refresh Counts"
+                    flat: true
+                    onClicked: workflowController.refresh()
+                }
                 Item {
-                    Layout.preferredHeight: 10
+                    Layout.fillWidth: true
                 }
+            }
 
-                // Run-all toolbar
+            // ── Stage 1: Scan ────────────────────────────────────────────
+            StageCard {
+                stageTitle: "1 \u00B7 Scan"
+                expanded: openStage === 1
+                onToggleRequested: openStage = (openStage === 1 ? 0 : 1)
+
                 RowLayout {
                     Layout.fillWidth: true
-                    spacing: 8
+                    spacing: 6
 
-                    Button {
-                        text:    workflowController.running ? "Cancel" : "\u25B6 Run All Stages"
-                        onClicked: {
-                            if (workflowController.running) {
-                                workflowController.cancel()
-                            } else {
-                                workflowController.runAll(
-                                    scanController.lastDirectory,
-                                    root.organizeLibraryPath,
-                                    root.namingTemplate)
-                            }
-                        }
+                    TextField {
+                        id: scanDirField
+                        Layout.fillWidth: true
+                        placeholderText: "Directory to scan\u2026"
+                        text: scanController.lastDirectory
+                        font.pixelSize: Theme.fontMd
                     }
                     Button {
-                        text:     "\u21BB Refresh Counts"
-                        flat:     true
-                        onClicked: workflowController.refresh()
+                        text: "Browse"
+                        flat: true
+                        onClicked: scanFolderDialog.open()
                     }
-                    Item { Layout.fillWidth: true }
-                }
-
-                // ── Stage 1: Scan ────────────────────────────────────────────
-                StageCard {
-                    stageTitle: "1 \u00B7 Scan"
-                    expanded:   openStage === 1
-                    onToggleRequested: openStage = (openStage === 1 ? 0 : 1)
-
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: 6
-
-                        TextField {
-                            id:               scanDirField
-                            Layout.fillWidth: true
-                            placeholderText:  "Directory to scan\u2026"
-                            text:             scanController.lastDirectory
-                            font.pixelSize:   Theme.fontMd
-                        }
-                        Button {
-                            text:      "Browse"
-                            flat:      true
-                            onClicked: scanFolderDialog.open()
-                        }
-                        Button {
-                            text:      scanController.scanning ? "Stop" : "Scan"
-                            enabled:   scanController.scanning || scanDirField.text.length > 0
-                            onClicked: scanController.scanning
-                                           ? scanController.stopScan()
-                                           : scanController.startScan(scanDirField.text)
-                        }
-                    }
-
-                    ProgressCard {
-                        Layout.fillWidth: true
-                        title:           "Scan Progress"
-                        progressValue:   scanController.scannedFiles
-                        progressTotal:   scanController.totalFiles
-                        message:         scanController.progressMessage
-                        visible:         scanController.scanning ||
-                                         scanController.scannedFiles > 0
+                    Button {
+                        text: scanController.scanning ? "Stop" : "Scan"
+                        enabled: scanController.scanning || scanDirField.text.length > 0
+                        onClicked: scanController.scanning ? scanController.stopScan() : scanController.startScan(scanDirField.text)
                     }
                 }
 
-                // ── Stage 2: Hash & Match ────────────────────────────────────
-                StageCard {
-                    stageTitle: "2 \u00B7 Hash & Match"
-                    stageCount: workflowController.identityCount
-                    expanded:   openStage === 2
-                    onToggleRequested: openStage = (openStage === 2 ? 0 : 2)
-
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: 6
-
-                        Button {
-                            text:      "Hash && Match All"
-                            enabled:   !hashController.hashing &&
-                                       !matchController.matching &&
-                                       appController.libraryOpen
-                            onClicked: workflowController.hashAndMatchAll()
-                        }
-                        Button {
-                            text:      "Hash && Match Selected"
-                            enabled:   !hashController.hashing &&
-                                       !matchController.matching &&
-                                       appController.selectedFileId > 0
-                            onClicked: workflowController.hashAndMatchSelected()
-                        }
-                        Item { Layout.fillWidth: true }
-                    }
-
-                    ProgressCard {
-                        Layout.fillWidth: true
-                        title:         "Hash & Match Progress"
-                        progressValue: hashController.hashing
-                                           ? hashController.hashedFiles
-                                           : matchController.matchedFiles
-                        progressTotal: hashController.hashing
-                                           ? hashController.totalFiles
-                                           : matchController.totalMatchFiles
-                        message:       hashController.hashing
-                                           ? hashController.progressMessage
-                                           : matchController.progressMessage
-                        visible:       hashController.hashing || matchController.matching
-                    }
-
-                    RowLayout {
-                        visible:          matchController.unconfirmedMatchCount > 0
-                        Layout.fillWidth: true
-                        spacing: 6
-
-                        Button {
-                            text:          "Confirm All (" + matchController.unconfirmedMatchCount + ")"
-                            enabled:       !matchController.matching
-                            font.pixelSize: Theme.fontSm
-                            padding:        6
-                            onClicked:      matchController.confirmAll()
-                        }
-
-                        Item { Layout.fillWidth: true }
-                    }
-
-                    RowLayout {
-                        visible:          (appController.selectedFileData.md5 || "").length > 0
-                        Layout.fillWidth: true
-                        spacing: 6
-
-                        Label {
-                            text:           appController.selectedMatchData.confirmed
-                                            ? "Matched" : "Match Unconfirmed"
-                            font.bold:      true
-                            font.pixelSize: Theme.fontMd
-                            color:          appController.selectedMatchData.confirmed
-                                            ? Theme.success : Theme.error
-                        }
-
-                        Button {
-                            text:      "\u2713 Confirm Selected"
-                            enabled:   appController.selectedFileId > 0 &&
-                                       !appController.selectedMatchData.confirmed
-                            font.pixelSize: Theme.fontSm
-                            padding:   6
-                            onClicked: matchController.confirmSelected()
-                        }
-                        Button {
-                            text:      "\u2717 Reject"
-                            enabled:   appController.selectedFileId > 0 &&
-                                       !appController.selectedMatchData.rejected
-                            font.pixelSize: Theme.fontSm
-                            padding:   6
-                            onClicked: matchController.rejectSelected()
-                        }
-
-                        Item { Layout.fillWidth: true }
-                    }
-
-                    Label {
-                        visible:          (appController.selectedFileData.md5 || "").length > 0 &&
-                                          matchController.lastMessage.length > 0
-                        Layout.fillWidth: true
-                        text:             matchController.lastMessage
-                        color:            Theme.accentAlt
-                        font.pixelSize:   Theme.fontXs
-                        wrapMode:         Text.WordWrap
-                    }
+                ProgressCard {
+                    Layout.fillWidth: true
+                    title: "Scan Progress"
+                    progressValue: scanController.scannedFiles
+                    progressTotal: scanController.totalFiles
+                    message: scanController.progressMessage
+                    visible: scanController.scanning || scanController.scannedFiles > 0
                 }
+            }
 
-                // ── Stage 3: Artwork & Metadata ──────────────────────────────
-                StageCard {
-                    stageTitle: "3 \u00B7 Artwork & Metadata"
-                    stageCount: workflowController.enrichCount
-                    expanded:   openStage === 3
-                    onToggleRequested: openStage = (openStage === 3 ? 0 : 3)
+            // ── Stage 2: Hash & Match ────────────────────────────────────
+            StageCard {
+                stageTitle: "2 \u00B7 Hash & Match"
+                stageCount: workflowController.identityCount
+                expanded: openStage === 2
+                onToggleRequested: openStage = (openStage === 2 ? 0 : 2)
 
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: 6
-                        Label { text: "Enrich:"; color: Theme.textMuted; font.pixelSize: Theme.fontMd }
-                        Button {
-                            text:      "Enrich All"
-                            enabled:   !artworkController.downloading && appController.libraryOpen
-                            onClicked: artworkController.downloadAllMatched()
-                        }
-                        Button {
-                            text:      "Enrich Selected"
-                            enabled:   !artworkController.downloading &&
-                                       appController.selectedFileId > 0
-                            onClicked: artworkController.downloadSelected()
-                        }
-                    }
-
-                    ProgressCard {
-                        Layout.fillWidth: true
-                        title:         "Enrich Progress"
-                        progressValue: artworkController.downloadProgress
-                        progressTotal: artworkController.downloadTotal
-                        message:       artworkController.progressMessage
-                        visible:       artworkController.downloading ||
-                                       artworkController.progressMessage.length > 0
-                    }
-                }
-
-                // ── Stage 4: Convert ─────────────────────────────────────────
-                StageCard {
-                    stageTitle: "4 \u00B7 Convert"
-                    expanded:   openStage === 4
-                    onToggleRequested: openStage = (openStage === 4 ? 0 : 4)
-
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: 6
-
-                        Label { text: "Format:"; color: Theme.textMuted; font.pixelSize: Theme.fontMd }
-                        ComboBox {
-                            id:    convertFormatCombo
-                            model: ["Auto", "CHD", "CSO", "RVZ", "WBFS", "PBP"]
-                            font.pixelSize: Theme.fontMd
-                        }
-                        Button {
-                            text:      "Convert Selected"
-                            enabled:   appController.selectedFileId > 0 &&
-                                       !conversionController.converting
-                            onClicked: conversionController.convertSelected(
-                                           convertFormatCombo.currentText, "",
-                                           scanController.lastDirectory)
-                        }
-                        Button {
-                            text:      "Convert All"
-                            enabled:   appController.libraryOpen &&
-                                       !conversionController.converting
-                            onClicked: conversionController.convertAll(
-                                           convertFormatCombo.currentText, "",
-                                           scanController.lastDirectory)
-                        }
-                    }
-
-                    ProgressCard {
-                        Layout.fillWidth: true
-                        title:         "Convert Progress"
-                        progressValue: conversionController.progress
-                        progressTotal: 100
-                        message:       conversionController.progressMessage
-                        visible:       conversionController.converting ||
-                                       conversionController.progressMessage.length > 0
-                    }
-                }
-
-                // ── Stage 5: Bundle & Rename ─────────────────────────────────
-                StageCard {
-                    stageTitle: "5 \u00B7 Bundle & Rename"
-                    expanded:   openStage === 5
-                    onToggleRequested: openStage = (openStage === 5 ? 0 : 5)
-
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: 6
-
-                        Button {
-                            text:      "Bundle Selected"
-                            enabled:   appController.selectedFileId > 0 &&
-                                       !exportController.exporting
-                            onClicked: exportController.bundleSelected(scanController.lastDirectory, root.namingTemplate)
-                        }
-                        Button {
-                            text:      "Bundle All"
-                            enabled:   appController.libraryOpen &&
-                                       !exportController.exporting
-                            onClicked: exportController.bundleAll(scanController.lastDirectory, root.namingTemplate)
-                        }
-                        Item { Layout.fillWidth: true }
-                    }
-
-                    Label {
-                        Layout.fillWidth: true
-                        wrapMode: Text.WordWrap
-                        font.pixelSize: Theme.fontSm
-                        color: Theme.textDim
-                        text: "Template: " + root.namingTemplate + "  (edit in Settings)"
-                    }
-
-                    ProgressCard {
-                        Layout.fillWidth: true
-                        title:         "Bundle Progress"
-                        progressValue: exportController.bundledFiles
-                        progressTotal: exportController.totalBundleFiles
-                        message:       exportController.progressMessage
-                        visible:       exportController.exporting ||
-                                       exportController.progressMessage.length > 0
-                    }
-                }
-
-                // ── Stage 6: Organize ────────────────────────────────────────
-                StageCard {
-                    stageTitle: "6 \u00B7 Organize"
-                    stageCount: workflowController.doneCount
-                    expanded:   openStage === 6
-                    onToggleRequested: openStage = (openStage === 6 ? 0 : 6)
-
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: 6
-
-                        Button {
-                            text:      "Organize All"
-                            enabled:   appController.libraryOpen &&
-                                       !organizeController.organizing &&
-                                       root.organizeDest.length > 0
-                            onClicked: organizeController.organizeAll(root.organizeLibraryPath)
-                        }
-                        Button {
-                            text:      "Organize"
-                            enabled:   appController.libraryOpen &&
-                                       !organizeController.organizing &&
-                                       root.organizeDest.length > 0
-                            onClicked: organizeController.applyOrganize(root.organizeLibraryPath)
-                        }
-                        Button {
-                            text:      "Undo"
-                            flat:      true
-                            onClicked: organizeController.undoLast()
-                        }
-                        Item { Layout.fillWidth: true }
-                    }
-
-                    Label {
-                        Layout.fillWidth: true
-                        wrapMode: Text.WordWrap
-                        font.pixelSize: Theme.fontSm
-                        color: root.organizeDest.length > 0 ? Theme.textDim : Theme.warn
-                        text: root.organizeDest.length > 0
-                              ? "Destination: " + root.organizeLibraryPath + "  (edit in Settings)"
-                              : "No organize destination configured \u2014 set in Settings."
-                    }
-
-                    ProgressCard {
-                        Layout.fillWidth: true
-                        title:         "Organize Progress"
-                        progressValue: organizeController.organizedFiles
-                        progressTotal: organizeController.organizing ? 0 : organizeController.totalOrganizeFiles
-                        message:       organizeController.progressMessage
-                        visible:       organizeController.organizing ||
-                                       organizeController.progressMessage.length > 0
-                    }
-
-                    Label {
-                        visible:   organizeController.lastError.length > 0
-                        text:      organizeController.lastError
-                        color:     Theme.error
-                        wrapMode:  Text.WordWrap
-                        font.pixelSize: Theme.fontSm
-                        Layout.fillWidth: true
-                    }
-                }
-
-                // ── Apply ────────────────────────────────────────────────────
                 RowLayout {
                     Layout.fillWidth: true
-                    spacing: 8
+                    spacing: 6
 
                     Button {
-                        id: applyButton
-                        text: "Apply"
-                        highlighted: true
-                        enabled: appController.libraryOpen &&
-                                 !hashController.hashing &&
-                                 !matchController.matching &&
-                                 !artworkController.downloading &&
-                                 !exportController.exporting &&
-                                 !organizeController.organizing &&
-                                 (matchController.unconfirmedMatchCount +
-                                  workflowController.enrichCount +
-                                  workflowController.doneCount) > 0
-                        onClicked: {
-                            if (root.organizeDest.length === 0)
-                                applyNoDirDialog.open()
-                            else
-                                applyConfirmDialog.open()
-                        }
+                        text: "Hash && Match All"
+                        enabled: !hashController.hashing && !matchController.matching && appController.libraryOpen
+                        onClicked: workflowController.hashAndMatchAll()
+                    }
+                    Button {
+                        text: "Hash && Match Selected"
+                        enabled: !hashController.hashing && !matchController.matching && appController.selectedFileId > 0
+                        onClicked: workflowController.hashAndMatchSelected()
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                }
+
+                ProgressCard {
+                    Layout.fillWidth: true
+                    title: "Hash & Match Progress"
+                    progressValue: hashController.hashing ? hashController.hashedFiles : matchController.matchedFiles
+                    progressTotal: hashController.hashing ? hashController.totalFiles : matchController.totalMatchFiles
+                    message: hashController.hashing ? hashController.progressMessage : matchController.progressMessage
+                    visible: hashController.hashing || matchController.matching
+                }
+
+                RowLayout {
+                    visible: matchController.unconfirmedMatchCount > 0
+                    Layout.fillWidth: true
+                    spacing: 6
+
+                    Button {
+                        text: "Confirm All (" + matchController.unconfirmedMatchCount + ")"
+                        enabled: !matchController.matching
+                        font.pixelSize: Theme.fontSm
+                        padding: 6
+                        onClicked: matchController.confirmAll()
                     }
 
-                    Item { Layout.fillWidth: true }
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                }
+
+                RowLayout {
+                    visible: (appController.selectedFileData.md5 || "").length > 0
+                    Layout.fillWidth: true
+                    spacing: 6
+
+                    Label {
+                        text: appController.selectedMatchData.confirmed ? "Matched" : "Match Unconfirmed"
+                        font.bold: true
+                        font.pixelSize: Theme.fontMd
+                        color: appController.selectedMatchData.confirmed ? Theme.success : Theme.error
+                    }
+
+                    Button {
+                        text: "\u2713 Confirm Selected"
+                        enabled: appController.selectedFileId > 0 && !appController.selectedMatchData.confirmed
+                        font.pixelSize: Theme.fontSm
+                        padding: 6
+                        onClicked: matchController.confirmSelected()
+                    }
+                    Button {
+                        text: "\u2717 Reject"
+                        enabled: appController.selectedFileId > 0 && !appController.selectedMatchData.rejected
+                        font.pixelSize: Theme.fontSm
+                        padding: 6
+                        onClicked: matchController.rejectSelected()
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                }
+
+                Label {
+                    visible: (appController.selectedFileData.md5 || "").length > 0 && matchController.lastMessage.length > 0
+                    Layout.fillWidth: true
+                    text: matchController.lastMessage
+                    color: Theme.accentAlt
+                    font.pixelSize: Theme.fontXs
+                    wrapMode: Text.WordWrap
+                }
+            }
+
+            // ── Stage 3: Artwork & Metadata ──────────────────────────────
+            StageCard {
+                stageTitle: "3 \u00B7 Artwork & Metadata"
+                stageCount: workflowController.enrichCount
+                expanded: openStage === 3
+                onToggleRequested: openStage = (openStage === 3 ? 0 : 3)
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 6
+                    Label {
+                        text: "Enrich:"
+                        color: Theme.textMuted
+                        font.pixelSize: Theme.fontMd
+                    }
+                    Button {
+                        text: "Enrich All"
+                        enabled: !artworkController.downloading && appController.libraryOpen
+                        onClicked: artworkController.downloadAllMatched()
+                    }
+                    Button {
+                        text: "Enrich Selected"
+                        enabled: !artworkController.downloading && appController.selectedFileId > 0
+                        onClicked: artworkController.downloadSelected()
+                    }
+                }
+
+                ProgressCard {
+                    Layout.fillWidth: true
+                    title: "Enrich Progress"
+                    progressValue: artworkController.downloadProgress
+                    progressTotal: artworkController.downloadTotal
+                    message: artworkController.progressMessage
+                    visible: artworkController.downloading || artworkController.progressMessage.length > 0
+                }
+            }
+
+            // ── Stage 4: Convert ─────────────────────────────────────────
+            StageCard {
+                stageTitle: "4 \u00B7 Convert"
+                expanded: openStage === 4
+                onToggleRequested: openStage = (openStage === 4 ? 0 : 4)
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 6
+
+                    Label {
+                        text: "Format:"
+                        color: Theme.textMuted
+                        font.pixelSize: Theme.fontMd
+                    }
+                    ComboBox {
+                        id: convertFormatCombo
+                        model: ["Auto", "CHD", "CSO", "RVZ", "WBFS", "PBP"]
+                        font.pixelSize: Theme.fontMd
+                    }
+                    Button {
+                        text: "Convert Selected"
+                        enabled: appController.selectedFileId > 0 && !conversionController.converting
+                        onClicked: conversionController.convertSelected(convertFormatCombo.currentText, "", scanController.lastDirectory)
+                    }
+                    Button {
+                        text: "Convert All"
+                        enabled: appController.libraryOpen && !conversionController.converting
+                        onClicked: conversionController.convertAll(convertFormatCombo.currentText, "", scanController.lastDirectory)
+                    }
+                }
+
+                ProgressCard {
+                    Layout.fillWidth: true
+                    title: "Convert Progress"
+                    progressValue: conversionController.progress
+                    progressTotal: 100
+                    message: conversionController.progressMessage
+                    visible: conversionController.converting || conversionController.progressMessage.length > 0
+                }
+
+                Label {
+                    Layout.fillWidth: true
+                    wrapMode: Text.WordWrap
+                    visible: conversionController.lastMessage.length > 0
+                    text: conversionController.lastMessage
+                    color: Theme.error
+                    font.pixelSize: Theme.fontSm
+                }
+            }
+
+            // ── Stage 5: Bundle & Rename ─────────────────────────────────
+            StageCard {
+                stageTitle: "5 \u00B7 Bundle & Rename"
+                expanded: openStage === 5
+                onToggleRequested: openStage = (openStage === 5 ? 0 : 5)
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 6
+
+                    Button {
+                        text: "Bundle Selected"
+                        enabled: appController.selectedFileId > 0 && !exportController.exporting
+                        onClicked: exportController.bundleSelected(scanController.lastDirectory, root.namingTemplate)
+                    }
+                    Button {
+                        text: "Bundle All"
+                        enabled: appController.libraryOpen && !exportController.exporting
+                        onClicked: exportController.bundleAll(scanController.lastDirectory, root.namingTemplate)
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                }
+
+                Label {
+                    Layout.fillWidth: true
+                    wrapMode: Text.WordWrap
+                    font.pixelSize: Theme.fontSm
+                    color: Theme.textDim
+                    text: "Template: " + root.namingTemplate + "  (edit in Settings)"
+                }
+
+                ProgressCard {
+                    Layout.fillWidth: true
+                    title: "Bundle Progress"
+                    progressValue: exportController.bundledFiles
+                    progressTotal: exportController.totalBundleFiles
+                    message: exportController.progressMessage
+                    visible: exportController.exporting || exportController.progressMessage.length > 0
+                }
+            }
+
+            // ── Stage 6: Organize ────────────────────────────────────────
+            StageCard {
+                stageTitle: "6 \u00B7 Organize"
+                stageCount: workflowController.doneCount
+                expanded: openStage === 6
+                onToggleRequested: openStage = (openStage === 6 ? 0 : 6)
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 6
+
+                    Button {
+                        text: "Organize All"
+                        enabled: appController.libraryOpen && !organizeController.organizing && root.organizeDest.length > 0
+                        onClicked: organizeController.organizeAll(root.organizeLibraryPath)
+                    }
+                    Button {
+                        text: "Organize"
+                        enabled: appController.libraryOpen && !organizeController.organizing && root.organizeDest.length > 0
+                        onClicked: organizeController.applyOrganize(root.organizeLibraryPath)
+                    }
+                    Button {
+                        text: "Undo"
+                        flat: true
+                        onClicked: organizeController.undoLast()
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                }
+
+                Label {
+                    Layout.fillWidth: true
+                    wrapMode: Text.WordWrap
+                    font.pixelSize: Theme.fontSm
+                    color: root.organizeDest.length > 0 ? Theme.textDim : Theme.warn
+                    text: root.organizeDest.length > 0 ? "Destination: " + root.organizeLibraryPath + "  (edit in Settings)" : "No organize destination configured \u2014 set in Settings."
+                }
+
+                ProgressCard {
+                    Layout.fillWidth: true
+                    title: "Organize Progress"
+                    progressValue: organizeController.organizedFiles
+                    progressTotal: organizeController.organizing ? 0 : organizeController.totalOrganizeFiles
+                    message: organizeController.progressMessage
+                    visible: organizeController.organizing || organizeController.progressMessage.length > 0
+                }
+
+                Label {
+                    visible: organizeController.lastError.length > 0
+                    text: organizeController.lastError
+                    color: Theme.error
+                    wrapMode: Text.WordWrap
+                    font.pixelSize: Theme.fontSm
+                    Layout.fillWidth: true
+                }
+            }
+
+            // ── Apply ────────────────────────────────────────────────────
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 8
+
+                Button {
+                    id: applyButton
+                    text: "Apply"
+                    highlighted: true
+                    enabled: appController.libraryOpen && !hashController.hashing && !matchController.matching && !artworkController.downloading && !exportController.exporting && !organizeController.organizing && (matchController.unconfirmedMatchCount + workflowController.enrichCount + workflowController.doneCount) > 0
+                    onClicked: {
+                        if (root.organizeDest.length === 0)
+                            applyNoDirDialog.open();
+                        else
+                            applyConfirmDialog.open();
+                    }
                 }
 
                 Item {
-                    Layout.preferredHeight: 10
+                    Layout.fillWidth: true
                 }
+            }
+
+            Item {
+                Layout.preferredHeight: 10
+            }
         }
     }
 }

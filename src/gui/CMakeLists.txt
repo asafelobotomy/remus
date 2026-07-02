@@ -61,6 +61,7 @@ qt_add_qml_module(remus-gui
         qml/components/RomTable.qml
         qml/components/StatusIcon.qml
         qml/components/PipelinePanel.qml
+        qml/components/ErrorBanner.qml
         qml/components/InspectorPanel.qml
         qml/views/LibraryWorkbench.qml
         qml/dialogs/MatchEnrichDialog.qml

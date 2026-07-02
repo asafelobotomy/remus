@@ -21,6 +21,7 @@ class AppController : public QObject {
     Q_PROPERTY(QVariantMap selectedFileData READ selectedFile NOTIFY selectedFileDataChanged)
     Q_PROPERTY(QVariantMap selectedMatchData READ selectedMatch NOTIFY selectedMatchDataChanged)
     Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
+    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
     enum View {
@@ -50,6 +51,9 @@ public:
     QString statusMessage() const {
         return m_statusMessage;
     }
+    QString errorMessage() const {
+        return m_errorMessage;
+    }
 
     Database *database() {
         return &m_database;
@@ -66,6 +70,8 @@ public:
     Q_INVOKABLE bool eraseLibraryDatabase(
         bool eraseFiles = true, bool eraseMatchData = true, bool eraseApiCache = true, bool eraseArtwork = true);
     Q_INVOKABLE QString defaultLibraryPath() const;
+    Q_INVOKABLE void showError(const QString &message);
+    Q_INVOKABLE void dismissError();
     Q_INVOKABLE QVariantMap selectedFile();
     Q_INVOKABLE QVariantMap selectedMatch();
     Q_INVOKABLE QString systemName(int systemId);
@@ -86,6 +92,7 @@ signals:
     void selectedFileDataChanged();
     void selectedMatchDataChanged();
     void statusMessageChanged();
+    void errorMessageChanged();
     void libraryOpened();
     void libraryClosed();
     void libraryDatabaseErased();
@@ -104,6 +111,7 @@ private:
     int m_selectedFileId = 0;
     int m_selectedGameId = 0;
     QString m_statusMessage;
+    QString m_errorMessage;
     std::unique_ptr<MetadataCache> m_cache;
     std::unique_ptr<ProviderOrchestrator> m_orchestrator;
 

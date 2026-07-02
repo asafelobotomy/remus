@@ -12,12 +12,12 @@ Dialog {
     title: "Match & Enrich"
     modal: true
     anchors.centerIn: Overlay.overlay
-    width:  Math.min(920, Overlay.overlay.width * 0.92)
+    width: Math.min(920, Overlay.overlay.width * 0.92)
     height: Math.min(680, Overlay.overlay.height * 0.88)
 
     onOpened: {
         if (appController.selectedFileId > 0)
-            matchController.beginSearch(appController.selectedFileId)
+            matchController.beginSearch(appController.selectedFileId);
     }
 
     ColumnLayout {
@@ -29,9 +29,7 @@ Dialog {
             wrapMode: Text.WordWrap
             font.pixelSize: Theme.fontSm
             color: Theme.textDim
-            text: matchController.searchRomPath.length > 0
-                  ? matchController.searchRomPath
-                  : "No ROM selected"
+            text: matchController.searchRomPath.length > 0 ? matchController.searchRomPath : "No ROM selected"
         }
 
         RowLayout {
@@ -49,9 +47,9 @@ Dialog {
                 model: matchController.enabledProviders()
                 font.pixelSize: Theme.fontMd
                 Component.onCompleted: {
-                    const idx = model.indexOf(matchController.searchProvider)
+                    const idx = model.indexOf(matchController.searchProvider);
                     if (idx >= 0)
-                        currentIndex = idx
+                        currentIndex = idx;
                 }
                 onActivated: matchController.searchProvider = model[currentIndex]
             }
@@ -86,13 +84,13 @@ Dialog {
         }
 
         SplitView {
-            Layout.fillWidth:  true
+            Layout.fillWidth: true
             Layout.fillHeight: true
-            orientation:     Qt.Horizontal
+            orientation: Qt.Horizontal
 
             Frame {
                 SplitView.preferredWidth: 340
-                SplitView.minimumWidth:   240
+                SplitView.minimumWidth: 240
 
                 background: Rectangle {
                     color: Theme.surface
@@ -114,7 +112,7 @@ Dialog {
 
                     ListView {
                         id: resultsList
-                        Layout.fillWidth:  true
+                        Layout.fillWidth: true
                         Layout.fillHeight: true
                         clip: true
                         spacing: 2
@@ -124,7 +122,7 @@ Dialog {
                             id: resultRow
                             required property var modelData
 
-                            width:  ListView.view.width
+                            width: ListView.view.width
                             padding: 6
                             highlighted: matchController.selectedSearchIndex === modelData.index
 
@@ -167,9 +165,7 @@ Dialog {
                             onClicked: matchController.selectSearchResult(modelData.index)
 
                             background: Rectangle {
-                                color: parent.highlighted ? Theme.selected
-                                     : parent.hovered     ? Theme.hover
-                                     : "transparent"
+                                color: parent.highlighted ? Theme.selected : parent.hovered ? Theme.hover : "transparent"
                                 radius: 4
                             }
                         }
@@ -239,7 +235,7 @@ Dialog {
                         LabelField {
                             label: "Title"
                             value: matchController.previewMetadata.title || ""
-                            bold:  true
+                            bold: true
                             minWidth: 68
                         }
                         LabelField {
@@ -254,9 +250,7 @@ Dialog {
                         }
                         LabelField {
                             label: "Release"
-                            value: matchController.previewMetadata.releaseYear
-                                   ? matchController.previewMetadata.releaseYear.toString()
-                                   : matchController.previewMetadata.releaseDate || ""
+                            value: matchController.previewMetadata.releaseYear ? matchController.previewMetadata.releaseYear.toString() : matchController.previewMetadata.releaseDate || ""
                             minWidth: 68
                         }
                         LabelField {
@@ -267,8 +261,8 @@ Dialog {
                         LabelField {
                             label: "Rating"
                             value: {
-                                const r = matchController.previewMetadata.rating
-                                return (r && r > 0) ? r.toFixed(1) + " / 10" : ""
+                                const r = matchController.previewMetadata.rating;
+                                return (r && r > 0) ? r.toFixed(1) + " / 10" : "";
                             }
                             minWidth: 68
                         }
@@ -305,14 +299,54 @@ Dialog {
             Layout.fillWidth: true
             spacing: 6
 
-            CheckBox { id: importTitle;       text: "Title";       checked: true;  font.pixelSize: Theme.fontSm }
-            CheckBox { id: importPlot;        text: "Plot";        checked: true;  font.pixelSize: Theme.fontSm }
-            CheckBox { id: importPublisher;   text: "Publisher";   checked: true;  font.pixelSize: Theme.fontSm }
-            CheckBox { id: importDeveloper;   text: "Developer";   checked: true;  font.pixelSize: Theme.fontSm }
-            CheckBox { id: importGenre;        text: "Genre";       checked: true;  font.pixelSize: Theme.fontSm }
-            CheckBox { id: importRelease;      text: "Release";     checked: true;  font.pixelSize: Theme.fontSm }
-            CheckBox { id: importRating;       text: "Rating";      checked: false; font.pixelSize: Theme.fontSm }
-            CheckBox { id: importArtwork;      text: "Box art";     checked: true;  font.pixelSize: Theme.fontSm }
+            CheckBox {
+                id: importTitle
+                text: "Title"
+                checked: true
+                font.pixelSize: Theme.fontSm
+            }
+            CheckBox {
+                id: importPlot
+                text: "Plot"
+                checked: true
+                font.pixelSize: Theme.fontSm
+            }
+            CheckBox {
+                id: importPublisher
+                text: "Publisher"
+                checked: true
+                font.pixelSize: Theme.fontSm
+            }
+            CheckBox {
+                id: importDeveloper
+                text: "Developer"
+                checked: true
+                font.pixelSize: Theme.fontSm
+            }
+            CheckBox {
+                id: importGenre
+                text: "Genre"
+                checked: true
+                font.pixelSize: Theme.fontSm
+            }
+            CheckBox {
+                id: importRelease
+                text: "Release"
+                checked: true
+                font.pixelSize: Theme.fontSm
+            }
+            CheckBox {
+                id: importRating
+                text: "Rating"
+                checked: false
+                font.pixelSize: Theme.fontSm
+            }
+            CheckBox {
+                id: importArtwork
+                text: "Box art"
+                checked: true
+                font.pixelSize: Theme.fontSm
+            }
         }
 
         CheckBox {
@@ -325,12 +359,12 @@ Dialog {
     Connections {
         target: matchController
         function onSearchQueryChanged() {
-            queryField.text = matchController.searchQuery
+            queryField.text = matchController.searchQuery;
         }
         function onSearchProviderChanged() {
-            const idx = providerCombo.model.indexOf(matchController.searchProvider)
+            const idx = providerCombo.model.indexOf(matchController.searchProvider);
             if (idx >= 0)
-                providerCombo.currentIndex = idx
+                providerCombo.currentIndex = idx;
         }
     }
 
@@ -338,7 +372,9 @@ Dialog {
         spacing: 8
         anchors.margins: 8
 
-        Item { Layout.fillWidth: true }
+        Item {
+            Layout.fillWidth: true
+        }
 
         Button {
             text: "Cancel"
@@ -353,25 +389,22 @@ Dialog {
     }
 
     function runSearch() {
-        matchController.runSearch(providerCombo.currentText, queryField.text)
+        matchController.runSearch(providerCombo.currentText, queryField.text);
     }
 
     function applyMatch() {
-        const ok = matchController.applySearchMatch(
-            true,
-            importArtwork.checked,
-            skipOverwrite.checked,
-            importTitle.checked,
-            importPlot.checked,
-            importPublisher.checked,
-            importDeveloper.checked,
-            importGenre.checked,
-            importRelease.checked,
-            importRating.checked)
+        const ok = matchController.applySearchMatch(true, importArtwork.checked, skipOverwrite.checked, importTitle.checked, importPlot.checked, importPublisher.checked, importDeveloper.checked, importGenre.checked, importRelease.checked, importRating.checked);
         if (!ok)
-            return
+            return;
         if (importArtwork.checked)
-            artworkController.downloadSelected()
-        dialog.close()
+            artworkController.downloadSelected();
+        dialog.close();
+    }
+
+    Connections {
+        target: matchController
+        function onMatchError(message) {
+            appController.showError(message);
+        }
     }
 }

@@ -5,6 +5,7 @@
 #include <QStandardPaths>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <csignal>
 
 #include "controllers/app_controller.h"
 #include "controllers/artwork_controller.h"
@@ -28,9 +29,17 @@
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
+
+    struct sigaction sa { };
+    sa.sa_handler = SIG_IGN;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    sigaction(SIGPIPE, &sa, nullptr);
+
     QQuickStyle::setStyle(QStringLiteral("Fusion"));
     QCoreApplication::setOrganizationName(QString::fromLatin1(Remus::Constants::SETTINGS_ORGANIZATION));
     QCoreApplication::setApplicationName(QString::fromLatin1(Remus::Constants::SETTINGS_APPLICATION));
+    QCoreApplication::setApplicationVersion(QString::fromLatin1(Remus::Constants::APP_VERSION));
 
     // Tighten config-directory permissions (defence in depth — credentials live in
     // the OS keychain, but the config dir should not be world-readable).

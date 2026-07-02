@@ -2,6 +2,7 @@
 // translation unit within the 400-line project baseline.
 #include "workflow_controller.h"
 
+#include "app_controller.h"
 #include "hash_controller.h"
 #include "match_controller.h"
 #include "artwork_controller.h"
@@ -10,6 +11,17 @@
 #include "export_controller.h"
 
 namespace Remus {
+
+namespace {
+
+    void reportRunAllError(AppController *appController, const QString &stage, const QString &message) {
+        if (appController != nullptr) {
+            appController->showError(QStringLiteral("%1 failed: %2").arg(stage, message));
+            appController->setStatusMessage(QStringLiteral("Run all stopped at %1.").arg(stage));
+        }
+    }
+
+} // namespace
 
 void WorkflowController::advanceRunAll() {
     if (!m_running)
@@ -25,7 +37,8 @@ void WorkflowController::advanceRunAll() {
             delete guard;
             advanceRunAll();
         });
-        connect(m_hashController, &HashController::hashError, guard, [this, guard](const QString &) {
+        connect(m_hashController, &HashController::hashError, guard, [this, guard](const QString &message) {
+            reportRunAllError(m_appController, QStringLiteral("Hash"), message);
             delete guard;
             cancelRunAll();
         });
@@ -36,9 +49,14 @@ void WorkflowController::advanceRunAll() {
     case 1: {
         // Match all files — guard QObject auto-disconnects on delete
         auto *guard = new QObject(this);
-        connect(m_matchController, &MatchController::libraryChanged, guard, [this, guard]() {
+        connect(m_matchController, &MatchController::matchAllFinished, guard, [this, guard]() {
             delete guard;
             advanceRunAll();
+        });
+        connect(m_matchController, &MatchController::matchError, guard, [this, guard](const QString &message) {
+            reportRunAllError(m_appController, QStringLiteral("Match"), message);
+            delete guard;
+            cancelRunAll();
         });
         m_matchController->matchAll();
         break;
@@ -50,19 +68,32 @@ void WorkflowController::advanceRunAll() {
         advanceRunAll();
         break;
 
-    case 3:
-        // Artwork (synchronous download loop)
+    case 3: {
+        // Artwork batch download
         setActiveStage(3);
+        auto *guard = new QObject(this);
+        connect(m_artworkController, &ArtworkController::batchDownloadFinished, guard, [this, guard]() {
+            delete guard;
+            advanceRunAll();
+        });
         m_artworkController->downloadAllMatched();
-        advanceRunAll();
         break;
+    }
 
-    case 4: // Convert — synchronous loop; AUTO resolves format per file
+    case 4: {
         setActiveStage(4);
-        if (m_conversionController)
-            m_conversionController->convertAll(QStringLiteral("AUTO"), QString(), m_scanDir);
-        advanceRunAll();
+        if (!m_conversionController) {
+            advanceRunAll();
+            break;
+        }
+        auto *guard = new QObject(this);
+        connect(m_conversionController, &ConversionController::conversionFinished, guard, [this, guard]() {
+            delete guard;
+            advanceRunAll();
+        });
+        m_conversionController->convertAll(QStringLiteral("AUTO"), QString(), m_scanDir);
         break;
+    }
 
     case 5: // Bundle confirmed ROMs (rejected and unconfirmed filtered by bundleAll)
         setActiveStage(5);
