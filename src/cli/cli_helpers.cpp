@@ -1,10 +1,13 @@
 #include "cli_helpers.h"
+#include "compendium_progress.h"
 #include <QDir>
 #include <QFileInfo>
+#include <QObject>
 #include <QRegularExpression>
 #include <QTemporaryDir>
 #include "../core/archive_extractor.h"
 #include "../core/constants/files.h"
+#include "../core/disc_converter.h"
 #include "../core/space_calculator.h"
 #include "../core/system_resolver.h"
 #include "../metadata/filename_normalizer.h"
@@ -351,4 +354,24 @@ bool printConversionResult(const ConversionResult &result, const QString &format
     }
     qCritical() << "✗ Conversion failed:" << result.error;
     return false;
+}
+
+void wireDiscConverterCliProgress(DiscConverter *converter, const QString &label) {
+    if (!converter) {
+        return;
+    }
+    QObject::connect(converter, &DiscConverter::conversionStarted, [](const QString &input, const QString &output) {
+        CompendiumProgressWriter::logProgressLine(QStringLiteral("[convert] Starting %1 → %2")
+                .arg(QFileInfo(input).fileName(), QFileInfo(output).fileName()));
+    });
+    QObject::connect(converter, &DiscConverter::conversionProgress, [label](int percent, const QString &status) {
+        Q_UNUSED(percent);
+        CompendiumProgressWriter::logProgressLine(QStringLiteral("  [%1] %2").arg(label, status));
+    });
+    QObject::connect(converter, &DiscConverter::conversionCompleted, [](const ConversionResult &result) {
+        if (result.success) {
+            CompendiumProgressWriter::logProgressLine(QStringLiteral("  [convert] Complete (%1% of original size)")
+                    .arg(QString::number(result.compressionRatio * 100.0, 'f', 1)));
+        }
+    });
 }

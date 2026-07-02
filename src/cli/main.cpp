@@ -12,6 +12,7 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
 #include "cli_options.h"
+#include "cli_primary_actions.h"
 #include "../core/constants/constants.h"
 #include "../core/compendium_disc_bridge.h"
 #include "cli_logging.h"
@@ -119,7 +120,14 @@ int main(int argc, char *argv[]) {
     }
 
     QCommandLineParser parser;
-    parser.setApplicationDescription("Remus CLI - Scan and catalog retro game ROMs");
+    parser.setApplicationDescription(
+        "Remus CLI - Scan and catalog retro game ROMs\n\n"
+        "Examples:\n"
+        "  remus-cli --scan ~/roms --hash --match\n"
+        "  remus-cli --library ~/roms --output ~/export --process-preset es-de\n"
+        "  remus-cli --build-compendium --compendium-manifest data/compendium/manifest.json\n"
+        "  remus-cli --db library.db --verify game.dat\n"
+        "  remus-cli --mod-catalog mods.json --mod-systems --json");
     parser.addHelpOption();
     parser.addVersionOption();
 
@@ -141,6 +149,13 @@ int main(int argc, char *argv[]) {
     }
 
     parser.process(activeArgs);
+
+    const QStringList primaryActions = collectPrimaryActions(parser, actionOptions);
+    QString primaryActionError;
+    if (const int usageRc = validatePrimaryActionCombination(primaryActions, &primaryActionError)) {
+        qCritical() << primaryActionError;
+        return usageRc;
+    }
 
     if (!jsonRequested && parser.isSet(QStringLiteral("log-file"))) {
         const QString logPath = parser.value(QStringLiteral("log-file"));
@@ -173,6 +188,7 @@ int main(int argc, char *argv[]) {
         /*dryRunAll*/ parser.isSet(Constants::Cli::Options::DRY_RUN_ALL),
         /*processRequested*/ parser.isSet("process") || parser.isSet("library"),
         /*processHandled*/ false,
+        /*actionExecuted*/ false,
         /*processSystemIdFilter*/ -1,
         /*processFileScopeIds*/ { },
         /*presetBundleFormat*/ { },
@@ -233,6 +249,11 @@ int main(int argc, char *argv[]) {
             ctx.processFileScopeIds.insert(id);
         else
             qWarning() << "remus: ignoring invalid --file-id value:" << idStr;
+    }
+
+    for (const QString &name : actionOptions) {
+        if (parser.isSet(name))
+            ctx.actionExecuted = true;
     }
 
     if (int rc = handleStatsCommand(ctx))
@@ -355,6 +376,11 @@ int main(int argc, char *argv[]) {
         return rc;
     if (int rc = handleEditMetadataCommand(ctx))
         return rc;
+
+    if (!ctx.actionExecuted) {
+        qCritical() << "No command was executed. Specify a primary action (remus-cli --help).";
+        return 1;
+    }
 
     if (!jsonRequested) {
         qInfo() << "";

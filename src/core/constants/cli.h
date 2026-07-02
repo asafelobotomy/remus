@@ -16,7 +16,6 @@ namespace Constants {
             inline const QString MOD_JSON = QStringLiteral("mod-json");
             inline const QString MIN_CONFIDENCE = QStringLiteral("min-confidence");
             inline const QString INTERACTIVE = QStringLiteral("interactive");
-            inline const QString NO_INTERACTIVE = QStringLiteral("no-interactive");
             inline const QString DRY_RUN_ALL = QStringLiteral("dry-run-all");
             inline const QString EXPORT = QStringLiteral("export");
             inline const QString EXPORT_PATH = QStringLiteral("export-path");

@@ -38,11 +38,22 @@ QString resolveSecret(const QCommandLineParser &parser, const QString &optionNam
 }
 
 QString findDataSubdir(const QString &subdir) {
+    const QByteArray dataRoot = qgetenv("REMUS_DATA_DIR");
+    const bool isolatedEnrichmentRoot = !dataRoot.isEmpty() && subdir != QLatin1String("compendium");
+    if (isolatedEnrichmentRoot) {
+        const QString path = QDir::cleanPath(QString::fromLocal8Bit(dataRoot) + QStringLiteral("/data/") + subdir);
+        return QDir(path).exists() ? path : QString();
+    }
+
     const QString appDir = QCoreApplication::applicationDirPath();
     const QString cwd = QDir::currentPath();
     const QString seg = QStringLiteral("data/") + subdir;
-    const QStringList candidates = { cwd + "/" + seg, appDir + "/" + seg, appDir + "/../" + seg,
-        appDir + "/../../" + seg, appDir + "/../../../" + seg, cwd + "/../" + seg, cwd + "/../../" + seg };
+    QStringList candidates;
+    if (!dataRoot.isEmpty()) {
+        candidates << QDir::cleanPath(QString::fromLocal8Bit(dataRoot) + QStringLiteral("/data/") + subdir);
+    }
+    candidates << QStringList { cwd + "/" + seg, appDir + "/" + seg, appDir + "/../" + seg, appDir + "/../../" + seg,
+        appDir + "/../../../" + seg, cwd + "/../" + seg, cwd + "/../../" + seg };
     for (const QString &dir : candidates) {
         if (QDir(dir).exists()) {
             return QDir::cleanPath(dir);

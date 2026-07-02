@@ -18,6 +18,7 @@ struct CliContext {
     bool dryRunAll;
     bool processRequested;
     bool processHandled;
+    bool actionExecuted = false;
     int processSystemIdFilter;
     QSet<int> processFileScopeIds;
     // Preset-resolved overrides (empty = use explicit CLI values)
@@ -35,6 +36,10 @@ struct CliContext {
     /// Empty means no output step (hash/match/enrich only).
     QString processOutputPath;
 };
+
+inline void cliMarkActionExecuted(CliContext &ctx) {
+    ctx.actionExecuted = true;
+}
 
 // ── Info / inspection ──────────────────────────────────────────────────────────
 // --stats, --info, --header-info, --show-art, --scan, --list, --hash-all

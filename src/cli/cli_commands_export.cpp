@@ -11,7 +11,9 @@
 #include "../core/library_exporter.h"
 #include "../core/patch_engine.h"
 #include "../core/patched_rom_parser.h"
+#include "../services/patch_service.h"
 #include "../metadata/filename_normalizer.h"
+#include "compendium_progress.h"
 #include "cli_logging.h"
 
 // ── Export ────────────────────────────────────────────────────────────────────
@@ -35,8 +37,8 @@ int handleExportCommand(CliContext &ctx) {
     QString error;
     if (!LibraryExporter::exportToFile(ctx.db, format, outputPath, systemFilters, &error)) {
         if (error.contains(QStringLiteral("No matched files"))) {
-            qWarning() << error;
-            return 0;
+            qCritical() << error;
+            return 1;
         }
         qCritical() << error;
         return 1;
@@ -140,7 +142,17 @@ int handlePatchCommands(CliContext &ctx) {
         if (ctx.dryRunAll) {
             qInfo() << "[DRY-RUN] Would apply patch" << patchPath << "to" << basePath << "->" << outputPath;
         } else {
-            PatchResult result = pe.apply(basePath, info, outputPath);
+            PatchService patchService;
+            CompendiumProgressWriter::logProgressLine(QStringLiteral("[patch] Applying %1 to %2…")
+                    .arg(QFileInfo(patchPath).fileName(), QFileInfo(basePath).fileName()));
+            PatchResult result = patchService.apply(basePath, info, outputPath, [](int percent) {
+                if (percent < 0) {
+                    CompendiumProgressWriter::logProgressLine(
+                        QStringLiteral("  [patch] Applying… %1s elapsed").arg(-percent));
+                } else if (percent > 0 && percent < 100) {
+                    CompendiumProgressWriter::logProgressLine(QStringLiteral("  [patch] %1%").arg(percent));
+                }
+            });
             if (result.success) {
                 if (!persistAppliedPatchLineage(ctx.db, basePath, patchPath, result.outputPath, info)) {
                     qWarning() << "Failed to persist applied patch lineage for" << result.outputPath;

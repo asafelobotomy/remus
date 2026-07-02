@@ -14,6 +14,8 @@
 #include <QStandardPaths>
 #include <QDir>
 
+#include <memory>
+
 #include "../src/core/database.h"
 #include "../src/core/constants/systems.h"
 #include "../src/core/compendium_manifest_parser.h"
@@ -24,6 +26,36 @@ class CliSmokeTest : public QObject {
     Q_OBJECT
 
 private:
+    mutable std::unique_ptr<QTemporaryDir> m_isolatedDataDir;
+    bool m_skipBundledCompendium = false;
+
+    void ensureIsolatedDataRoot() {
+        if (!m_isolatedDataDir) {
+            auto dir = std::make_unique<QTemporaryDir>();
+            QVERIFY2(dir->isValid(), "Failed to create isolated REMUS_DATA_DIR for compendium tests");
+            QDir root(dir->path());
+            const QStringList subdirs
+                = { QStringLiteral("metadata"), QStringLiteral("gametdb"), QStringLiteral("openvgdb"),
+                      QStringLiteral("mame"), QStringLiteral("launchbox"), QStringLiteral("hasheous/dumps"),
+                      QStringLiteral("acquisition/libretro-thumbnails"), QStringLiteral("remus-thumbnails") };
+            for (const QString &sub : subdirs) {
+                QVERIFY2(root.mkpath(QStringLiteral("data/") + sub),
+                    qPrintable(QStringLiteral("Failed to create data/%1").arg(sub)));
+            }
+            m_isolatedDataDir = std::move(dir);
+        }
+    }
+
+    QStringList withCompendiumTestFlags(QStringList args) const {
+        if (!args.contains(QStringLiteral("--offline-only-enrichment"))) {
+            args << QStringLiteral("--offline-only-enrichment");
+        }
+        if (!args.contains(QStringLiteral("--skip-consolidate-thumbnails"))) {
+            args << QStringLiteral("--skip-consolidate-thumbnails");
+        }
+        return args;
+    }
+
     QString fixturePath(const QString &name) const {
         const QStringList candidates = {
             QString(REMUS_SOURCE_DIR) + "/tests/fixtures/" + name,
@@ -62,38 +94,48 @@ private:
         env.insert("QT_LOGGING_RULES", "remus.cli.info=true");
         env.insert("LANG", "en_US.UTF-8");
         env.insert("LC_ALL", "en_US.UTF-8");
+        if (m_isolatedDataDir) {
+            env.insert(QStringLiteral("REMUS_DATA_DIR"), m_isolatedDataDir->path());
+        }
+        if (m_skipBundledCompendium) {
+            env.insert(QStringLiteral("REMUS_TEST_NO_BUNDLED_COMPENDIUM"), QStringLiteral("1"));
+        }
         return env;
     }
 
-    void runCli(const QStringList &extraArgs, int expectedExit = 0) const {
+    void runCli(QStringList extraArgs, int expectedExit = 0) {
+        if (extraArgs.contains(QStringLiteral("--build-compendium"))) {
+            ensureIsolatedDataRoot();
+            extraArgs = withCompendiumTestFlags(std::move(extraArgs));
+        }
         QProcess proc;
         proc.setProcessEnvironment(cliEnvironment());
-        QStringList args = extraArgs;
-        if (!args.contains("--no-interactive")) {
-            args.prepend("--no-interactive");
-        }
+        const QStringList args = extraArgs;
         const QString binary = cliPath();
         QVERIFY2(!binary.isEmpty(), "remus-cli binary not found next to tests");
         proc.start(binary, args);
         QVERIFY2(proc.waitForStarted(), "CLI failed to start");
-        bool finished = proc.waitForFinished(30000);
+        const int timeoutMs = args.contains(QStringLiteral("--build-compendium")) ? 300000 : 30000;
+        bool finished = proc.waitForFinished(timeoutMs);
         QVERIFY2(finished, "CLI did not finish in time");
         QCOMPARE(proc.exitCode(), expectedExit);
     }
 
-    void runCliCapture(const QStringList &extraArgs, QString &output, int expectedExit = 0) const {
+    void runCliCapture(QStringList extraArgs, QString &output, int expectedExit = 0) {
+        if (extraArgs.contains(QStringLiteral("--build-compendium"))) {
+            ensureIsolatedDataRoot();
+            extraArgs = withCompendiumTestFlags(std::move(extraArgs));
+        }
         QProcess proc;
         proc.setProcessEnvironment(cliEnvironment());
 
-        QStringList args = extraArgs;
-        if (!args.contains("--no-interactive")) {
-            args.prepend("--no-interactive");
-        }
+        const QStringList args = extraArgs;
         const QString binary = cliPath();
         QVERIFY2(!binary.isEmpty(), "remus-cli binary not found next to tests");
         proc.start(binary, args);
         QVERIFY2(proc.waitForStarted(), "CLI failed to start");
-        bool finished = proc.waitForFinished(30000);
+        const int timeoutMs = args.contains(QStringLiteral("--build-compendium")) ? 300000 : 30000;
+        bool finished = proc.waitForFinished(timeoutMs);
         QVERIFY2(finished, "CLI did not finish in time");
         QCOMPARE(proc.exitCode(), expectedExit);
 
@@ -107,7 +149,7 @@ private:
         }
     }
 
-    void runCliJson(const QStringList &extraArgs, QJsonDocument &doc, int expectedExit = 0) const {
+    void runCliJson(const QStringList &extraArgs, QJsonDocument &doc, int expectedExit = 0) {
         QString output;
         runCliCapture(extraArgs, output, expectedExit);
 
@@ -132,6 +174,11 @@ private:
     }
 
 private slots:
+    void init() {
+        m_isolatedDataDir.reset();
+        m_skipBundledCompendium = false;
+    }
+
     void initTestCase() {
         QCoreApplication::setOrganizationName("Remus");
         QCoreApplication::setApplicationName("RemusTest");
@@ -228,6 +275,7 @@ private slots:
     }
 
     void testVerifyUsesNormalizedDatSystemName() {
+        m_skipBundledCompendium = true;
         QTemporaryDir dir;
         QVERIFY(dir.isValid());
 
@@ -251,7 +299,7 @@ private slots:
             out << ")\n";
             out << "game (\n";
             out << "  name \"Test Game\"\n";
-            out << "  rom ( name \"Test Game.nds\" size 4 crc 00000000 )\n";
+            out << "  rom ( name \"Test Game.nds\" size 4 crc DB1720A5 )\n";
             out << ")\n";
         }
 
@@ -260,8 +308,8 @@ private slots:
         QString output;
         runCliCapture({ "--db", dbPath, "--verify", datPath }, output);
 
-        QVERIFY2(
-            output.contains("System: \"Nintendo DS\""), qPrintable(QStringLiteral("Captured output:\n%1").arg(output)));
+        QVERIFY2(output.contains(QStringLiteral("System: \"Nintendo DS\"")),
+            qPrintable(QStringLiteral("Captured output:\n%1").arg(output)));
         QVERIFY2(output.contains("Total files: 1"), qPrintable(QStringLiteral("Captured output:\n%1").arg(output)));
     }
 
@@ -377,7 +425,8 @@ private slots:
             QVERIFY(countsQuery.value(0).toInt() > 0);
 
             QSqlQuery sourceQuery(db);
-            QVERIFY2(sourceQuery.exec("SELECT source_id, display_name, enabled, priority FROM sources"),
+            QVERIFY2(sourceQuery.exec("SELECT source_id, display_name, enabled, priority FROM sources "
+                                      "WHERE source_id = 'test-source'"),
                 qPrintable(sourceQuery.lastError().text()));
             QVERIFY(sourceQuery.next());
             QCOMPARE(sourceQuery.value(0).toString(), QString("test-source"));
@@ -785,6 +834,7 @@ private slots:
     }
 
     void testVerifyXmlDatUsesHeaderSystemName() {
+        m_skipBundledCompendium = true;
         QTemporaryDir dir;
         QVERIFY(dir.isValid());
 
@@ -810,7 +860,7 @@ private slots:
             out << "  </header>\n";
             out << "  <game name=\"Test Game\">\n";
             out << "    <description>Test Game</description>\n";
-            out << "    <rom name=\"Test Game.nds\" size=\"4\" crc=\"00000000\"/>\n";
+            out << "    <rom name=\"Test Game.nds\" size=\"4\" crc=\"db1720a5\"/>\n";
             out << "  </game>\n";
             out << "</datafile>\n";
         }
@@ -1424,6 +1474,60 @@ private slots:
             QStringLiteral("--export-path"), json });
         QVERIFY(QFileInfo(launchbox).exists());
         QVERIFY(QFileInfo(json).exists());
+    }
+
+    void testModifierOnlyShowsHelp() {
+        QProcess proc;
+        proc.setProcessEnvironment(cliEnvironment());
+        proc.start(cliPath(), { QStringLiteral("--force-full-rebuild") });
+        QVERIFY(proc.waitForStarted());
+        QVERIFY(proc.waitForFinished(30000));
+        QCOMPARE(proc.exitCode(), 0);
+        const QString output = QString::fromUtf8(proc.readAllStandardOutput() + proc.readAllStandardError());
+        QVERIFY2(output.contains(QStringLiteral("Usage:")) || output.contains(QStringLiteral("Options:")),
+            qPrintable(output));
+    }
+
+    void testMultiActionConflictExitsUsageError() {
+        runCli({ QStringLiteral("--scan"), QStringLiteral("/tmp"), QStringLiteral("--verify"),
+                   QStringLiteral("missing.dat") },
+            2);
+    }
+
+    void testEditMetadataWithoutFieldsFails() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString dbPath = dir.filePath(QStringLiteral("test.db"));
+        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--edit-metadata"), QStringLiteral("1") }, 1);
+    }
+
+    void testVerifyMismatchExitsFailure() {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString dbPath = dir.filePath(QStringLiteral("test.db"));
+        const QString romPath = dir.filePath(QStringLiteral("Test Game.nds"));
+        {
+            QFile romFile(romPath);
+            QVERIFY(romFile.open(QIODevice::WriteOnly));
+            QVERIFY(romFile.write("ABCD") == 4);
+        }
+        const QString datPath = dir.filePath(QStringLiteral("bad.dat"));
+        {
+            QFile datFile(datPath);
+            QVERIFY(datFile.open(QIODevice::WriteOnly | QIODevice::Text));
+            QTextStream out(&datFile);
+            out << "clrmamepro (\n";
+            out << "  name \"Nintendo - Nintendo DS\"\n";
+            out << "  description \"Mismatch test\"\n";
+            out << "  version \"1.0\"\n";
+            out << ")\n";
+            out << "game (\n";
+            out << "  name \"Test Game\"\n";
+            out << "  rom ( name \"Test Game.nds\" size 4 crc 00000000 )\n";
+            out << ")\n";
+        }
+        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--scan"), dir.path(), QStringLiteral("--hash") });
+        runCli({ QStringLiteral("--db"), dbPath, QStringLiteral("--verify"), datPath }, 1);
     }
 };
 

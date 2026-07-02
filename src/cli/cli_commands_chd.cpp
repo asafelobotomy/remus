@@ -50,6 +50,8 @@ int handleConvertChdCommand(CliContext &ctx) {
         return 0;
     }
 
+    wireDiscConverterCliProgress(&converter, QStringLiteral("CHD"));
+
     const QString ext = QStringLiteral(".") + info.suffix().toLower();
     ConversionResult result;
     if (ext == Constants::Files::CUE)

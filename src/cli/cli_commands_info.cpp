@@ -1,5 +1,6 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
+#include "compendium_progress.h"
 #include <algorithm>
 #include <QDir>
 #include <QMap>
@@ -268,7 +269,17 @@ int handleHashAllCommand(CliContext &ctx) {
     // Route through HashService::computeHashes() so that plain-file hashing
     // scales with available CPU cores via the existing QThreadPool worker pool.
     HashService svc;
-    const QList<HashService::HashBatchResult> taskResults = svc.computeHashes(filesToHash);
+    int done = 0;
+    const int total = filesToHash.size();
+    const QList<HashService::HashBatchResult> taskResults
+        = svc.computeHashes(filesToHash, [&](int completed, int batchTotal, const QString &path) {
+              Q_UNUSED(batchTotal);
+              ++done;
+              if (done % 10 == 0 || done == total) {
+                  CompendiumProgressWriter::logProgressLine(
+                      QStringLiteral("  Hashed %1 / %2 — %3").arg(done).arg(total).arg(QFileInfo(path).fileName()));
+              }
+          });
 
     for (const HashService::HashBatchResult &task : taskResults) {
         if (!task.skipped && task.result.success) {

@@ -128,3 +128,9 @@ QString buildOutputPath(const QString &inputPath, const QString &outputDir, cons
 // Print conversion result statistics (sizes, compression ratio).
 // Returns true on success, false on failure.
 bool printConversionResult(const ConversionResult &result, const QString &formatName);
+
+namespace Remus {
+class DiscConverter;
+}
+
+void wireDiscConverterCliProgress(Remus::DiscConverter *converter, const QString &label);

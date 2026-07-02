@@ -1,5 +1,6 @@
 #include "cli_commands.h"
 #include "cli_helpers.h"
+#include <cstdio>
 #include <QFileInfo>
 #include <QFile>
 #include <QRegularExpression>
@@ -189,6 +190,16 @@ void printVerificationDetails(const QList<VerificationResult> &results) {
 
 int reportVerificationResults(
     CliContext &ctx, VerificationEngine &verifier, const QString &systemName, bool generateReport) {
+    QObject::connect(&verifier, &VerificationEngine::verificationProgress, &verifier,
+        [](int current, int total, const QString &file) {
+            if (current % 25 == 0 || current == total) {
+                qInfo().noquote() << QStringLiteral("  Verified %1 / %2 — %3")
+                                         .arg(current)
+                                         .arg(total)
+                                         .arg(QFileInfo(file).fileName());
+                std::fflush(stdout);
+            }
+        });
     const QList<VerificationResult> results = verifier.verifyLibrary(systemName);
     const VerificationSummary summary = verifier.getLastSummary();
 
@@ -217,7 +228,7 @@ int reportVerificationResults(
         }
     }
 
-    return 0;
+    return summary.mismatched > 0 || summary.corrupt > 0 || (summary.notInDat > 0 && summary.totalFiles > 0) ? 1 : 0;
 }
 
 bool importVerificationDat(CliContext &ctx, VerificationEngine &verifier, const QString &datFile, QString &systemName) {
@@ -310,10 +321,12 @@ int handleVerifyCommand(CliContext &ctx) {
 
     VerificationEngine verifier(&ctx.db);
 
-    // Attach compendium as supplemental catalog when available
-    const QString compendiumDir = findDataSubdir(QStringLiteral("compendium"));
-    if (!compendiumDir.isEmpty()) {
-        verifier.setCompendiumDb(compendiumDir + QStringLiteral("/remus_compendium.db"));
+    // Attach compendium as supplemental catalog when available (skip in CLI smoke tests).
+    if (qgetenv("REMUS_TEST_NO_BUNDLED_COMPENDIUM") != "1") {
+        const QString compendiumDir = findDataSubdir(QStringLiteral("compendium"));
+        if (!compendiumDir.isEmpty()) {
+            verifier.setCompendiumDb(compendiumDir + QStringLiteral("/remus_compendium.db"));
+        }
     }
 
     QString systemName;
@@ -352,6 +365,7 @@ int handleVerifySetCommand(CliContext &ctx) {
         return 0;
     }
 
+    bool hasIncomplete = false;
     for (const DiscSetCompletenessReport &report : reports) {
         qInfo() << "";
         qInfo() << report.titleDisc;
@@ -359,15 +373,19 @@ int handleVerifySetCommand(CliContext &ctx) {
         qInfo() << "  owned discs:" << report.ownedDiscNumbers;
         if (!report.missingDiscNumbers.isEmpty()) {
             qWarning() << "  missing discs:" << report.missingDiscNumbers;
+            hasIncomplete = true;
         }
-        for (const QString &warning : report.warnings)
+        for (const QString &warning : report.warnings) {
             qWarning() << "  warning:" << warning;
+            hasIncomplete = true;
+        }
         for (const DiscTrackCompleteness &gap : report.trackGaps) {
             qWarning() << "  disc" << gap.discNumber << "missing tracks:" << gap.missingRomNames;
+            hasIncomplete = true;
         }
     }
 
-    return 0;
+    return hasIncomplete ? 1 : 0;
 }
 
 int handlePatchDatCommand(CliContext &ctx) {

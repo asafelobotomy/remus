@@ -51,10 +51,8 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addActionOption({ { "m", "metadata" }, "Fetch metadata by file hash", "hash" });
     addActionOption(QCommandLineOption("search", "Search for game by name", "title"));
     addOption(QCommandLineOption("system", "Specify system for search", "system"));
-    const QString providerHelp = QString("Metadata provider (%1, %2, %3, auto)")
-                                     .arg(Providers::SCREENSCRAPER)
-                                     .arg(Providers::THEGAMESDB)
-                                     .arg(Providers::IGDB);
+    const QString providerHelp
+        = QString("Metadata provider (screenscraper, thegamesdb, igdb, hasheous, compendium, auto)");
     addOption(QCommandLineOption(
         Constants::Cli::Options::PROVIDER, providerHelp, "provider", Constants::Cli::Defaults::PROVIDER));
     addOption(QCommandLineOption("tgdb-api-key", "TheGamesDB API key (env: REMUS_TGDB_API_KEY)", "apiKey"));
@@ -154,7 +152,7 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addActionOption(QCommandLineOption("mod-min-rating", "List catalog mods with rating >= value", "rating"));
     addActionOption(QCommandLineOption("mod-min-downloads", "List catalog mods with downloads >= value", "count"));
     addOption(QCommandLineOption({ Constants::Cli::Options::JSON, Constants::Cli::Options::MOD_JSON },
-        "Emit machine-readable JSON when supported by the selected command"));
+        "Emit machine-readable JSON for supported commands (stats, list, info, mod-*)"));
     addOption(QCommandLineOption(
         "mod-no-system-fallback", "Do not fall back to system-level catalog matches for --mod-list"));
     addActionOption(QCommandLineOption("mod-install", "Install a mod by catalog ID", "modId"));
@@ -195,19 +193,23 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         "preset"));
 
     addActionOption(QCommandLineOption("build-compendium", "Build a canonical compendium database from a manifest"));
-    addActionOption(QCommandLineOption("force-full-rebuild",
+    addOption(QCommandLineOption("force-full-rebuild",
         "Force a full compendium rebuild even when incremental or enrichment-only refresh is possible"));
-    addActionOption(QCommandLineOption("offline-only-enrichment",
+    addOption(QCommandLineOption(
+        "force-enrichment", "Re-run enrichment even when enrichment input fingerprint is unchanged"));
+    addOption(QCommandLineOption(
+        "skip-fts", "Skip FTS index rebuild after --enrich-compendium or --build-compendium enrichment"));
+    addOption(QCommandLineOption("offline-only-enrichment",
         "Skip online enrichment passes during --build-compendium or --enrich-compendium "
         "(local DAT/metadata/files only). Default runs offline first, then online gap-fill."));
-    addActionOption(QCommandLineOption("online-enrichment",
+    addOption(QCommandLineOption("online-enrichment",
         "Legacy flag: bulk online gap-fill is already the default when credentials exist. "
         "Use --offline-only-enrichment to disable online passes."));
-    addActionOption(QCommandLineOption("online-enrichment-all",
+    addOption(QCommandLineOption("online-enrichment-all",
         "Enable all online enrichment passes including Hasheous, PlayMatch, and ZXInfo APIs "
         "(can take days on full catalogues — use only for targeted rebuilds). Applies to "
         "--build-compendium and --enrich-compendium."));
-    addActionOption(QCommandLineOption("fail-on-enrichment-errors",
+    addOption(QCommandLineOption("fail-on-enrichment-errors",
         "Exit with failure when any enrichment pass reports a non-fatal error during --build-compendium or "
         "--enrich-compendium"));
     addActionOption(QCommandLineOption(
@@ -224,11 +226,10 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         QCommandLineOption("export-retroarch-artwork", "Export remus-thumbnails blobs as libretro-style PNG tree"));
     addActionOption(QCommandLineOption("ingest-remote-artwork",
         "Download remote cover_url values (IGDB/ScreenScraper/LaunchBox) into remus-thumbnails blobs"));
-    addActionOption(QCommandLineOption("strict-offline",
+    addOption(QCommandLineOption("strict-offline",
         "Require remus-thumbnails manifest (or acquisition tree) for offline-capable artwork builds"));
-    addActionOption(
-        QCommandLineOption("skip-consolidate-thumbnails", "Skip consolidate pass during --build-compendium"));
-    addActionOption(QCommandLineOption(
+    addOption(QCommandLineOption("skip-consolidate-thumbnails", "Skip consolidate pass during --build-compendium"));
+    addOption(QCommandLineOption(
         "prune-acquisition-sources", "Remove libretro acquisition trees after successful consolidate"));
     addOption(QCommandLineOption("acquisition-dir",
         "Libretro thumbnails acquisition root (default: data/acquisition/libretro-thumbnails)", "path"));
@@ -241,7 +242,8 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         QCommandLineOption("thumbnail-snap-quality", "Lossy WebP quality for snaps (default: 85)", "quality", "85"));
     addOption(QCommandLineOption(
         "thumbnail-snap-lossless", "Transcode Named_Snaps with WebP lossless instead of lossy quality"));
-    addOption(QCommandLineOption("thumbnail-dry-run", "Consolidate/GC dry-run (no writes)"));
+    addOption(QCommandLineOption(
+        "thumbnail-dry-run", "Consolidate/GC dry-run (no writes; see also --dry-run-all for library operations)"));
     addOption(QCommandLineOption("retroarch-artwork-dir", "Export directory for --export-retroarch-artwork", "path"));
     addOption(QCommandLineOption(
         "artwork-source-id", "Source id filter for --ingest-remote-artwork (default: igdb)", "source"));
@@ -254,7 +256,7 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         "ingest-source", "Incrementally ingest a single DAT file into an existing compendium database", "dat-file"));
     addActionOption(QCommandLineOption("backfill-disc-sets",
         "Populate game_disc_sets and game_disc_tracks from existing source_items and signatures"));
-    addActionOption(
+    addOption(
         QCommandLineOption("force-disc-set-backfill", "Clear existing disc topology before --backfill-disc-sets"));
     addOption(QCommandLineOption(
         "source-id", "Source identifier for --ingest-source (default: derived from filename)", "id"));
@@ -309,8 +311,6 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addActionOption(QCommandLineOption("export-pbp", "Export PS1 CUE/ISO/M3U to PBP (requires PSXPackager)", "path"));
     addOption(QCommandLineOption("output-dir", "Output directory for conversions/extractions", "directory"));
 
-    addOption(QCommandLineOption(
-        Constants::Cli::Options::NO_INTERACTIVE, "Accepted for backwards compatibility (this is a CLI-only build)"));
     addOption(QCommandLineOption(QStringLiteral("log-file"),
         QStringLiteral("Write full CLI output to a log file (opt-in; specify a path to enable tee logging)"),
         QStringLiteral("path")));

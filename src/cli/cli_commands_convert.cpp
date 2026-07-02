@@ -61,6 +61,8 @@ int handleConvertRvzCommand(CliContext &ctx) {
         return 0;
     }
 
+    wireDiscConverterCliProgress(&converter, QStringLiteral("RVZ"));
+
     ConversionResult result = converter.convertIsoToRVZ(inputPath, outputPath);
     if (!printConversionResult(result, "RVZ"))
         return 1;
@@ -170,6 +172,8 @@ int handleConvertCsoCommand(CliContext &ctx) {
         return 0;
     }
 
+    wireDiscConverterCliProgress(&converter, QStringLiteral("CSO"));
+
     ConversionResult result = converter.convertIsoToCSO(inputPath, outputPath);
     if (!printConversionResult(result, "CSO"))
         return 1;
@@ -278,6 +282,8 @@ int handleConvertWbfsCommand(CliContext &ctx) {
         qInfo() << "[DRY-RUN] Would convert" << inputPath << "to" << outputPath;
         return 0;
     }
+
+    wireDiscConverterCliProgress(&converter, QStringLiteral("WBFS"));
 
     ConversionResult result = converter.convertIsoToWbfs(inputPath, outputPath);
     if (!printConversionResult(result, "WBFS"))

@@ -206,9 +206,9 @@ int handleEditMetadataCommand(CliContext &ctx) {
     const QString publisher = ctx.parser.isSet("set-publisher") ? ctx.parser.value("set-publisher") : QString();
 
     if (title.isEmpty() && region.isEmpty() && genre.isEmpty() && developer.isEmpty() && publisher.isEmpty()) {
-        qInfo() << "No metadata fields specified. Available flags:";
+        qCritical() << "No metadata fields specified. Available flags:";
         qInfo() << "  --set-title, --set-region, --set-genre, --set-developer, --set-publisher";
-        return 0;
+        return 1;
     }
 
     // updateGame: only the fields the user specified are written; empty strings keep existing values
