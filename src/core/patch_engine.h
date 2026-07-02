@@ -180,6 +180,8 @@ private:
     // Built-in IPS implementation (fallback if no Flips)
     PatchResult applyIPSBuiltin(const QString &basePath, const QString &patchPath, const QString &outputPath);
 
+    bool waitForExternalPatchTool(QProcess &process, int timeoutMs, bool *timedOut = nullptr);
+
     QString findExecutable(const QString &name);
     QString generateOutputPath(const QString &basePath, const QString &patchPath);
 };

@@ -1,5 +1,6 @@
 #include "patch_engine.h"
 #include "constants/constants.h"
+#include <QElapsedTimer>
 #include <QFile>
 #include <QFileInfo>
 #include <QProcess>
@@ -16,6 +17,37 @@
 #define qCritical() qCCritical(logCore)
 
 namespace Remus {
+
+bool PatchEngine::waitForExternalPatchTool(QProcess &process, int timeoutMs, bool *timedOut) {
+    if (timedOut) {
+        *timedOut = false;
+    }
+
+    QElapsedTimer elapsed;
+    elapsed.start();
+    int lastHeartbeatSec = 0;
+    while (process.state() == QProcess::Running) {
+        if (!process.waitForFinished(1000)) {
+            const int sec = static_cast<int>(elapsed.elapsed() / 1000);
+            if (sec >= lastHeartbeatSec + 5) {
+                lastHeartbeatSec = sec;
+                emit patchProgress(-sec);
+            }
+            if (elapsed.elapsed() >= timeoutMs) {
+                process.kill();
+                process.waitForFinished(3000);
+                if (timedOut) {
+                    *timedOut = true;
+                }
+                return false;
+            }
+            continue;
+        }
+        break;
+    }
+
+    return process.state() == QProcess::NotRunning;
+}
 
 PatchResult PatchEngine::applyIPS(const QString &basePath, const QString &patchPath, const QString &outputPath) {
     QString flips = getFlipsPath();
@@ -43,10 +75,11 @@ PatchResult PatchEngine::applyIPS(const QString &basePath, const QString &patchP
     process.setArguments({ "--apply", patchPath, basePath, outputPath });
 
     process.start();
-    if (!process.waitForFinished(Constants::Engines::Patch::EXTERNAL_TOOL_TIMEOUT_MS)) {
-        process.kill();
-        process.waitForFinished(3000);
-        result.error = QStringLiteral("Patch tool timed out");
+    bool timedOut = false;
+    if (!waitForExternalPatchTool(process, Constants::Engines::Patch::EXTERNAL_TOOL_TIMEOUT_MS, &timedOut)) {
+        if (timedOut) {
+            result.error = QStringLiteral("Patch tool timed out");
+        }
         QFile::remove(outputPath);
         return result;
     }
@@ -186,10 +219,11 @@ PatchResult PatchEngine::applyBPS(const QString &basePath, const QString &patchP
     process.setArguments({ "--apply", patchPath, basePath, outputPath });
 
     process.start();
-    if (!process.waitForFinished(Constants::Engines::Patch::EXTERNAL_TOOL_LARGE_TIMEOUT_MS)) {
-        process.kill();
-        process.waitForFinished(3000);
-        result.error = QStringLiteral("Patch tool timed out");
+    bool timedOut = false;
+    if (!waitForExternalPatchTool(process, Constants::Engines::Patch::EXTERNAL_TOOL_LARGE_TIMEOUT_MS, &timedOut)) {
+        if (timedOut) {
+            result.error = QStringLiteral("Patch tool timed out");
+        }
         return result;
     }
 
@@ -223,10 +257,11 @@ PatchResult PatchEngine::applyXDelta(const QString &basePath, const QString &pat
     process.setArguments({ "-d", "-s", basePath, patchPath, outputPath });
 
     process.start();
-    if (!process.waitForFinished(Constants::Engines::Patch::EXTERNAL_TOOL_XDELTA_TIMEOUT_MS)) {
-        process.kill();
-        process.waitForFinished(3000);
-        result.error = QStringLiteral("Patch tool timed out");
+    bool timedOut = false;
+    if (!waitForExternalPatchTool(process, Constants::Engines::Patch::EXTERNAL_TOOL_XDELTA_TIMEOUT_MS, &timedOut)) {
+        if (timedOut) {
+            result.error = QStringLiteral("Patch tool timed out");
+        }
         return result;
     }
 
@@ -264,10 +299,11 @@ PatchResult PatchEngine::applyPPF(const QString &basePath, const QString &patchP
     process.setArguments({ patchPath, outputPath });
 
     process.start();
-    if (!process.waitForFinished(Constants::Engines::Patch::EXTERNAL_TOOL_TIMEOUT_MS)) {
-        process.kill();
-        process.waitForFinished(3000);
-        result.error = QStringLiteral("Patch tool timed out");
+    bool timedOut = false;
+    if (!waitForExternalPatchTool(process, Constants::Engines::Patch::EXTERNAL_TOOL_TIMEOUT_MS, &timedOut)) {
+        if (timedOut) {
+            result.error = QStringLiteral("Patch tool timed out");
+        }
         QFile::remove(outputPath);
         return result;
     }

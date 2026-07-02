@@ -51,8 +51,8 @@ QString LibraryExporter::resolveOutputPath(const QString &format, const QString 
     return outputPath;
 }
 
-bool LibraryExporter::exportToFile(
-    Database &db, const QString &format, const QString &outputPath, const QStringList &systemFilters, QString *error) {
+bool LibraryExporter::exportToFile(Database &db, const QString &format, const QString &outputPath,
+    const QStringList &systemFilters, QString *error, ProgressCallback onProgress) {
     const QString normalized = format.trimmed().toLower();
     const QList<LibraryExportRow> rows = buildRows(db, systemFilters);
     if (rows.isEmpty()) {
@@ -60,6 +60,13 @@ bool LibraryExporter::exportToFile(
             *error = QStringLiteral("No matched files to export");
         return false;
     }
+
+    const int totalRows = rows.size();
+    auto reportProgress = [&](int current) {
+        if (onProgress) {
+            onProgress(current, totalRows);
+        }
+    };
 
     const QString resolvedPath = resolveOutputPath(normalized, outputPath);
     QFile file(resolvedPath);
@@ -73,12 +80,14 @@ bool LibraryExporter::exportToFile(
 
     if (normalized == Formats::RETROARCH) {
         QTextStream out(&file);
-        for (const auto &row : rows) {
+        for (int i = 0; i < rows.size(); ++i) {
+            const auto &row = rows.at(i);
             out << row.file.currentPath << "\n";
             out << (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << "\n";
             out << "DETECT\nDETECT\n";
             out << (row.file.crc32.isEmpty() ? "00000000" : row.file.crc32) << "|crc\n";
             out << db.getSystemDisplayName(row.file.systemId) << Files::PLAYLIST_EXTENSION << "\n";
+            reportProgress(i + 1);
         }
     } else if (normalized == Formats::EMUSTATION) {
         QTextStream out(&file);
@@ -91,7 +100,8 @@ bool LibraryExporter::exportToFile(
                 return d + QStringLiteral("0101T000000");
             return QString();
         };
-        for (const auto &row : rows) {
+        for (int i = 0; i < rows.size(); ++i) {
+            const auto &row = rows.at(i);
             const QString name
                 = (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename).toHtmlEscaped();
             out << "  <game>\n";
@@ -107,12 +117,14 @@ bool LibraryExporter::exportToFile(
             if (!esd.isEmpty())
                 out << "    <releasedate>" << esd << "</releasedate>\n";
             out << "  </game>\n";
+            reportProgress(i + 1);
         }
         out << "</gameList>\n";
     } else if (normalized == Formats::LAUNCHBOX) {
         QTextStream out(&file);
         out << "<LaunchBox>\n";
-        for (const auto &row : rows) {
+        for (int i = 0; i < rows.size(); ++i) {
+            const auto &row = rows.at(i);
             const QString title
                 = (!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename).toHtmlEscaped();
             out << "  <Game>\n";
@@ -121,6 +133,7 @@ bool LibraryExporter::exportToFile(
             out << "    <Region>" << row.match.region.toHtmlEscaped() << "</Region>\n";
             out << "    <Genre>" << row.match.genre.toHtmlEscaped() << "</Genre>\n";
             out << "  </Game>\n";
+            reportProgress(i + 1);
         }
         out << "</LaunchBox>\n";
     } else if (normalized == Formats::CSV) {
@@ -133,15 +146,18 @@ bool LibraryExporter::exportToFile(
             return s;
         };
         out << "file_id,title,system,path,region,confidence\n";
-        for (const auto &row : rows) {
+        for (int i = 0; i < rows.size(); ++i) {
+            const auto &row = rows.at(i);
             out << row.file.id << ","
                 << csvField(!row.match.gameTitle.isEmpty() ? row.match.gameTitle : row.file.filename) << ","
                 << csvField(db.getSystemDisplayName(row.file.systemId)) << "," << csvField(row.file.currentPath) << ","
                 << csvField(row.match.region) << "," << row.match.confidence << "\n";
+            reportProgress(i + 1);
         }
     } else if (normalized == Formats::JSON) {
         QJsonArray arr;
-        for (const auto &row : rows) {
+        for (int i = 0; i < rows.size(); ++i) {
+            const auto &row = rows.at(i);
             QJsonObject obj;
             obj["fileId"] = row.file.id;
             obj["title"] = row.match.gameTitle;
@@ -150,6 +166,7 @@ bool LibraryExporter::exportToFile(
             obj["region"] = row.match.region;
             obj["confidence"] = row.match.confidence;
             arr.append(obj);
+            reportProgress(i + 1);
         }
         file.write(QJsonDocument(arr).toJson());
     } else {

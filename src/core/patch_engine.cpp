@@ -282,6 +282,8 @@ PatchResult PatchEngine::apply(const QString &basePath, const PatchInfo &patch, 
         return result;
     }
 
+    emit patchProgress(0);
+
     QString output = outputPath.isEmpty() ? generateOutputPath(basePath, patch.path) : outputPath;
     result.outputPath = output;
 
@@ -314,6 +316,7 @@ PatchResult PatchEngine::apply(const QString &basePath, const PatchInfo &patch, 
     }
 
     if (result.success) {
+        emit patchProgress(100);
         emit patchComplete(result);
     } else {
         emit patchError(result.error);

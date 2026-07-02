@@ -1,7 +1,9 @@
 #include "disc_converter.h"
+#include <QElapsedTimer>
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
+#include <QProcess>
 
 namespace Remus {
 
@@ -25,7 +27,54 @@ ConversionResult DiscConverter::runToolConversion(const QString &toolPath, const
 
     qInfo() << "Running" << toolDisplayName << ":" << toolPath << args.join(" ");
 
-    ProcessResult processResult = runProcessTracked(toolPath, args, timeoutMs);
+    QProcess process;
+    m_process = &process;
+    m_cancelled = false;
+    process.start(toolPath, args);
+
+    ProcessResult processResult;
+    processResult.started = process.waitForStarted(10000);
+    if (!processResult.started) {
+        m_process = nullptr;
+        processResult.exitCode = -1;
+        if (processResult.stdError.isEmpty()) {
+            processResult.stdError = QStringLiteral("Failed to start process: %1").arg(toolPath);
+        }
+    } else {
+        QElapsedTimer elapsed;
+        elapsed.start();
+        int lastHeartbeatSec = 0;
+        while (process.state() == QProcess::Running) {
+            if (!process.waitForFinished(1000)) {
+                if (m_cancelled) {
+                    process.kill();
+                    process.waitForFinished(3000);
+                    break;
+                }
+                const int sec = static_cast<int>(elapsed.elapsed() / 1000);
+                if (sec >= lastHeartbeatSec + 5) {
+                    lastHeartbeatSec = sec;
+                    emit conversionProgress(0, QStringLiteral("%1 running… %2s elapsed").arg(toolDisplayName).arg(sec));
+                }
+                continue;
+            }
+            break;
+        }
+        processResult.finished = process.state() == QProcess::NotRunning;
+        if (!processResult.finished && !m_cancelled) {
+            process.kill();
+            process.waitForFinished(3000);
+            if (processResult.stdError.isEmpty()) {
+                processResult.stdError
+                    = QStringLiteral("Process timed out after %1 ms: %2").arg(timeoutMs).arg(toolPath);
+            }
+        }
+        processResult.exitCode = process.exitCode();
+        processResult.exitStatus = process.exitStatus();
+        processResult.stdOutput = QString::fromUtf8(process.readAllStandardOutput());
+        processResult.stdError = QString::fromUtf8(process.readAllStandardError());
+        m_process = nullptr;
+    }
     if (!processResult.started) {
         result.success = false;
         result.error = QString("Failed to start %1. Is it installed?").arg(toolDisplayName);

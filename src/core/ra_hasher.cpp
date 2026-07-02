@@ -4,11 +4,14 @@
 #include "constants/system_ids.h"
 #include "system_resolver.h"
 
+#include <QCoreApplication>
 #include <QCryptographicHash>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QProcess>
 #include <QRegularExpression>
+#include <QStandardPaths>
 
 namespace Remus {
 
@@ -111,7 +114,36 @@ namespace {
     QString resolvedExternalToolPath() {
         if (!s_externalToolPath.isEmpty())
             return s_externalToolPath;
-        return qEnvironmentVariable("REMUS_RAHASHER_PATH");
+
+        const QString envPath = qEnvironmentVariable("REMUS_RAHASHER_PATH");
+        if (!envPath.isEmpty())
+            return envPath;
+
+        for (const QString &name : { QStringLiteral("RAHasher"), QStringLiteral("rahasher") }) {
+            const QString inPath = QStandardPaths::findExecutable(name);
+            if (!inPath.isEmpty())
+                return inPath;
+        }
+
+        const QString dataRoot = qEnvironmentVariable("REMUS_DATA_DIR");
+        const QString appDir = QCoreApplication::instance() ? QCoreApplication::applicationDirPath() : QString();
+        const QStringList roots = {
+            dataRoot,
+            QDir::currentPath(),
+            appDir,
+            appDir + QStringLiteral("/.."),
+            appDir + QStringLiteral("/../.."),
+            appDir + QStringLiteral("/../../.."),
+        };
+        for (const QString &root : roots) {
+            if (root.isEmpty())
+                continue;
+            const QString candidate = QDir(root).filePath(QStringLiteral("data/tools/rahasher/RAHasher"));
+            if (QFileInfo::exists(candidate))
+                return QDir::cleanPath(candidate);
+        }
+
+        return { };
     }
 
     QString resolvedExternalSystemPath() {

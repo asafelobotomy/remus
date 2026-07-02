@@ -263,6 +263,10 @@ namespace {
 } // namespace
 
 QString resolveBundledCompendiumDbPath() {
+    if (qgetenv("REMUS_TEST_NO_BUNDLED_COMPENDIUM") == "1") {
+        return QString();
+    }
+
     const QString appDir = QCoreApplication::applicationDirPath();
     const QString cwd = QDir::currentPath();
     const QStringList candidates = {
