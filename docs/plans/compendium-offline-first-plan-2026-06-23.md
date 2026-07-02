@@ -113,16 +113,16 @@ Default build order (`cli_compendium_build_phases.cpp`):
 - `games.cover_url` populated mainly by **IGDB online** enrichment (migration 0010)
 - No `data/thumbnails/` mirror or offline artwork enricher
 
-### 2.4 Gaps vs goal
+### 2.4 Gaps vs goal (updated 2026-06-22)
 
-| Gap | Impact |
-|-----|--------|
-| No libretro-thumbnails acquisition | Box/snap/title art requires CDN at runtime |
-| LaunchBox not auto-downloaded | ~530 MB XML missing unless manual |
-| IGDB / ScreenScraper / RA only online during build | Build needs credentials + network |
-| No `--strict-offline` build mode | Cannot enforce zero-network compendium builds |
-| No acquisition manifest / coverage gates | Cannot verify mirrors complete before build |
-| `cover_url` only (no snap/title columns) | Limited artwork persistence in schema |
+| Gap | Status | Notes |
+|-----|--------|-------|
+| No libretro-thumbnails acquisition | **Partial** | `update_libretro_thumbnails.sh` optional in `update_compendium_offline_sources.sh` |
+| LaunchBox not auto-downloaded | **Done** | `update_launchbox_metadata.sh` auto-downloads Metadata.zip |
+| IGDB / ScreenScraper / RA only online during build | **By design** | Offline-first default; online gap-fill when creds exist |
+| No `--strict-offline` build mode | **Done** | `--strict-offline` + `offline-mirrors.json` preflight |
+| No acquisition manifest / coverage gates | **Done** | Full Tier A `offline-mirrors.json` (files, directories, artwork one_of) + preflight in `update_compendium_offline_sources.sh` |
+| `cover_url` only (no snap/title columns) | **Open** | migration 0012 `game_assets` adds blob refs |
 
 ---
 

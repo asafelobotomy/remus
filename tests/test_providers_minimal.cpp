@@ -82,11 +82,13 @@ void ProvidersMinimalTest::screenscraperRequiresAuth() {
 void ProvidersMinimalTest::thegamesdbHashUnsupported() {
     TheGamesDBProvider provider;
     QSignalSpy spy(&provider, &TheGamesDBProvider::errorOccurred);
+    QVERIFY(!provider.isAvailable());
     GameMetadata md = provider.getByHash("abcd", "NES");
     QVERIFY(md.title.isEmpty());
     // getByHash() is a silent no-op for TheGamesDB (no error signal emitted);
     // the orchestrator's supportsHashMatch flag prevents this path in normal use.
     QVERIFY(spy.isEmpty());
+    provider.setApiKey(QStringLiteral("test-api-key"));
     QVERIFY(provider.isAvailable());
 }
 

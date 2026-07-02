@@ -3,6 +3,7 @@
 ## Prerequisites
 
 ### Required Dependencies
+
 - **CMake** >= 3.16
 - **Qt 6 development files** (Core, Gui, Sql, Network, Concurrent, Quick, QML, Quick Controls 2, Quick Layouts, Quick Dialogs 2)
 - **C++17** compatible compiler (GCC 7+, Clang 5+)
@@ -27,12 +28,14 @@ sudo apt install build-essential cmake \
 ```
 
 #### Fedora
+
 ```bash
 sudo dnf install cmake qt6-qtbase-devel qt6-qtbase-private-devel qt6-qtdeclarative-devel \
   zlib-devel libarchive-devel qt6-qtkeychain-devel gcc-c++
 ```
 
 #### Arch Linux
+
 ```bash
 sudo pacman -S cmake qt6-base qt6-declarative zlib libarchive qt6-keychain gcc
 ```
@@ -40,6 +43,7 @@ sudo pacman -S cmake qt6-base qt6-declarative zlib libarchive qt6-keychain gcc
 ## Building from Source
 
 ### 1. Clone the repository
+
 ```bash
 cd ~/Documents/remus
 ```
@@ -53,12 +57,14 @@ bash scripts/setup_compendium_db.sh
 Creates `data/compendium/remus_compendium.db` (gitignored; systems/regions seeds only).
 
 ### 3. Create build directory
+
 ```bash
 mkdir -p build
 cd build
 ```
 
 ### 4. Configure with CMake
+
 ```bash
 cmake -S .. -B .
 ```
@@ -76,6 +82,7 @@ Presets: `default` → `build/`, `debug` → `build-debug/`, `asan` → `build-a
 The default configure builds both `remus-cli` and `remus-gui`. The legacy TUI remains archived under `archive/gui-tui/` and is not part of the active build.
 
 #### Optional build acceleration flags
+
 ```bash
 # Enable compiler cache (default ON when ccache is installed)
 cmake -DREMUS_ENABLE_CCACHE=ON ..
@@ -93,24 +100,29 @@ cmake -DREMUS_ENABLE_CXX20=ON ..
 #### Recommended build profiles (benchmark-backed)
 
 **Profile A — Fast clean builds (CI/rebuild-heavy sessions)**
+
 ```bash
 cmake -DREMUS_ENABLE_CCACHE=OFF \
   -DREMUS_ENABLE_PCH=ON \
   -DREMUS_ENABLE_UNITY_BUILD=ON \
   ..
 ```
+
 Use when repeatedly doing full clean builds; this profile gave the best clean-build speed in local benchmarks.
 
 **Profile B — Fast iterative rebuilds across fresh build directories**
+
 ```bash
 cmake -DREMUS_ENABLE_CCACHE=ON \
   -DREMUS_ENABLE_PCH=OFF \
   -DREMUS_ENABLE_UNITY_BUILD=OFF \
   ..
 ```
+
 Use when you create multiple build directories and recompile similar code. In this environment, `ccache` produced significant warm-build gains with PCH disabled.
 
 If Qt 6 is not found automatically, specify the path:
+
 ```bash
 cmake -DCMAKE_PREFIX_PATH=/usr/lib/qt6 ..
 ```
@@ -130,6 +142,7 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DREMUS_ENABLE_WARNINGS=ON
 ```
 
 ### 5. Build
+
 ```bash
 cmake --build . -j$(nproc)
 ```
@@ -168,12 +181,22 @@ bash scripts/build_compendium_full.sh
 
 The wrapper script:
 
-- Refreshes DATs via `scripts/update_dats.sh --all` (skip with `--skip-update`)
+- Refreshes offline inputs via `scripts/update_compendium_offline_sources.sh` (skip with `--skip-update`)
 - Generates `data/compendium/compendium-manifest-full.json`
 - Runs `remus-cli --build-compendium` with **manifest checksum verification** on every enabled DAT
 - **Fails** on unresolved merge conflicts unless you pass `--allow-unresolved-conflicts`
-- Runs `data/compendium/validation/0001_phase1_checks.sql` (skip with `--skip-validation`)
+- Runs validation tiers via `scripts/validate_compendium_tier.sh ci` (skip with `--skip-validation`; migrations always run unless `--skip-migrations`)
+- Runs warn-only artwork coverage via `scripts/validate_compendium_tier.sh artwork` after consolidate
 - Writes `data/compendium/remus_compendium.coverage.tsv`
+
+**Additional flags:** `--strict-offline` (Tier A mirror preflight + artwork manifest gate), `--force-enrichment`, `--recover`, `--allow-patch-skip`, `--skip-migrations`, `--skip-consolidate`.
+
+**Detached build** (survives terminal close; parent holds flock until completion):
+
+```bash
+bash scripts/run_compendium_full_build_detached.sh
+tail -f "${REMUS_COMPENDIUM_BUILD_LOG:-${TMPDIR:-/tmp}/remus_compendium_full_build.log}"
+```
 
 `collision.serial_multi_game` is scoped by `(serial_value, system_id)` to match the identity linker. If validation fails after a build, run `remus-cli --dedup-compendium` to prune region-mismatched serial rows and merge duplicate games sharing a serial on the same system.
 
@@ -220,38 +243,55 @@ These write versioned outputs to the repository root `dist/` directory:
 ### Scanning Commands
 
 #### Scan a directory
+
 ```bash
 ./remus-cli --scan ~/roms/NES
 ```
 
 #### Scan and calculate hashes
+
 ```bash
 ./remus-cli --scan ~/roms/NES --hash
 ```
 
 #### List scanned files by system
+
 ```bash
 ./remus-cli --list
 ```
 
 #### Use custom database location
+
 ```bash
 ./remus-cli --scan ~/roms/SNES --db ~/my-library.db --hash
+```
+
+#### Full library pipeline (consumer presets)
+
+```bash
+# Scan, hash, match, enrich, bundle, and organize with ES-DE defaults
+./remus-cli --library ~/roms --output ~/export --process-preset es-de
+
+# Same pipeline with explicit paths and dry-run preview
+./remus-cli --process ~/roms --process-output ~/export --dry-run-all
 ```
 
 ### Metadata Commands
 
 #### Search for a game by name
+
 ```bash
 ./remus-cli --search "Super Mario Bros" --system NES
 ```
 
 #### Search with TheGamesDB
+
 ```bash
 ./remus-cli --search "Final Fantasy" --provider thegamesdb
 ```
 
 #### Fetch metadata by hash (ScreenScraper)
+
 ```bash
 # Requires ScreenScraper account
 ./remus-cli --metadata 3337ec46 --system NES \
@@ -263,6 +303,7 @@ These write versioned outputs to the repository root `dist/` directory:
 ```
 
 #### Fetch metadata by hash (Hasheous - NO AUTH REQUIRED!)
+
 ```bash
 # FREE hash matching, no API key needed
 ./remus-cli --metadata 811b027eaf99c2def7b933c5208636de --provider hasheous
@@ -271,18 +312,21 @@ These write versioned outputs to the repository root `dist/` directory:
 ### Matching Commands
 
 #### Match files with intelligent provider fallback
+
 ```bash
 # Automatically tries: Hasheous → ScreenScraper → TheGamesDB → IGDB
 ./remus-cli --scan ~/roms/NES --hash --match
 ```
 
 #### Match with minimum confidence threshold
+
 ```bash
 # Only accept matches with 80% or higher confidence
 ./remus-cli --match --min-confidence 80
 ```
 
 #### Match with ScreenScraper authentication
+
 ```bash
 ./remus-cli --scan ~/roms --hash --match \
   --ss-user "username" \
@@ -304,6 +348,7 @@ These write versioned outputs to the repository root `dist/` directory:
 ```
 
 Expected output:
+
 ```
 Files by system:
 ─────────────────────────────────────
@@ -339,6 +384,7 @@ The CLI creates a SQLite database with the following tables:
 - **files**: ROM/disc files with hashes and metadata
 
 To inspect the database:
+
 ```bash
 sqlite3 remus.db
 sqlite> SELECT name, COUNT(*) FROM files JOIN systems ON files.system_id = systems.id GROUP BY name;
@@ -347,7 +393,9 @@ sqlite> SELECT name, COUNT(*) FROM files JOIN systems ON files.system_id = syste
 ## Troubleshooting
 
 ### Qt 6 not found
+
 If CMake cannot find Qt 6:
+
 ```bash
 # Find Qt installation
 find /usr -name "Qt6Config.cmake" 2>/dev/null
@@ -357,6 +405,7 @@ cmake -DCMAKE_PREFIX_PATH=/path/to/qt6 ..
 ```
 
 ### zlib not found
+
 ```bash
 # Ubuntu/Debian
 sudo apt install zlib1g-dev
@@ -368,13 +417,15 @@ sudo dnf install zlib-devel
 ## Metadata Providers
 
 ### ScreenScraper (Recommended)
+
 - **Hash-based matching**: ✅ (CRC32, MD5, SHA1)
 - **Authentication**: Required
 - **Rate limit**: 1 req/2s, 10k req/day
-- **Registration**: https://www.screenscraper.fr/inscription.php
+- **Registration**: <https://www.screenscraper.fr/inscription.php>
 - **Features**: Most comprehensive database, supports No-Intro/Redump hashes
 
 ### TheGamesDB
+
 - **Hash-based matching**: ❌ (name-based only)
 - **Authentication**: Optional API key
 - **Rate limit**: 1 req/s
@@ -382,6 +433,7 @@ sudo dnf install zlib-devel
 - **Features**: Good for name-based searches
 
 ### IGDB
+
 - **Hash-based matching**: ❌ (name-based only)
 - **Authentication**: Required (Twitch credentials)
 - **Rate limit**: 4 req/s
@@ -399,6 +451,7 @@ sudo dnf install zlib-devel
 Use the canonical repository-local test paths described in [../guides/TEST-DATA-POLICY.md](../guides/TEST-DATA-POLICY.md).
 
 To test with sample ROMs:
+
 ```bash
 # Create local ROM input directory
 mkdir -p roms/NES

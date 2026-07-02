@@ -1,6 +1,6 @@
 # Compendium Multi-Disc Hashes & SHA256 Bridges — Research Report
 
-**Date:** 2026-06-18  
+**Date:** 2026-06-18
 **Context:** Follow-up to the compendium build investigation (post `e937f9d`). Two items were
 deferred as P3/nice-to-have: **multi-disc hash ingest** and **SHA256 hash bridges**. This
 document captures codebase analysis, industry practice, and a recommended implementation path.
@@ -87,34 +87,16 @@ hash database.
 - [Redump Mega CD DAT example](https://github.com/libretro/libretro-database/blob/master/metadat/redump/Sega%20-%20Mega-CD%20-%20Sega%20CD.dat)
 - [Redump Dreamcast DAT example](https://github.com/libretro/libretro-database/blob/master/metadat/redump/Sega%20-%20Dreamcast.dat)
 
-### 2.3 Multi-track within one disc — real compendium gap
+### 2.3 Multi-track within one disc — implemented (2026)
 
 Redump CD games often have **one `game` block with many `rom` rows** (`.cue` + Track 01…N).
-`DatExtractor` collapses that to a single canonical track:
+`DatExtractor` now emits **one envelope per data track** via `dataTracksForBlock()` — meta
+extensions (`.cue`, `.m3u`, `.gdi`) are skipped; all data tracks are ingested.
 
-```cpp
-// src/metadata/compendium_dat_extractor.cpp
-// Group entries by gameName and select the canonical data-track per game.
-for (auto it = groups.cbegin(), end = groups.cend(); it != end; ++it)
-    canonical.append(it->size() == 1 ? it->first() : selectDataTrack(*it));
-```
+**Residual gap:** Existing databases may need `scripts/backfill_disc_sets.sh --force` to
+rebuild disc topology; some PSP/FDS sets may still lack track rows until a full re-ingest.
 
-`selectDataTrack` returns the **first non-meta** file (`.cue`, `.m3u`, `.gdi`, etc. are
-skipped). For a typical Redump entry that is **Track 01**. Hashes for Track 02+ never reach
-`game_signatures`.
-
-**Impact:** A ROM that verifies against Track 3's CRC/MD5/SHA1 will not match the compendium,
-even though Redump lists that track.
-
-**Test coverage today:** `test_compendium_dat_extractor.cpp::extractSelectsDataTrack` only
-asserts cue-vs-bin selection within one game block — not multi-track loss.
-
-**Shared-track caveat:** Redump sets sometimes share identical track files across unrelated
-titles (e.g. Saturn audio tracks). Hash linking is exact (`UNIQUE(hash_type, hash_value)`),
-so a shared track hash correctly resolves to whichever game ingested it first — this is
-expected Redump/ClrMamePro behavior, not a Remus-specific bug.
-
-- [Retool discussion on shared Redump tracks](https://github.com/unexpectedpanda/retool/discussions/318)
+**Test coverage:** `test_compendium_dat_extractor.cpp::extractMultiTrackKeepsAllDataTracks`.
 
 ---
 
@@ -342,14 +324,14 @@ Full implementation plan: [COMPENDIUM-DISC-SETS-PLAN.md](COMPENDIUM-DISC-SETS-PL
 
 | Topic | URL |
 |-------|-----|
-| Hasheous project | https://github.com/gaseous-project/hasheous |
-| Hasheous Swagger | https://hasheous.org/swagger/index.html |
-| PlayMatch | https://github.com/RetroRealm/playmatch |
-| RomM Hasheous array payload | https://github.com/rommapp/romm/pull/3498 |
-| RomM CHD/RVZ feature request | https://github.com/rommapp/romm/issues/2241 |
-| No-Intro SHA-256 field | https://wiki.no-intro.org/index.php?title=File_Convention |
-| CHD format notes | https://wiki.romcenter.com/wiki/doku.php?id=chd |
-| RomM metadata providers | https://docs.romm.app/latest/Getting-Started/Metadata-Providers/ |
+| Hasheous project | <https://github.com/gaseous-project/hasheous> |
+| Hasheous Swagger | <https://hasheous.org/swagger/index.html> |
+| PlayMatch | <https://github.com/RetroRealm/playmatch> |
+| RomM Hasheous array payload | <https://github.com/rommapp/romm/pull/3498> |
+| RomM CHD/RVZ feature request | <https://github.com/rommapp/romm/issues/2241> |
+| No-Intro SHA-256 field | <https://wiki.no-intro.org/index.php?title=File_Convention> |
+| CHD format notes | <https://wiki.romcenter.com/wiki/doku.php?id=chd> |
+| RomM metadata providers | <https://docs.romm.app/latest/Getting-Started/Metadata-Providers/> |
 
 ---
 

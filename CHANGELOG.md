@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- GUI `ErrorBanner` for global scan/hash/match errors; `AppController::showError()`
+- `docs/cli/EXIT-CODES.md` documenting CLI exit code contract
+- Settings note that compendium build/enrichment is CLI-only
+- Keyboard shortcuts: Ctrl+R (update library), Ctrl+M (match & enrich)
+
+### Changed
+
+- **Breaking:** Compendium modifier flags (`--force-full-rebuild`, enrichment toggles, thumbnail flags, etc.) are modifiers only and no longer satisfy the CLI action gate alone
+- **Breaking:** `--verify` and `--verify-set` exit `1` on mismatches or incomplete disc sets
+- **Breaking:** `--export` with no matched files and `--edit-metadata` without `--set-*` fields exit `1`
+- **Breaking:** Only one primary action per invocation (except scan pipeline companions and mod filter combos); conflicting combos exit `2`
+- **Breaking:** Removed no-op `--no-interactive` flag
+- GUI: scan cancel uses `scanCancelled` instead of error banner; run-all pipeline surfaces stage failures
+- GUI: artwork batch and verification run without blocking the event loop; verify uses a worker thread
+- Verify tab no longer duplicates DAT import (use Tools → DAT Import)
+
 ## [0.12.0] - 2026-06-19
 
 ### Added
@@ -198,7 +216,7 @@ Three critical improvements to offline ROM identification:
 
 ### Added - M10: Offline + Online Enhancement
 
-Phase 1: Offline ROM identification using local DAT files  
+Phase 1: Offline ROM identification using local DAT files
 Phase 2: Optional ScreenScraper free-tier integration with first-run wizard
 
 #### Phase 1: LocalDatabaseProvider (Offline ROM Identification)

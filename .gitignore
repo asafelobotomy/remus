@@ -105,6 +105,7 @@ data/compendium/*.report.json
 data/compendium/*.coverage.tsv
 data/compendium/*.disc-set-coverage.tsv
 data/compendium/*.progress.json
+data/compendium/.enrichment-inputs-fingerprint.json
 data/compendium/*.bootstrap-backup
 data/compendium/*.pre-rebuild-*.bak
 data/compendium/*.bak
@@ -174,6 +175,9 @@ data/mame/catver.ini
 
 # LaunchBox metadata (local install only; not redistributed)
 data/launchbox/Metadata.xml
+
+# Optional tooling binaries (install via scripts/install_rahasher.sh)
+data/tools/rahasher/
 
 # Patch/hack DATs (synced from libretro metadat/hacks by update_dats.sh)
 data/patches/**/*.dat
