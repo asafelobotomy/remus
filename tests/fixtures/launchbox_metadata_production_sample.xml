@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LaunchBox>
+  <Game>
+    <DatabaseID>12345</DatabaseID>
+    <Name>Super Mario 64</Name>
+    <Platform>Nintendo 64</Platform>
+    <Developer>Nintendo EAD</Developer>
+    <Publisher>Nintendo</Publisher>
+    <ReleaseDate>1996-09-26</ReleaseDate>
+    <Overview>Classic 3D platformer starring Mario.</Overview>
+    <Genre>Platform</Genre>
+    <MaxPlayers>1</MaxPlayers>
+    <ESRB>E</ESRB>
+  </Game>
+  <Game>
+    <DatabaseID>67890</DatabaseID>
+    <Name>The Legend of Zelda: Ocarina of Time</Name>
+    <Platform>Nintendo 64</Platform>
+    <Developer>Nintendo EAD</Developer>
+    <Publisher>Nintendo</Publisher>
+    <ReleaseDate>1998-11-21</ReleaseDate>
+    <Overview>Link's adventure across Hyrule.</Overview>
+    <Genre>Action Adventure</Genre>
+    <MaxPlayers>1</MaxPlayers>
+    <ESRB>E</ESRB>
+  </Game>
+</LaunchBox>

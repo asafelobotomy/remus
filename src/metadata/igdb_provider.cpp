@@ -86,6 +86,7 @@ bool IGDBProvider::authenticate() {
     m_tokenExpiry = QDateTime::currentDateTime().addSecs(expiresIn);
 
     m_authenticated = !m_accessToken.isEmpty();
+    HttpMetadataProvider::processNetworkEvents();
     return m_authenticated;
 }
 
@@ -268,7 +269,11 @@ IGDBProvider::ApiResponse IGDBProvider::makeRequest(const QString &endpoint, con
     request.setHeader(QNetworkRequest::ContentTypeHeader, "text/plain");
 
     QNetworkReply *reply = m_networkManager->post(request, body.toUtf8());
-    return waitForReply(reply, Constants::Network::IGDB_TIMEOUT_MS);
+    ApiResponse response = waitForReply(reply, Constants::Network::IGDB_TIMEOUT_MS);
+    if (!response.success) {
+        qWarning().noquote() << QStringLiteral("IGDB request failed (%1): %2").arg(endpoint, response.error);
+    }
+    return response;
 }
 
 GameMetadata IGDBProvider::parseGameJson(const QJsonObject &game) {

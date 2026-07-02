@@ -1,5 +1,8 @@
 #include "compendium_enrichment.h"
 #include "compendium_enrichment_sql.h"
+#include "compendium_enrichment_match_utils.h"
+#include "compendium_platform_index_cache.h"
+#include "compendium_progress.h"
 #include "../metadata/igdb_provider.h"
 #include "../metadata/http_metadata_provider.h"
 #include "../core/system_resolver.h"
@@ -43,26 +46,6 @@ namespace {
             .arg(colPrefix);
     }
 
-    // Returns the candidate with the greatest number of non-empty enrichable fields.
-    // Used to resolve title-collision ties in the IGDB index (multiple entries with
-    // the same normalized title, e.g. different regional variants of the same game).
-    const GameMetadata &bestCandidate(const QList<GameMetadata> &candidates) {
-        Q_ASSERT(!candidates.isEmpty());
-        int bestScore = -1;
-        int bestIdx = 0;
-        for (int i = 0; i < candidates.size(); ++i) {
-            const GameMetadata &c = candidates.at(i);
-            const int score = (!c.description.isEmpty() ? 1 : 0) + (!c.developer.isEmpty() ? 1 : 0)
-                + (!c.publisher.isEmpty() ? 1 : 0) + (!c.genres.isEmpty() ? 1 : 0) + (c.releaseDate.size() >= 4 ? 1 : 0)
-                + (c.rating > 0.0f ? 1 : 0) + (c.players > 0 ? 1 : 0);
-            if (score > bestScore) {
-                bestScore = score;
-                bestIdx = i;
-            }
-        }
-        return candidates.at(bestIdx);
-    }
-
     bool applyIgdbGameMetadata(QSqlDatabase &database, FactReplaceQueries &replaceQueries, QSqlQuery &updateQ,
         QSqlQuery &factQ, QSqlQuery &delQ, const FactInsertSpec &factSpec, const QString &gameId,
         const GameMetadata &gm, int &gamesEnriched, int &factsInserted, QString &error) {
@@ -103,8 +86,8 @@ namespace {
         auto insertFact
             = [&](const QString &field, const QString &value, const QString &type = QStringLiteral("text")) {
                   bool inserted = false;
-                  if (!insertGameFact(replaceQueries,
-                          delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("igdb"), &inserted))
+                  if (!insertGameFact(replaceQueries, delQ, factQ, factSpec, gameId, field, value, type, error,
+                          QStringLiteral("igdb"), &inserted))
                       return false;
                   if (inserted)
                       ++factsInserted;
@@ -119,8 +102,7 @@ namespace {
             && insertFact(QStringLiteral("release_date"), releaseDateStr)
             && insertFact(QStringLiteral("rating"), ratingStr, QStringLiteral("decimal"))
             && insertFact(QStringLiteral("players_max"), playersStr, QStringLiteral("integer"))
-            && insertFact(QStringLiteral("cover_url"), gm.boxArtUrl)
-            && insertFact(QStringLiteral("series"), gm.series)
+            && insertFact(QStringLiteral("cover_url"), gm.boxArtUrl) && insertFact(QStringLiteral("series"), gm.series)
             && insertFact(QStringLiteral("age_rating"), gm.ageRating)
             && insertFact(QStringLiteral("alternate_titles"), alternateTitlesJson(gm.alternateTitles));
         return factsOk;
@@ -134,9 +116,8 @@ bool enrichFromIGDB(
     factsInserted = 0;
 
     // Load credentials (JSON file beside DB, then REMUS_* env, keychain, QSettings).
-    const auto loadCredential = [&](const char *key) {
-        return CredentialManager::get(QString::fromLatin1(key), credentialsPath);
-    };
+    const auto loadCredential
+        = [&](const char *key) { return CredentialManager::get(QString::fromLatin1(key), credentialsPath); };
     const QString clientId = loadCredential("igdb/client_id");
     const QString clientSecret = loadCredential("igdb/client_secret");
     if (clientId.isEmpty() || clientSecret.isEmpty()) {
@@ -187,6 +168,14 @@ bool enrichFromIGDB(
     int systemsSkippedEmptyIndex = 0;
     int byIdGamesEnriched = 0;
     bool bulkCleared = false;
+
+    const QSet<QString> skipGameIds = loadGamesWithMinSourceFieldFacts(database, sourceId, 4, error);
+    if (!error.isEmpty())
+        return false;
+    if (!skipGameIds.isEmpty()) {
+        qInfo().noquote()
+            << QStringLiteral("[IGDB] Skipping %1 games already enriched by source").arg(skipGameIds.size());
+    }
 
     // Phase 1: targeted fetch for games that already have igdb_id from hash bridges.
     {
@@ -289,8 +278,17 @@ bool enrichFromIGDB(
             int callIdx = 0;
             for (const PendingIgdbGame &pending : pendingGames) {
                 ++callIdx;
+                if (skipGameIds.contains(pending.gameId)) {
+                    if (!batchWriter.onGameProcessed(error))
+                        return false;
+                    continue;
+                }
                 if (callIdx % 20 == 0)
                     HttpMetadataProvider::processNetworkEvents();
+                if (callIdx % 2500 == 0 || callIdx == pendingGames.size()) {
+                    reportCompendiumEnrichmentProgress(QStringLiteral("per_id_fetch"), callIdx, pendingGames.size(),
+                        QStringLiteral("%1 enriched").arg(byIdGamesEnriched), byIdGamesEnriched, factsInserted);
+                }
 
                 const GameMetadata gm = provider.getById(pending.igdbId);
                 if (gm.title.isEmpty()) {
@@ -299,8 +297,8 @@ bool enrichFromIGDB(
                     continue;
                 }
 
-                if (!applyIgdbGameMetadata(database, replaceQueries, updateQ, factQ, delQ, byIdFactSpec, pending.gameId, gm,
-                        byIdGamesEnriched, factsInserted, error)) {
+                if (!applyIgdbGameMetadata(database, replaceQueries, updateQ, factQ, delQ, byIdFactSpec, pending.gameId,
+                        gm, byIdGamesEnriched, factsInserted, error)) {
                     return false;
                 }
                 if (!batchWriter.onGameProcessed(error))
@@ -330,8 +328,8 @@ bool enrichFromIGDB(
         // Skip full platform download when this system only has rating gaps.
         {
             QSqlQuery bulkGapQ(database);
-            bulkGapQ.prepare(QStringLiteral("SELECT 1 FROM games WHERE system_id = ? AND (%1) LIMIT 1")
-                    .arg(igdbBulkGameGapSql()));
+            bulkGapQ.prepare(
+                QStringLiteral("SELECT 1 FROM games WHERE system_id = ? AND (%1) LIMIT 1").arg(igdbBulkGameGapSql()));
             bulkGapQ.addBindValue(sys.id);
             if (!bulkGapQ.exec()) {
                 error = QStringLiteral("IGDB bulk gap check for %1: %2").arg(sys.name, bulkGapQ.lastError().text());
@@ -362,16 +360,35 @@ bool enrichFromIGDB(
 
         // Bulk-fetch all IGDB games for this platform
         QHash<QString, QList<GameMetadata>> igdbIndex;
-        int offset = 0;
-        while (true) {
-            const QList<GameMetadata> page = provider.fetchGamesByPlatformSlug(igdbSlug, offset, PAGE_SIZE);
-            for (const GameMetadata &gm : page) {
+        QList<GameMetadata> cachedGames;
+        if (CompendiumPlatformIndexCache::loadPlatformIndex(QStringLiteral("igdb"), igdbSlug, cachedGames)) {
+            for (const GameMetadata &gm : cachedGames) {
                 if (!gm.title.isEmpty())
                     igdbIndex[normalizeMetadataTitle(gm.title)].append(gm);
             }
-            if (page.size() < PAGE_SIZE)
-                break;
-            offset += PAGE_SIZE;
+            reportCompendiumEnrichmentProgress(QStringLiteral("platform_index"), igdbIndex.size(), -1,
+                QStringLiteral("loaded %1 from disk cache").arg(cachedGames.size()));
+        } else {
+            QList<GameMetadata> fetched;
+            int offset = 0;
+            while (true) {
+                HttpMetadataProvider::processNetworkEvents();
+                const QList<GameMetadata> page = provider.fetchGamesByPlatformSlug(igdbSlug, offset, PAGE_SIZE);
+                fetched.append(page);
+                for (const GameMetadata &gm : page) {
+                    if (!gm.title.isEmpty())
+                        igdbIndex[normalizeMetadataTitle(gm.title)].append(gm);
+                }
+                if (offset > 0 && offset % 2500 == 0) {
+                    reportCompendiumEnrichmentProgress(QStringLiteral("platform_download"), offset, -1,
+                        QStringLiteral("%1 entries for %2").arg(igdbIndex.size()).arg(sys.name));
+                }
+                if (page.size() < PAGE_SIZE)
+                    break;
+                offset += PAGE_SIZE;
+            }
+            if (!fetched.isEmpty())
+                CompendiumPlatformIndexCache::storePlatformIndex(QStringLiteral("igdb"), igdbSlug, fetched);
         }
 
         if (igdbIndex.isEmpty()) {
@@ -454,8 +471,15 @@ bool enrichFromIGDB(
         }
 
         int sysEnriched = 0;
+        int sysProcessed = 0;
         while (gamesQ.next()) {
+            ++sysProcessed;
             const QString gameId = gamesQ.value(0).toString();
+            if (skipGameIds.contains(gameId)) {
+                if (!batchWriter.onGameProcessed(error))
+                    return false;
+                continue;
+            }
             const QString norm = normalizeMetadataTitle(gamesQ.value(1).toString());
             const auto it = igdbIndex.constFind(norm);
             if (it == igdbIndex.cend()) {
@@ -463,16 +487,20 @@ bool enrichFromIGDB(
                     return false;
                 continue;
             }
-            const GameMetadata &gm = bestCandidate(it.value());
+            const GameMetadata &gm = CompendiumEnrichmentMatchUtils::bestMetadataCandidate(it.value(), true);
 
-            if (!applyIgdbGameMetadata(
-                    database, replaceQueries, updateQ, factQ, delQ, factSpec, gameId, gm, gamesEnriched, factsInserted, error)) {
+            if (!applyIgdbGameMetadata(database, replaceQueries, updateQ, factQ, delQ, factSpec, gameId, gm,
+                    gamesEnriched, factsInserted, error)) {
                 return false;
             }
             if (updateQ.numRowsAffected() > 0)
                 ++sysEnriched;
             if (!batchWriter.onGameProcessed(error))
                 return false;
+            if (sysProcessed % 2500 == 0) {
+                reportCompendiumEnrichmentProgress(QStringLiteral("matching"), sysProcessed, -1,
+                    QStringLiteral("%1: %2 enriched").arg(sys.name).arg(sysEnriched), gamesEnriched, factsInserted);
+            }
         }
 
         if (!batchWriter.finish(error))

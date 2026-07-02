@@ -323,6 +323,8 @@ GameMetadata TheGamesDBProvider::parseGameJson(const QJsonObject &game) {
 }
 
 bool TheGamesDBProvider::isAvailable() {
+    if (m_apiKey.isEmpty())
+        return false;
     // Unavailable when the monthly request cap has been reached.
     if (m_monthlyRequestCount >= Constants::Network::THEGAMESDB_BLOCK_THRESHOLD) {
         return false;

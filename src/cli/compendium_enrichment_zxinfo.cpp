@@ -163,12 +163,12 @@ bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInse
 
     QSqlQuery updateQ(database);
     updateQ.prepare(QStringLiteral("UPDATE games SET "
-                                   "genre        = COALESCE(genre, ?), "
-                                   "developer    = COALESCE(developer, ?), "
-                                   "publisher    = COALESCE(publisher, ?), "
+                                   "genre        = COALESCE(NULLIF(genre, ''), ?), "
+                                   "developer    = COALESCE(NULLIF(developer, ''), ?), "
+                                   "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
                                    "release_year = COALESCE(release_year, ?), "
-                                   "release_date = COALESCE(release_date, ?), "
-                                   "description  = COALESCE(description, ?) "
+                                   "release_date = COALESCE(NULLIF(release_date, ''), ?), "
+                                   "description  = COALESCE(NULLIF(description, ''), ?) "
                                    "WHERE game_id = ?"));
 
     QSqlQuery factQ(database);
@@ -195,8 +195,8 @@ bool enrichFromZXInfo(QSqlDatabase &database, int &gamesEnriched, int &factsInse
     auto insertFact
         = [&](const QString &gameId, const QString &field, const QString &value, const QString &type) -> bool {
         bool inserted = false;
-        if (!insertGameFact(replaceQueries,
-                delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("zxinfo"), &inserted)) {
+        if (!insertGameFact(replaceQueries, delQ, factQ, factSpec, gameId, field, value, type, error,
+                QStringLiteral("zxinfo"), &inserted)) {
             return false;
         }
         if (inserted)

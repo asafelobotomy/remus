@@ -49,6 +49,11 @@ add_remus_test(test_matching_engine MatchingEngineTest
     LIBS Qt6::Test Qt6::Core remus-core
 )
 
+add_remus_test(test_title_similarity TitleSimilarityTest
+    SOURCES test_title_similarity.cpp
+    LIBS Qt6::Test Qt6::Core remus-core
+)
+
 add_remus_test(test_dat_parser DatParserTest
     SOURCES test_dat_parser.cpp
     LIBS Qt6::Test Qt6::Core remus-core
@@ -223,7 +228,7 @@ target_compile_definitions(test_compendium_sql_utilities PRIVATE
 add_remus_test(test_compendium_enrichment_sql_helpers CompendiumEnrichmentSqlHelpersTest
     SOURCES test_compendium_enrichment_sql_helpers.cpp
             ../src/cli/compendium_enrichment_sql.cpp
-    LIBS Qt6::Test Qt6::Core Qt6::Sql
+    LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata
 )
 
 add_remus_test(test_compendium_enrichment_local_smoke CompendiumEnrichmentLocalSmokeTest
@@ -237,6 +242,8 @@ add_remus_test(test_compendium_enrichment_local_smoke CompendiumEnrichmentLocalS
             ../src/cli/compendium_enrichment_launchbox.cpp
             ../src/cli/compendium_enrichment_thegamesdb.cpp
             ../src/cli/compendium_enrichment_sql.cpp
+            ../src/cli/compendium_platform_index_cache.cpp
+            ../src/cli/compendium_progress.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-metadata remus-core remus-services
 )
 
@@ -540,6 +547,14 @@ add_remus_test(test_compendium_build_plan CompendiumBuildPlanTest
             ../src/cli/compendium_enrichment_hasheous.cpp
             ../src/cli/compendium_enrichment_playmatch.cpp
             ../src/cli/compendium_enrichment_zxinfo.cpp
+            ../src/cli/compendium_enrichment_screenscraper.cpp
+            ../src/cli/compendium_enrichment_launchbox.cpp
+            ../src/cli/compendium_enrichment_wikidata.cpp
+            ../src/cli/compendium_enrichment_thegamesdb.cpp
+            ../src/cli/compendium_enrichment_thumbnails.cpp
+            ../src/cli/compendium_artwork_transcode.cpp
+            ../src/cli/compendium_cwebp_resolver.cpp
+            ../src/cli/compendium_artwork_blob_store.cpp
             ../src/cli/compendium_enrichment_sql.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-metadata remus-core remus-services
 )

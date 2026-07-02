@@ -1,6 +1,7 @@
 #include "compendium_enrichment.h"
 #include "compendium_artwork_blob_store.h"
 #include "compendium_enrichment_sql.h"
+#include "compendium_progress.h"
 
 #include <QDebug>
 #include <QSqlDatabase>
@@ -26,7 +27,7 @@ bool enrichFromRemusThumbnails(QSqlDatabase &database, int &gamesEnriched, int &
     SourceSpec source {
         QStringLiteral("remus-thumbnails"),
         QStringLiteral("Remus consolidated artwork"),
-        QStringLiteral("artwork"),
+        QStringLiteral("static-file"),
         QString(),
         true,
         15,
@@ -67,15 +68,18 @@ bool enrichFromRemusThumbnails(QSqlDatabase &database, int &gamesEnriched, int &
         return false;
     }
 
+    QSqlQuery updateQ(database);
+    updateQ.prepare(QStringLiteral("UPDATE games SET cover_url = ? WHERE game_id = ?"));
+
+    int processed = 0;
     while (gamesQ.next()) {
+        ++processed;
         const QString gameId = gamesQ.value(0).toString();
         const QString storagePath = gamesQ.value(1).toString();
         if (gameId.isEmpty() || storagePath.isEmpty()) {
             continue;
         }
 
-        QSqlQuery updateQ(database);
-        updateQ.prepare(QStringLiteral("UPDATE games SET cover_url = ? WHERE game_id = ?"));
         updateQ.addBindValue(storagePath);
         updateQ.addBindValue(gameId);
         if (!updateQ.exec()) {
@@ -95,6 +99,10 @@ bool enrichFromRemusThumbnails(QSqlDatabase &database, int &gamesEnriched, int &
         if (!batchWriter.onGameProcessed(error)) {
             return false;
         }
+        if (processed % 1000 == 0) {
+            reportCompendiumEnrichmentProgress(QStringLiteral("linking"), processed, -1,
+                QStringLiteral("%1 covers linked").arg(gamesEnriched), gamesEnriched, factsInserted);
+        }
     }
 
     return batchWriter.finish(error);
@@ -112,6 +120,9 @@ bool ingestRemoteCoverArtIntoBlobStore(QSqlDatabase &database, const QString &re
         error = gamesQ.lastError().text();
         return false;
     }
+
+    QSqlQuery updateQ(database);
+    updateQ.prepare(QStringLiteral("UPDATE games SET cover_url = ? WHERE game_id = ?"));
 
     while (gamesQ.next()) {
         const QString gameId = gamesQ.value(0).toString();
@@ -132,8 +143,6 @@ bool ingestRemoteCoverArtIntoBlobStore(QSqlDatabase &database, const QString &re
             return false;
         }
 
-        QSqlQuery updateQ(database);
-        updateQ.prepare(QStringLiteral("UPDATE games SET cover_url = ? WHERE game_id = ?"));
         updateQ.addBindValue(blob.storagePath);
         updateQ.addBindValue(gameId);
         if (!updateQ.exec()) {

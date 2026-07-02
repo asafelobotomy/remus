@@ -245,8 +245,8 @@ bool enrichFromWikidata(QSqlDatabase &database, int &gamesEnriched, int &factsIn
  * Matches by platform + ROM filename from source_items.payload_json.rom_name.
  * Skipped silently when @p metadataXmlPath is absent.
  */
-bool enrichFromLaunchBox(
-    QSqlDatabase &database, const QString &metadataXmlPath, int &gamesEnriched, int &factsInserted, QString &error);
+bool enrichFromLaunchBox(QSqlDatabase &database, const QString &metadataXmlPath, int &gamesEnriched, int &factsInserted,
+    QString &error, const QStringList &gapFieldFilter = { });
 
 /**
  * @brief Gap-fill cover_url and game_facts from consolidated remus-thumbnails game_assets rows.

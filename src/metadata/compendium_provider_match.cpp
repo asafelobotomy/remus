@@ -184,6 +184,10 @@ QList<CompendiumMultiSignalMatch> CompendiumProvider::matchROM(const ROMSignals 
         const QString normalizedMd5 = input.md5.trimmed().toLower();
         lookupHashCandidates(db, QStringLiteral("md5"), normalizedMd5, systemId, matches, matchedVia);
     }
+    if (matches.isEmpty() && !input.sha256.isEmpty()) {
+        const QString normalizedSha256 = input.sha256.trimmed().toLower();
+        lookupHashCandidates(db, QStringLiteral("sha256"), normalizedSha256, systemId, matches, matchedVia);
+    }
     if (matches.isEmpty() && !input.sha1.isEmpty()) {
         const QString normalizedSha1 = input.sha1.trimmed().toLower();
         lookupHashCandidates(db, QStringLiteral("sha1"), normalizedSha1, systemId, matches, matchedVia);

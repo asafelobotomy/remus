@@ -1,5 +1,6 @@
 #include "compendium_enrichment.h"
 #include "compendium_enrichment_sql.h"
+#include "compendium_progress.h"
 #include "../core/system_resolver.h"
 #include "../metadata/http_metadata_provider.h"
 #include "../metadata/screenscraper_provider.h"
@@ -142,8 +143,11 @@ bool enrichFromScreenScraper(QSqlDatabase &database, const QString &credentialsP
             continue;
         ++apiCallsNeeded;
         ++apiCallsPerformed;
-        if (apiCallsPerformed % 50 == 0)
+        if (apiCallsPerformed % 50 == 0) {
             HttpMetadataProvider::processNetworkEvents();
+            reportCompendiumEnrichmentProgress(QStringLiteral("api_lookup"), apiCallsPerformed, pending.size(),
+                QStringLiteral("%1 matched").arg(matchedMetadata.size()));
+        }
 
         const GameMetadata metadata = provider.getByHash(hash, game.systemName);
         if (!metadata.title.isEmpty())

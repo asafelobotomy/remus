@@ -270,6 +270,7 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator, const QStrin
                     romSignals.crc32 = crc32;
                     romSignals.md5 = md5;
                     romSignals.sha1 = sha1;
+                    romSignals.sha256 = sha256FromPrimaryHash(hash);
                     romSignals.contentSha1 = contentSha1;
                     romSignals.filename = name;
                     romSignals.fileSize = fileSize;
@@ -699,8 +700,8 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash, const
     return accumulator;
 }
 
-ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(const QString &id, const QString &system,
-    const QString &providerName, const QMap<QString, QString> &externalIds) {
+ArtworkUrls ProviderOrchestrator::getArtworkWithFallback(
+    const QString &id, const QString &system, const QString &providerName, const QMap<QString, QString> &externalIds) {
     Q_UNUSED(system);
 
     if (m_cache) {

@@ -82,6 +82,7 @@ namespace Compendium {
         int factsCreated = 0;
         int resolvedFields = 0;
         int unresolvedConflicts = 0;
+        int titleFieldsResolved = 0;
         int skippedDisabled = 0;
         int collisionHashSkipped = 0;
         int discSetsCreated = 0;

@@ -1,5 +1,8 @@
 #include "compendium_enrichment.h"
 #include "compendium_enrichment_sql.h"
+#include "compendium_enrichment_match_utils.h"
+#include "compendium_platform_index_cache.h"
+#include "compendium_progress.h"
 #include "../metadata/thegamesdb_provider.h"
 #include "../metadata/http_metadata_provider.h"
 #include "../core/system_resolver.h"
@@ -24,30 +27,7 @@ namespace CompendiumEnrichment {
 
 namespace {
 
-    static const char kMetadataGapSql[] = "genre IS NULL OR TRIM(genre) = '' "
-                                          "   OR developer IS NULL OR TRIM(developer) = '' "
-                                          "   OR publisher IS NULL OR TRIM(publisher) = '' "
-                                          "   OR release_year IS NULL "
-                                          "   OR release_date IS NULL OR TRIM(release_date) = '' "
-                                          "   OR description IS NULL OR TRIM(description) = '' "
-                                          "   OR players_max IS NULL ";
-
-    const GameMetadata &bestTheGamesDbCandidate(const QList<GameMetadata> &candidates) {
-        Q_ASSERT(!candidates.isEmpty());
-        int bestScore = -1;
-        int bestIdx = 0;
-        for (int i = 0; i < candidates.size(); ++i) {
-            const GameMetadata &c = candidates.at(i);
-            const int score = (!c.description.isEmpty() ? 1 : 0) + (!c.developer.isEmpty() ? 1 : 0)
-                + (!c.publisher.isEmpty() ? 1 : 0) + (!c.genres.isEmpty() ? 1 : 0) + (c.releaseDate.size() >= 4 ? 1 : 0)
-                + (c.players > 0 ? 1 : 0);
-            if (score > bestScore) {
-                bestScore = score;
-                bestIdx = i;
-            }
-        }
-        return candidates.at(bestIdx);
-    }
+    using CompendiumEnrichmentMatchUtils::bestMetadataCandidate;
 
     bool applyTheGamesDbMetadata(QSqlDatabase &database, FactReplaceQueries &replaceQueries, QSqlQuery &updateQ,
         QSqlQuery &factQ, QSqlQuery &delQ, const FactInsertSpec &factSpec, const QString &gameId,
@@ -107,8 +87,11 @@ bool enrichFromTheGamesDB(
 
     TheGamesDBProvider provider;
     const QString apiKey = CredentialManager::get(QStringLiteral("thegamesdb/api_key"), credentialsPath);
-    if (!apiKey.isEmpty())
-        provider.setApiKey(apiKey);
+    if (apiKey.isEmpty()) {
+        qInfo() << "[TheGamesDB] API key not configured — enrichment skipped";
+        return true;
+    }
+    provider.setApiKey(apiKey);
 
     if (!provider.isAvailable()) {
         qWarning() << "[TheGamesDB] Monthly request budget exhausted — enrichment skipped";
@@ -120,7 +103,7 @@ bool enrichFromTheGamesDB(
                                   "JOIN systems s ON s.system_id = g.system_id "
                                   "WHERE %1 "
                                   "ORDER BY s.display_name")
-                .arg(QLatin1String(kMetadataGapSql)))) {
+                .arg(QLatin1String(kGameMetadataGapSql)))) {
         error = QStringLiteral("Query systems for TheGamesDB: %1").arg(sysQ.lastError().text());
         return false;
     }
@@ -143,6 +126,14 @@ bool enrichFromTheGamesDB(
     const QString snapshotId = QStringLiteral("thegamesdb-bulk");
     bool bulkCleared = false;
 
+    const QSet<QString> skipGameIds = loadGamesWithMinSourceFieldFacts(database, sourceId, 4, error);
+    if (!error.isEmpty())
+        return false;
+    if (!skipGameIds.isEmpty()) {
+        qInfo().noquote()
+            << QStringLiteral("[TheGamesDB] Skipping %1 games already enriched by source").arg(skipGameIds.size());
+    }
+
     for (const SysInfo &sys : systems) {
         if (!provider.isAvailable()) {
             qWarning() << "[TheGamesDB] Monthly request budget reached — stopping early";
@@ -156,10 +147,10 @@ bool enrichFromTheGamesDB(
             continue;
 
         QSqlQuery pendingQ(database);
-        pendingQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games "
-                                        "WHERE system_id = ? AND (%1) "
-                                        "ORDER BY game_id")
-                .arg(QLatin1String(kMetadataGapSql)));
+        pendingQ.prepare(QStringLiteral("SELECT g.game_id, g.canonical_title FROM games g "
+                                        "WHERE g.system_id = ? AND (%1) "
+                                        "ORDER BY g.game_id")
+                .arg(QLatin1String(kGameMetadataGapSql)));
         pendingQ.addBindValue(sys.id);
         if (!pendingQ.exec()) {
             error = QStringLiteral("Query TheGamesDB candidates for %1: %2").arg(sys.name, pendingQ.lastError().text());
@@ -179,16 +170,34 @@ bool enrichFromTheGamesDB(
             continue;
 
         QHash<QString, QList<GameMetadata>> tgdbIndex;
-        int page = 1;
-        while (provider.isAvailable()) {
-            const QList<GameMetadata> pageGames = provider.fetchGamesByPlatformId(platformId, page);
-            if (pageGames.isEmpty())
-                break;
-            for (const GameMetadata &gm : pageGames) {
+        QList<GameMetadata> cachedGames;
+        if (CompendiumPlatformIndexCache::loadPlatformIndex(QStringLiteral("thegamesdb"), platformId, cachedGames)) {
+            for (const GameMetadata &gm : cachedGames) {
                 if (!gm.title.isEmpty())
                     tgdbIndex[normalizeMetadataTitle(gm.title)].append(gm);
             }
-            ++page;
+            reportCompendiumEnrichmentProgress(QStringLiteral("platform_index"), tgdbIndex.size(), pending.size(),
+                QStringLiteral("loaded %1 from disk cache").arg(cachedGames.size()));
+        } else {
+            QList<GameMetadata> fetched;
+            int page = 1;
+            while (provider.isAvailable()) {
+                const QList<GameMetadata> pageGames = provider.fetchGamesByPlatformId(platformId, page);
+                if (pageGames.isEmpty())
+                    break;
+                fetched.append(pageGames);
+                for (const GameMetadata &gm : pageGames) {
+                    if (!gm.title.isEmpty())
+                        tgdbIndex[normalizeMetadataTitle(gm.title)].append(gm);
+                }
+                if (page % 5 == 0) {
+                    reportCompendiumEnrichmentProgress(QStringLiteral("platform_download"), page, -1,
+                        QStringLiteral("%1 entries for %2").arg(tgdbIndex.size()).arg(sys.name));
+                }
+                ++page;
+            }
+            if (!fetched.isEmpty())
+                CompendiumPlatformIndexCache::storePlatformIndex(QStringLiteral("thegamesdb"), platformId, fetched);
         }
 
         if (tgdbIndex.isEmpty()) {
@@ -255,7 +264,14 @@ bool enrichFromTheGamesDB(
         EnrichmentBatchWriter batchWriter(database);
 
         int matched = 0;
+        int processed = 0;
         for (const PendingGame &game : pending) {
+            ++processed;
+            if (skipGameIds.contains(game.gameId)) {
+                if (!batchWriter.onGameProcessed(error))
+                    return false;
+                continue;
+            }
             const auto candidates = tgdbIndex.value(normalizeMetadataTitle(game.title));
             if (candidates.isEmpty()) {
                 if (!batchWriter.onGameProcessed(error))
@@ -263,7 +279,7 @@ bool enrichFromTheGamesDB(
                 continue;
             }
 
-            const GameMetadata &gm = bestTheGamesDbCandidate(candidates);
+            const GameMetadata &gm = bestMetadataCandidate(candidates);
             if (!applyTheGamesDbMetadata(database, replaceQueries, updateQ, factQ, delQ, factSpec, game.gameId, gm,
                     gamesEnriched, factsInserted, error)) {
                 return false;
@@ -271,6 +287,10 @@ bool enrichFromTheGamesDB(
             ++matched;
             if (!batchWriter.onGameProcessed(error))
                 return false;
+            if (processed % 2500 == 0 || processed == pending.size()) {
+                reportCompendiumEnrichmentProgress(QStringLiteral("matching"), processed, pending.size(),
+                    QStringLiteral("%1 matched").arg(matched), gamesEnriched, factsInserted);
+            }
         }
 
         if (!batchWriter.finish(error))

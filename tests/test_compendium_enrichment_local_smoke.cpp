@@ -159,6 +159,9 @@ private slots:
     void igdbMissingCredentials_skipsWithoutWrites();
     void launchBoxMissingFile_skipsWithoutWrites();
     void launchBoxFixture_enrichesLinkedGame();
+    void launchBoxProductionFixture_enrichesByTitle();
+    void launchBoxSkipAfterFourSourceFacts();
+    void gametdbEmptyStringGenre_fillsGenre();
     void theGamesDbMissingBudget_skipsWithoutWrites();
     void gametdbTitleStripMatches_enrichesGame();
     void knownSourceKeys_noBlankNoDuplicates();
@@ -404,17 +407,20 @@ void CompendiumEnrichmentLocalSmokeTest::launchBoxFixture_enrichesLinkedGame() {
         QVERIFY(createLaunchBoxSchema(db));
 
         const int systemId = Constants::Systems::ID_ZX_SPECTRUM;
-        QVERIFY(execSql(db, QStringLiteral("INSERT INTO systems (system_id, display_name) VALUES (%1, 'ZX Spectrum')")
-                            .arg(systemId)));
-        QVERIFY(execSql(db, QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title) "
-                                            "VALUES ('g-jsw', %1, 'Jet Set Willy')")
-                            .arg(systemId)));
-        QVERIFY(execSql(db, QStringLiteral("INSERT INTO source_items (source_id, external_key, payload_json) "
-                                            "VALUES ('test-dat', 'rom-jsw', "
-                                            "'{\"rom_name\":\"Jet Set Willy (1984)(Software Projects).tzx\"}')")));
-        QVERIFY(execSql(db, QStringLiteral("INSERT INTO game_signatures "
-                                            "(game_id, hash_type, hash_value, source_entry_key) "
-                                            "VALUES ('g-jsw', 'crc32', 'deadbeef', 'rom-jsw')")));
+        QVERIFY(execSql(db,
+            QStringLiteral("INSERT INTO systems (system_id, display_name) VALUES (%1, 'ZX Spectrum')").arg(systemId)));
+        QVERIFY(execSql(db,
+            QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title) "
+                           "VALUES ('g-jsw', %1, 'Jet Set Willy')")
+                .arg(systemId)));
+        QVERIFY(execSql(db,
+            QStringLiteral("INSERT INTO source_items (source_id, external_key, payload_json) "
+                           "VALUES ('test-dat', 'rom-jsw', "
+                           "'{\"rom_name\":\"Jet Set Willy (1984)(Software Projects).tzx\"}')")));
+        QVERIFY(execSql(db,
+            QStringLiteral("INSERT INTO game_signatures "
+                           "(game_id, hash_type, hash_value, source_entry_key) "
+                           "VALUES ('g-jsw', 'crc32', 'deadbeef', 'rom-jsw')")));
 
         int games = 0;
         int facts = 0;
@@ -430,6 +436,142 @@ void CompendiumEnrichmentLocalSmokeTest::launchBoxFixture_enrichesLinkedGame() {
         QCOMPARE(q.value(0).toString(), QStringLiteral("Software Projects"));
         QCOMPARE(q.value(1).toString(), QStringLiteral("Platform"));
         QCOMPARE(q.value(2).toInt(), 1984);
+
+        db.close();
+    }
+    QSqlDatabase::removeDatabase(connectionName);
+}
+
+void CompendiumEnrichmentLocalSmokeTest::launchBoxProductionFixture_enrichesByTitle() {
+    const QString xmlPath = fixturePath(QStringLiteral("launchbox_metadata_production_sample.xml"));
+    QVERIFY2(!xmlPath.isEmpty(), "LaunchBox production fixture not found");
+
+    const QString connectionName = QStringLiteral("compendium_local_smoke_launchbox_production");
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        db.setDatabaseName(QStringLiteral(":memory:"));
+        QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+        QVERIFY(createLaunchBoxSchema(db));
+
+        const int systemId = Constants::Systems::ID_N64;
+        QVERIFY(execSql(db,
+            QStringLiteral("INSERT INTO systems (system_id, display_name) VALUES (%1, 'Nintendo 64')").arg(systemId)));
+        QVERIFY(execSql(db,
+            QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title) "
+                           "VALUES ('g-mario', %1, 'Super Mario 64 (USA)')")
+                .arg(systemId)));
+
+        int games = 0;
+        int facts = 0;
+        QString error;
+        const bool ok = CompendiumEnrichment::enrichFromLaunchBox(db, xmlPath, games, facts, error);
+        QVERIFY2(ok, qPrintable(error));
+        QCOMPARE(games, 1);
+        QVERIFY(facts > 0);
+
+        QSqlQuery q(db);
+        QVERIFY(q.exec(QStringLiteral("SELECT genre, developer FROM games WHERE game_id = 'g-mario'")));
+        QVERIFY(q.next());
+        QCOMPARE(q.value(0).toString(), QStringLiteral("Platform"));
+        QCOMPARE(q.value(1).toString(), QStringLiteral("Nintendo EAD"));
+
+        QVERIFY(q.exec(QStringLiteral("SELECT field_value FROM game_facts "
+                                      "WHERE game_id = 'g-mario' AND field_name = 'launchbox_id'")));
+        QVERIFY(q.next());
+        QCOMPARE(q.value(0).toString(), QStringLiteral("12345"));
+
+        db.close();
+    }
+    QSqlDatabase::removeDatabase(connectionName);
+}
+
+void CompendiumEnrichmentLocalSmokeTest::launchBoxSkipAfterFourSourceFacts() {
+    const QString xmlPath = fixturePath(QStringLiteral("launchbox_metadata_production_sample.xml"));
+    QVERIFY2(!xmlPath.isEmpty(), "LaunchBox production fixture not found");
+
+    const QString connectionName = QStringLiteral("compendium_local_smoke_launchbox_skip");
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        db.setDatabaseName(QStringLiteral(":memory:"));
+        QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+        QVERIFY(createLaunchBoxSchema(db));
+
+        const int systemId = Constants::Systems::ID_N64;
+        QVERIFY(execSql(db,
+            QStringLiteral("INSERT INTO systems (system_id, display_name) VALUES (%1, 'Nintendo 64')").arg(systemId)));
+        QVERIFY(execSql(db,
+            QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title, genre) "
+                           "VALUES ('g-mario', %1, 'Super Mario 64 (USA)', '')")
+                .arg(systemId)));
+        for (const QString &field : { QStringLiteral("genre"), QStringLiteral("developer"), QStringLiteral("publisher"),
+                 QStringLiteral("description") }) {
+            QVERIFY(execSql(db,
+                QStringLiteral("INSERT INTO game_facts "
+                               "(game_id, field_name, field_value, value_type, source_id) "
+                               "VALUES ('g-mario', '%1', 'x', 'text', 'launchbox')")
+                    .arg(field)));
+        }
+
+        int games = 0;
+        int facts = 0;
+        QString error;
+        const bool ok = CompendiumEnrichment::enrichFromLaunchBox(db, xmlPath, games, facts, error);
+        QVERIFY2(ok, qPrintable(error));
+        QCOMPARE(games, 0);
+        QCOMPARE(facts, 0);
+        QCOMPARE(scalarInt(db, QStringLiteral("SELECT COUNT(*) FROM sources")), 0);
+
+        db.close();
+    }
+    QSqlDatabase::removeDatabase(connectionName);
+}
+
+void CompendiumEnrichmentLocalSmokeTest::gametdbEmptyStringGenre_fillsGenre() {
+    QTemporaryDir tempDir;
+    QVERIFY(tempDir.isValid());
+
+    const QString xmlPath = tempDir.filePath(QStringLiteral("wiitdb.xml"));
+    QFile xmlFile(xmlPath);
+    QVERIFY(xmlFile.open(QIODevice::WriteOnly | QIODevice::Text));
+    QTextStream out(&xmlFile);
+    out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        << "<datafile>\n"
+        << "<game name=\"Bar Game (USA)\">\n"
+        << "  <id>BGME</id>\n"
+        << "  <type>WiiU</type>\n"
+        << "  <region>NTSC-U</region>\n"
+        << "  <locale lang=\"EN\"><title>Bar Game</title></locale>\n"
+        << "  <genre>puzzle</genre>\n"
+        << "</game>\n"
+        << "</datafile>\n";
+    out.flush();
+    xmlFile.close();
+
+    const QString connectionName = QStringLiteral("compendium_local_smoke_gametdb_empty_genre");
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+        db.setDatabaseName(QStringLiteral(":memory:"));
+        QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+        QVERIFY(createSchema(db));
+
+        QVERIFY(execSql(db,
+            QStringLiteral("INSERT INTO games (game_id, system_id, canonical_title, genre) "
+                           "VALUES ('g1', 56, 'Bar Game', '')")));
+        QVERIFY(execSql(db,
+            QStringLiteral("INSERT INTO game_signatures (game_id, hash_type, hash_value) "
+                           "VALUES ('g1', 'crc32', '00000001')")));
+
+        int games = 0;
+        int facts = 0;
+        QString error;
+        const bool ok = CompendiumEnrichment::enrichFromGameTDB(db, tempDir.path(), games, facts, error);
+        QVERIFY2(ok, qPrintable(error));
+        QVERIFY(games >= 1);
+
+        QSqlQuery q(db);
+        QVERIFY(q.exec(QStringLiteral("SELECT genre FROM games WHERE game_id = 'g1'")));
+        QVERIFY(q.next());
+        QCOMPARE(q.value(0).toString(), QStringLiteral("puzzle"));
 
         db.close();
     }
@@ -565,6 +707,7 @@ void CompendiumEnrichmentLocalSmokeTest::knownSourceKeys_containsAllExpectedEnri
         QStringLiteral("mame-catver"),
         QStringLiteral("mame-listxml"),
         QStringLiteral("zxinfo"),
+        QStringLiteral("remus-thumbnails"),
     };
 
     const QStringList actual = knownEnrichmentSourceKeys();

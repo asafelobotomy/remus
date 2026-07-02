@@ -68,6 +68,7 @@ namespace Compendium {
         if (n < 0)
             return false;
         total += n;
+        stats.titleFieldsResolved = n;
 
         // ── 2. developer / publisher — step 1: exact_hash_source_priority ─────────
         // Facts linked to a DAT source_item (hash-identified ingest) win first.

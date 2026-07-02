@@ -1,5 +1,6 @@
 #include "compendium_enrichment.h"
 #include "compendium_enrichment_sql.h"
+#include "compendium_progress.h"
 
 #include "../metadata/gametdb_provider.h"
 #include "../metadata/libretro_metadata_parser.h"
@@ -11,11 +12,11 @@
 
 namespace {
 
+using CompendiumEnrichmentSql::bulkClearSourceFactBlockers;
 using CompendiumEnrichmentSql::EnrichmentBatchWriter;
 using CompendiumEnrichmentSql::execPrepared;
 using CompendiumEnrichmentSql::FactInsertSpec;
 using CompendiumEnrichmentSql::FactReplaceQueries;
-using CompendiumEnrichmentSql::bulkClearSourceFactBlockers;
 using CompendiumEnrichmentSql::insertGameFact;
 using CompendiumEnrichmentSql::loadGamesWithMinSourceFieldFacts;
 using CompendiumEnrichmentSql::nullableInt;
@@ -46,7 +47,7 @@ bool enrichFromLibretroMetadata(
             SourceSpec {
                 sourceId,
                 QStringLiteral("Libretro Metadata DAT"),
-                QStringLiteral("libretro_metadata"),
+                QStringLiteral("static-file"),
                 QStringLiteral("https://creativecommons.org/licenses/by-sa/4.0/"),
                 /*attributionRequired=*/true,
                 /*priority=*/30,
@@ -60,16 +61,31 @@ bool enrichFromLibretroMetadata(
         return false;
     }
 
-    // Preload CRC32 hashes to avoid per-row correlated subqueries (O(N*M) → O(N+M))
+    // Preload CRC32, SHA1, MD5, SHA256 hashes to avoid per-row correlated subqueries (O(N*M) → O(N+M))
     QHash<QString, QString> gameCrc32;
+    QHash<QString, QString> gameSha1;
+    QHash<QString, QString> gameMd5;
+    QHash<QString, QString> gameSha256;
     {
         QSqlQuery q(database);
-        if (!q.exec(QStringLiteral("SELECT game_id, hash_value FROM game_signatures WHERE hash_type = 'crc32'"))) {
-            error = QStringLiteral("Load CRC32 hashes: %1").arg(q.lastError().text());
+        if (!q.exec(QStringLiteral("SELECT game_id, hash_type, hash_value FROM game_signatures "
+                                   "WHERE hash_type IN ('crc32', 'sha1', 'md5', 'sha256')"))) {
+            error = QStringLiteral("Load hashes for libretro enrichment: %1").arg(q.lastError().text());
             return false;
         }
-        while (q.next())
-            gameCrc32.insert(q.value(0).toString(), q.value(1).toString());
+        while (q.next()) {
+            const QString gid = q.value(0).toString();
+            const QString type = q.value(1).toString();
+            const QString val = q.value(2).toString();
+            if (type == QLatin1String("crc32"))
+                gameCrc32.insert(gid, val);
+            else if (type == QLatin1String("sha1"))
+                gameSha1.insert(gid, val);
+            else if (type == QLatin1String("md5"))
+                gameMd5.insert(gid, val);
+            else if (type == QLatin1String("sha256"))
+                gameSha256.insert(gid, val);
+        }
     }
 
     // Preload first serial per game
@@ -85,30 +101,32 @@ bool enrichFromLibretroMetadata(
     }
 
     QSqlQuery gameQuery(database);
-    if (!gameQuery.exec(QStringLiteral("SELECT game_id, canonical_title FROM games g "
-                                       "WHERE (genre IS NULL OR TRIM(genre) = '' "
-                                       "   OR developer IS NULL OR TRIM(developer) = '' "
-                                       "   OR publisher IS NULL OR TRIM(publisher) = '' "
-                                       "   OR players_max IS NULL "
-                                       "   OR release_year IS NULL "
-                                       "   OR release_date IS NULL OR TRIM(release_date) = '' "
-                                       "   OR description IS NULL OR TRIM(description) = '') "
-                                       "  AND (EXISTS (SELECT 1 FROM game_signatures gs "
-                                       "               WHERE gs.game_id = g.game_id AND gs.hash_type = 'crc32') "
-                                       "       OR EXISTS (SELECT 1 FROM game_serials s WHERE s.game_id = g.game_id))"))) {
+    if (!gameQuery.exec(
+            QStringLiteral("SELECT game_id, canonical_title FROM games g "
+                           "WHERE (genre IS NULL OR TRIM(genre) = '' "
+                           "   OR developer IS NULL OR TRIM(developer) = '' "
+                           "   OR publisher IS NULL OR TRIM(publisher) = '' "
+                           "   OR players_max IS NULL "
+                           "   OR release_year IS NULL "
+                           "   OR release_date IS NULL OR TRIM(release_date) = '' "
+                           "   OR description IS NULL OR TRIM(description) = '') "
+                           "  AND (EXISTS (SELECT 1 FROM game_signatures gs "
+                           "               WHERE gs.game_id = g.game_id AND gs.hash_type IN "
+                           "               ('crc32', 'sha1', 'md5', 'sha256')) "
+                           "       OR EXISTS (SELECT 1 FROM game_serials s WHERE s.game_id = g.game_id))"))) {
         error = QStringLiteral("Load games for libretro enrichment: %1").arg(gameQuery.lastError().text());
         return false;
     }
 
     QSqlQuery updateQuery(database);
     updateQuery.prepare(QStringLiteral("UPDATE games SET "
-                                       "genre        = COALESCE(genre, ?), "
-                                       "developer    = COALESCE(developer, ?), "
-                                       "publisher    = COALESCE(publisher, ?), "
+                                       "genre        = COALESCE(NULLIF(genre, ''), ?), "
+                                       "developer    = COALESCE(NULLIF(developer, ''), ?), "
+                                       "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
                                        "players_max  = COALESCE(players_max, ?), "
                                        "release_year = COALESCE(release_year, ?), "
-                                       "release_date = COALESCE(release_date, ?), "
-                                       "description  = COALESCE(description, ?) "
+                                       "release_date = COALESCE(NULLIF(release_date, ''), ?), "
+                                       "description  = COALESCE(NULLIF(description, ''), ?) "
                                        "WHERE game_id = ?"));
 
     QSqlQuery factQuery(database);
@@ -134,7 +152,8 @@ bool enrichFromLibretroMetadata(
     if (!error.isEmpty())
         return false;
     if (!skipGameIds.isEmpty()) {
-        qInfo().noquote() << QStringLiteral("[libretro] Skipping %1 games already enriched by source").arg(skipGameIds.size());
+        qInfo().noquote()
+            << QStringLiteral("[libretro] Skipping %1 games already enriched by source").arg(skipGameIds.size());
     }
 
     FactReplaceQueries replaceQueries(database);
@@ -154,11 +173,14 @@ bool enrichFromLibretroMetadata(
     int scanned = 0;
     while (gameQuery.next()) {
         ++scanned;
-        if (scanned % 10000 == 0) {
+        if (scanned % 2500 == 0) {
             qInfo().noquote() << QStringLiteral("[libretro] Scanned %1 gap games (%2 enriched, %3 facts)")
                                      .arg(scanned)
                                      .arg(gamesEnriched)
                                      .arg(factsInserted);
+            reportCompendiumEnrichmentProgress(QStringLiteral("scanning"), scanned, -1,
+                QStringLiteral("%1 enriched, %2 facts").arg(gamesEnriched).arg(factsInserted), gamesEnriched,
+                factsInserted);
         }
         const QString gameId = gameQuery.value(0).toString();
         if (skipGameIds.contains(gameId)) {
@@ -168,11 +190,23 @@ bool enrichFromLibretroMetadata(
         }
         const QString title = gameQuery.value(1).toString();
         const QString crc32 = gameCrc32.value(gameId);
+        const QString sha1 = gameSha1.value(gameId);
+        const QString md5 = gameMd5.value(gameId);
+        const QString sha256 = gameSha256.value(gameId);
         const QString serial = gameSerial.value(gameId);
 
         Remus::LibretroMetadata meta;
         if (!crc32.isEmpty())
             meta = parser.lookup(crc32);
+        if (meta.genre.isEmpty() && meta.developer.isEmpty() && meta.publisher.isEmpty() && meta.maxUsers == 0
+            && meta.releaseYear == 0 && meta.description.isEmpty() && !sha256.isEmpty())
+            meta = parser.lookup(sha256);
+        if (meta.genre.isEmpty() && meta.developer.isEmpty() && meta.publisher.isEmpty() && meta.maxUsers == 0
+            && meta.releaseYear == 0 && meta.description.isEmpty() && !sha1.isEmpty())
+            meta = parser.lookup(sha1);
+        if (meta.genre.isEmpty() && meta.developer.isEmpty() && meta.publisher.isEmpty() && meta.maxUsers == 0
+            && meta.releaseYear == 0 && meta.description.isEmpty() && !md5.isEmpty())
+            meta = parser.lookup(md5);
         if (meta.genre.isEmpty() && meta.developer.isEmpty() && meta.publisher.isEmpty() && meta.maxUsers == 0
             && meta.releaseYear == 0 && meta.description.isEmpty() && !serial.isEmpty())
             meta = parser.lookupBySerial(serial);

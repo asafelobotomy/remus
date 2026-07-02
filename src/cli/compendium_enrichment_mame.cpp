@@ -107,7 +107,7 @@ bool enrichFromMameCatver(
         return false;
 
     QSqlQuery updateQ(database);
-    updateQ.prepare(QStringLiteral("UPDATE games SET genre = COALESCE(genre, ?) WHERE game_id = ?"));
+    updateQ.prepare(QStringLiteral("UPDATE games SET genre = COALESCE(NULLIF(genre, ''), ?) WHERE game_id = ?"));
 
     QSqlQuery factQ(database);
     factQ.prepare(QStringLiteral("INSERT INTO game_facts "

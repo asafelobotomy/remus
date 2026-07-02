@@ -1,5 +1,6 @@
 #include "compendium_enrichment.h"
 #include "compendium_enrichment_sql.h"
+#include "compendium_progress.h"
 #include "../metadata/playmatch_provider.h"
 #include "../metadata/http_metadata_provider.h"
 #include "../core/constants/providers.h"
@@ -169,8 +170,11 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
             continue;
         ++apiCallsNeeded;
         ++apiCallsPerformed;
-        if (apiCallsPerformed % 50 == 0)
+        if (apiCallsPerformed % 50 == 0) {
             HttpMetadataProvider::processNetworkEvents();
+            reportCompendiumEnrichmentProgress(QStringLiteral("api_lookup"), apiCallsPerformed, pending.size(),
+                QStringLiteral("%1 matched").arg(matchedMetadata.size()));
+        }
 
         const GameMetadata metadata = provider.identifyBySignals(
             game.title, game.fileSize, game.crc32, game.md5, game.sha1, game.sha256, QString());
@@ -242,8 +246,8 @@ bool enrichFromPlayMatch(QSqlDatabase &database, int &gamesEnriched, int &factsI
     auto insertFact = [&](const QString &gameId, const QString &field, const QString &value,
                           const QString &type = QStringLiteral("text")) -> bool {
         bool inserted = false;
-        if (!insertGameFact(replaceQueries,
-                delQ, factQ, factSpec, gameId, field, value, type, error, QStringLiteral("playmatch"), &inserted)) {
+        if (!insertGameFact(replaceQueries, delQ, factQ, factSpec, gameId, field, value, type, error,
+                QStringLiteral("playmatch"), &inserted)) {
             return false;
         }
         if (inserted)

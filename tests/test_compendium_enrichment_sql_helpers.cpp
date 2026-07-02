@@ -11,6 +11,11 @@ using namespace CompendiumEnrichmentSql;
 
 namespace {
 
+bool execSql(QSqlDatabase &db, const QString &sql) {
+    QSqlQuery q(db);
+    return q.exec(sql);
+}
+
 bool createFactsSchema(QSqlDatabase &db) {
     QSqlQuery q(db);
     return q.exec(QStringLiteral("CREATE TABLE game_facts ("
@@ -24,6 +29,10 @@ bool createFactsSchema(QSqlDatabase &db) {
                                  "source_priority INTEGER NOT NULL DEFAULT 100, "
                                  "confidence REAL NOT NULL DEFAULT 1.0, "
                                  "UNIQUE (game_id, field_name, source_id))"));
+}
+
+bool createFactsSchemaWithGames(QSqlDatabase &db) {
+    return createFactsSchema(db) && execSql(db, QStringLiteral("CREATE TABLE games (game_id TEXT PRIMARY KEY)"));
 }
 
 QSqlDatabase openMemoryDb(const QString &connectionName) {
@@ -84,6 +93,10 @@ private slots:
     void insertGameFact_replacesPriorFactFromSameSource();
     void insertGameFact_clearsBlockersWhenCanonicalReferencesDuplicateFacts();
     void normalizeMetadataTitle_stripsStackedSuffixes();
+    void metadataTitleMatchTokens_preservesWords();
+    void metadataTitleIndexKeys_includesSubtitleVariant();
+    void loadGamesWithMinSourceFieldFacts_returnsGamesAtThreshold();
+    void loadGamesWithLaunchBoxNoMatchFacts_returnsPriorNoMatch();
 };
 
 void CompendiumEnrichmentSqlHelpersTest::nullableHelpers_returnNullOrValue() {
@@ -328,6 +341,76 @@ void CompendiumEnrichmentSqlHelpersTest::normalizeMetadataTitle_stripsStackedSuf
     // A title whose only content is inside parentheses must not be reduced to empty.
     const QString onlyParens = normalizeMetadataTitle(QStringLiteral("(Test)"));
     QVERIFY(!onlyParens.isEmpty());
+}
+
+void CompendiumEnrichmentSqlHelpersTest::metadataTitleMatchTokens_preservesWords() {
+    QCOMPARE(metadataTitleMatchTokens(QStringLiteral("Super Mario 64 (USA)")), QStringLiteral("super mario 64"));
+    QCOMPARE(metadataTitleMatchTokens(QStringLiteral("The Legend of Zelda")), QStringLiteral("legend of zelda"));
+}
+
+void CompendiumEnrichmentSqlHelpersTest::metadataTitleIndexKeys_includesSubtitleVariant() {
+    const QStringList keys = metadataTitleIndexKeys(QStringLiteral("The Legend of Zelda: Ocarina of Time (USA)"));
+    QVERIFY(keys.contains(QStringLiteral("legendofzeldaocarinaoftime")));
+    QVERIFY(keys.contains(QStringLiteral("legendofzelda")));
+}
+
+void CompendiumEnrichmentSqlHelpersTest::loadGamesWithMinSourceFieldFacts_returnsGamesAtThreshold() {
+    const QString connectionName = QStringLiteral("enrichment_sql_helpers_min_facts");
+    {
+        QSqlDatabase db = openMemoryDb(connectionName);
+        QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+        QVERIFY(createFactsSchemaWithGames(db));
+        QVERIFY(execSql(db, QStringLiteral("INSERT INTO games (game_id) VALUES ('g1'), ('g2')")));
+
+        auto insertFact = [&](const QString &gameId, const QString &field) {
+            QSqlQuery q(db);
+            q.prepare(QStringLiteral("INSERT INTO game_facts "
+                                     "(game_id, field_name, field_value, value_type, source_id) "
+                                     "VALUES (?, ?, 'v', 'text', 'launchbox')"));
+            q.addBindValue(gameId);
+            q.addBindValue(field);
+            QVERIFY(q.exec());
+        };
+        for (const QString &field : { QStringLiteral("genre"), QStringLiteral("developer"), QStringLiteral("publisher"),
+                 QStringLiteral("description") }) {
+            insertFact(QStringLiteral("g1"), field);
+        }
+        insertFact(QStringLiteral("g2"), QStringLiteral("genre"));
+
+        QString error;
+        const QSet<QString> skip4 = loadGamesWithMinSourceFieldFacts(db, QStringLiteral("launchbox"), 4, error);
+        QVERIFY2(error.isEmpty(), qPrintable(error));
+        QVERIFY(skip4.contains(QStringLiteral("g1")));
+        QVERIFY(!skip4.contains(QStringLiteral("g2")));
+
+        db.close();
+    }
+    QSqlDatabase::removeDatabase(connectionName);
+}
+
+void CompendiumEnrichmentSqlHelpersTest::loadGamesWithLaunchBoxNoMatchFacts_returnsPriorNoMatch() {
+    const QString connectionName = QStringLiteral("enrichment_sql_helpers_no_match");
+    {
+        QSqlDatabase db = openMemoryDb(connectionName);
+        QVERIFY2(db.open(), qPrintable(db.lastError().text()));
+        QVERIFY(createFactsSchemaWithGames(db));
+        QVERIFY(execSql(db, QStringLiteral("INSERT INTO games (game_id) VALUES ('g1'), ('g2')")));
+
+        QSqlQuery q(db);
+        QVERIFY(q.exec(QStringLiteral("INSERT INTO game_facts "
+                                      "(game_id, field_name, field_value, value_type, source_id) "
+                                      "VALUES ('g1', 'enrichment_match', "
+                                      "'{\"source\":\"launchbox\",\"tier\":\"no_match\"}', 'json', 'launchbox')")));
+
+        QString error;
+        const QSet<QString> noMatch = loadGamesWithLaunchBoxNoMatchFacts(db, error);
+        QVERIFY2(error.isEmpty(), qPrintable(error));
+        QVERIFY(noMatch.contains(QStringLiteral("g1")));
+        QVERIFY(!noMatch.contains(QStringLiteral("g2")));
+
+        db.close();
+    }
+    QSqlDatabase::removeDatabase(connectionName);
 }
 
 QTEST_MAIN(CompendiumEnrichmentSqlHelpersTest)

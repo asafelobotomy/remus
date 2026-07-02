@@ -1,5 +1,6 @@
 #include "compendium_enrichment.h"
 #include "compendium_enrichment_sql.h"
+#include "compendium_progress.h"
 
 #include "../metadata/gametdb_provider.h"
 #include "../core/system_resolver.h"
@@ -15,13 +16,14 @@
 
 namespace {
 
+using CompendiumEnrichmentSql::bulkClearSourceFactBlockers;
 using CompendiumEnrichmentSql::EnrichmentBatchWriter;
 using CompendiumEnrichmentSql::execPrepared;
 using CompendiumEnrichmentSql::FactInsertSpec;
 using CompendiumEnrichmentSql::FactReplaceQueries;
-using CompendiumEnrichmentSql::bulkClearSourceFactBlockers;
 using CompendiumEnrichmentSql::insertGameFact;
 using CompendiumEnrichmentSql::loadGamesWithMinSourceFieldFacts;
+using CompendiumEnrichmentSql::metadataTitleIndexKeys;
 using CompendiumEnrichmentSql::nullableInt;
 using CompendiumEnrichmentSql::nullableText;
 using CompendiumEnrichmentSql::SnapshotSpec;
@@ -50,7 +52,7 @@ bool enrichFromGameTDB(
             SourceSpec {
                 sourceId,
                 QStringLiteral("GameTDB"),
-                QStringLiteral("gametdb"),
+                QStringLiteral("static-file"),
                 QStringLiteral("https://www.gametdb.com/"),
                 /*attributionRequired=*/true,
                 /*priority=*/55,
@@ -64,14 +66,15 @@ bool enrichFromGameTDB(
         return false;
     }
 
-    // Preload CRC32, SHA1, MD5 hashes to avoid per-row correlated subqueries (O(N*M) → O(N+M))
+    // Preload CRC32, SHA1, MD5, SHA256 hashes to avoid per-row correlated subqueries (O(N*M) → O(N+M))
     QHash<QString, QString> gameCrc32;
     QHash<QString, QString> gameSha1;
     QHash<QString, QString> gameMd5;
+    QHash<QString, QString> gameSha256;
     {
         QSqlQuery q(database);
         if (!q.exec(QStringLiteral("SELECT game_id, hash_type, hash_value FROM game_signatures "
-                                   "WHERE hash_type IN ('crc32', 'sha1', 'md5')"))) {
+                                   "WHERE hash_type IN ('crc32', 'sha1', 'md5', 'sha256')"))) {
             error = QStringLiteral("Load hashes for GameTDB enrichment: %1").arg(q.lastError().text());
             return false;
         }
@@ -85,6 +88,8 @@ bool enrichFromGameTDB(
                 gameSha1.insert(gid, val);
             else if (type == QLatin1String("md5"))
                 gameMd5.insert(gid, val);
+            else if (type == QLatin1String("sha256"))
+                gameSha256.insert(gid, val);
         }
     }
 
@@ -106,13 +111,13 @@ bool enrichFromGameTDB(
 
     QSqlQuery updateQuery(database);
     updateQuery.prepare(QStringLiteral("UPDATE games SET "
-                                       "genre        = COALESCE(genre, ?), "
-                                       "developer    = COALESCE(developer, ?), "
-                                       "publisher    = COALESCE(publisher, ?), "
+                                       "genre        = COALESCE(NULLIF(genre, ''), ?), "
+                                       "developer    = COALESCE(NULLIF(developer, ''), ?), "
+                                       "publisher    = COALESCE(NULLIF(publisher, ''), ?), "
                                        "players_max  = COALESCE(players_max, ?), "
                                        "release_year = COALESCE(release_year, ?), "
-                                       "release_date = COALESCE(release_date, ?), "
-                                       "description  = COALESCE(description, ?) "
+                                       "release_date = COALESCE(NULLIF(release_date, ''), ?), "
+                                       "description  = COALESCE(NULLIF(description, ''), ?) "
                                        "WHERE game_id = ?"));
 
     QSqlQuery factQuery(database);
@@ -138,7 +143,8 @@ bool enrichFromGameTDB(
     if (!error.isEmpty())
         return false;
     if (!skipGameIds.isEmpty()) {
-        qInfo().noquote() << QStringLiteral("[gametdb] Skipping %1 games already enriched by source").arg(skipGameIds.size());
+        qInfo().noquote()
+            << QStringLiteral("[gametdb] Skipping %1 games already enriched by source").arg(skipGameIds.size());
     }
 
     FactReplaceQueries replaceQueries(database);
@@ -158,11 +164,14 @@ bool enrichFromGameTDB(
     int scanned = 0;
     while (gameQuery.next()) {
         ++scanned;
-        if (scanned % 10000 == 0) {
+        if (scanned % 2500 == 0) {
             qInfo().noquote() << QStringLiteral("[gametdb] Scanned %1 gap games (%2 enriched, %3 facts)")
                                      .arg(scanned)
                                      .arg(gamesEnriched)
                                      .arg(factsInserted);
+            reportCompendiumEnrichmentProgress(QStringLiteral("scanning"), scanned, -1,
+                QStringLiteral("%1 enriched, %2 facts").arg(gamesEnriched).arg(factsInserted), gamesEnriched,
+                factsInserted);
         }
         const QString gameId = gameQuery.value(0).toString();
         if (skipGameIds.contains(gameId)) {
@@ -173,12 +182,15 @@ bool enrichFromGameTDB(
         const QString crc32 = gameCrc32.value(gameId);
         const QString sha1 = gameSha1.value(gameId);
         const QString md5 = gameMd5.value(gameId);
+        const QString sha256 = gameSha256.value(gameId);
 
         // GameTDBProvider::getByHash normalises the hash and checks
         // CRC32 → MD5 → SHA1 indexes in order.
         Remus::GameMetadata meta;
         if (!crc32.isEmpty())
             meta = provider.getByHash(crc32, QString());
+        if (meta.title.isEmpty() && !sha256.isEmpty())
+            meta = provider.getByHash(sha256, QString());
         if (meta.title.isEmpty() && !sha1.isEmpty())
             meta = provider.getByHash(sha1, QString());
         if (meta.title.isEmpty() && !md5.isEmpty())
@@ -190,25 +202,13 @@ bool enrichFromGameTDB(
         if (meta.title.isEmpty()) {
             const QString title = gameQuery.value(1).toString();
             if (!title.isEmpty()) {
-                // Direct lookup.
-                QString gid = provider.gameIdByNormalizedTitle(title.trimmed().toLower());
-                // Strip trailing parenthetical groups and retry.
-                // DAT titles often carry region/language/revision suffixes that
-                // GameTDB omits, e.g. "Mario Kart 8 (Europe) (En,Fr,De) (Rev 1)"
-                // vs GameTDB's stored title "Mario Kart 8".
-                if (gid.isEmpty()) {
-                    QString stripped = title.trimmed();
-                    while (stripped.endsWith(QLatin1Char(')'))) {
-                        const int pos = stripped.lastIndexOf(QLatin1Char('('));
-                        if (pos <= 0)
-                            break;
-                        stripped = stripped.left(pos).trimmed();
+                for (const QString &key : metadataTitleIndexKeys(title)) {
+                    const QString gid = provider.gameIdByNormalizedTitle(key);
+                    if (!gid.isEmpty()) {
+                        meta = provider.getById(gid);
+                        break;
                     }
-                    if (!stripped.isEmpty() && stripped != title.trimmed())
-                        gid = provider.gameIdByNormalizedTitle(stripped.toLower());
                 }
-                if (!gid.isEmpty())
-                    meta = provider.getById(gid);
             }
         }
 

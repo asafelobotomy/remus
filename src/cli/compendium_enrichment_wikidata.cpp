@@ -1,5 +1,8 @@
 #include "compendium_enrichment.h"
 #include "compendium_enrichment_sql.h"
+#include "compendium_enrichment_match_utils.h"
+#include "compendium_platform_index_cache.h"
+#include "compendium_progress.h"
 #include "../core/system_resolver.h"
 #include "../core/constants/providers.h"
 #include "../metadata/wikidata_provider.h"
@@ -23,30 +26,7 @@ namespace CompendiumEnrichment {
 
 namespace {
 
-    static const char kMetadataGapSql[] = "genre IS NULL OR TRIM(genre) = '' "
-                                          "   OR developer IS NULL OR TRIM(developer) = '' "
-                                          "   OR publisher IS NULL OR TRIM(publisher) = '' "
-                                          "   OR release_year IS NULL "
-                                          "   OR release_date IS NULL OR TRIM(release_date) = '' "
-                                          "   OR description IS NULL OR TRIM(description) = '' "
-                                          "   OR players_max IS NULL ";
-
-    const GameMetadata &bestWikidataCandidate(const QList<GameMetadata> &candidates) {
-        Q_ASSERT(!candidates.isEmpty());
-        int bestScore = -1;
-        int bestIdx = 0;
-        for (int i = 0; i < candidates.size(); ++i) {
-            const GameMetadata &c = candidates.at(i);
-            const int score = (!c.description.isEmpty() ? 1 : 0) + (!c.developer.isEmpty() ? 1 : 0)
-                + (!c.publisher.isEmpty() ? 1 : 0) + (!c.genres.isEmpty() ? 1 : 0)
-                + (c.releaseDate.size() >= 4 ? 1 : 0);
-            if (score > bestScore) {
-                bestScore = score;
-                bestIdx = i;
-            }
-        }
-        return candidates.at(bestIdx);
-    }
+    using CompendiumEnrichmentMatchUtils::bestMetadataCandidate;
 
     bool applyWikidataMetadata(QSqlDatabase &database, FactReplaceQueries &replaceQueries, QSqlQuery &updateQ,
         QSqlQuery &factQ, QSqlQuery &delQ, const FactInsertSpec &factSpec, const QString &gameId,
@@ -106,7 +86,7 @@ bool enrichFromWikidata(QSqlDatabase &database, int &gamesEnriched, int &factsIn
                                   "JOIN systems s ON s.system_id = g.system_id "
                                   "WHERE %1 "
                                   "ORDER BY s.display_name")
-                .arg(QLatin1String(kMetadataGapSql)))) {
+                .arg(QLatin1String(kGameMetadataGapSql)))) {
         error = QStringLiteral("Query systems for Wikidata: %1").arg(sysQ.lastError().text());
         return false;
     }
@@ -131,14 +111,22 @@ bool enrichFromWikidata(QSqlDatabase &database, int &gamesEnriched, int &factsIn
     static constexpr int PAGE_SIZE = 500;
     bool bulkCleared = false;
 
+    const QSet<QString> skipGameIds = loadGamesWithMinSourceFieldFacts(database, sourceId, 4, error);
+    if (!error.isEmpty())
+        return false;
+    if (!skipGameIds.isEmpty()) {
+        qInfo().noquote()
+            << QStringLiteral("[Wikidata] Skipping %1 games already enriched by source").arg(skipGameIds.size());
+    }
+
     for (const SysInfo &sys : systems) {
         HttpMetadataProvider::processNetworkEvents();
 
         QSqlQuery pendingQ(database);
-        pendingQ.prepare(QStringLiteral("SELECT game_id, canonical_title FROM games "
-                                        "WHERE system_id = ? AND (%1) "
-                                        "ORDER BY game_id")
-                .arg(QLatin1String(kMetadataGapSql)));
+        pendingQ.prepare(QStringLiteral("SELECT g.game_id, g.canonical_title FROM games g "
+                                        "WHERE g.system_id = ? AND (%1) "
+                                        "ORDER BY g.game_id")
+                .arg(QLatin1String(kGameMetadataGapSql)));
         pendingQ.addBindValue(sys.id);
         if (!pendingQ.exec()) {
             error = QStringLiteral("Query Wikidata candidates for %1: %2").arg(sys.name, pendingQ.lastError().text());
@@ -161,18 +149,35 @@ bool enrichFromWikidata(QSqlDatabase &database, int &gamesEnriched, int &factsIn
         const QString platformKey = wikidataPlatform.isEmpty() ? sys.name : wikidataPlatform;
 
         QHash<QString, QList<GameMetadata>> wikidataIndex;
-        int offset = 0;
-        while (true) {
-            const QList<GameMetadata> page = provider.fetchGamesForPlatform(platformKey, PAGE_SIZE, offset);
-            for (const GameMetadata &gm : page) {
+        QList<GameMetadata> cachedGames;
+        if (CompendiumPlatformIndexCache::loadPlatformIndex(QStringLiteral("wikidata"), platformKey, cachedGames)) {
+            for (const GameMetadata &gm : cachedGames) {
                 if (!gm.title.isEmpty())
                     wikidataIndex[normalizeMetadataTitle(gm.title)].append(gm);
             }
-            if (page.size() < PAGE_SIZE)
-                break;
-            offset += PAGE_SIZE;
-            if (offset % 2000 == 0)
-                qInfo().noquote() << QStringLiteral("[Wikidata] %1: indexed %2 entries …").arg(sys.name).arg(offset);
+            reportCompendiumEnrichmentProgress(QStringLiteral("platform_index"), wikidataIndex.size(), pending.size(),
+                QStringLiteral("loaded %1 from disk cache").arg(cachedGames.size()));
+        } else {
+            QList<GameMetadata> fetched;
+            int offset = 0;
+            while (true) {
+                HttpMetadataProvider::processNetworkEvents();
+                const QList<GameMetadata> page = provider.fetchGamesForPlatform(platformKey, PAGE_SIZE, offset);
+                fetched.append(page);
+                for (const GameMetadata &gm : page) {
+                    if (!gm.title.isEmpty())
+                        wikidataIndex[normalizeMetadataTitle(gm.title)].append(gm);
+                }
+                if (page.size() < PAGE_SIZE)
+                    break;
+                offset += PAGE_SIZE;
+                if (offset % 2000 == 0) {
+                    reportCompendiumEnrichmentProgress(QStringLiteral("platform_download"), offset, -1,
+                        QStringLiteral("%1 entries for %2").arg(wikidataIndex.size()).arg(sys.name));
+                }
+            }
+            if (!fetched.isEmpty())
+                CompendiumPlatformIndexCache::storePlatformIndex(QStringLiteral("wikidata"), platformKey, fetched);
         }
 
         if (wikidataIndex.isEmpty()) {
@@ -239,7 +244,14 @@ bool enrichFromWikidata(QSqlDatabase &database, int &gamesEnriched, int &factsIn
         EnrichmentBatchWriter batchWriter(database);
 
         int matched = 0;
+        int processed = 0;
         for (const PendingGame &game : pending) {
+            ++processed;
+            if (skipGameIds.contains(game.gameId)) {
+                if (!batchWriter.onGameProcessed(error))
+                    return false;
+                continue;
+            }
             const auto candidates = wikidataIndex.value(normalizeMetadataTitle(game.title));
             if (candidates.isEmpty()) {
                 if (!batchWriter.onGameProcessed(error))
@@ -247,7 +259,7 @@ bool enrichFromWikidata(QSqlDatabase &database, int &gamesEnriched, int &factsIn
                 continue;
             }
 
-            const GameMetadata &gm = bestWikidataCandidate(candidates);
+            const GameMetadata &gm = bestMetadataCandidate(candidates);
             if (!applyWikidataMetadata(database, replaceQueries, updateQ, factQ, delQ, factSpec, game.gameId, gm,
                     gamesEnriched, factsInserted, error)) {
                 return false;
@@ -255,6 +267,10 @@ bool enrichFromWikidata(QSqlDatabase &database, int &gamesEnriched, int &factsIn
             ++matched;
             if (!batchWriter.onGameProcessed(error))
                 return false;
+            if (processed % 2500 == 0 || processed == pending.size()) {
+                reportCompendiumEnrichmentProgress(QStringLiteral("matching"), processed, pending.size(),
+                    QStringLiteral("%1 matched").arg(matched), gamesEnriched, factsInserted);
+            }
         }
 
         if (!batchWriter.finish(error))

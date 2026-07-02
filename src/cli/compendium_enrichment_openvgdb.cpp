@@ -1,5 +1,6 @@
 #include "compendium_enrichment.h"
 #include "compendium_enrichment_sql.h"
+#include "compendium_progress.h"
 
 #include <QDate>
 #include <QFile>
@@ -27,9 +28,8 @@ struct OpenVGDBEntry {
 
 namespace CompendiumEnrichment {
 
-bool enrichFromOpenVGDB(
-    QSqlDatabase &database, const QString &openvgdbPath, const QString &gametdbDir, int &gamesEnriched,
-    int &factsInserted, QString &error) {
+bool enrichFromOpenVGDB(QSqlDatabase &database, const QString &openvgdbPath, const QString &gametdbDir,
+    int &gamesEnriched, int &factsInserted, QString &error) {
     gamesEnriched = 0;
     factsInserted = 0;
 
@@ -206,7 +206,7 @@ bool enrichFromOpenVGDB(
                                    "   OR release_year IS NULL "
                                    "   OR release_date IS NULL OR TRIM(release_date) = '' "
                                    "   OR description IS NULL OR TRIM(description) = '')%1")
-                        .arg(excludeSystemsSql))) {
+                    .arg(excludeSystemsSql))) {
             error = QStringLiteral("Load OpenVGDB gap games: %1").arg(q.lastError().text());
             return false;
         }
@@ -223,7 +223,7 @@ bool enrichFromOpenVGDB(
             SourceSpec {
                 sourceId,
                 QStringLiteral("OpenVGDB"),
-                QStringLiteral("openvgdb"),
+                QStringLiteral("static-file"),
                 QStringLiteral("https://github.com/OpenVGDB/OpenVGDB"),
                 /*attributionRequired=*/false,
                 /*priority=*/25,
@@ -245,8 +245,13 @@ bool enrichFromOpenVGDB(
             error = QStringLiteral("Load CRC32 hashes: %1").arg(q.lastError().text());
             return false;
         }
-        while (q.next())
-            gameIdByCrc.insert(q.value(1).toString(), q.value(0).toString());
+        while (q.next()) {
+            const QString gameId = q.value(0).toString();
+            if (!gapGameIds.contains(gameId))
+                continue;
+            const QString crc = q.value(1).toString().toUpper().rightJustified(8, QLatin1Char('0'));
+            gameIdByCrc.insert(crc, gameId);
+        }
     }
 
     // Preload MD5 → gameId from compendium signatures (for disc-based systems)
@@ -257,8 +262,12 @@ bool enrichFromOpenVGDB(
             error = QStringLiteral("Load MD5 hashes: %1").arg(q.lastError().text());
             return false;
         }
-        while (q.next())
-            gameIdByMd5.insert(q.value(1).toString(), q.value(0).toString());
+        while (q.next()) {
+            const QString gameId = q.value(0).toString();
+            if (!gapGameIds.contains(gameId))
+                continue;
+            gameIdByMd5.insert(q.value(1).toString().toUpper().trimmed(), gameId);
+        }
     }
 
     QSqlQuery updateQuery(database);
@@ -294,7 +303,8 @@ bool enrichFromOpenVGDB(
     if (!error.isEmpty())
         return false;
     if (!skipGameIds.isEmpty()) {
-        qInfo().noquote() << QStringLiteral("[openvgdb] Skipping %1 games already enriched by source").arg(skipGameIds.size());
+        qInfo().noquote()
+            << QStringLiteral("[openvgdb] Skipping %1 games already enriched by source").arg(skipGameIds.size());
     }
 
     FactReplaceQueries replaceQueries(database);
@@ -305,8 +315,8 @@ bool enrichFromOpenVGDB(
         FactInsertSpec scopedFactSpec = factSpec;
         scopedFactSpec.confidence = confidence;
         bool inserted = false;
-        if (!insertGameFact(replaceQueries,
-                delQuery, factQuery, scopedFactSpec, gameId, field, value, valueType, error, contextPrefix, &inserted))
+        if (!insertGameFact(replaceQueries, delQuery, factQuery, scopedFactSpec, gameId, field, value, valueType, error,
+                contextPrefix, &inserted))
             return false;
         if (inserted)
             ++factsInserted;
@@ -360,11 +370,13 @@ bool enrichFromOpenVGDB(
         return batchWriter.onGameProcessed(error);
     };
 
+    int processed = 0;
+    const int totalCandidates = gameIdByCrc.size() + gameIdByMd5.size();
+    reportCompendiumEnrichmentProgress(QStringLiteral("hash_match"), 0, totalCandidates, QStringLiteral("starting"));
+
     for (auto it = gameIdByCrc.cbegin(); it != gameIdByCrc.cend(); ++it) {
         const QString &crc32 = it.key();
         const QString &gameId = it.value();
-        if (!gapGameIds.contains(gameId))
-            continue;
 
         auto entryIt = crcIndex.constFind(crc32);
         if (entryIt == crcIndex.cend())
@@ -374,7 +386,15 @@ bool enrichFromOpenVGDB(
         if (!applyEntryToGame(gameId, e, 0.80, QStringLiteral("openvgdb"), QStringLiteral("int"))) {
             return false;
         }
+        ++processed;
+        if (processed % 2500 == 0) {
+            reportCompendiumEnrichmentProgress(QStringLiteral("hash_match"), processed, totalCandidates,
+                QStringLiteral("%1 enriched").arg(gamesEnriched), gamesEnriched, factsInserted);
+        }
     }
+
+    reportCompendiumEnrichmentProgress(QStringLiteral("md5_match"), processed, totalCandidates,
+        QStringLiteral("starting MD5 pass"), gamesEnriched, factsInserted);
 
     // MD5 pass — enriches disc-based systems (GCN, Saturn, PSX, Dreamcast, N64)
     // where the compendium stores md5 rather than crc32 signatures.
@@ -382,8 +402,6 @@ bool enrichFromOpenVGDB(
     for (auto it = gameIdByMd5.cbegin(); it != gameIdByMd5.cend(); ++it) {
         const QString &md5 = it.key();
         const QString &gameId = it.value();
-        if (!gapGameIds.contains(gameId))
-            continue;
 
         auto entryIt = md5Index.constFind(md5);
         if (entryIt == md5Index.cend())
@@ -392,6 +410,11 @@ bool enrichFromOpenVGDB(
 
         if (!applyEntryToGame(gameId, e, 0.80, QStringLiteral("openvgdb MD5"), QStringLiteral("int"))) {
             return false;
+        }
+        ++processed;
+        if (processed % 2500 == 0) {
+            reportCompendiumEnrichmentProgress(QStringLiteral("md5_match"), processed, totalCandidates,
+                QStringLiteral("%1 enriched").arg(gamesEnriched), gamesEnriched, factsInserted);
         }
     }
 
