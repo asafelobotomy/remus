@@ -1,5 +1,6 @@
 #include "gametdb_provider.h"
 #include "../core/match_utils.h"
+#include "metadata_title_normalize.h"
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -170,11 +171,10 @@ int GameTDBProvider::loadDatabase(const QString &filePath) {
                     if (!current.sha1.isEmpty()) {
                         m_sha1Index.insert(current.sha1, current.id);
                     }
-                    // Title index: first entry for a normalized title wins.
-                    // Used by the enrichment pipeline for O(1) name fallback.
-                    const QString normTitle = current.title.trimmed().toLower();
-                    if (!normTitle.isEmpty() && !m_titleIndex.contains(normTitle)) {
-                        m_titleIndex.insert(normTitle, current.id);
+                    // Title index: normalized keys for O(1) enrichment fallback.
+                    for (const QString &key : MetadataTitleNormalize::metadataTitleIndexKeys(current.title)) {
+                        if (!key.isEmpty() && !m_titleIndex.contains(key))
+                            m_titleIndex.insert(key, current.id);
                     }
                     ++loaded;
                 }

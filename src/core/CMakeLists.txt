@@ -33,6 +33,7 @@ add_library(remus-core STATIC
     database_patches.cpp
     database_schema.cpp
     matching_engine.cpp
+    title_similarity.cpp
     template_engine.cpp
     organize_engine.cpp
     organize_engine_undo.cpp

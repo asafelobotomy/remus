@@ -21,6 +21,7 @@ add_library(remus-metadata STATIC
     retroachievements_provider.cpp
     wikidata_provider.cpp
     libretro_metadata_parser.cpp
+    metadata_title_normalize.cpp
     provider_orchestrator.cpp
     provider_orchestrator_enrich.cpp
     provider_orchestrator_fallback.cpp
@@ -47,6 +48,7 @@ add_library(remus-metadata STATIC
     compendium_provider_disc_sets.cpp
     compendium_patch_catalog_importer.cpp
     romhacking_scraper.cpp
+    launchbox_platform_map.cpp
 )
 
 target_link_libraries(remus-metadata PUBLIC
