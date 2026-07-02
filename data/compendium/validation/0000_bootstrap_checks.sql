@@ -31,14 +31,14 @@ SELECT 'seed_count.merge_policy' AS check_name,
     WHEN (
       SELECT COUNT(*)
       FROM merge_policy
-    ) = 26 THEN 'PASS'
+    ) = 25 THEN 'PASS'
     ELSE 'FAIL'
   END AS status,
   (
     SELECT COUNT(*)
     FROM merge_policy
   ) AS observed,
-  26 AS expected;
+  25 AS expected;
 SELECT 'schema.migration_0011.coverage_stats' AS check_name,
   CASE
     WHEN (

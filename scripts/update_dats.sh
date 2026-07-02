@@ -372,13 +372,24 @@ for entry in "${REDUMP_DIRECT_DBS[@]}"; do
         extracted=$(unzip -Z -1 "$zippath" 2>/dev/null | grep -E '\.dat$' | head -1)
         if [[ -n "$extracted" ]]; then
             if unzip -o -q "$zippath" "$extracted" -d "$redump_direct_tmp" 2>/dev/null; then
-                mv "$redump_direct_tmp/$extracted" "$REDUMP_DIR/$destname"
-                copied=$((copied + 1))
-                if [[ "$source_kind" == "cached" ]]; then
-                    echo "    Added from cached ZIP ($source_url)"
-                else
-                    echo "    Added from $source_url"
-                fi
+                extracted_dat="$redump_direct_tmp/$extracted"
+                dest_dat="$REDUMP_DIR/$destname"
+                case "$(install_file_if_changed "$extracted_dat" "$dest_dat" 2>/dev/null || echo failed)" in
+                    updated)
+                        copied=$((copied + 1))
+                        if [[ "$source_kind" == "cached" ]]; then
+                            echo "    Updated from cached ZIP ($source_url)"
+                        else
+                            echo "    Updated from $source_url"
+                        fi
+                        ;;
+                    unchanged)
+                        echo "    Unchanged ($destname)"
+                        ;;
+                    *)
+                        echo "    Warning: failed to install $destname"
+                        ;;
+                esac
             else
                 echo "    Warning: failed to extract DAT from $slug zip"
             fi
@@ -953,5 +964,29 @@ if [[ ! -f "$MAME_CATVER_PATH" ]]; then
     echo "  Arcade genre metadata will not be populated from catver.ini."
     echo "  Re-run this script when network access is available, or place catver.ini manually."
 fi
+
+if [[ -x "$PROJECT_ROOT/scripts/update_enrichment_fingerprint_sidecar.sh" ]]; then
+    metadata_count=0
+    metadata_mtime=0
+    if [[ -d "$PROJECT_ROOT/data/metadata" ]]; then
+        metadata_count="$(find "$PROJECT_ROOT/data/metadata" -type f 2>/dev/null | wc -l | tr -d ' ')"
+        metadata_mtime="$(find "$PROJECT_ROOT/data/metadata" -type f -printf '%T@\n' 2>/dev/null | sort -n | tail -1 | cut -d. -f1)"
+    fi
+    openvgdb_sha=""
+    if [[ -f "$OPENVGDB_DEST" ]]; then
+        openvgdb_sha="$(compendium_sha256_of "$OPENVGDB_DEST")"
+    fi
+    mame_listxml_sha=""
+    if [[ -f "$MAME_LISTXML_PATH" ]]; then
+        mame_listxml_sha="$(compendium_sha256_of "$MAME_LISTXML_PATH")"
+    fi
+    bash "$PROJECT_ROOT/scripts/update_enrichment_fingerprint_sidecar.sh" metadata \
+        "{\"file_count\":${metadata_count:-0},\"root_mtime\":${metadata_mtime:-0}}" || true
+    bash "$PROJECT_ROOT/scripts/update_enrichment_fingerprint_sidecar.sh" openvgdb \
+        "{\"sqlite_sha256\":\"${openvgdb_sha}\"}" || true
+    bash "$PROJECT_ROOT/scripts/update_enrichment_fingerprint_sidecar.sh" mame_listxml \
+        "{\"xml_sha256\":\"${mame_listxml_sha}\"}" || true
+fi
+
 echo ""
 echo "Next step: run scripts/generate_compendium_manifest.sh to update the manifest."

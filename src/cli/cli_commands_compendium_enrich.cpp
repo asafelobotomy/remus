@@ -1,11 +1,13 @@
 #include "cli_commands.h"
 #include "cli_compendium_build_phases.h"
 #include "cli_helpers.h"
+#include "compendium_progress.h"
 #include "compendium_sql_utilities.h"
 
 #include "../core/constants/database_schema.h"
 
 #include <QDebug>
+#include <QDateTime>
 #include <QElapsedTimer>
 #include <QFile>
 #include <QFileInfo>
@@ -105,18 +107,34 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
 
     qInfo() << "Running enrichment on" << outputInfo.absoluteFilePath();
 
+    const QString progressPath = outputInfo.absoluteFilePath() + QStringLiteral(".progress.json");
+    CompendiumProgressWriter progressWriter(progressPath);
+    progressWriter.setStartedAt(QDateTime::currentDateTimeUtc());
+    progressWriter.writeTerminal(QStringLiteral("enriching"), 0, QStringLiteral("enriching"));
+    qInfo().noquote() << QStringLiteral("[enrich] Progress sidecar: %1").arg(progressPath);
+    qInfo().noquote() << QStringLiteral("[enrich] Poll: jq . %1").arg(progressPath);
+
     const EnrichmentCliOptions enrichOpts = resolveEnrichmentCliOptions(ctx.parser, sourceFilter);
     const bool offlineOnlyEnrichment = enrichOpts.offlineOnlyEnrichment;
     const bool onlineEnrichmentAll = enrichOpts.onlineEnrichmentAll;
     const QStringList effectiveSourceFilter = enrichOpts.sourceFilter;
+    const QString enrichmentFingerprint = computeEnrichmentInputsFingerprint(metadataDir, gametdbDir, openvgdbPath,
+        mameCatverPath, mameListXmlPath, launchboxMetadataPath, credPath, effectiveSourceFilter, offlineOnlyEnrichment,
+        onlineEnrichmentAll, findRemusThumbnailsDir(), findLibretroAcquisitionDir());
 
     // ── Run all enrichment passes and merge resolution ───────────────────────
     EnrichmentStats stats;
     {
         QString enrichError;
+        EnrichmentProgressCallback onEnrichProgress = [&](int passIdx, int totalPasses, const QString &passName) {
+            progressWriter.setElapsedMs(timer.elapsed());
+            Q_UNUSED(passIdx);
+            Q_UNUSED(totalPasses);
+            Q_UNUSED(passName);
+        };
         if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir, openvgdbPath, credPath, mameCatverPath,
-                mameListXmlPath, launchboxMetadataPath, stats, enrichError, nullptr, effectiveSourceFilter,
-                offlineOnlyEnrichment, onlineEnrichmentAll)) {
+                mameListXmlPath, launchboxMetadataPath, stats, enrichError, onEnrichProgress, effectiveSourceFilter,
+                offlineOnlyEnrichment, onlineEnrichmentAll, &progressWriter)) {
             qCritical().noquote() << QStringLiteral("✗ %1").arg(enrichError);
             database.close();
             database = QSqlDatabase();
@@ -137,16 +155,18 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
         }
     }
 
-    // Rebuild FTS index to pick up new descriptions.
-    {
+    // Rebuild FTS when merge resolved title facts (genre-only enrichment skips FTS).
+    if (shouldRebuildCompendiumFts(stats, ctx.parser.isSet(QStringLiteral("skip-fts")))) {
         QString ftsError;
-        if (!populateCompendiumFtsIndex(database, stats.ftsRowsIndexed, ftsError)) {
+        if (!populateCompendiumFtsIndex(database, stats.ftsRowsIndexed, ftsError, &progressWriter)) {
             qCritical().noquote() << QStringLiteral("✗ FTS rebuild failed: %1").arg(ftsError);
             database.close();
             database = QSqlDatabase();
             QSqlDatabase::removeDatabase(connectionName);
             return 1;
         }
+    } else if (stats.passesExecuted > 0) {
+        qInfo() << "[FTS] Skipped — enrichment did not change searchable title fields";
     }
 
     finalizeCompendiumBuildArtifacts(database);
@@ -167,6 +187,7 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
     }
 
     insertEnrichmentStatsReportFields(report, stats, QStringLiteral("resolved_fields"));
+    report.insert(QStringLiteral("enrichment_inputs_fingerprint"), enrichmentFingerprint);
     report.insert(QStringLiteral("enrich_compendium_duration_ms"), static_cast<qint64>(timer.elapsed()));
 
     QString reportError;
@@ -176,6 +197,32 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
         database = QSqlDatabase();
         QSqlDatabase::removeDatabase(connectionName);
         return 1;
+    }
+
+    {
+        QSqlQuery buildIdQuery(database);
+        QString buildId;
+        if (buildIdQuery.exec(QStringLiteral("SELECT build_id FROM compendium_builds ORDER BY built_at DESC LIMIT 1"))
+            && buildIdQuery.next()) {
+            buildId = buildIdQuery.value(0).toString();
+        }
+        if (!buildId.isEmpty()) {
+            const QJsonObject notesObj {
+                { QStringLiteral("description"), QStringLiteral("Standalone --enrich-compendium run") },
+                { QStringLiteral("enrichment_inputs_fingerprint"), enrichmentFingerprint },
+                { QStringLiteral("build_phase"), QStringLiteral("complete") },
+            };
+            QSqlQuery notesQuery(database);
+            notesQuery.prepare(
+                QStringLiteral("UPDATE compendium_builds SET notes = ?, built_at = ? WHERE build_id = ?"));
+            notesQuery.addBindValue(QString::fromUtf8(QJsonDocument(notesObj).toJson(QJsonDocument::Compact)));
+            notesQuery.addBindValue(QDateTime::currentDateTimeUtc().toString(Qt::ISODate));
+            notesQuery.addBindValue(buildId);
+            if (!notesQuery.exec()) {
+                qWarning() << "[enrich] Failed to persist enrichment fingerprint in build notes:"
+                           << notesQuery.lastError().text();
+            }
+        }
     }
 
     qInfo() << "";
@@ -213,6 +260,9 @@ int handleEnrichCompendiumCommand(CliContext &ctx) {
         qInfo() << "Resolved fields:" << stats.resolvedFields;
     }
     qInfo().nospace() << "Duration: " << timer.elapsed() << " ms";
+
+    progressWriter.setElapsedMs(timer.elapsed());
+    progressWriter.writeTerminal(QStringLiteral("complete"), timer.elapsed(), QStringLiteral("complete"));
 
     database.close();
     database = QSqlDatabase();

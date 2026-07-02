@@ -31,6 +31,9 @@ payload = {
     "hasheous": {
         "client_api_key": os.environ.get("REMUS_HASHEOUS_API_KEY", ""),
     },
+    "thegamesdb": {
+        "api_key": os.environ.get("REMUS_TGDB_API_KEY", ""),
+    },
 }
 
 with open(out, "w", encoding="utf-8") as f:
@@ -40,3 +43,10 @@ with open(out, "w", encoding="utf-8") as f:
 configured = sum(1 for section in payload.values() for v in section.values() if v)
 print(f"Wrote {out} ({configured} non-empty credential field(s))")
 PY
+
+if [[ -x "$ROOT/scripts/update_enrichment_fingerprint_sidecar.sh" ]]; then
+    cred_sha="$(sha256sum "$OUT" | awk '{print $1}')"
+    cred_mtime="$(stat -c %Y "$OUT" 2>/dev/null || echo 0)"
+    bash "$ROOT/scripts/update_enrichment_fingerprint_sidecar.sh" credentials \
+        "{\"sha256\":\"$cred_sha\",\"mtime\":$cred_mtime}"
+fi

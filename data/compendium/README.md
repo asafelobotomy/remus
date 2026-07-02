@@ -47,8 +47,8 @@ sqlite3 -header -column data/compendium/remus_compendium.db < data/compendium/va
 Phase 2 quality thresholds (informational, do not block phase 1):
 
 ```bash
-./scripts/validate_compendium_quick.sh          # applies migrations 0008/0009, runs 0002 (~1 min)
-./scripts/validate_compendium_extended.sh       # applies migrations 0008/0009, runs 0003 (~30s)
+./scripts/validate_compendium_quick.sh          # applies migrations 0008–0012, runs 0002 (~1 min)
+./scripts/validate_compendium_extended.sh       # applies migrations 0008–0012, runs 0003 (~30s)
 ```
 
 Full builds also run strict gate `0006_enabled_source_gate.sql` (enabled sources with zero items).
@@ -112,13 +112,21 @@ bash scripts/build_compendium_full.sh
 
 Steps performed by `build_compendium_full.sh`:
 
-1. `scripts/update_dats.sh --all` — sync libretro, No-Intro, Redump, MAME, metadata, GameTDB, OpenVGDB
+1. `scripts/update_compendium_offline_sources.sh` — sync DATs/metadata (via `update_dats.sh`), LaunchBox metadata, libretro-thumbnails (skip with `--skip-update`)
 2. `scripts/generate_compendium_manifest.sh` — write `compendium-manifest-full.json`
 3. `remus-cli --build-compendium` — ingest DATs, run enrichment passes, merge, FTS index
-4. `scripts/import_patch_catalog.sh` — import libretro hack/translation DATs into the patch catalog tables
-5. `.github/scripts/validate-compendium-db.sh` — schema and content validation gates
-6. `--coverage-report` — per-source TSV coverage summary (aggregate disc-set stats in header)
-7. `--disc-set-coverage` — per-system disc set topology coverage for disc-based platforms (written to `remus_compendium.disc-set-coverage.tsv` by default)
+4. Standalone artwork consolidate (unless `--skip-consolidate`)
+5. `scripts/import_patch_catalog.sh` — import libretro hack/translation DATs into the patch catalog tables
+6. `scripts/apply_compendium_migrations.sh` — idempotent migrations 0001–0012 (ledger in `schema_migrations`; manifest in `data/compendium/migrations/manifest.json`)
+7. `--coverage-report` / `--disc-set-coverage` — per-source and per-system TSV summaries
+8. `scripts/validate_compendium_tier.sh ci` — schema and content validation gates (skip with `--skip-validation`)
+9. `scripts/validate_compendium_tier.sh artwork` — warn-only `0013_artwork_coverage.sql` after consolidate
+
+**Build flags:** `--skip-update`, `--skip-validation` (ci tier only), `--skip-migrations`, `--strict-offline` (Tier A `offline-mirrors.json` preflight + artwork manifest gate), `--force-enrichment`, `--recover`, `--allow-patch-skip`, `--skip-consolidate`, `--offline-only`, `--force-full-rebuild`.
+
+`--force-enrichment` bypasses the **build-level** enrichment-input fingerprint skip only (so enrichment passes run even when offline mirror checksums are unchanged). Per-pass `no_gaps` predicates and per-game skip sets (`loadGamesWithMinSourceFieldFacts`, LaunchBox `no_match` facts) still apply unless a source has no remaining gap work. Use `--enrich-source <name>` with `--force-enrichment` for targeted re-runs. `--skip-fts` skips the post-enrichment FTS rebuild when no canonical title fields changed.
+
+**Detached runner:** `scripts/run_compendium_full_build_detached.sh` — holds the per-DB flock until the build exits; log defaults to `$REMUS_COMPENDIUM_BUILD_LOG` or `${TMPDIR:-/tmp}/remus_compendium_full_build.log`.
 
 Patch catalog import runs **after** the compendium build because it writes to
 `patch_catalog_sources` / `patch_catalog_entries` in the populated database.

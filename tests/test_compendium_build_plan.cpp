@@ -20,10 +20,13 @@ bool execSql(QSqlDatabase &db, const QString &sql) {
     return q.exec(sql);
 }
 
-QString notesWithFingerprint(const QString &fingerprint) {
-    const QJsonObject notes {
+QString notesWithFingerprint(const QString &fingerprint, const QString &buildPhase = QString()) {
+    QJsonObject notes {
         { QStringLiteral("enrichment_inputs_fingerprint"), fingerprint },
     };
+    if (!buildPhase.isEmpty()) {
+        notes.insert(QStringLiteral("build_phase"), buildPhase);
+    }
     return QString::fromUtf8(QJsonDocument(notes).toJson(QJsonDocument::Compact));
 }
 
@@ -129,6 +132,11 @@ private slots:
     void plan_incrementalWhenSourceMissingFromDatabase();
     void plan_fullWhenDatabaseMissing();
     void plan_fullWhenForceRebuild();
+    void plan_enrichmentOnlyWhenBuildPhaseIncomplete();
+    void plan_forceEnrichmentWhenFingerprintMatches();
+    void plan_enrichmentOnlyFromProgressEnriching();
+    void plan_enrichmentOnlyFromNotesIngestCompleteWithoutProgress();
+    void isIncompleteBuildPhase_recognizesExpectedPhases();
     void syncManifestSourcesToDatabase_upsertsSourceMetadata();
 };
 
@@ -144,8 +152,8 @@ void CompendiumBuildPlanTest::plan_skipsWhenChecksumAndFingerprintMatch() {
     CompendiumBuildPlan plan;
     QString error;
     const QList<CompendiumSourceDescriptor> sources = { makeDatSource(QStringLiteral("src-a"), checksum) };
-    QVERIFY(planCompendiumBuild(
-        dbPath, 1, sources, fingerprint, /*forceFullRebuild=*/false, /*reportExists=*/true, plan, error));
+    QVERIFY(planCompendiumBuild(dbPath, 1, sources, fingerprint, /*forceFullRebuild=*/false, /*forceEnrichment=*/false,
+        /*reportExists=*/true, QString(), plan, error));
     QVERIFY2(error.isEmpty(), qPrintable(error));
     QCOMPARE(plan.mode, CompendiumBuildMode::Skip);
     QVERIFY(plan.sourcesToIngest.isEmpty());
@@ -162,7 +170,8 @@ void CompendiumBuildPlanTest::plan_enrichmentOnlyWhenFingerprintDiffers() {
     CompendiumBuildPlan plan;
     QString error;
     const QList<CompendiumSourceDescriptor> sources = { makeDatSource(QStringLiteral("src-a"), checksum) };
-    QVERIFY(planCompendiumBuild(dbPath, 1, sources, QStringLiteral("new-fp"), false, true, plan, error));
+    QVERIFY(
+        planCompendiumBuild(dbPath, 1, sources, QStringLiteral("new-fp"), false, false, true, QString(), plan, error));
     QVERIFY2(error.isEmpty(), qPrintable(error));
     QCOMPARE(plan.mode, CompendiumBuildMode::EnrichmentOnly);
     QVERIFY(plan.sourcesToIngest.isEmpty());
@@ -180,7 +189,7 @@ void CompendiumBuildPlanTest::plan_skipsWhenReportMissingButChecksumsMatch() {
     CompendiumBuildPlan plan;
     QString error;
     const QList<CompendiumSourceDescriptor> sources = { makeDatSource(QStringLiteral("src-a"), checksum) };
-    QVERIFY(planCompendiumBuild(dbPath, 1, sources, fingerprint, false, /*reportExists=*/false, plan, error));
+    QVERIFY(planCompendiumBuild(dbPath, 1, sources, fingerprint, false, false, false, QString(), plan, error));
     QVERIFY2(error.isEmpty(), qPrintable(error));
     QCOMPARE(plan.mode, CompendiumBuildMode::Skip);
     QVERIFY(plan.sourcesToIngest.isEmpty());
@@ -197,7 +206,7 @@ void CompendiumBuildPlanTest::plan_incrementalWhenChecksumDiffers() {
     QString error;
     const QList<CompendiumSourceDescriptor> sources
         = { makeDatSource(QStringLiteral("src-a"), QStringLiteral("manifest-checksum")) };
-    QVERIFY(planCompendiumBuild(dbPath, 1, sources, QStringLiteral("fp"), false, true, plan, error));
+    QVERIFY(planCompendiumBuild(dbPath, 1, sources, QStringLiteral("fp"), false, false, true, QString(), plan, error));
     QVERIFY2(error.isEmpty(), qPrintable(error));
     QCOMPARE(plan.mode, CompendiumBuildMode::IncrementalIngest);
     QCOMPARE(plan.sourcesToIngest.size(), 1);
@@ -218,7 +227,7 @@ void CompendiumBuildPlanTest::plan_incrementalWhenSourceMissingFromDatabase() {
         makeDatSource(QStringLiteral("src-a"), checksum),
         makeDatSource(QStringLiteral("src-b"), checksum),
     };
-    QVERIFY(planCompendiumBuild(dbPath, 1, sources, QStringLiteral("fp"), false, true, plan, error));
+    QVERIFY(planCompendiumBuild(dbPath, 1, sources, QStringLiteral("fp"), false, false, true, QString(), plan, error));
     QVERIFY2(error.isEmpty(), qPrintable(error));
     QCOMPARE(plan.mode, CompendiumBuildMode::IncrementalIngest);
     QVERIFY(plan.sourcesToIngest.contains(QStringLiteral("src-b")));
@@ -233,7 +242,7 @@ void CompendiumBuildPlanTest::plan_fullWhenDatabaseMissing() {
     CompendiumBuildPlan plan;
     QString error;
     const QList<CompendiumSourceDescriptor> sources = { makeDatSource(QStringLiteral("src-a"), QStringLiteral("abc")) };
-    QVERIFY(planCompendiumBuild(dbPath, 1, sources, QStringLiteral("fp"), false, false, plan, error));
+    QVERIFY(planCompendiumBuild(dbPath, 1, sources, QStringLiteral("fp"), false, false, false, QString(), plan, error));
     QVERIFY2(error.isEmpty(), qPrintable(error));
     QCOMPARE(plan.mode, CompendiumBuildMode::Full);
     QVERIFY(plan.sourcesToIngest.contains(QStringLiteral("src-a")));
@@ -250,11 +259,127 @@ void CompendiumBuildPlanTest::plan_fullWhenForceRebuild() {
     CompendiumBuildPlan plan;
     QString error;
     const QList<CompendiumSourceDescriptor> sources = { makeDatSource(QStringLiteral("src-a"), checksum) };
-    QVERIFY(
-        planCompendiumBuild(dbPath, 1, sources, QStringLiteral("fp"), /*forceFullRebuild=*/true, true, plan, error));
+    QVERIFY(planCompendiumBuild(
+        dbPath, 1, sources, QStringLiteral("fp"), /*forceFullRebuild=*/true, false, true, QString(), plan, error));
     QVERIFY2(error.isEmpty(), qPrintable(error));
     QCOMPARE(plan.mode, CompendiumBuildMode::Full);
     QVERIFY(plan.sourcesToIngest.contains(QStringLiteral("src-a")));
+}
+
+void CompendiumBuildPlanTest::plan_enrichmentOnlyWhenBuildPhaseIncomplete() {
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString checksum = QStringLiteral("abc123checksum");
+    const QString fingerprint = QStringLiteral("fingerprint-v1");
+    const QString dbPath = dir.filePath(QStringLiteral("plan.db"));
+    QVERIFY(seedPlanDatabase(dbPath, fingerprint, checksum));
+
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("phase-notes"));
+        db.setDatabaseName(dbPath);
+        QVERIFY(db.open());
+        QSqlQuery notesQ(db);
+        notesQ.prepare(QStringLiteral("UPDATE compendium_builds SET notes = ?"));
+        notesQ.addBindValue(notesWithFingerprint(fingerprint, QStringLiteral("ingest_complete")));
+        QVERIFY(notesQ.exec());
+        db.close();
+        QSqlDatabase::removeDatabase(QStringLiteral("phase-notes"));
+    }
+
+    CompendiumBuildPlan plan;
+    QString error;
+    const QList<CompendiumSourceDescriptor> sources = { makeDatSource(QStringLiteral("src-a"), checksum) };
+    QVERIFY(planCompendiumBuild(dbPath, 1, sources, fingerprint, false, false, true, QString(), plan, error));
+    QVERIFY2(error.isEmpty(), qPrintable(error));
+    QCOMPARE(plan.mode, CompendiumBuildMode::EnrichmentOnly);
+}
+
+void CompendiumBuildPlanTest::plan_forceEnrichmentWhenFingerprintMatches() {
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString checksum = QStringLiteral("abc123checksum");
+    const QString fingerprint = QStringLiteral("fingerprint-v1");
+    const QString dbPath = dir.filePath(QStringLiteral("plan.db"));
+    QVERIFY(seedPlanDatabase(dbPath, fingerprint, checksum));
+
+    CompendiumBuildPlan plan;
+    QString error;
+    const QList<CompendiumSourceDescriptor> sources = { makeDatSource(QStringLiteral("src-a"), checksum) };
+    QVERIFY(planCompendiumBuild(
+        dbPath, 1, sources, fingerprint, false, /*forceEnrichment=*/true, true, QString(), plan, error));
+    QVERIFY2(error.isEmpty(), qPrintable(error));
+    QCOMPARE(plan.mode, CompendiumBuildMode::EnrichmentOnly);
+}
+
+void CompendiumBuildPlanTest::plan_enrichmentOnlyFromProgressEnriching() {
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString checksum = QStringLiteral("abc123checksum");
+    const QString fingerprint = QStringLiteral("fingerprint-v1");
+    const QString dbPath = dir.filePath(QStringLiteral("plan.db"));
+    const QString progressPath = dir.filePath(QStringLiteral("plan.db.progress.json"));
+    QVERIFY(seedPlanDatabase(dbPath, fingerprint, checksum));
+
+    {
+        const QJsonObject progress {
+            { QStringLiteral("status"), QStringLiteral("in_progress") },
+            { QStringLiteral("build_phase"), QStringLiteral("enriching") },
+        };
+        QFile progressFile(progressPath);
+        QVERIFY(progressFile.open(QIODevice::WriteOnly | QIODevice::Truncate));
+        progressFile.write(QJsonDocument(progress).toJson(QJsonDocument::Compact));
+    }
+
+    CompendiumBuildPlan plan;
+    QString error;
+    const QList<CompendiumSourceDescriptor> sources = { makeDatSource(QStringLiteral("src-a"), checksum) };
+    QVERIFY(planCompendiumBuild(dbPath, 1, sources, fingerprint, false, false, true, progressPath, plan, error));
+    QVERIFY2(error.isEmpty(), qPrintable(error));
+    QCOMPARE(plan.mode, CompendiumBuildMode::EnrichmentOnly);
+}
+
+void CompendiumBuildPlanTest::plan_enrichmentOnlyFromNotesIngestCompleteWithoutProgress() {
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+
+    const QString checksum = QStringLiteral("abc123checksum");
+    const QString fingerprint = QStringLiteral("fingerprint-v1");
+    const QString dbPath = dir.filePath(QStringLiteral("plan.db"));
+    QVERIFY(seedPlanDatabase(dbPath, fingerprint, checksum));
+
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("notes-only"));
+        db.setDatabaseName(dbPath);
+        QVERIFY(db.open());
+        QSqlQuery notesQ(db);
+        notesQ.prepare(QStringLiteral("UPDATE compendium_builds SET notes = ?"));
+        const QJsonObject notes {
+            { QStringLiteral("build_phase"), QStringLiteral("ingest_complete") },
+            { QStringLiteral("description"), QStringLiteral("Ingest promoted; enrichment pending") },
+        };
+        notesQ.addBindValue(QString::fromUtf8(QJsonDocument(notes).toJson(QJsonDocument::Compact)));
+        QVERIFY(notesQ.exec());
+        db.close();
+        QSqlDatabase::removeDatabase(QStringLiteral("notes-only"));
+    }
+
+    CompendiumBuildPlan plan;
+    QString error;
+    const QList<CompendiumSourceDescriptor> sources = { makeDatSource(QStringLiteral("src-a"), checksum) };
+    QVERIFY(planCompendiumBuild(dbPath, 1, sources, fingerprint, false, false, true, QString(), plan, error));
+    QVERIFY2(error.isEmpty(), qPrintable(error));
+    QCOMPARE(plan.mode, CompendiumBuildMode::EnrichmentOnly);
+}
+
+void CompendiumBuildPlanTest::isIncompleteBuildPhase_recognizesExpectedPhases() {
+    QVERIFY(isIncompleteBuildPhase(QStringLiteral("ingest_complete")));
+    QVERIFY(isIncompleteBuildPhase(QStringLiteral("enriching")));
+    QVERIFY(!isIncompleteBuildPhase(QStringLiteral("enrich_complete")));
+    QVERIFY(!isIncompleteBuildPhase(QStringLiteral("complete")));
+    QVERIFY(!isIncompleteBuildPhase(QStringLiteral("artwork_complete")));
 }
 
 void CompendiumBuildPlanTest::syncManifestSourcesToDatabase_upsertsSourceMetadata() {

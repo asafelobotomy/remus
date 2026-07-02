@@ -13,6 +13,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DB_PATH="$ROOT_DIR/data/compendium/remus_compendium.db"
 TIMEOUT_SEC=0
+NO_LOCK=false
 LOCK_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 if ! mkdir -p "$LOCK_DIR" 2>/dev/null; then
     LOCK_DIR="/tmp"
@@ -26,6 +27,7 @@ usage: $(basename "$0") [options] -- <command...>
 Options:
   --db <path>       Compendium DB path for health warnings (default: data/compendium/remus_compendium.db)
   --timeout <sec>   Kill command after SEC seconds (0 = no limit; default: 0)
+  --no-lock         Skip flock (caller already holds the per-DB lock)
   -h, --help        Show this help
 
 Holds an exclusive flock on \$LOCK_FILE ($LOCK_FILE) for the duration of the command.
@@ -41,6 +43,10 @@ while [[ $# -gt 0 ]]; do
         --timeout)
             TIMEOUT_SEC="$2"
             shift 2
+            ;;
+        --no-lock)
+            NO_LOCK=true
+            shift
             ;;
         -h | --help)
             usage
@@ -77,11 +83,16 @@ else
     fi
 fi
 
-exec 9>"$LOCK_FILE"
-if ! flock -n 9; then
-    echo "error: another compendium job holds $LOCK_FILE" >&2
-    echo "hint: pgrep -af 'sqlite3|remus-cli.*compendium'" >&2
-    exit 1
+if $NO_LOCK || [[ "${REMUS_COMPENDIUM_JOB_NO_LOCK:-}" == "1" ]]; then
+    echo "==> Compendium job starting (lock skipped; caller holds flock) ($(date -u +%H:%M:%SZ))"
+else
+    exec 9>"$LOCK_FILE"
+    if ! flock -n 9; then
+        echo "error: another compendium job holds $LOCK_FILE" >&2
+        echo "hint: pgrep -af 'sqlite3|remus-cli.*compendium'" >&2
+        exit 1
+    fi
+    echo "==> Compendium job lock acquired ($(date -u +%H:%M:%SZ))"
 fi
 
 run_cmd() {
@@ -97,7 +108,6 @@ run_cmd() {
     fi
 }
 
-echo "==> Compendium job lock acquired ($(date -u +%H:%M:%SZ))"
 run_cmd "$@"
 exit_code=$?
 echo "==> Compendium job finished (exit $exit_code)"

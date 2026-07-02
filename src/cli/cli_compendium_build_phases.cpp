@@ -1,15 +1,18 @@
 #include "cli_compendium_build_phases.h"
+#include "compendium_progress.h"
 
 #include "compendium_enrichment.h"
+#include "compendium_enrichment_sql.h"
 #include "compendium_consolidate_thumbnails.h"
 #include "compendium_sql_utilities.h"
-#include "../core/compendium_disc_bridge.h"
 #include "../core/compendium_manifest_parser.h"
+#include "../core/compendium_disc_bridge.h"
 #include "../core/constants/database_schema.h"
 #include "../core/constants/settings.h"
 #include "../core/constants/system_ids.h"
 #include "../metadata/compendium_merge_resolver.h"
 #include "../metadata/compendium_hasheous_offline.h"
+#include "../metadata/compendium_source_purge.h"
 #include "../metadata/compendium_types.h"
 #include "../services/credential_manager.h"
 
@@ -20,7 +23,7 @@
 #include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
-#include <QFileInfo>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QList>
@@ -62,6 +65,15 @@ bool hasScreenScraperCredentials(const QString &credPath) {
     using namespace Constants::Settings::Providers;
     return !load(SCREENSCRAPER_USERNAME).isEmpty() && !load(SCREENSCRAPER_PASSWORD).isEmpty()
         && !load(SCREENSCRAPER_DEVID).isEmpty() && !load(SCREENSCRAPER_DEVPASSWORD).isEmpty();
+}
+
+bool hasTheGamesDbCredentials(const QString &credPath) {
+    const auto load = [&](const char *key) {
+        const QString qkey = QString::fromLatin1(key);
+        return credPath.isEmpty() ? CredentialManager::get(qkey) : CredentialManager::get(qkey, credPath);
+    };
+    using namespace Constants::Settings::Providers;
+    return !load(THEGAMESDB_API_KEY).isEmpty();
 }
 
 bool queryHasRows(QSqlDatabase &db, const QString &sql, QString &error) {
@@ -108,8 +120,8 @@ bool hasGametdbGaps(QSqlDatabase &db, QString &error) {
         error);
 }
 
-// Checks metadata gaps IGDB bulk enrichment can fill (excludes rating-only gaps to
-// avoid re-downloading entire platform catalogs when only ratings are missing).
+// True when IGDB enrichment should run: any game still missing bulk-fillable fields.
+// Games with igdb_id from hash bridges still need the per-id metadata fetch.
 bool hasIgdbBulkMetadataGaps(QSqlDatabase &db, QString &error) {
     return queryHasRows(db,
         QStringLiteral("SELECT 1 FROM games "
@@ -120,10 +132,6 @@ bool hasIgdbBulkMetadataGaps(QSqlDatabase &db, QString &error) {
                        "   OR release_date IS NULL OR TRIM(release_date) = '' "
                        "   OR description IS NULL OR TRIM(description) = '' "
                        "   OR players_max IS NULL) "
-                       "  AND (igdb_id IS NULL OR TRIM(igdb_id) = '') "
-                       "  AND NOT EXISTS (SELECT 1 FROM game_facts gf "
-                       "                  WHERE gf.game_id = games.game_id "
-                       "                    AND gf.field_name = 'igdb_id') "
                        "LIMIT 1"),
         error);
 }
@@ -162,16 +170,18 @@ bool hasOpenVgdbGaps(QSqlDatabase &db, QString &error, const QString &gametdbDir
 bool hasLaunchBoxGaps(QSqlDatabase &db, QString &error) {
     return queryHasRows(db,
         QStringLiteral("SELECT 1 FROM games g "
+                       "LEFT JOIN ("
+                       "  SELECT gs.game_id "
+                       "  FROM game_signatures gs "
+                       "  JOIN source_items si ON si.external_key = gs.source_entry_key "
+                       "  WHERE json_extract(si.payload_json, '$.rom_name') IS NOT NULL "
+                       "    AND TRIM(json_extract(si.payload_json, '$.rom_name')) <> '' "
+                       "  GROUP BY gs.game_id"
+                       ") si_rom ON si_rom.game_id = g.game_id "
                        "WHERE (%1) "
-                       "  AND EXISTS ("
-                       "      SELECT 1 FROM game_signatures gs "
-                       "      JOIN source_items si ON si.external_key = gs.source_entry_key "
-                       "      WHERE gs.game_id = g.game_id "
-                       "        AND json_extract(si.payload_json, '$.rom_name') IS NOT NULL "
-                       "        AND TRIM(json_extract(si.payload_json, '$.rom_name')) <> ''"
-                       "  ) "
+                       "  AND (TRIM(g.canonical_title) <> '' OR si_rom.game_id IS NOT NULL) "
                        "LIMIT 1")
-            .arg(QLatin1String(kGeneralMetadataGapSql)),
+            .arg(QLatin1String(CompendiumEnrichmentSql::kGameMetadataGapSql)),
         error);
 }
 
@@ -330,6 +340,69 @@ bool hasAnyPlayMatchGaps(QSqlDatabase &db, QString &error) {
 
 } // namespace
 
+static QString enrichmentFingerprintSidecarPath() {
+    const QStringList candidateRoots {
+        QStringLiteral("data/compendium"),
+        QStringLiteral("../data/compendium"),
+    };
+    for (const QString &relRoot : candidateRoots) {
+        const QFileInfo rootInfo(QDir(relRoot).absolutePath());
+        if (rootInfo.isDir()) {
+            return QDir(rootInfo.absoluteFilePath()).filePath(QStringLiteral(".enrichment-inputs-fingerprint.json"));
+        }
+    }
+    return QDir(QStringLiteral("data/compendium"))
+        .absoluteFilePath(QStringLiteral(".enrichment-inputs-fingerprint.json"));
+}
+
+void bumpEnrichmentFingerprintSidecar(const QString &section, const QJsonObject &sectionData) {
+    const QString sidecarPath = enrichmentFingerprintSidecarPath();
+    if (sidecarPath.isEmpty()) {
+        return;
+    }
+
+    QJsonObject root;
+    QFile existing(sidecarPath);
+    if (existing.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        const QJsonDocument doc = QJsonDocument::fromJson(existing.readAll());
+        if (doc.isObject()) {
+            root = doc.object();
+        }
+    }
+
+    QJsonObject sectionObj = sectionData;
+    sectionObj.insert(QStringLiteral("updated_at"), QDateTime::currentSecsSinceEpoch());
+    root.insert(section, sectionObj);
+    root.insert(QStringLiteral("metadata"),
+        QJsonObject {
+            { QStringLiteral("updated_at"), QDateTime::currentSecsSinceEpoch() },
+            { QStringLiteral("sidecar_version"), 1 },
+        });
+
+    QDir().mkpath(QFileInfo(sidecarPath).absolutePath());
+    QFile out(sidecarPath);
+    if (!out.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+        qWarning() << "[fingerprint] Failed to write sidecar:" << sidecarPath;
+        return;
+    }
+    out.write(QJsonDocument(root).toJson(QJsonDocument::Indented));
+}
+
+void bumpRemusThumbnailsFingerprintSidecar(const QString &thumbnailDir) {
+    if (thumbnailDir.isEmpty()) {
+        return;
+    }
+    const QString manifestPath = QDir(thumbnailDir).filePath(QStringLiteral("manifest.json"));
+    if (!QFileInfo::exists(manifestPath)) {
+        return;
+    }
+    bumpEnrichmentFingerprintSidecar(QStringLiteral("remus_thumbnails"),
+        QJsonObject {
+            { QStringLiteral("manifest_sha256"), fileSha256Hex(manifestPath) },
+            { QStringLiteral("manifest_mtime"), QFileInfo(manifestPath).lastModified().toSecsSinceEpoch() },
+        });
+}
+
 static void addTreeToEnrichmentFingerprint(QCryptographicHash &hash, const QString &rootPath) {
     QFileInfo fi(rootPath);
     if (!fi.exists()) {
@@ -365,27 +438,50 @@ static void addTreeToEnrichmentFingerprint(QCryptographicHash &hash, const QStri
 QString computeEnrichmentInputsFingerprint(const QString &metadataDir, const QString &gametdbDir,
     const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath,
     const QString &launchboxMetadataPath, const QString &credPath, const QStringList &sourceFilter,
-    bool offlineOnlyEnrichment, bool onlineEnrichmentAll) {
+    bool offlineOnlyEnrichment, bool onlineEnrichmentAll, const QString &remusThumbnailsDir,
+    const QString &libretroAcquisitionDir) {
     QCryptographicHash hash(QCryptographicHash::Sha256);
 
-    auto addLabeledTree = [&](const char *label, const QString &path) {
-        hash.addData(label);
-        hash.addData("\n");
-        if (path.isEmpty()) {
+    const QString sidecarPath = enrichmentFingerprintSidecarPath();
+    if (!sidecarPath.isEmpty() && QFileInfo::exists(sidecarPath)) {
+        QFile sidecarFile(sidecarPath);
+        if (sidecarFile.open(QIODevice::ReadOnly)) {
+            hash.addData("sidecar\n");
+            hash.addData(sidecarFile.readAll());
+            hash.addData("\n");
+        }
+        hash.addData("credentials\n");
+        if (credPath.isEmpty() || !QFileInfo::exists(credPath)) {
             hash.addData("empty\n");
         } else {
-            addTreeToEnrichmentFingerprint(hash, path);
+            QFile credFile(credPath);
+            if (credFile.open(QIODevice::ReadOnly)) {
+                hash.addData(credFile.readAll());
+            }
+            hash.addData("\n");
         }
-    };
+    } else {
+        auto addLabeledTree = [&](const char *label, const QString &path) {
+            hash.addData(label);
+            hash.addData("\n");
+            if (path.isEmpty()) {
+                hash.addData("empty\n");
+            } else {
+                addTreeToEnrichmentFingerprint(hash, path);
+            }
+        };
 
-    addLabeledTree("metadata", metadataDir);
-    addLabeledTree("gametdb", gametdbDir);
-    addLabeledTree("openvgdb", openvgdbPath);
-    addLabeledTree("mame_catver", mameCatverPath);
-    addLabeledTree("mame_listxml", mameListXmlPath);
-    addLabeledTree("launchbox_metadata", launchboxMetadataPath);
-    addLabeledTree("credentials", credPath);
-    addLabeledTree("hasheous_dumps", Remus::Compendium::findHasheousDumpDir());
+        addLabeledTree("metadata", metadataDir);
+        addLabeledTree("gametdb", gametdbDir);
+        addLabeledTree("openvgdb", openvgdbPath);
+        addLabeledTree("mame_catver", mameCatverPath);
+        addLabeledTree("mame_listxml", mameListXmlPath);
+        addLabeledTree("launchbox_metadata", launchboxMetadataPath);
+        addLabeledTree("credentials", credPath);
+        addLabeledTree("hasheous_dumps", Remus::Compendium::findHasheousDumpDir());
+        addLabeledTree("remus_thumbnails", remusThumbnailsDir);
+        addLabeledTree("libretro_acquisition", libretroAcquisitionDir);
+    }
 
     QStringList sortedFilter = sourceFilter;
     sortedFilter.sort(Qt::CaseInsensitive);
@@ -409,6 +505,52 @@ QString enrichmentFingerprintFromBuildNotes(const QString &notes) {
         return { };
     }
     return document.object().value(QStringLiteral("enrichment_inputs_fingerprint")).toString();
+}
+
+QString buildPhaseFromBuildNotes(const QString &notes) {
+    QJsonParseError parseError;
+    const QJsonDocument document = QJsonDocument::fromJson(notes.toUtf8(), &parseError);
+    if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
+        return { };
+    }
+    return document.object().value(QStringLiteral("build_phase")).toString();
+}
+
+bool isIncompleteBuildPhase(const QString &phase) {
+    return phase == QStringLiteral("ingest_complete") || phase == QStringLiteral("enriching");
+}
+
+bool persistBuildPhaseNotes(QSqlDatabase &database, const QString &buildId, const QString &buildPhase,
+    const QString &description, const QString &enrichmentFingerprint) {
+    QJsonObject notesObj {
+        { QStringLiteral("description"), description },
+        { QStringLiteral("build_phase"), buildPhase },
+    };
+    if (!enrichmentFingerprint.isEmpty()) {
+        notesObj.insert(QStringLiteral("enrichment_inputs_fingerprint"), enrichmentFingerprint);
+    }
+    QSqlQuery notesQuery(database);
+    notesQuery.prepare(QStringLiteral("UPDATE compendium_builds SET notes = ? WHERE build_id = ?"));
+    notesQuery.addBindValue(QString::fromUtf8(QJsonDocument(notesObj).toJson(QJsonDocument::Compact)));
+    notesQuery.addBindValue(buildId);
+    if (!notesQuery.exec()) {
+        qWarning() << "[build-compendium] Failed to persist build phase notes:" << notesQuery.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+QString readBuildPhaseFromProgressFile(const QString &progressPath) {
+    QFile file(progressPath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        return { };
+    }
+    QJsonParseError parseError;
+    const QJsonDocument document = QJsonDocument::fromJson(file.readAll(), &parseError);
+    if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
+        return { };
+    }
+    return document.object().value(QStringLiteral("build_phase")).toString();
 }
 
 void insertEnrichmentStatsReportFields(
@@ -516,7 +658,8 @@ EnrichmentCliOptions resolveEnrichmentCliOptions(const QCommandLineParser &parse
 bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir, const QString &gametdbDir,
     const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath, const QString &mameListXmlPath,
     const QString &launchboxMetadataPath, EnrichmentStats &stats, QString &error, EnrichmentProgressCallback onProgress,
-    QStringList sourceFilter, bool offlineOnlyEnrichment, bool onlineEnrichmentAll) {
+    QStringList sourceFilter, bool offlineOnlyEnrichment, bool onlineEnrichmentAll,
+    CompendiumProgressWriter *progressWriter) {
     auto runSelfManagedPass = [&](const QString &passName, auto &&passFn) -> bool {
         if (!passFn()) {
             error = QStringLiteral("%1 failed: %2").arg(passName, error);
@@ -539,6 +682,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
     const bool hasIgdbCreds = hasIgdbCredentials(credPath);
     const bool hasRaCreds = hasRaCredentials(credPath);
     const bool hasScreenScraperCreds = hasScreenScraperCredentials(credPath);
+    const bool hasTheGamesDbCreds = hasTheGamesDbCredentials(credPath);
     const bool hasMameCatverPath = !mameCatverPath.isEmpty() && QFile::exists(mameCatverPath);
     const bool hasMameListXmlPath = !mameListXmlPath.isEmpty() && QFile::exists(mameListXmlPath);
     const bool hasLaunchBoxMetadataPath = !launchboxMetadataPath.isEmpty() && QFile::exists(launchboxMetadataPath);
@@ -594,8 +738,12 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             [&] { return hasLaunchBoxMetadataPath; },
             [&] { return hasLaunchBoxGaps(db, error); },
             [&] {
-                return CompendiumEnrichment::enrichFromLaunchBox(
-                    db, launchboxMetadataPath, stats.launchboxGamesEnriched, stats.launchboxFactsInserted, error);
+                const QStringList gapFields
+                    = (sourceFilter.size() == 1 && sourceFilter.contains(QStringLiteral("launchbox")))
+                    ? QStringList { QStringLiteral("genre") }
+                    : QStringList { };
+                return CompendiumEnrichment::enrichFromLaunchBox(db, launchboxMetadataPath,
+                    stats.launchboxGamesEnriched, stats.launchboxFactsInserted, error, gapFields);
             },
         },
         {
@@ -664,7 +812,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         {
             QStringLiteral("TheGamesDB enrichment"),
             QStringLiteral("thegamesdb"),
-            [&] { return !offlineOnlyEnrichment; },
+            [&] { return hasTheGamesDbCreds && !offlineOnlyEnrichment; },
             [&] { return hasTheGamesDBGaps(db, error); },
             [&] {
                 return CompendiumEnrichment::enrichFromTheGamesDB(
@@ -749,6 +897,8 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             continue;
         }
 
+        if (progressWriter)
+            progressWriter->writeEnrichmentPassStart(passIdx, totalPasses, pass.name, pass.sourceKey);
         if (onProgress)
             onProgress(passIdx, totalPasses, pass.name);
         qInfo().noquote() << QStringLiteral("[ENRICH] Pass %1/%2: %3 …").arg(passIdx).arg(totalPasses).arg(pass.name);
@@ -768,6 +918,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
             continue;
         }
 
+        CompendiumEnrichmentProgressScope passProgressScope(progressWriter, pass.sourceKey, passIdx, totalPasses);
         const bool ok = runSelfManagedPass(pass.name, pass.run);
         if (!ok) {
             qWarning().noquote() << QStringLiteral("[ENRICH] Pass %1/%2: %3 failed (non-fatal): %4")
@@ -802,15 +953,24 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
         }
         stats.resolvedFields = resolveStats.resolvedFields;
         stats.unresolvedConflicts = resolveStats.unresolvedConflicts;
+        stats.needsFtsRebuild = resolveStats.titleFieldsResolved > 0;
         stats.mergeRuns = 1;
     }
 
     return true;
 }
 
-bool populateCompendiumFtsIndex(QSqlDatabase &db, int &rowsIndexed, QString &error) {
+bool populateCompendiumFtsIndex(
+    QSqlDatabase &db, int &rowsIndexed, QString &error, CompendiumProgressWriter *progressWriter) {
     rowsIndexed = 0;
-    qInfo() << "[buildCompendium] Rebuilding FTS search index (clearing previous content)...";
+    auto reportFts = [&](const QString &phase, int done, int total, const QString &detail, int overallPct) {
+        if (progressWriter)
+            progressWriter->writeTaskProgress(QStringLiteral("fts_rebuild"), phase, done, total, detail, overallPct);
+        else
+            CompendiumProgressWriter::logProgressLine(QStringLiteral("[FTS] %1 %2").arg(phase, detail));
+    };
+
+    reportFts(QStringLiteral("clearing"), 0, 4, QStringLiteral("removing previous index content"), 95);
     if (!db.transaction()) {
         error = QStringLiteral("Could not start FTS transaction: %1").arg(db.lastError().text());
         return false;
@@ -842,6 +1002,8 @@ bool populateCompendiumFtsIndex(QSqlDatabase &db, int &rowsIndexed, QString &err
         return false;
     }
     rowsIndexed += ftsQ.numRowsAffected();
+    reportFts(
+        QStringLiteral("games_search_titles"), 1, 4, QStringLiteral("%1 title rows indexed").arg(rowsIndexed), 96);
 
     const bool ok2 = ftsQ.exec(QStringLiteral("INSERT INTO games_search(title, game_id, system_id, region_code) "
                                               "SELECT gn.name_text, gn.game_id, g.system_id, "
@@ -853,6 +1015,8 @@ bool populateCompendiumFtsIndex(QSqlDatabase &db, int &rowsIndexed, QString &err
         return false;
     }
     rowsIndexed += ftsQ.numRowsAffected();
+    reportFts(
+        QStringLiteral("games_search_aliases"), 2, 4, QStringLiteral("%1 total search rows").arg(rowsIndexed), 97);
 
     // ── games_fts (unicode61, columns: game_id / system_id / title_text) ─────────
     // Populated here so the provider does not perform a slow lazy-populate on first
@@ -868,6 +1032,7 @@ bool populateCompendiumFtsIndex(QSqlDatabase &db, int &rowsIndexed, QString &err
         return false;
     }
     rowsIndexed += ftsQ.numRowsAffected();
+    reportFts(QStringLiteral("games_fts"), 3, 4, QStringLiteral("%1 FTS rows indexed").arg(rowsIndexed), 98);
 
     if (!db.commit()) {
         error = QStringLiteral("FTS transaction commit failed: %1").arg(db.lastError().text());
@@ -881,6 +1046,7 @@ bool populateCompendiumFtsIndex(QSqlDatabase &db, int &rowsIndexed, QString &err
         error = QStringLiteral("games_fts optimize failed: %1").arg(ftsQ.lastError().text());
         return false;
     }
+    reportFts(QStringLiteral("optimize"), 4, 4, QStringLiteral("FTS optimize complete"), 99);
     qInfo() << "[buildCompendium] FTS index rebuilt and optimized.";
     return true;
 }
@@ -914,6 +1080,14 @@ QString readStoredEnrichmentFingerprint(QSqlDatabase &db) {
     return enrichmentFingerprintFromBuildNotes(q.value(0).toString());
 }
 
+QString readStoredBuildPhase(QSqlDatabase &db) {
+    QSqlQuery q(db);
+    if (!q.exec(QStringLiteral("SELECT notes FROM compendium_builds ORDER BY built_at DESC LIMIT 1")) || !q.next()) {
+        return { };
+    }
+    return buildPhaseFromBuildNotes(q.value(0).toString());
+}
+
 bool databaseHasPopulatedContent(QSqlDatabase &db) {
     QSqlQuery q(db);
     return q.exec(QStringLiteral("SELECT 1 FROM games LIMIT 1")) && q.next();
@@ -929,8 +1103,8 @@ void releasePlanDatabase(QSqlDatabase &db) {
 } // namespace
 
 bool planCompendiumBuild(const QString &dbPath, int schemaVersion, const QList<CompendiumSourceDescriptor> &sources,
-    const QString &enrichmentFingerprint, bool forceFullRebuild, bool reportExists, CompendiumBuildPlan &plan,
-    QString &error) {
+    const QString &enrichmentFingerprint, bool forceFullRebuild, bool forceEnrichment, bool reportExists,
+    const QString &progressPath, CompendiumBuildPlan &plan, QString &error) {
     plan = CompendiumBuildPlan { };
     plan.mode = CompendiumBuildMode::Full;
 
@@ -974,6 +1148,10 @@ bool planCompendiumBuild(const QString &dbPath, int schemaVersion, const QList<C
     }
 
     plan.storedEnrichmentFingerprint = readStoredEnrichmentFingerprint(db);
+    const QString storedBuildPhase = readStoredBuildPhase(db);
+    const QString progressBuildPhase = readBuildPhaseFromProgressFile(progressPath);
+    const QString effectiveBuildPhase = !progressBuildPhase.isEmpty() ? progressBuildPhase : storedBuildPhase;
+    const bool incompleteBuildPhase = isIncompleteBuildPhase(effectiveBuildPhase);
 
     for (const CompendiumSourceDescriptor &source : sources) {
         if (!source.enabled || source.sourceType != QStringLiteral("dat")) {
@@ -996,12 +1174,13 @@ bool planCompendiumBuild(const QString &dbPath, int schemaVersion, const QList<C
         = !plan.storedEnrichmentFingerprint.isEmpty() && plan.storedEnrichmentFingerprint == enrichmentFingerprint;
 
     if (plan.sourcesToIngest.isEmpty()) {
-        if (enrichmentMatches) {
+        if (!reportExists || forceEnrichment || incompleteBuildPhase) {
+            plan.mode = CompendiumBuildMode::EnrichmentOnly;
+        } else if (enrichmentMatches) {
             plan.mode = CompendiumBuildMode::Skip;
         } else {
             plan.mode = CompendiumBuildMode::EnrichmentOnly;
         }
-        Q_UNUSED(reportExists);
     } else {
         plan.mode = CompendiumBuildMode::IncrementalIngest;
     }
@@ -1082,6 +1261,31 @@ bool syncManifestSourcesToDatabase(QSqlDatabase &db, const QList<CompendiumSourc
         }
     }
 
+    return true;
+}
+
+bool purgeDisabledSourcesIngestData(
+    QSqlDatabase &db, const QList<Remus::CompendiumSourceDescriptor> &sources, QString &error) {
+    QSqlQuery countQ(db);
+    for (const Remus::CompendiumSourceDescriptor &source : sources) {
+        if (source.enabled) {
+            continue;
+        }
+        countQ.prepare(QStringLiteral("SELECT COUNT(*) FROM source_items WHERE source_id = ?"));
+        countQ.addBindValue(source.sourceId);
+        if (!countQ.exec() || !countQ.next()) {
+            error = countQ.lastError().text();
+            return false;
+        }
+        if (countQ.value(0).toInt() <= 0) {
+            continue;
+        }
+        qInfo().noquote()
+            << QStringLiteral("[build-compendium] Purging ingest data for disabled source: %1").arg(source.sourceId);
+        if (!Remus::Compendium::purgeSourceIngestData(db, source.sourceId, error)) {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -1272,16 +1476,30 @@ int runCompendiumEnrichmentOnlyRefresh(QSqlDatabase &database, const QString &bu
     const QString &gametdbDir, const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath,
     const QString &mameListXmlPath, const QString &launchboxMetadataPath, const QStringList &sourceFilter,
     EnrichmentProgressCallback onProgress, QJsonObject &reportOut, QString &error, bool offlineOnlyEnrichment,
-    bool onlineEnrichmentAll) {
+    bool onlineEnrichmentAll, CompendiumProgressWriter *progressWriter) {
     EnrichmentStats enrichStats;
     if (!runCompendiumEnrichmentPasses(database, metadataDir, gametdbDir, openvgdbPath, credPath, mameCatverPath,
             mameListXmlPath, launchboxMetadataPath, enrichStats, error, onProgress, sourceFilter, offlineOnlyEnrichment,
-            onlineEnrichmentAll)) {
+            onlineEnrichmentAll, progressWriter)) {
         return 1;
     }
 
-    if (!populateCompendiumFtsIndex(database, enrichStats.ftsRowsIndexed, error)) {
+    if (enrichStats.passesFailedWithError > 0) {
+        persistBuildPhaseNotes(database, buildId, QStringLiteral("ingest_complete"),
+            QStringLiteral("Enrichment-only refresh interrupted by pass failures"));
+        error = QStringLiteral("%1 enrichment pass(es) failed").arg(enrichStats.passesFailedWithError);
         return 1;
+    }
+
+    persistBuildPhaseNotes(database, buildId, QStringLiteral("enrich_complete"),
+        QStringLiteral("Enrichment passes complete; FTS pending"));
+
+    if (shouldRebuildCompendiumFts(enrichStats, false)) {
+        if (!populateCompendiumFtsIndex(database, enrichStats.ftsRowsIndexed, error, progressWriter)) {
+            return 1;
+        }
+    } else if (enrichStats.passesExecuted > 0) {
+        qInfo() << "[FTS] Skipped — enrichment did not change searchable title fields";
     }
 
     finalizeCompendiumBuildArtifacts(database);
@@ -1294,6 +1512,7 @@ int runCompendiumEnrichmentOnlyRefresh(QSqlDatabase &database, const QString &bu
     const QJsonObject notesObj {
         { QStringLiteral("description"), QStringLiteral("Enrichment-only refresh") },
         { QStringLiteral("enrichment_inputs_fingerprint"), enrichmentFingerprint },
+        { QStringLiteral("build_phase"), QStringLiteral("complete") },
     };
     QSqlQuery notesQuery(database);
     notesQuery.prepare(QStringLiteral("UPDATE compendium_builds SET notes = ?, built_at = ? WHERE build_id = ?"));

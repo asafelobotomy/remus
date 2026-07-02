@@ -60,6 +60,7 @@ SQL_STEPS=(
     "$ROOT_DIR/data/compendium/migrations/0010_game_extended_metadata.sql"
     "$ROOT_DIR/data/compendium/migrations/0011_materialized_coverage.sql"
     "$ROOT_DIR/data/compendium/migrations/0012_game_assets.sql"
+    "$ROOT_DIR/data/compendium/migrations/0013_disc_tracks_per_set_unique.sql"
 )
 VALIDATION_SQL="$ROOT_DIR/data/compendium/validation/0001_phase1_checks.sql"
 DISC_SET_VALIDATION_SQL="$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql"
@@ -105,3 +106,4 @@ echo "Run the full validator after ingest/build populates games, signatures, and
 echo "  sqlite3 -header -column '$DB_PATH' < '$VALIDATION_SQL'"
 
 echo "==> Done"
+bash "$ROOT_DIR/scripts/apply_compendium_migrations.sh" "$DB_PATH"

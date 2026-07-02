@@ -8,8 +8,10 @@ alwaysApply: false
 
 ## One job at a time
 
-- Run **at most one** sqlite3 / `--enrich-compendium` / `--build-compendium` job on a given compendium DB at a time.
-- Wrap commands with `scripts/run_compendium_job.sh --db <path> -- …` (flock serializes shell-level jobs).
+- Run **at most one** sqlite3 / `--enrich-compendium` / `--build-compendium` / `build_compendium_full.sh` job on a given compendium DB at a time.
+- All jobs share one flock domain: `$XDG_RUNTIME_DIR/$(basename <db>).lock` (same path as `run_compendium_job.sh`).
+- Wrap sub-commands with `scripts/run_compendium_job.sh --db <path> -- …` (flock serializes shell-level jobs).
+- `build_compendium_full.sh` holds the per-DB lock for its entire run; nested `run_compendium_job.sh` calls use `--no-lock`.
 - SQLite `busy_timeout` is set inside **remus-cli** connections (30s write / 60s read via `compendium_sql_pragmas.h`); flock does not replace it.
 - Before starting, check: `pgrep -af 'sqlite3.*remus_compendium|remus-cli.*compendium'`
 
@@ -17,8 +19,12 @@ alwaysApply: false
 
 | Script | SQL | Budget |
 |--------|-----|--------|
+| `scripts/validate_compendium_tier.sh ci` | 0001, 0004, 0006, 0005 warn | post-build default |
+| `scripts/validate_compendium_tier.sh artwork` | 0013 warn | after consolidate |
 | `scripts/validate_compendium_quick.sh` | 0002 | ~1 min |
 | `scripts/validate_compendium_extended.sh` | 0003 | ~30s (after migrations) |
+
+`build_compendium_full.sh` flags: `--skip-validation` (ci tier only), `--skip-migrations`, `--strict-offline` (Tier A `offline-mirrors.json`), `--force-enrichment`, `--recover`, `--allow-patch-skip`.
 
 Never launch parallel `0003` validation processes. Do not wrap these scripts in `run_compendium_job.sh` — they already call it internally.
 

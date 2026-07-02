@@ -4,6 +4,11 @@
 #include <QString>
 #include <QStringList>
 
+#include <functional>
+
+using ConsolidateThumbnailsProgressCallback
+    = std::function<void(int gamesScanned, int totalGames, const QString &detail)>;
+
 struct ConsolidateThumbnailsOptions {
     QString acquisitionDir;
     QString outputDir;
@@ -14,6 +19,7 @@ struct ConsolidateThumbnailsOptions {
     int maxWidth = 512;
     bool dryRun = false;
     bool pruneAcquisitionSources = false;
+    ConsolidateThumbnailsProgressCallback onProgress;
 };
 
 struct ConsolidateThumbnailsStats {

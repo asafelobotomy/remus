@@ -15,6 +15,8 @@ class QJsonObject;
 class QSqlDatabase;
 class QJsonObject;
 
+class CompendiumProgressWriter;
+
 // Progress callback fired before each enrichment pass begins.
 // passIdx:    1-based index of the pass about to run.
 // totalPasses: total number of configured passes (including skipped ones).
@@ -110,7 +112,17 @@ struct EnrichmentStats {
     int thegamesdbGamesEnriched = 0;
     int thegamesdbFactsInserted = 0;
     int ftsRowsIndexed = 0;
+    bool needsFtsRebuild = false;
 };
+
+/** Whether to run populateCompendiumFtsIndex after enrichment passes. */
+inline bool shouldRebuildCompendiumFts(const EnrichmentStats &stats, bool skipFtsCliFlag) {
+    if (skipFtsCliFlag)
+        return false;
+    if (stats.passesExecuted == 0)
+        return false;
+    return stats.needsFtsRebuild;
+}
 
 /**
  * @brief Run all enrichment passes (Libretro metadata, GameTDB, OpenVGDB, IGDB,
@@ -143,7 +155,7 @@ bool runCompendiumEnrichmentPasses(QSqlDatabase &db, const QString &metadataDir,
     const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath, const QString &mameListXmlPath,
     const QString &launchboxMetadataPath, EnrichmentStats &stats, QString &error,
     EnrichmentProgressCallback onProgress = nullptr, QStringList sourceFilter = { }, bool offlineOnlyEnrichment = false,
-    bool onlineEnrichmentAll = false);
+    bool onlineEnrichmentAll = false, CompendiumProgressWriter *progressWriter = nullptr);
 
 /**
  * @brief Source keys that require live network access during enrichment.
@@ -212,7 +224,8 @@ inline QStringList perGameOnlineEnrichmentSourceKeys() {
  * @param error [out] Human-readable error on failure.
  * @return true on success, false on failure.
  */
-bool populateCompendiumFtsIndex(QSqlDatabase &db, int &rowsIndexed, QString &error);
+bool populateCompendiumFtsIndex(
+    QSqlDatabase &db, int &rowsIndexed, QString &error, CompendiumProgressWriter *progressWriter = nullptr);
 
 /**
  * @brief Insert enrichment stat fields into a report JSON object.
@@ -233,13 +246,45 @@ void insertEnrichmentStatsReportFields(
  */
 QString computeEnrichmentInputsFingerprint(const QString &metadataDir, const QString &gametdbDir,
     const QString &openvgdbPath, const QString &mameCatverPath, const QString &mameListXmlPath,
-    const QString &launchboxMetadataPath, const QString &credPath, const QStringList &sourceFilter = { },
-    bool offlineOnlyEnrichment = false, bool onlineEnrichmentAll = false);
+    const QString &launchboxMetadataPath, const QString &credPath, const QStringList &sourceFilter,
+    bool offlineOnlyEnrichment, bool onlineEnrichmentAll, const QString &remusThumbnailsDir = QString(),
+    const QString &libretroAcquisitionDir = QString());
 
 /**
  * @brief Extract a stored enrichment fingerprint from compendium_builds.notes JSON.
  */
 QString enrichmentFingerprintFromBuildNotes(const QString &notes);
+
+/**
+ * @brief Extract build_phase from compendium_builds.notes JSON.
+ */
+QString buildPhaseFromBuildNotes(const QString &notes);
+
+/**
+ * @brief True when build_phase indicates enrichment still pending after ingest promote.
+ */
+bool isIncompleteBuildPhase(const QString &phase);
+
+/**
+ * @brief True when enrichment was interrupted after early ingest promote.
+ */
+bool persistBuildPhaseNotes(QSqlDatabase &database, const QString &buildId, const QString &buildPhase,
+    const QString &description, const QString &enrichmentFingerprint = QString());
+
+/**
+ * @brief Read build_phase from a *.progress.json sidecar (empty when absent).
+ */
+QString readBuildPhaseFromProgressFile(const QString &progressPath);
+
+/**
+ * @brief Update one section of data/compendium/.enrichment-inputs-fingerprint.json.
+ */
+void bumpEnrichmentFingerprintSidecar(const QString &section, const QJsonObject &sectionData);
+
+/**
+ * @brief Refresh remus_thumbnails section from manifest.json SHA-256.
+ */
+void bumpRemusThumbnailsFingerprintSidecar(const QString &thumbnailDir);
 
 /**
  * @brief Returns the canonical set of source key strings accepted by the
@@ -292,12 +337,17 @@ struct CompendiumBuildPlan {
  */
 bool planCompendiumBuild(const QString &dbPath, int schemaVersion,
     const QList<Remus::CompendiumSourceDescriptor> &sources, const QString &enrichmentFingerprint,
-    bool forceFullRebuild, bool reportExists, CompendiumBuildPlan &plan, QString &error);
+    bool forceFullRebuild, bool forceEnrichment, bool reportExists, const QString &progressPath,
+    CompendiumBuildPlan &plan, QString &error);
 
 /// Upsert manifest source metadata and insert snapshot rows for changed sources.
 bool syncManifestSourcesToDatabase(QSqlDatabase &db, const QList<Remus::CompendiumSourceDescriptor> &sources,
     const QSet<QString> &changedSourceIds, const QString &buildId, int schemaVersion,
     const QString &normalizedManifestJson, QString &error);
+
+/// Remove ingest rows for manifest sources marked disabled but still holding source_items.
+bool purgeDisabledSourcesIngestData(
+    QSqlDatabase &db, const QList<Remus::CompendiumSourceDescriptor> &sources, QString &error);
 
 /// Apply build pragmas used during compendium builds.
 void applyCompendiumBuildPragmas(QSqlDatabase &database);
@@ -314,4 +364,4 @@ int runCompendiumEnrichmentOnlyRefresh(QSqlDatabase &database, const QString &bu
     const QString &gametdbDir, const QString &openvgdbPath, const QString &credPath, const QString &mameCatverPath,
     const QString &mameListXmlPath, const QString &launchboxMetadataPath, const QStringList &sourceFilter,
     EnrichmentProgressCallback onProgress, QJsonObject &reportOut, QString &error, bool offlineOnlyEnrichment = false,
-    bool onlineEnrichmentAll = false);
+    bool onlineEnrichmentAll = false, CompendiumProgressWriter *progressWriter = nullptr);

@@ -1,0 +1,101 @@
+{
+  "required_files": [
+    {
+      "path": "data/openvgdb/openvgdb.sqlite",
+      "min_bytes": 1000000,
+      "hint": "scripts/update_dats.sh --all"
+    },
+    {
+      "path": "data/mame/listxml.xml",
+      "min_bytes": 104857600,
+      "hint": "scripts/update_dats.sh --all"
+    },
+    {
+      "path": "data/mame/catver.ini",
+      "min_bytes": 65536,
+      "hint": "scripts/update_dats.sh --all"
+    },
+    {
+      "path": "data/launchbox/Metadata.xml",
+      "min_bytes": 1048576,
+      "hint": "scripts/update_launchbox_metadata.sh"
+    }
+  ],
+  "required_directories": [
+    {
+      "path": "data/databases",
+      "glob": "*.dat",
+      "min_files": 5,
+      "hint": "scripts/update_dats.sh --all"
+    },
+    {
+      "path": "data/databases/no-intro",
+      "glob": "*.dat",
+      "min_files": 1,
+      "hint": "scripts/update_dats.sh --all"
+    },
+    {
+      "path": "data/databases/redump",
+      "glob": "*.dat",
+      "min_files": 1,
+      "hint": "scripts/update_dats.sh --all"
+    },
+    {
+      "path": "data/metadata",
+      "glob": "*.dat",
+      "min_files": 1,
+      "hint": "scripts/update_dats.sh --all"
+    },
+    {
+      "path": "data/gametdb",
+      "glob": "*.xml",
+      "min_files": 1,
+      "hint": "scripts/update_dats.sh --all"
+    },
+    {
+      "path": "data/hasheous/dumps",
+      "glob": "*.json",
+      "min_files": 10,
+      "exclude_glob": "PlatformMapping.json",
+      "hint": "scripts/update_dats.sh --all"
+    }
+  ],
+  "required_one_of": [
+    {
+      "id": "artwork",
+      "hint": "scripts/update_libretro_thumbnails.sh --all OR run consolidate",
+      "options": [
+        {
+          "path": "data/remus-thumbnails/manifest.json",
+          "min_bytes": 64
+        },
+        {
+          "path": "data/acquisition/libretro-thumbnails",
+          "glob": "**/*.png",
+          "min_files": 100
+        }
+      ]
+    }
+  ],
+  "required": [
+    {
+      "path": "data/openvgdb/openvgdb.sqlite",
+      "min_bytes": 1000000,
+      "hint": "scripts/update_dats.sh --all"
+    },
+    {
+      "path": "data/mame/listxml.xml",
+      "min_bytes": 104857600,
+      "hint": "scripts/update_dats.sh --all"
+    },
+    {
+      "path": "data/launchbox/Metadata.xml",
+      "min_bytes": 1048576,
+      "hint": "scripts/update_launchbox_metadata.sh"
+    }
+  ],
+  "optional": [
+    "data/acquisition/libretro-thumbnails",
+    "data/remus-thumbnails/blobs"
+  ]
+}

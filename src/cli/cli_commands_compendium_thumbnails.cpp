@@ -2,7 +2,9 @@
 #include "cli_helpers.h"
 #include "compendium_consolidate_thumbnails.h"
 #include "compendium_enrichment.h"
+#include "compendium_progress.h"
 
+#include <QDir>
 #include <QTextStream>
 #include <QFileInfo>
 #include <QSqlDatabase>
@@ -80,11 +82,32 @@ int handleConsolidateThumbnailsCommand(CliContext &ctx) {
     }
 
     ConsolidateThumbnailsOptions opts = optionsFromParser(ctx.parser);
+    opts.onProgress = [](int done, int total, const QString &detail) {
+        CompendiumProgressWriter::logProgressLine(
+            QStringLiteral("[consolidate-thumbnails] %1/%2 — %3").arg(done).arg(total).arg(detail));
+    };
+    const bool strictOffline = ctx.parser.isSet(QStringLiteral("strict-offline"));
+    const QString thumbnailDir = opts.outputDir.isEmpty() ? findRemusThumbnailsDir() : opts.outputDir;
+    if (strictOffline && !CompendiumThumbnails::remusThumbnailsManifestExists(thumbnailDir)
+        && (opts.acquisitionDir.isEmpty() || !QDir(opts.acquisitionDir).exists())) {
+        qCritical() << "✗ --strict-offline: remus-thumbnails manifest missing and no acquisition tree";
+        database.close();
+        QSqlDatabase::removeDatabase(connectionName);
+        return 1;
+    }
+
     ConsolidateThumbnailsStats stats;
     QString error;
     if (!CompendiumThumbnails::consolidateThumbnails(database, opts, stats, error)) {
         QTextStream(stderr) << "consolidate-thumbnails failed: " << error << '\n';
         qCritical().noquote() << QStringLiteral("✗ consolidate-thumbnails failed: %1").arg(error);
+        database.close();
+        QSqlDatabase::removeDatabase(connectionName);
+        return 1;
+    }
+
+    if (strictOffline && !CompendiumThumbnails::remusThumbnailsManifestExists(thumbnailDir)) {
+        qCritical() << "✗ --strict-offline: remus-thumbnails manifest missing after consolidate";
         database.close();
         QSqlDatabase::removeDatabase(connectionName);
         return 1;

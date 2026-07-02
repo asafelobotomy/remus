@@ -53,7 +53,8 @@ QString createCompendiumFixture() {
         && execSql(db,
             QStringLiteral("CREATE TABLE game_disc_tracks (track_id INTEGER PRIMARY KEY AUTOINCREMENT, disc_set_id "
                            "INTEGER NOT NULL, track_index INTEGER NOT NULL, rom_name TEXT NOT NULL, signature_id "
-                           "INTEGER, source_entry_key TEXT NOT NULL UNIQUE)"))
+                           "INTEGER, source_entry_key TEXT NOT NULL, "
+                           "UNIQUE (disc_set_id, track_index), UNIQUE (disc_set_id, source_entry_key))"))
         && execSql(db, QStringLiteral("INSERT INTO systems VALUES (14, 'PlayStation', 'Sony PlayStation')"))
         && execSql(db, QStringLiteral("INSERT INTO games VALUES ('ff7', 14, 'Final Fantasy VII')"))
         && execSql(db,

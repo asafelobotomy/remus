@@ -13,7 +13,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # Load provider credentials for compendium enrichment (REMUS_* → CredentialManager).
 # shellcheck disable=SC1091
-source "$ROOT_DIR/scripts/load_env_local.sh"
+source "$ROOT_DIR/scripts/load_env_local.sh" "$ROOT_DIR/.env.local"
 # shellcheck disable=SC1091
 source "$ROOT_DIR/scripts/ensure_npm_build_tools.sh"
 ensure_npm_build_tools
@@ -23,12 +23,16 @@ source "$ROOT_DIR/scripts/compendium_db_guard.sh"
 SKIP_UPDATE=false
 ALLOW_UNRESOLVED_CONFLICTS=false
 SKIP_VALIDATION=false
+SKIP_MIGRATIONS=false
 OFFLINE_ONLY=false
 STRICT_OFFLINE=false
 PRUNE_ACQUISITION=false
 SNAP_LOSSLESS=false
 SKIP_CONSOLIDATE=false
 FORCE_FULL_REBUILD=false
+FORCE_ENRICHMENT=false
+RECOVER_BUILD=false
+ALLOW_PATCH_SKIP=false
 ONLINE_ENRICHMENT_ALL=false
 DAT_DIR="$ROOT_DIR/data/databases"
 MANIFEST_PATH="$ROOT_DIR/data/compendium/compendium-manifest-full.json"
@@ -36,8 +40,7 @@ OUTPUT_DB="$ROOT_DIR/data/compendium/remus_compendium.db"
 PROGRESS_FILE="${OUTPUT_DB}.progress.json"
 COVERAGE_REPORT="$ROOT_DIR/data/compendium/remus_compendium.coverage.tsv"
 DISC_SET_COVERAGE_REPORT="$ROOT_DIR/data/compendium/remus_compendium.disc-set-coverage.tsv"
-BUILD_LOG="${TMPDIR:-/tmp}/remus_compendium_full_build.log"
-LOCK_PATH="$ROOT_DIR/data/compendium/remus_compendium_full.lock"
+BUILD_LOG="${REMUS_COMPENDIUM_BUILD_LOG:-${TMPDIR:-/tmp}/remus_compendium_full_build.log}"
 HEARTBEAT_SECONDS=600
 
 monitor_pid=""
@@ -50,7 +53,7 @@ cleanup_monitor() {
 }
 
 cleanup_lock() {
-    if [[ -e "$LOCK_PATH" ]]; then
+    if [[ -n "${LOCK_PATH:-}" && -e "$LOCK_PATH" ]]; then
         : > "$LOCK_PATH"
     fi
 }
@@ -104,13 +107,6 @@ emit_build_heartbeat() {
     done
 }
 
-run_compendium_validate() {
-    local db_path="$1"
-    shift
-    bash "$ROOT_DIR/scripts/run_compendium_job.sh" --db "$db_path" -- \
-        bash "$ROOT_DIR/.github/scripts/validate-compendium-db.sh" "$@"
-}
-
 run_consolidate_artwork() {
     local db_path="$1"
     echo "==> Consolidating artwork (standalone pass; safe to retry without re-ingest)"
@@ -124,8 +120,47 @@ run_consolidate_artwork() {
     if $PRUNE_ACQUISITION; then
         consolidate_args+=(--prune-acquisition-sources)
     fi
-    "$ROOT_DIR/scripts/run_compendium_job.sh" --db "$db_path" -- \
+    if $STRICT_OFFLINE; then
+        consolidate_args+=(--strict-offline)
+    fi
+    "$ROOT_DIR/scripts/run_compendium_job.sh" --no-lock --db "$db_path" -- \
         "$ROOT_DIR/build/remus-cli" "${consolidate_args[@]}"
+}
+
+persist_artwork_complete_phase() {
+    local db_path="$1"
+    local progress_file="${db_path}.progress.json"
+    if command -v jq >/dev/null 2>&1 && [[ -f "$progress_file" ]]; then
+        local tmp
+        tmp="$(mktemp)"
+        jq '.build_phase = "artwork_complete" | .status = "in_progress"' "$progress_file" >"$tmp" && mv "$tmp" "$progress_file"
+    fi
+    if command -v sqlite3 >/dev/null 2>&1 && [[ -f "$db_path" ]]; then
+        python3 - "$db_path" <<'PY' || true
+import json, sqlite3, sys
+db_path = sys.argv[1]
+con = sqlite3.connect(db_path)
+row = con.execute(
+    "SELECT build_id, notes FROM compendium_builds ORDER BY built_at DESC LIMIT 1"
+).fetchone()
+if not row:
+    sys.exit(0)
+build_id, notes_raw = row
+notes = {}
+if notes_raw:
+    try:
+        notes = json.loads(notes_raw)
+    except json.JSONDecodeError:
+        notes = {}
+notes["build_phase"] = "artwork_complete"
+notes["description"] = "Artwork consolidate complete"
+con.execute(
+    "UPDATE compendium_builds SET notes = ? WHERE build_id = ?",
+    (json.dumps(notes, separators=(",", ":")), build_id),
+)
+con.commit()
+PY
+    fi
 }
 
 trap 'cleanup_monitor; cleanup_lock' EXIT
@@ -139,7 +174,8 @@ Options:
   --skip-update             Skip offline source refresh (`update_compendium_offline_sources.sh`)
   --allow-unresolved-conflicts
                             Treat exit code 2 (unresolved merge conflicts) as success
-  --skip-validation         Skip post-build phase-1 validation SQL
+  --skip-validation         Skip post-build phase-1 validation SQL (ci tier)
+  --skip-migrations         Skip post-build schema migrations
   --offline-only            Skip online enrichment (local DAT/metadata/files only)
   --strict-offline          Require remus-thumbnails manifest for offline artwork
   --prune-acquisition-sources
@@ -148,6 +184,9 @@ Options:
                             Transcode Named_Snaps with WebP lossless (default: lossy q=85)
   --skip-consolidate        Skip the standalone artwork consolidate pass
   --force-full-rebuild      Ignore recoverable staged/backup DBs and re-ingest from scratch
+  --force-enrichment        Re-run enrichment even when inputs fingerprint is unchanged
+  --recover                 Opt-in adopt of failed/in-progress staged or backup DB artifacts
+  --allow-patch-skip        Continue when patch catalog import fails
   --online-enrichment       Legacy no-op (bulk online gap-fill is the default)
   --online-enrichment-all   Also run Hasheous/PlayMatch/ZXInfo per-game APIs (very slow)
                               Default: offline sources first, then online gap-fill when creds exist.
@@ -176,6 +215,10 @@ while [[ $# -gt 0 ]]; do
             SKIP_VALIDATION=true
             shift
             ;;
+        --skip-migrations)
+            SKIP_MIGRATIONS=true
+            shift
+            ;;
         --offline-only)
             OFFLINE_ONLY=true
             shift
@@ -199,6 +242,18 @@ while [[ $# -gt 0 ]]; do
             ;;
         --force-full-rebuild)
             FORCE_FULL_REBUILD=true
+            shift
+            ;;
+        --force-enrichment)
+            FORCE_ENRICHMENT=true
+            shift
+            ;;
+        --recover)
+            RECOVER_BUILD=true
+            shift
+            ;;
+        --allow-patch-skip)
+            ALLOW_PATCH_SKIP=true
             shift
             ;;
         --online-enrichment)
@@ -275,19 +330,19 @@ mkdir -p "$(dirname "$OUTPUT_DB")"
 mkdir -p "$(dirname "$COVERAGE_REPORT")"
 mkdir -p "$(dirname "$DISC_SET_COVERAGE_REPORT")"
 
-exec 9>"$LOCK_PATH"
-if compendium_full_build_is_running "$LOCK_PATH"; then
-    holder="$(compendium_full_build_lock_holder "$LOCK_PATH")"
-    echo "error: another full compendium build is already running (lock: $LOCK_PATH pid=${holder:-unknown})" >&2
-    echo "hint: tail -f $BUILD_LOG or wait for the current build to finish" >&2
-    exit 1
-fi
-if ! flock -n 9; then
-    echo "error: could not acquire compendium build lock: $LOCK_PATH" >&2
-    exit 1
-fi
+LOCK_PATH="$(compendium_db_lock_path "$OUTPUT_DB")"
+export REMUS_COMPENDIUM_JOB_NO_LOCK=1
 
-printf '%s\n' "$BASHPID" 1>&9
+if [[ "${REMUS_COMPENDIUM_FULL_BUILD_LOCK_HELD:-}" != "1" ]]; then
+    exec 9>>"$LOCK_PATH"
+    if ! flock -n 9; then
+        holder="$(compendium_full_build_lock_holder "$LOCK_PATH")"
+        echo "error: another full compendium build is already running (lock: $LOCK_PATH pid=${holder:-unknown})" >&2
+        echo "hint: tail -f $BUILD_LOG or wait for the current build to finish" >&2
+        exit 1
+    fi
+    printf '%s\n' "$BASHPID" >"$LOCK_PATH"
+fi
 
 echo "==> Full compendium pipeline"
 echo "    dat_dir=$DAT_DIR"
@@ -300,7 +355,11 @@ echo "    heartbeat_seconds=$HEARTBEAT_SECONDS"
 
 if ! $SKIP_UPDATE; then
     echo "==> Updating offline compendium sources"
-    bash "$ROOT_DIR/scripts/update_compendium_offline_sources.sh"
+    offline_args=()
+    if $STRICT_OFFLINE; then
+        offline_args+=(--strict-offline)
+    fi
+    bash "$ROOT_DIR/scripts/update_compendium_offline_sources.sh" "${offline_args[@]}"
 else
     echo "==> Skipping offline source refresh (--skip-update)"
 fi
@@ -313,7 +372,16 @@ echo "==> Generating manifest"
 CRED_TARGET="$(dirname "$OUTPUT_DB")/enrichment-credentials.json"
 if [[ -x "$ROOT_DIR/scripts/sync_enrichment_credentials.sh" ]]; then
     echo "==> Syncing enrichment-credentials.json from REMUS_* env"
-    "$ROOT_DIR/scripts/sync_enrichment_credentials.sh" "$CRED_TARGET" || true
+    if ! "$ROOT_DIR/scripts/sync_enrichment_credentials.sh" "$CRED_TARGET"; then
+        if [[ -n "${REMUS_IGDB_CLIENT_ID:-}" || -n "${REMUS_IGDB_CLIENT_SECRET:-}" \
+            || -n "${REMUS_RA_USERNAME:-}" || -n "${REMUS_RA_USER:-}" || -n "${REMUS_RA_API_KEY:-}" \
+            || -n "${REMUS_SS_USER:-}" || -n "${REMUS_TGDB_API_KEY:-}" ]]; then
+            echo "error: enrichment credential sync failed but REMUS_* provider env vars are set" >&2
+            echo "hint: fix scripts/sync_enrichment_credentials.sh or unset conflicting env vars" >&2
+            exit 1
+        fi
+        echo "warning: enrichment credential sync failed; continuing without credentials file" >&2
+    fi
 elif [[ ! -f "$CRED_TARGET" ]]; then
     echo "==> Note: $CRED_TARGET not found — IGDB/RA bulk enrichment will use REMUS_* env vars only."
     CRED_EXAMPLE="$ROOT_DIR/data/compendium/enrichment-credentials.json.example"
@@ -327,7 +395,7 @@ compendium_backup_if_populated "$OUTPUT_DB" "pre-refresh"
 if $FORCE_FULL_REBUILD; then
     echo "==> Skipping in-progress recovery (--force-full-rebuild)"
 else
-    compendium_try_resume_in_progress_build "$OUTPUT_DB"
+    compendium_try_resume_in_progress_build "$OUTPUT_DB" "$([[ "$RECOVER_BUILD" == true ]] && echo 1 || echo 0)"
 fi
 
 echo "==> Building compendium DB"
@@ -363,12 +431,15 @@ fi
 if $FORCE_FULL_REBUILD; then
     build_cli_args+=(--force-full-rebuild)
 fi
+if $FORCE_ENRICHMENT; then
+    build_cli_args+=(--force-enrichment)
+fi
 build_cli_args+=(--skip-consolidate-thumbnails)
-"$ROOT_DIR/scripts/run_compendium_job.sh" --db "$OUTPUT_DB" -- \
+"$ROOT_DIR/scripts/run_compendium_job.sh" --no-lock --db "$OUTPUT_DB" -- \
     "$ROOT_DIR/build/remus-cli" \
     "${build_cli_args[@]}" \
     --log-file "$BUILD_LOG" \
-    >/dev/null 2>&1 &
+    2>&1 | tee -a "$BUILD_LOG" >/dev/null &
 build_pid=$!
 
 emit_build_heartbeat "$build_pid" "$HEARTBEAT_SECONDS" "$build_started_at" &
@@ -404,53 +475,63 @@ fi
 
 if ! $SKIP_CONSOLIDATE; then
     run_consolidate_artwork "$OUTPUT_DB"
+    persist_artwork_complete_phase "$OUTPUT_DB"
+    echo "==> Post-consolidate remus-thumbnails enrichment"
+    "$ROOT_DIR/scripts/run_compendium_job.sh" --no-lock --db "$OUTPUT_DB" -- \
+        "$ROOT_DIR/build/remus-cli" --enrich-compendium \
+        --compendium-output "$OUTPUT_DB" \
+        --enrich-source remus-thumbnails \
+        2>&1 | tee -a "$BUILD_LOG" || echo "warning: post-consolidate thumbnail enrich failed" >&2
 else
     echo "==> Skipping artwork consolidate (--skip-consolidate)"
 fi
 
-echo "==> Importing patch catalog (libretro hacks DATs)"
-bash "$ROOT_DIR/scripts/import_patch_catalog.sh" "$OUTPUT_DB" \
-    || echo "warning: patch catalog import failed or skipped (see above)" >&2
-
 if ! $SKIP_VALIDATION; then
-    bash "$ROOT_DIR/scripts/run_compendium_job.sh" --db "$OUTPUT_DB" -- \
-        bash "$ROOT_DIR/scripts/apply_compendium_migrations.sh" "$OUTPUT_DB"
-    run_compendium_validate "$OUTPUT_DB"
-    if [[ -f "$ROOT_DIR/data/compendium/validation/0002_phase2_quality_checks.sql" ]]; then
-        echo "==> Phase 2 quality checks (informational thresholds)"
-        run_compendium_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0002_phase2_quality_checks.sql" \
-            || echo "warning: one or more phase-2 quality checks failed (see above)" >&2
-    fi
-    if [[ -f "$ROOT_DIR/data/compendium/validation/0003_phase2_extended_checks.sql" ]]; then
-        echo "==> Phase 2 extended checks (informational thresholds)"
-        run_compendium_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0003_phase2_extended_checks.sql" \
-            || echo "warning: one or more phase-2 extended checks failed (see above)" >&2
-    fi
-    if [[ -f "$ROOT_DIR/data/compendium/validation/0006_enabled_source_gate.sql" ]]; then
-        echo "==> Enabled ingest sources with zero items (strict)"
-        run_compendium_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0006_enabled_source_gate.sql"
-    fi
-    if [[ -f "$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql" ]]; then
-        echo "==> Disc set schema checks (migration 0007)"
-        run_compendium_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql"
-    fi
-    if [[ -f "$ROOT_DIR/data/compendium/validation/0005_disc_set_ingest_checks.sql" ]]; then
-        echo "==> Disc set ingest checks (strict: FAIL only; use --strict to fail on WARN)"
-        run_compendium_validate "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0005_disc_set_ingest_checks.sql" \
-            --warn-only
+    echo "==> Artwork coverage validation (warn-only)"
+    bash "$ROOT_DIR/scripts/validate_compendium_tier.sh" artwork "$OUTPUT_DB" \
+        || echo "warning: artwork coverage checks reported issues (see above)" >&2
+fi
+
+echo "==> Importing patch catalog (libretro hacks DATs)"
+if ! bash "$ROOT_DIR/scripts/import_patch_catalog.sh" "$OUTPUT_DB"; then
+    if $ALLOW_PATCH_SKIP; then
+        echo "warning: patch catalog import failed or skipped (--allow-patch-skip)" >&2
+    else
+        echo "error: patch catalog import failed (pass --allow-patch-skip to continue)" >&2
+        exit 1
     fi
 fi
 
-# Emit a machine-friendly per-source coverage report via remus-cli --coverage-report.
-# Columns: source_id, source_items, sigs_owned, games_covered, coverage_pct (TSV)
-# sigs_owned    – signature rows attributed to this source (0 for shadowed sources)
-# games_covered – games from this source that have any signature (honest ingest coverage)
-"$ROOT_DIR/build/remus-cli" --coverage-report --compendium-output "$OUTPUT_DB" > "$COVERAGE_REPORT"
+BUILD_MODE=""
+REPORT_PATH="${OUTPUT_DB%.db}.report.json"
+if [[ -f "$REPORT_PATH" ]] && command -v jq >/dev/null 2>&1; then
+    BUILD_MODE="$(jq -r '.build_mode // ""' "$REPORT_PATH" 2>/dev/null || true)"
+fi
+
+if ! $SKIP_MIGRATIONS; then
+    if [[ "$BUILD_MODE" != "full_rebuild" ]]; then
+        bash "$ROOT_DIR/scripts/run_compendium_job.sh" --no-lock --db "$OUTPUT_DB" -- \
+            bash "$ROOT_DIR/scripts/apply_compendium_migrations.sh" "$OUTPUT_DB"
+    else
+        echo "==> Skipping post-build migrations (build_mode=full_rebuild; schema already current)"
+    fi
+else
+    echo "==> Skipping post-build migrations (--skip-migrations)"
+fi
+
+# Refresh coverage TSVs after migrations; do not block on validation gates.
+"$ROOT_DIR/scripts/run_compendium_job.sh" --no-lock --db "$OUTPUT_DB" -- \
+    "$ROOT_DIR/build/remus-cli" --coverage-report --compendium-output "$OUTPUT_DB" > "$COVERAGE_REPORT"
 
 echo "==> Disc set coverage (per-system topology)"
-"$ROOT_DIR/build/remus-cli" --disc-set-coverage --compendium-output "$OUTPUT_DB" > "$DISC_SET_COVERAGE_REPORT"
+"$ROOT_DIR/scripts/run_compendium_job.sh" --no-lock --db "$OUTPUT_DB" -- \
+    "$ROOT_DIR/build/remus-cli" --disc-set-coverage --compendium-output "$OUTPUT_DB" > "$DISC_SET_COVERAGE_REPORT"
 echo "==> Disc set coverage report written: $DISC_SET_COVERAGE_REPORT"
 head -12 "$DISC_SET_COVERAGE_REPORT"
+
+if ! $SKIP_VALIDATION; then
+    bash "$ROOT_DIR/scripts/validate_compendium_tier.sh" ci "$OUTPUT_DB"
+fi
 
 summary_query="
 SELECT 'games', COUNT(*) FROM games

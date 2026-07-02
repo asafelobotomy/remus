@@ -172,6 +172,14 @@ EXCLUDED_SOURCE_IDS=(
     "libretro-nointro-mobile-zeebo"                     # 0 items
     "libretro-dat-microsoft-xbox-360-games-on-demand"   # 0 items
     "libretro-nointro-microsoft-xbox-360-games-on-demand" # 0 items
+    # Shadowed MAME Redump CHD / duplicate nointro (sigs_owned=0; raw Redump owns hashes)
+    "mame-redump-chd-ibm-pc-compatible"                   # 52k items, CHD bridge not implemented
+    "mame-redump-chd-panasonic-3do-interactive-multiplayer"
+    "mame-redump-chd-nec-pc-engine-cd-turbografx-cd"
+    "mame-redump-chd-sega-mega-cd-sega-cd"
+    "mame-redump-chd-photo-cd"
+    "mame-redump-chd-palm"
+    "libretro-nointro-arduboy-inc-arduboy"                # duplicate of excluded libretro-dat variant
 )
 
 is_excluded() {
@@ -261,6 +269,11 @@ slug_is_superseded() {
         [[ "$slug" == "$s" ]] && return 0
     done
     return 1
+}
+
+slug_is_chd_shadowed() {
+    local slug="$1"
+    slug_is_superseded "$slug"
 }
 
 declare -A CHECKSUM_BY_FILE=()
@@ -374,6 +387,8 @@ filter_duplicate_mame_official_sources
         if is_excluded "$source_id"; then
             printf '      "enabled": false,\n'
         elif [[ "$dat_prefix" == "libretro-dat" ]] && slug_is_superseded "$slug"; then
+            printf '      "enabled": false,\n'
+        elif [[ "$dat_prefix" == "mame-redump-chd" ]] && slug_is_chd_shadowed "$slug"; then
             printf '      "enabled": false,\n'
         else
             printf '      "enabled": true,\n'

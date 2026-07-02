@@ -53,7 +53,8 @@ cat > "$MANIFEST" <<EOF
 EOF
 
 echo "==> CI fixture compendium build"
-"$CLI" --build-compendium --compendium-manifest "$MANIFEST" --compendium-output "$OUTPUT_DB"
+"$CLI" --build-compendium --offline-only-enrichment --skip-consolidate-thumbnails \
+    --compendium-manifest "$MANIFEST" --compendium-output "$OUTPUT_DB"
 
 echo "==> Fixture DB counts"
 sqlite3 -header -column "$OUTPUT_DB" "
@@ -64,6 +65,9 @@ UNION ALL SELECT 'game_disc_tracks', COUNT(*) FROM game_disc_tracks;
 
 echo "==> Disc set schema validation (0004)"
 bash "$VALIDATE" "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0004_disc_set_checks.sql"
+
+echo "==> Enabled source gate (0006)"
+bash "$VALIDATE" "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0006_enabled_source_gate.sql"
 
 echo "==> Disc set ingest validation (0005, WARN allowed)"
 bash "$VALIDATE" "$OUTPUT_DB" "$ROOT_DIR/data/compendium/validation/0005_disc_set_ingest_checks.sql" --warn-only

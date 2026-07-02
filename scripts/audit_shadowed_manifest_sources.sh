@@ -15,9 +15,9 @@ if [[ -z "$COVERAGE_TSV" || ! -f "$COVERAGE_TSV" ]]; then
     exit 1
 fi
 
-# Columns (TSV): source_id, source_items, sigs_owned, games_covered, coverage_pct, ...
-# Shadowed flag is column 9 (enabled=1, sigs_owned=0, items>100) in build_compendium_full.sh awk.
-shadowed="$(awk -F'\t' 'NR>2 && $9==1 {print $1 "\t" $2 "\t" $3}' "$COVERAGE_TSV" | sort -u)"
+# Columns (TSV): source_id, enabled, priority, source_items, sigs_owned, games_covered,
+# coverage_pct, sig_yield_pct, shadowed
+shadowed="$(awk -F'\t' 'NR>2 && $9==1 {print $1 "\t" $4 "\t" $5}' "$COVERAGE_TSV" | sort -u)"
 
 if [[ -z "$shadowed" ]]; then
     echo "No persistently shadowed enabled sources (sigs_owned=0, items>100)."

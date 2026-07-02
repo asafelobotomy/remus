@@ -5,6 +5,15 @@
 # outputs: helper functions only (no side effects until called)
 # risk: safe
 
+compendium_db_lock_path() {
+    local db_path="$1"
+    local lock_dir="${XDG_RUNTIME_DIR:-/tmp}"
+    if ! mkdir -p "$lock_dir" 2>/dev/null; then
+        lock_dir="/tmp"
+    fi
+    printf '%s/%s.lock' "$lock_dir" "$(basename "$db_path")"
+}
+
 compendium_db_game_count() {
     local db="$1"
     if [[ ! -f "$db" ]]; then
@@ -204,6 +213,16 @@ compendium_progress_status() {
     fi
 }
 
+compendium_progress_build_phase() {
+    local progress_file="$1"
+    if [[ ! -f "$progress_file" ]]; then
+        return 0
+    fi
+    if command -v jq >/dev/null 2>&1; then
+        jq -r '.build_phase // ""' "$progress_file" 2>/dev/null || true
+    fi
+}
+
 compendium_full_build_lock_holder() {
     local lock_path="$1"
     if [[ ! -f "$lock_path" ]]; then
@@ -221,27 +240,53 @@ compendium_full_build_is_running() {
         return 0
     fi
 
-    if pgrep -f "build_compendium_full\\.sh" >/dev/null 2>&1; then
-        return 0
-    fi
-
     return 1
 }
 
 compendium_try_resume_in_progress_build() {
     local output_db="$1"
+    local recover="${2:-${COMPENDIUM_RECOVER_BUILD:-0}}"
     local progress_file="${output_db}.progress.json"
     local output_count staged_path backup_path pre_rebuild_path
     local staged_count backup_count pre_rebuild_count
-    local best_path="" best_kind="" best_count=0 count path status
+    local best_path="" best_kind="" best_count=0 count path status build_phase
 
     output_count="$(compendium_db_effective_game_count "$output_db")"
     if [[ "${output_count:-0}" -gt 0 ]]; then
-        echo "==> Found populated compendium ($output_count games); will plan incremental refresh"
-        return 0
+        if [[ "$recover" != "1" ]]; then
+            echo "==> Found populated compendium ($output_count games); will plan incremental refresh"
+            return 0
+        fi
+        status="$(compendium_progress_status "$progress_file")"
+        if [[ "$status" != "failed" && "$status" != "in_progress" && "$status" != "partial" ]]; then
+            echo "==> --recover: populated DB but progress status='${status:-unknown}'; skipping artifact adopt"
+            return 0
+        fi
     fi
 
+    status="$(compendium_progress_status "$progress_file")"
+    build_phase="$(compendium_progress_build_phase "$progress_file")"
+
+    if [[ -n "$status" && "$status" != "failed" && "$status" != "in_progress" && "$status" != "partial" ]]; then
+        if [[ "${output_count:-0}" -eq 0 ]]; then
+            echo "==> No recoverable in-progress compendium build found (progress status=$status); starting fresh ingest"
+            return 0
+        fi
+    fi
+
+    backup_path="$(compendium_latest_post_ingest_backup "$output_db")"
     staged_path="$(compendium_find_best_staged_db "$output_db")"
+    pre_rebuild_path="$(compendium_find_best_pre_rebuild_backup "$output_db")"
+
+    if [[ "$build_phase" == "ingest_complete" && -n "$backup_path" && -f "$backup_path" ]]; then
+        backup_count="$(compendium_db_effective_game_count "$backup_path")"
+        if [[ "${backup_count:-0}" -gt 0 ]]; then
+            best_path=$backup_path
+            best_kind="post-ingest-backup"
+            best_count=$backup_count
+        fi
+    fi
+
     if [[ -n "$staged_path" ]]; then
         staged_count="$(compendium_db_effective_game_count "$staged_path")"
         if [[ "${staged_count:-0}" -gt "$best_count" ]]; then
@@ -251,8 +296,7 @@ compendium_try_resume_in_progress_build() {
         fi
     fi
 
-    backup_path="$(compendium_latest_post_ingest_backup "$output_db")"
-    if [[ -n "$backup_path" && -f "$backup_path" ]]; then
+    if [[ -z "$best_path" && -n "$backup_path" && -f "$backup_path" ]]; then
         backup_count="$(compendium_db_effective_game_count "$backup_path")"
         if [[ "${backup_count:-0}" -gt "$best_count" ]]; then
             best_path=$backup_path
@@ -261,7 +305,6 @@ compendium_try_resume_in_progress_build() {
         fi
     fi
 
-    pre_rebuild_path="$(compendium_find_best_pre_rebuild_backup "$output_db")"
     if [[ -n "$pre_rebuild_path" ]]; then
         pre_rebuild_count="$(compendium_db_effective_game_count "$pre_rebuild_path")"
         if [[ "${pre_rebuild_count:-0}" -gt "$best_count" ]]; then
@@ -276,13 +319,15 @@ compendium_try_resume_in_progress_build() {
         return 0
     fi
 
-    status="$(compendium_progress_status "$progress_file")"
     echo "==> Recovering in-progress compendium build instead of fresh ingest"
     echo "    source=$best_path"
     echo "    kind=$best_kind"
     echo "    games=$best_count"
     if [[ -n "$status" ]]; then
         echo "    progress_status=$status"
+    fi
+    if [[ -n "$build_phase" ]]; then
+        echo "    build_phase=$build_phase"
     fi
 
     compendium_adopt_database_artifact "$best_path" "$output_db"

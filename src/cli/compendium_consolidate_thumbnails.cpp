@@ -1,4 +1,5 @@
 #include "compendium_consolidate_thumbnails.h"
+#include "cli_compendium_build_phases.h"
 #include "compendium_artwork_transcode.h"
 #include "compendium_cwebp_resolver.h"
 #include "compendium_enrichment_sql.h"
@@ -403,6 +404,7 @@ bool writeManifest(const QString &outputDir, const ConsolidateThumbnailsOptions 
         return false;
     }
     file.write(QJsonDocument(manifest).toJson(QJsonDocument::Indented));
+    bumpRemusThumbnailsFingerprintSidecar(outputDir);
     return true;
 }
 
@@ -450,6 +452,18 @@ bool consolidateThumbnails(QSqlDatabase &database, const ConsolidateThumbnailsOp
                                             "JOIN systems s ON s.system_id = g.system_id "
                                             "WHERE s.libretro_name IS NOT NULL AND TRIM(s.libretro_name) != ''")
         + systemFilterSql;
+
+    int totalGames = 0;
+    {
+        QSqlQuery countQ(database);
+        const QString countSql = QStringLiteral("SELECT COUNT(*) FROM games g "
+                                                "JOIN systems s ON s.system_id = g.system_id "
+                                                "WHERE s.libretro_name IS NOT NULL AND TRIM(s.libretro_name) != ''")
+            + systemFilterSql;
+        if (countQ.exec(countSql) && countQ.next())
+            totalGames = countQ.value(0).toInt();
+    }
+
     if (!gamesQ.exec(gamesSql)) {
         error = gamesQ.lastError().text();
         return false;
@@ -473,6 +487,10 @@ bool consolidateThumbnails(QSqlDatabase &database, const ConsolidateThumbnailsOp
         return false;
     }
 
+    if (options.onProgress) {
+        options.onProgress(0, totalGames, QStringLiteral("starting thumbnail consolidation"));
+    }
+
     while (gamesQ.next()) {
         const QString gameId = gamesQ.value(0).toString();
         const QString title = gamesQ.value(1).toString();
@@ -482,6 +500,13 @@ bool consolidateThumbnails(QSqlDatabase &database, const ConsolidateThumbnailsOp
         }
 
         ++stats.gamesScanned;
+        if (options.onProgress && (stats.gamesScanned % 500 == 0 || stats.gamesScanned == totalGames)) {
+            options.onProgress(stats.gamesScanned, totalGames,
+                QStringLiteral("%1 written, %2 skipped, %3 deduped")
+                    .arg(stats.assetsWritten)
+                    .arg(stats.assetsSkipped)
+                    .arg(stats.assetsDeduplicated));
+        }
         if (!systemsSeenSet.contains(libretroName)) {
             systemsSeenSet.insert(libretroName);
             systemsSeen.append(libretroName);

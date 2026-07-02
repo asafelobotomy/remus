@@ -63,21 +63,21 @@ run_sqlite_csv() {
 
 print_csv_as_columns() {
     awk -F',' '
-        NR == 1 || ($1 ~ /^check_name$/ && NR > 1) {
-            if (NR > 1 && buf != "") {
+        function flush_block() {
+            if (n > 0) {
                 for (i = 1; i <= n; i++) printf "  %s\n", buf[i]
                 print ""
             }
-            delete buf
             n = 0
+        }
+        NR == 1 || ($1 ~ /^check_name$/ && NR > 1) {
+            flush_block()
         }
         {
             buf[++n] = $0
         }
         END {
-            if (n > 0) {
-                for (i = 1; i <= n; i++) printf "  %s\n", buf[i]
-            }
+            flush_block()
         }
     ' | column -t -s','
 }
