@@ -334,6 +334,15 @@ void ProviderOrchestrator::queryProvider(GameMetadata &accumulator, const QStrin
     if (!result.title.isEmpty() || !result.publisher.isEmpty() || !result.developer.isEmpty()
         || !result.boxArtUrl.isEmpty() || !result.screenshotUrls.isEmpty() || result.rating != 0.0f
         || !result.externalIds.isEmpty()) {
+        if (providerName.compare(Constants::Providers::COMPENDIUM, Qt::CaseInsensitive) == 0 && !result.id.isEmpty()) {
+            const ArtworkUrls artwork = info.provider->getArtwork(result.id);
+            if (result.boxArtUrl.isEmpty() && !artwork.boxFront.isEmpty()) {
+                result.boxArtUrl = artwork.boxFront.toString();
+            }
+            if (result.screenshotUrls.isEmpty() && !artwork.screenshot.isEmpty()) {
+                result.screenshotUrls = { artwork.screenshot.toString() };
+            }
+        }
         mergeMetadata(accumulator, result);
     }
 }
@@ -639,7 +648,8 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash, const
         if (!accumulator.title.isEmpty()) {
             const FieldSet gaps = computeFieldGap(accumulator);
             if (!gaps.isEmpty()) {
-                const QSet<QString> exclude = { compendiumId };
+                const QSet<QString> exclude
+                    = (m_mode == OrchestratorMode::CompendiumOnly) ? QSet<QString> { } : QSet<QString> { compendiumId };
                 accumulator = enrichMissingFields(gaps, accumulator, hash, accumulator.title, system, crc32, md5, sha1,
                     serial, exclude, raMd5, fileSize, contentSha1);
             }
@@ -648,6 +658,12 @@ GameMetadata ProviderOrchestrator::searchWithFallback(const QString &hash, const
             }
             return accumulator;
         }
+    }
+
+    if (m_mode == OrchestratorMode::CompendiumOnly) {
+        qWarning() << "Compendium-only: no match for:" << name;
+        emit allProvidersFailed();
+        return GameMetadata();
     }
 
     // Pass 2 — legacy waterfall (compendium excluded; already tried in Pass 1).

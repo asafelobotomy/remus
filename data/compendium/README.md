@@ -5,7 +5,15 @@ Phase 1 canonical compendium database.
 
 ## Create a fresh compendium database
 
-One command:
+**Recommended (first use):** build a complete offline catalog in one step:
+
+```bash
+bash scripts/init_compendium.sh
+```
+
+This creates the schema (if needed), runs the full DAT ingest and enrichment pipeline, and materializes artwork blobs for offline runtime.
+
+**Schema only** (empty — cannot match ROMs until you build):
 
 ```bash
 bash scripts/setup_compendium_db.sh
@@ -127,6 +135,12 @@ Steps performed by `build_compendium_full.sh`:
 `--force-enrichment` bypasses the **build-level** enrichment-input fingerprint skip only (so enrichment passes run even when offline mirror checksums are unchanged). Per-pass `no_gaps` predicates and per-game skip sets (`loadGamesWithMinSourceFieldFacts`, LaunchBox `no_match` facts) still apply unless a source has no remaining gap work. Use `--enrich-source <name>` with `--force-enrichment` for targeted re-runs. `--skip-fts` skips the post-enrichment FTS rebuild when no canonical title fields changed.
 
 **Detached runner:** `scripts/run_compendium_full_build_detached.sh` — holds the per-DB flock until the build exits; log defaults to `$REMUS_COMPENDIUM_BUILD_LOG` or `${TMPDIR:-/tmp}/remus_compendium_full_build.log`.
+
+**Progress JSON:** During builds, `remus_compendium.db.progress.json` tracks `build_phase`, `overall_pct`, and enrichment pass detail. Wrapper phases include `dat_update`, `manifest`, `credentials`, `artwork`, `validate`, and `complete`. The GUI Compendium Wizard polls this file.
+
+**Packaged builds:** Linux AppImages bundle `usr/share/remus/scripts/` and `usr/share/remus/data/compendium/`; the launcher sets `REMUS_DATA_DIR`. Writable output DB defaults to the user data directory when the bundled path is read-only.
+
+**Credentials:** Compendium build enrichment uses `enrichment-credentials.json` and `REMUS_*` env vars. SteamGridDB (`REMUS_SGDB_API_KEY`) is runtime artwork only and is not written to enrichment-credentials.json.
 
 Patch catalog import runs **after** the compendium build because it writes to
 `patch_catalog_sources` / `patch_catalog_entries` in the populated database.

@@ -37,11 +37,11 @@ namespace {
         return QStringLiteral("No fallback required.");
     }
 
-    QString keepOriginalUntilToolAvailable(const QString &toolName) {
+    [[maybe_unused]] QString keepOriginalUntilToolAvailable(const QString &toolName) {
         return QStringLiteral("Keep the original payload untouched until %1 is available.").arg(toolName);
     }
 
-    QString chainFallback(const QStringList &toolNames) {
+    [[maybe_unused]] QString chainFallback(const QStringList &toolNames) {
         return QStringLiteral("Keep the original payload untouched until the required toolchain is available: %1.")
             .arg(toolNames.join(QStringLiteral(", ")));
     }

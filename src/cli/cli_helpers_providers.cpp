@@ -3,6 +3,9 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QUuid>
 #include <memory>
 
 #include "../metadata/compendium_provider.h"
@@ -27,6 +30,13 @@ using namespace Remus::Constants;
 /// in shell history and process listings.
 QString resolveSecret(const QCommandLineParser &parser, const QString &optionName, const char *settingKey) {
     if (parser.isSet(optionName)) {
+        if (qEnvironmentVariableIsSet("REMUS_DEPRECATE_ARGV_SECRETS")) {
+            qCritical().noquote() << QStringLiteral(
+                "Security: --%1 is rejected (REMUS_DEPRECATE_ARGV_SECRETS is set). "
+                "Use the matching REMUS_* environment variable or the OS keychain instead.")
+                                         .arg(optionName);
+            return QString();
+        }
         qWarning().noquote() << QStringLiteral(
             "Security: --%1 passes a secret via argv (visible in process listings and shell history). "
             "Argv secrets are deprecated and will be removed in a future release — use the matching "
@@ -62,29 +72,18 @@ QString findDataSubdir(const QString &subdir) {
     return QString();
 }
 
-std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser, Database *db) {
-    auto orchestrator = std::make_unique<ProviderOrchestrator>();
+namespace {
 
-    if (db) {
-        auto cache = std::make_unique<MetadataCache>(db->database(), orchestrator.get());
-        orchestrator->setCache(cache.get());
-        cache.release();
-    }
-
+QString compendiumDatabasePath() {
     const QString compendiumDir = findDataSubdir(QStringLiteral("compendium"));
-    if (!compendiumDir.isEmpty()) {
-        const QString compendiumPath = QDir(compendiumDir).filePath(QStringLiteral("remus_compendium.db"));
-        if (QFileInfo::exists(compendiumPath)) {
-            auto compendiumProvider = std::make_unique<CompendiumProvider>();
-            if (compendiumProvider->openDatabase(compendiumPath)) {
-                const auto compendiumInfo = Providers::getProviderInfo(Providers::COMPENDIUM);
-                orchestrator->addProvider(
-                    Providers::COMPENDIUM, compendiumProvider.get(), compendiumInfo ? compendiumInfo->priority : 180);
-                compendiumProvider.release();
-            }
-        }
+    if (compendiumDir.isEmpty()) {
+        return QString();
     }
+    const QString path = QDir(compendiumDir).filePath(QStringLiteral("remus_compendium.db"));
+    return QFileInfo::exists(path) ? path : QString();
+}
 
+void registerRemoteProviders(ProviderOrchestrator &orchestrator, const QCommandLineParser &parser) {
     auto hasheousProvider = std::make_unique<HasheousProvider>();
     {
         const QString hasheousKey
@@ -96,12 +95,12 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         }
     }
     const auto hasheousInfo = Providers::getProviderInfo(Providers::HASHEOUS);
-    orchestrator->addProvider(Providers::HASHEOUS, hasheousProvider.get(), hasheousInfo ? hasheousInfo->priority : 80);
+    orchestrator.addProvider(Providers::HASHEOUS, hasheousProvider.get(), hasheousInfo ? hasheousInfo->priority : 80);
     hasheousProvider.release();
 
     auto playmatchProvider = std::make_unique<PlayMatchProvider>();
     const auto playmatchInfo = Providers::getProviderInfo(Providers::PLAYMATCH);
-    orchestrator->addProvider(Providers::PLAYMATCH, playmatchProvider.get(),
+    orchestrator.addProvider(Providers::PLAYMATCH, playmatchProvider.get(),
         playmatchInfo ? playmatchInfo->priority : Constants::Providers::Priority::PLAYMATCH);
     playmatchProvider.release();
 
@@ -120,7 +119,7 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
             ssProvider->setDeveloperCredentials(ssDevId, ssDevPass);
         }
         const auto ssInfo = Providers::getProviderInfo(Providers::SCREENSCRAPER);
-        orchestrator->addProvider(Providers::SCREENSCRAPER, ssProvider.get(), ssInfo ? ssInfo->priority : 90);
+        orchestrator.addProvider(Providers::SCREENSCRAPER, ssProvider.get(), ssInfo ? ssInfo->priority : 90);
         ssProvider.release();
     }
 
@@ -130,7 +129,7 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         const int gametdbLoaded = gametdbProvider->loadDatabases(gametdbDir);
         if (gametdbLoaded > 0) {
             const auto gametdbInfo = Providers::getProviderInfo(Providers::GAMETDB);
-            orchestrator->addProvider(
+            orchestrator.addProvider(
                 Providers::GAMETDB, gametdbProvider.get(), gametdbInfo ? gametdbInfo->priority : 150);
             gametdbProvider.release();
         }
@@ -142,7 +141,7 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         auto tgdbProvider = std::make_unique<TheGamesDBProvider>();
         tgdbProvider->setApiKey(tgdbApiKey);
         const auto tgdbInfo = Providers::getProviderInfo(Providers::THEGAMESDB);
-        orchestrator->addProvider(Providers::THEGAMESDB, tgdbProvider.get(), tgdbInfo ? tgdbInfo->priority : 50);
+        orchestrator.addProvider(Providers::THEGAMESDB, tgdbProvider.get(), tgdbInfo ? tgdbInfo->priority : 50);
         tgdbProvider.release();
     } else {
         qInfo() << "TheGamesDB: skipped (no API key configured)";
@@ -156,7 +155,7 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         auto igdbProvider = std::make_unique<IGDBProvider>();
         igdbProvider->setCredentials(igdbClientId, igdbClientSecret);
         const auto igdbInfo = Providers::getProviderInfo(Providers::IGDB);
-        orchestrator->addProvider(Providers::IGDB, igdbProvider.get(), igdbInfo ? igdbInfo->priority : 70);
+        orchestrator.addProvider(Providers::IGDB, igdbProvider.get(), igdbInfo ? igdbInfo->priority : 70);
         igdbProvider.release();
     }
 
@@ -166,7 +165,7 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         auto sgdbProvider = std::make_unique<SteamGridDBProvider>();
         sgdbProvider->setApiKey(sgdbApiKey);
         const auto sgdbInfo = Providers::getProviderInfo(Providers::STEAMGRIDDB);
-        orchestrator->addProvider(Providers::STEAMGRIDDB, sgdbProvider.get(),
+        orchestrator.addProvider(Providers::STEAMGRIDDB, sgdbProvider.get(),
             sgdbInfo ? sgdbInfo->priority : Constants::Providers::Priority::STEAMGRIDDB);
         sgdbProvider.release();
     } else {
@@ -181,14 +180,95 @@ std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser
         auto raProvider = std::make_unique<RetroAchievementsProvider>();
         raProvider->setCredentials(raUsername, raApiKey);
         const auto raInfo = Providers::getProviderInfo(Providers::RETROACHIEVEMENTS);
-        orchestrator->addProvider(Providers::RETROACHIEVEMENTS, raProvider.get(), raInfo ? raInfo->priority : 60);
+        orchestrator.addProvider(Providers::RETROACHIEVEMENTS, raProvider.get(), raInfo ? raInfo->priority : 60);
         raProvider.release();
     }
 
     auto wikidataProvider = std::make_unique<WikidataProvider>();
     const auto wdInfo = Providers::getProviderInfo(Providers::WIKIDATA);
-    orchestrator->addProvider(Providers::WIKIDATA, wikidataProvider.get(), wdInfo ? wdInfo->priority : 40);
+    orchestrator.addProvider(Providers::WIKIDATA, wikidataProvider.get(), wdInfo ? wdInfo->priority : 40);
     wikidataProvider.release();
+}
 
+} // namespace
+
+ProviderOrchestrator::OrchestratorMode resolveOrchestratorMode(
+    const QCommandLineParser &parser, bool compendiumAvailable) {
+    if (parser.isSet(QStringLiteral("online-fallback"))) {
+        return ProviderOrchestrator::OrchestratorMode::CompendiumPreferred;
+    }
+    if (parser.isSet(QStringLiteral("compendium-only")) || parser.isSet(QStringLiteral("offline"))) {
+        return ProviderOrchestrator::OrchestratorMode::CompendiumOnly;
+    }
+    if (compendiumAvailable) {
+        return ProviderOrchestrator::OrchestratorMode::CompendiumOnly;
+    }
+    return ProviderOrchestrator::OrchestratorMode::CompendiumPreferred;
+}
+
+std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser, Database *db) {
+    auto orchestrator = std::make_unique<ProviderOrchestrator>();
+
+    if (db) {
+        auto cache = std::make_unique<MetadataCache>(db->database(), orchestrator.get());
+        orchestrator->setCache(cache.get());
+        cache.release();
+    }
+
+    const QString compendiumPath = compendiumDatabasePath();
+    const bool compendiumAvailable = !compendiumPath.isEmpty();
+    const auto mode = resolveOrchestratorMode(parser, compendiumAvailable);
+    orchestrator->setMode(mode);
+
+    if (compendiumAvailable) {
+        auto compendiumProvider = std::make_unique<CompendiumProvider>();
+        if (compendiumProvider->openDatabase(compendiumPath)) {
+            compendiumProvider->setStrictOffline(mode == ProviderOrchestrator::OrchestratorMode::CompendiumOnly);
+            const auto compendiumInfo = Providers::getProviderInfo(Providers::COMPENDIUM);
+            orchestrator->addProvider(
+                Providers::COMPENDIUM, compendiumProvider.get(), compendiumInfo ? compendiumInfo->priority : 180);
+            compendiumProvider.release();
+        }
+    }
+
+    if (mode == ProviderOrchestrator::OrchestratorMode::CompendiumOnly) {
+        if (!compendiumAvailable) {
+            qWarning() << "Compendium-only mode requested but remus_compendium.db was not found — "
+                          "run scripts/init_compendium.sh or pass --online-fallback";
+        } else {
+            qInfo() << "Runtime mode: compendium-only (no remote providers)";
+        }
+        return orchestrator;
+    }
+
+    registerRemoteProviders(*orchestrator, parser);
+    qInfo() << "Runtime mode: compendium-preferred (online fallback enabled)";
     return orchestrator;
+}
+
+qint64 countCompendiumSignatures(const QString &dbPath) {
+    if (dbPath.isEmpty() || !QFileInfo::exists(dbPath)) {
+        return -1;
+    }
+
+    const QString connectionName
+        = QStringLiteral("compendium_sig_count_%1").arg(QUuid::createUuid().toString(QUuid::Id128));
+    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+    db.setDatabaseName(dbPath);
+    if (!db.open()) {
+        QSqlDatabase::removeDatabase(connectionName);
+        return -1;
+    }
+
+    QSqlQuery query(db);
+    if (!query.exec(QStringLiteral("SELECT COUNT(*) FROM game_signatures")) || !query.next()) {
+        db.close();
+        QSqlDatabase::removeDatabase(connectionName);
+        return -1;
+    }
+
+    const qint64 count = query.value(0).toLongLong();
+    db.close();
+    QSqlDatabase::removeDatabase(connectionName);
+    return count;
 }

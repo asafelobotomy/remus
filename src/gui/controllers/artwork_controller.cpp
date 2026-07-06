@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QMetaObject>
 #include <QRegularExpression>
@@ -18,6 +19,24 @@
 #include "../../metadata/provider_orchestrator.h"
 
 namespace Remus {
+
+namespace {
+
+    bool copyLocalArtworkToCache(const QString &sourcePath, const QString &destBase) {
+        const QFileInfo sourceInfo(sourcePath);
+        if (!sourceInfo.exists() || !sourceInfo.isFile()) {
+            return false;
+        }
+
+        const QString suffix = sourceInfo.suffix().isEmpty() ? QStringLiteral("png") : sourceInfo.suffix();
+        const QString destPath = destBase + QLatin1Char('.') + suffix;
+        if (QFileInfo::exists(destPath)) {
+            QFile::remove(destPath);
+        }
+        return QFile::copy(sourcePath, destPath);
+    }
+
+} // namespace
 
 ArtworkController::ArtworkController(AppController *appController, QObject *parent)
     : QObject(parent)
@@ -341,9 +360,29 @@ bool ArtworkController::refreshArtworkForFile(int fileId, bool requireDownloadab
         return true;
     }
 
-    // No local artwork yet — use the remote URL from enrichment for the download step.
+    // No local artwork yet — use compendium blob path or remote URL for the download step.
     if (enriched.boxArtUrl.isEmpty()) {
         return false;
+    }
+
+    QString localSource;
+    const QUrl artUrl(enriched.boxArtUrl);
+    if (artUrl.isLocalFile()) {
+        localSource = artUrl.toLocalFile();
+    } else if (QFileInfo::exists(enriched.boxArtUrl)) {
+        localSource = enriched.boxArtUrl;
+    }
+
+    if (!localSource.isEmpty()) {
+        const QString destBase = defaultArtworkDir() + QStringLiteral("/artwork_%1").arg(fileId);
+        if (copyLocalArtworkToCache(localSource, destBase)) {
+            const QString cachedPath = artworkPathForFile(fileId);
+            m_localArtworkPath = cachedPath;
+            m_previewUrl = QUrl::fromLocalFile(cachedPath);
+            if (!m_batchDownloading)
+                emit previewChanged();
+            return true;
+        }
     }
 
     const QUrl remoteArtUrl(enriched.boxArtUrl);

@@ -47,6 +47,15 @@ Item {
             text: modController.lastError
         }
 
+        ProgressCard {
+            visible: modController.loadingCatalog || modController.installing
+            Layout.fillWidth: true
+            title: modController.loadingCatalog ? "Loading catalog" : "Installing mod"
+            progressValue: modController.loadingCatalog || modController.installing ? -1 : 0
+            progressTotal: 100
+            message: modController.lastError.length > 0 ? modController.lastError : ""
+        }
+
         SplitView {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -84,8 +93,17 @@ Item {
                             width: modDelegate.availableWidth
                             spacing: 6
 
-                            Label { Layout.fillWidth: true; text: title; font.bold: true; elide: Text.ElideRight }
-                            Label { Layout.fillWidth: true; text: author + " • v" + version + " • " + type + " • " + format; elide: Text.ElideRight }
+                            Label {
+                                Layout.fillWidth: true
+                                text: title
+                                font.bold: true
+                                elide: Text.ElideRight
+                            }
+                            Label {
+                                Layout.fillWidth: true
+                                text: author + " • v" + version + " • " + type + " • " + format
+                                elide: Text.ElideRight
+                            }
                             Label {
                                 Layout.fillWidth: true
                                 wrapMode: Text.WordWrap

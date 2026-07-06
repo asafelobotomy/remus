@@ -19,6 +19,8 @@ add_library(remus-gui-controllers STATIC
     controllers/export_controller.cpp
     controllers/patch_controller.cpp
     controllers/mod_controller.cpp
+    controllers/compendium_build_controller.cpp
+    controllers/compendium_build_options.cpp
     controllers/settings_controller.cpp
     controllers/workflow_controller.cpp
     controllers/workflow_controller_run.cpp
@@ -65,6 +67,7 @@ qt_add_qml_module(remus-gui
         qml/components/InspectorPanel.qml
         qml/views/LibraryWorkbench.qml
         qml/dialogs/MatchEnrichDialog.qml
+        qml/dialogs/CompendiumBuildWizard.qml
         qml/dialogs/RenameOrganizeDialog.qml
         qml/views/UtilitiesView.qml
         qml/views/ExportView.qml

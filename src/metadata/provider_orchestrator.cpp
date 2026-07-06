@@ -93,6 +93,10 @@ void ProviderOrchestrator::mergeMetadata(GameMetadata &target, const GameMetadat
 ProviderOrchestrator::ProviderOrchestrator(QObject *parent)
     : QObject(parent) { }
 
+void ProviderOrchestrator::setMode(OrchestratorMode mode) {
+    m_mode = mode;
+}
+
 void ProviderOrchestrator::setCache(MetadataCache *cache) {
     m_cache = cache;
 }

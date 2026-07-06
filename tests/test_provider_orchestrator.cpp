@@ -122,6 +122,10 @@ static QSqlDatabase createTestCacheDb() {
     return db;
 }
 
+static void setLegacyOrchestratorMode(ProviderOrchestrator &orchestrator) {
+    orchestrator.setMode(ProviderOrchestrator::OrchestratorMode::CompendiumPreferred);
+}
+
 class ProviderOrchestratorTest : public QObject {
     Q_OBJECT
 
@@ -169,6 +173,7 @@ private slots:
 
 void ProviderOrchestratorTest::hashProviderPriority() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     auto *hashProvider = new StubProvider("screenscraper");
     hashProvider->m_hashMetadata.title = "Hash Hit";
@@ -192,6 +197,7 @@ void ProviderOrchestratorTest::hashProviderPriority() {
 
 void ProviderOrchestratorTest::fallsBackToNameSearch() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     auto *hashProvider = new StubProvider("screenscraper");
     // Return empty to force name fallback
@@ -220,6 +226,7 @@ void ProviderOrchestratorTest::fallsBackToNameSearch() {
 
 void ProviderOrchestratorTest::detailFetchFailureEmitsSpecificProviderError() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     auto *first = new StubProvider("igdb");
     SearchResult failedDetailResult;
@@ -258,6 +265,7 @@ void ProviderOrchestratorTest::detailFetchFailureEmitsSpecificProviderError() {
 
 void ProviderOrchestratorTest::normalizesVersionedNamesBeforeNameSearch() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     auto *nameProvider = new StubProvider("igdb");
     SearchResult result;
@@ -282,6 +290,7 @@ void ProviderOrchestratorTest::normalizesVersionedNamesBeforeNameSearch() {
 
 void ProviderOrchestratorTest::artworkFallback() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     auto *first = new StubProvider("igdb");
     auto *second = new StubProvider("thegamesdb");
@@ -301,6 +310,7 @@ void ProviderOrchestratorTest::searchWithFallbackContinuesPastCacheWithoutArtwor
     QSqlDatabase db = createTestCacheDb();
     MetadataCache cache(db);
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
     orchestrator.setCache(&cache);
 
     GameMetadata cached;
@@ -341,6 +351,7 @@ void ProviderOrchestratorTest::searchWithFallbackContinuesPastCacheWithoutArtwor
 
 void ProviderOrchestratorTest::testRemoveProvider() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     auto *provider = new StubProvider("screenscraper");
     orchestrator.addProvider("screenscraper", provider, 90);
@@ -352,6 +363,7 @@ void ProviderOrchestratorTest::testRemoveProvider() {
 
 void ProviderOrchestratorTest::testGetEnabledProviders() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     QVERIFY(orchestrator.getEnabledProviders().isEmpty());
 
@@ -368,6 +380,7 @@ void ProviderOrchestratorTest::testGetEnabledProviders() {
 
 void ProviderOrchestratorTest::testSetProviderEnabled() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     auto *provider = new StubProvider("igdb");
     orchestrator.addProvider("igdb", provider, 40);
@@ -382,6 +395,7 @@ void ProviderOrchestratorTest::testSetProviderEnabled() {
 
 void ProviderOrchestratorTest::testAllProvidersFailed() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     // Add providers that return empty results (will fail)
     orchestrator.addProvider("empty1", new StubProvider("empty1"), 10);
@@ -396,6 +410,7 @@ void ProviderOrchestratorTest::testAllProvidersFailed() {
 
 void ProviderOrchestratorTest::testSearchAllProviders() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     auto *p1 = new StubProvider("provider1");
     SearchResult r1;
@@ -424,6 +439,7 @@ void ProviderOrchestratorTest::cacheHitSkipsProviders() {
     QSqlDatabase db = createTestCacheDb();
     MetadataCache cache(db);
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
     orchestrator.setCache(&cache);
 
     // Pre-populate cache
@@ -447,6 +463,7 @@ void ProviderOrchestratorTest::cacheMissStoresResult() {
     QSqlDatabase db = createTestCacheDb();
     MetadataCache cache(db);
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
     orchestrator.setCache(&cache);
 
     auto *hashProvider = new StubProvider("screenscraper");
@@ -468,6 +485,7 @@ void ProviderOrchestratorTest::artworkCacheHitSkipsProviders() {
     QSqlDatabase db = createTestCacheDb();
     MetadataCache cache(db);
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
     orchestrator.setCache(&cache);
 
     // Pre-populate artwork cache
@@ -489,6 +507,7 @@ void ProviderOrchestratorTest::hashMatchSkipsRemainingProviders() {
     // A hash match from the first (local) provider must prevent any further
     // provider from being queried — the ROM identity is resolved at 100%.
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     auto *first = new StubProvider("compendium");
     first->m_hashMetadata.title = "Super Mario World";
@@ -534,6 +553,7 @@ void ProviderOrchestratorTest::hashMatchWithRequireArtworkContinuesForArtwork() 
     // the orchestrator should continue to find artwork — but the title from
     // the hash match must be preserved (not overwritten).
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     auto *first = new StubProvider("compendium");
     first->m_hashMetadata.title = "Chrono Trigger";
@@ -579,6 +599,7 @@ void ProviderOrchestratorTest::testIgdbSkippedCountWhenProxyDisabled() {
 
 void ProviderOrchestratorTest::testGetProviderReturnsCorrectType() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
     auto *hasheous = new StubHasheousProvider();
     orchestrator.addProvider("hasheous", hasheous, 80);
 
@@ -610,6 +631,7 @@ void ProviderOrchestratorTest::testConcurrentMatchResultsNoDuplicates() {
         // Worker-local orchestrator + stub — no shared QObject state.
         // Use name-search path (hash lookup is gated on known provider names).
         ProviderOrchestrator localOrch;
+        setLegacyOrchestratorMode(localOrch);
         const QString providerName = QStringLiteral("stub-%1").arg(id);
         auto *stub = new StubProvider(providerName);
         const QString title = QStringLiteral("Title-%1").arg(id);
@@ -675,6 +697,7 @@ void ProviderOrchestratorTest::testComputeFieldGapConcurrentlyConsistent() {
 void ProviderOrchestratorTest::serialCascadeWhenHashMisses() {
     // Arrange: provider returns empty on hash, a result on serial.
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     auto *provider = new StubProvider("compendium");
     // hash returns nothing
@@ -701,6 +724,7 @@ void ProviderOrchestratorTest::serialCascadeWhenHashMisses() {
 void ProviderOrchestratorTest::nameCascadeWhenHashAndSerialMiss() {
     // Arrange: provider returns empty on both hash and serial, a result on name.
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
 
     auto *provider = new StubProvider("compendium");
     // hash and serial return nothing; name search succeeds.
@@ -729,6 +753,7 @@ void ProviderOrchestratorTest::nameCascadeWhenHashAndSerialMiss() {
 
 void ProviderOrchestratorTest::retroAchievementsUsesRaMd5NotNoIntroMd5() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
     auto *ra = new StubProvider(QStringLiteral("retroachievements"));
     ra->m_hashMetadata.title = QStringLiteral("RA Match");
     orchestrator.addProvider(
@@ -744,6 +769,7 @@ void ProviderOrchestratorTest::retroAchievementsUsesRaMd5NotNoIntroMd5() {
 
 void ProviderOrchestratorTest::retroAchievementsUsesExternalIdBeforeRaHash() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
     auto *ra = new StubProvider(QStringLiteral("retroachievements"));
     ra->m_idMetadata.title = QStringLiteral("RA By ID");
     ra->m_hashMetadata.title = QStringLiteral("RA By Hash");
@@ -769,6 +795,7 @@ void ProviderOrchestratorTest::retroAchievementsUsesExternalIdBeforeRaHash() {
 
 void ProviderOrchestratorTest::hasheousMultiEntryPayload() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
     auto *hasheous = new CapturingHasheousProvider();
     orchestrator.addProvider(QStringLiteral("hasheous"), hasheous, Constants::Providers::Priority::HASHEOUS);
 
@@ -785,6 +812,7 @@ void ProviderOrchestratorTest::hasheousMultiEntryPayload() {
 
 void ProviderOrchestratorTest::hasheousChdEntryUsesArrayPayload() {
     ProviderOrchestrator orchestrator;
+    setLegacyOrchestratorMode(orchestrator);
     auto *hasheous = new CapturingHasheousProvider();
     orchestrator.addProvider(QStringLiteral("hasheous"), hasheous, Constants::Providers::Priority::HASHEOUS);
 

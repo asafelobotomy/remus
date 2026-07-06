@@ -398,8 +398,8 @@ ArtworkUrls CompendiumProvider::getArtwork(const QString &id) {
 
     ArtworkUrls artwork;
     const auto resolve = [&](const QString &assetType) -> QUrl {
-        const QString url
-            = Metadata::ThumbnailUrlHelper::resolveArtworkUrl(db, repoRoot, id, libretroName, title, assetType, false);
+        const QString url = Metadata::ThumbnailUrlHelper::resolveArtworkUrl(
+            db, repoRoot, id, libretroName, title, assetType, m_strictOffline);
         return url.isEmpty() ? QUrl() : QUrl(url);
     };
 

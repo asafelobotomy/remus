@@ -66,15 +66,46 @@ else
     cp -a "$ICON_SRC" "$ICON_DEST"
 fi
 
-# ── Bundle compendium database ───────────────────────────────────────────────
+# ── Bundle compendium data, scripts, and CLI shim ─────────────────────────────
+REMUS_SHARE="$APPDIR/usr/share/remus"
+mkdir -p "$REMUS_SHARE"
+
+if [[ -d "$ROOT_DIR/data/compendium" ]]; then
+    mkdir -p "$REMUS_SHARE/data"
+    cp -a "$ROOT_DIR/data/compendium" "$REMUS_SHARE/data/"
+    echo "Bundled data/compendium"
+fi
+
+if [[ -d "$ROOT_DIR/scripts" ]]; then
+    cp -a "$ROOT_DIR/scripts" "$REMUS_SHARE/"
+    echo "Bundled scripts/"
+fi
+
+mkdir -p "$REMUS_SHARE/build"
+ln -sf ../../bin/remus-cli "$REMUS_SHARE/build/remus-cli"
+
 COMPENDIUM_SRC="$ROOT_DIR/data/compendium/remus_compendium.db"
 if [[ -f "$COMPENDIUM_SRC" ]]; then
-    mkdir -p "$APPDIR/usr/share/remus/data/compendium"
-    cp -a "$COMPENDIUM_SRC" "$APPDIR/usr/share/remus/data/compendium/remus_compendium.db"
+    mkdir -p "$REMUS_SHARE/data/compendium"
+    cp -a "$COMPENDIUM_SRC" "$REMUS_SHARE/data/compendium/remus_compendium.db"
     echo "Bundled compendium DB: $COMPENDIUM_SRC"
 else
-    echo "WARNING: compendium DB not found at $COMPENDIUM_SRC — skipping" >&2
+    echo "NOTE: compendium DB not found at $COMPENDIUM_SRC — wizard will create on first build" >&2
 fi
+
+# AppImage launcher sets REMUS_DATA_DIR so findDataSubdir and wizard resolve bundled assets.
+cat > "$APPDIR/usr/bin/remus-gui-launch" <<'LAUNCH'
+#!/usr/bin/env bash
+HERE="$(dirname "$(readlink -f "$0")")"
+APPDIR="${APPDIR:-$(dirname "$HERE")}"
+export REMUS_DATA_DIR="${APPDIR}/usr/share/remus"
+export PATH="${HERE}:${PATH}"
+exec "${HERE}/remus-gui" "$@"
+LAUNCH
+chmod +x "$APPDIR/usr/bin/remus-gui-launch"
+
+# Patch desktop entry to use launcher (linuxdeploy reads this file).
+sed -i 's|^Exec=remus-gui|Exec=remus-gui-launch|' "$APPDIR/usr/share/applications/remus.desktop"
 
 # Symlink desktop and icon at AppDir root (required by linuxdeploy)
 ln -sf usr/share/applications/remus.desktop "$APPDIR/remus.desktop"

@@ -48,7 +48,9 @@ jobs:
         run: cmake --build build --config ${{ matrix.build_type }} -j$(nproc)
 
       - name: Run Tests
-        run: ctest --test-dir build --output-on-failure
+        run: |
+          ctest --test-dir build -LE gui --output-on-failure
+          ctest --test-dir build -L gui --parallel-level 1 --output-on-failure
 
       - name: Upload dependency manifest
         if: matrix.build_type == 'Release'
@@ -86,7 +88,9 @@ jobs:
         run: cmake --build build -j$(nproc)
 
       - name: Run Tests
-        run: ctest --test-dir build --output-on-failure
+        run: |
+          ctest --test-dir build -LE gui --output-on-failure
+          ctest --test-dir build -L gui --parallel-level 1 --output-on-failure
 
       - name: Generate coverage report
         run: |
@@ -174,7 +178,6 @@ jobs:
 
   clang-tidy:
     runs-on: ubuntu-24.04
-    continue-on-error: true
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3

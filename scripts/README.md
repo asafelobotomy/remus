@@ -20,6 +20,7 @@ Shell helpers for build, compendium, packaging, testing, and workspace hygiene. 
 | Script | Purpose |
 |--------|---------|
 | [`setup_compendium_db.sh`](setup_compendium_db.sh) | **Run once per clone** — create bootstrap `data/compendium/remus_compendium.db` (schema + seeds; gitignored) |
+| [`init_compendium.sh`](init_compendium.sh) | **First-use full build** — schema (if missing) + `build_compendium_full.sh` for a complete offline compendium |
 | [`apply_compendium_migrations.sh`](apply_compendium_migrations.sh) | Apply incremental migrations (0008+) on an existing populated DB |
 | [`run_compendium_job.sh`](run_compendium_job.sh) | **Serialize** compendium sqlite/cli jobs (flock, optional timeout, busy_timeout) |
 | [`validate_compendium_quick.sh`](validate_compendium_quick.sh) | Fast quality gate: phase-2 checks only (~1 min) |

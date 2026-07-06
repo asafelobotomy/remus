@@ -84,7 +84,7 @@ ScrollView {
         }
 
         GroupBox {
-            title: "Compendium (CLI)"
+            title: "Compendium"
             Layout.fillWidth: true
 
             ColumnLayout {
@@ -95,7 +95,7 @@ ScrollView {
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
                     color: Theme.textBody
-                    text: "Building and enriching the bundled compendium database is CLI-only. " + "See data/compendium/README.md in the repository."
+                    text: "Match and enrich use remus_compendium.db only (offline). Use the Compendium Wizard for full builds or per-source extend."
                 }
 
                 Label {
@@ -104,9 +104,56 @@ ScrollView {
                     font.family: "monospace"
                     font.pixelSize: Theme.fontSm
                     color: Theme.textMuted
-                    text: "remus-cli --build-compendium --compendium-manifest data/compendium/manifest.json"
+                    text: "CLI alternative: bash scripts/init_compendium.sh  |  remus-cli --enrich-compendium --enrich-source <name>"
+                }
+
+                Label {
+                    text: "Extend compendium (incremental — no full rebuild)"
+                    font.bold: true
+                    color: Theme.textBody
+                }
+
+                Repeater {
+                    model: [
+                        {
+                            source: "igdb",
+                            hint: "remus-cli --enrich-compendium --enrich-source igdb"
+                        },
+                        {
+                            source: "screenscraper",
+                            hint: "remus-cli --enrich-compendium --enrich-source screenscraper"
+                        },
+                        {
+                            source: "hasheous",
+                            hint: "remus-cli --enrich-compendium --enrich-source hasheous"
+                        },
+                        {
+                            source: "remus-thumbnails",
+                            hint: "remus-cli --consolidate-thumbnails && remus-cli --enrich-compendium --enrich-source remus-thumbnails"
+                        }
+                    ]
+
+                    delegate: Label {
+                        required property var modelData
+                        Layout.fillWidth: true
+                        wrapMode: Text.WordWrap
+                        font.pixelSize: Theme.fontSm
+                        color: Theme.textMuted
+                        text: modelData.source + ": " + modelData.hint
+                    }
+                }
+
+                Button {
+                    text: "Open Compendium Wizard…"
+                    Layout.alignment: Qt.AlignLeft
+                    onClicked: compendiumBuildWizard.open()
                 }
             }
+        }
+
+        CompendiumBuildWizard {
+            id: compendiumBuildWizard
+            buildController: compendiumBuildController
         }
 
         // ── Library ──────────────────────────────────────────────────────────
@@ -256,7 +303,7 @@ ScrollView {
                         onClicked: {
                             const msg = settingsController.authenticateProvider(modelData.groupKey);
                             authResultLabel.text = msg;
-                            authResultLabel.color = msg === "Credentials saved." ? Theme.success : Theme.error;
+                            authResultLabel.color = msg.startsWith("Credentials saved") ? Theme.success : Theme.error;
                         }
                     }
 
@@ -580,8 +627,7 @@ ScrollView {
             font.pixelSize: Theme.fontSm
             color: Theme.textDim
             leftPadding: 200
-            text: "ROMs are organized into <i>destination/Remus Library/{system}/\u2026</i>"
-            textFormat: Text.RichText
+            text: "ROMs are organized into destination/Remus Library/{system}/…"
         }
 
         CheckBox {

@@ -21,6 +21,13 @@ public:
 
     bool openDatabase(const QString &databasePath);
 
+    void setStrictOffline(bool strictOffline) {
+        m_strictOffline = strictOffline;
+    }
+    bool strictOffline() const {
+        return m_strictOffline;
+    }
+
     QList<SearchResult> searchByName(
         const QString &title, const QString &system, const QString &region = QString()) override;
     GameMetadata getByHash(const QString &hash, const QString &system) override;
@@ -81,6 +88,7 @@ private:
 
     QString m_connectionName;
     QString m_databasePath;
+    bool m_strictOffline = false;
     Compendium::CompendiumNormalizer m_normalizer;
 };
 

@@ -92,7 +92,7 @@ Item {
             }
             ComboBox {
                 id: patchFormatCombo
-                model: ["bps", "ips", "ups", "xdelta"]
+                model: ["bps", "ips", "xdelta"]
             }
             Button {
                 text: "Browse modified…"

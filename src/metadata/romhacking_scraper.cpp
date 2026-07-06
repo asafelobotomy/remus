@@ -23,7 +23,7 @@ namespace {
         QNetworkAccessManager manager;
         QNetworkRequest request(url);
         request.setHeader(
-            QNetworkRequest::UserAgentHeader, QStringLiteral("Remus/0.10 (+https://github.com/asafelobotomy/remus)"));
+            QNetworkRequest::UserAgentHeader, QStringLiteral("Remus/0.13 (+https://github.com/asafelobotomy/remus)"));
 
         QNetworkReply *reply = manager.get(request);
         QEventLoop loop;

@@ -20,5 +20,8 @@ namespace CredentialManager {
     /// Read a credential from @p jsonFilePath only (no env/keychain/settings fallback).
     QString getFromFile(const QString &key, const QString &jsonFilePath);
 
+    /// Move legacy plaintext QSettings secrets into the OS keychain when empty.
+    void migrateLegacySecrets();
+
 } // namespace CredentialManager
 } // namespace Remus

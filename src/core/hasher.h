@@ -61,12 +61,6 @@ public:
 
 signals:
     void hashProgress(const QString &filePath, int percentage);
-
-private:
-    QByteArray readFileData(const QString &filePath, bool stripHeader, int headerSize);
-    QString calculateCRC32(const QByteArray &data);
-    QString calculateMD5(const QByteArray &data);
-    QString calculateSHA1(const QByteArray &data);
 };
 
 } // namespace Remus

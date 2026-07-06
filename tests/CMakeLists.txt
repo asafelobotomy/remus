@@ -254,6 +254,7 @@ add_remus_test(test_thumbnail_urls ThumbnailUrlTest
 
 add_remus_test(test_consolidate_thumbnails ConsolidateThumbnailsTest
     SOURCES test_consolidate_thumbnails.cpp
+        stubs/compendium_fingerprint_stub.cpp
         ../src/cli/compendium_artwork_transcode.cpp
         ../src/cli/compendium_cwebp_resolver.cpp
         ../src/cli/compendium_consolidate_thumbnails.cpp
@@ -296,6 +297,7 @@ add_remus_test(test_gui_controllers GuiControllersSmokeTest
     SOURCES test_gui_controllers.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql remus-metadata remus-core remus-services remus-gui-controllers
 )
+set_tests_properties(GuiControllersSmokeTest PROPERTIES LABELS "gui")
 target_include_directories(test_gui_controllers PRIVATE
     ${CMAKE_SOURCE_DIR}/src/gui
 )
@@ -472,6 +474,7 @@ add_remus_test(test_rom_bundler RomBundlerTest
 
 add_remus_test(test_cli_helpers CliHelpersTest
     SOURCES test_cli_helpers.cpp ../src/cli/cli_helpers.cpp ../src/cli/cli_helpers_providers.cpp
+        ../src/cli/compendium_progress.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-core remus-metadata remus-constants remus-services
 )
 
@@ -556,6 +559,8 @@ add_remus_test(test_compendium_build_plan CompendiumBuildPlanTest
             ../src/cli/compendium_cwebp_resolver.cpp
             ../src/cli/compendium_artwork_blob_store.cpp
             ../src/cli/compendium_enrichment_sql.cpp
+            ../src/cli/compendium_progress.cpp
+            ../src/cli/compendium_platform_index_cache.cpp
     LIBS Qt6::Test Qt6::Core Qt6::Sql Qt6::Network remus-metadata remus-core remus-services
 )
 target_compile_definitions(test_compendium_build_plan PRIVATE
@@ -622,6 +627,17 @@ target_include_directories(test_gui_extra_controllers PRIVATE
 target_compile_definitions(test_gui_extra_controllers PRIVATE
     REMUS_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 )
+
+add_remus_test(test_compendium_build_options CompendiumBuildOptionsTest
+    SOURCES test_compendium_build_options.cpp
+    LIBS Qt6::Test Qt6::Core remus-gui-controllers
+)
+target_include_directories(test_compendium_build_options PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/gui
+)
+
+add_test(NAME WrapperProgressTest COMMAND bash "${CMAKE_SOURCE_DIR}/tests/test_wrapper_progress.sh")
+set_tests_properties(WrapperProgressTest PROPERTIES LABELS "unit")
 
 add_remus_test(test_metadata_rate_limits MetadataRateLimitsTest
     SOURCES test_metadata_rate_limits.cpp

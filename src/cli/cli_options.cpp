@@ -71,6 +71,12 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
     addOption(QCommandLineOption("ra-user", "RetroAchievements username (env: REMUS_RA_USERNAME)", "username"));
     addOption(QCommandLineOption("ra-api-key", "RetroAchievements web API key (env: REMUS_RA_API_KEY)", "apiKey"));
 
+    addOption(QCommandLineOption(
+        "compendium-only", "Match/enrich using remus_compendium.db only (default when compendium DB exists)"));
+    addOption(QCommandLineOption("offline", "Alias for --compendium-only"));
+    addOption(QCommandLineOption(
+        "online-fallback", "Allow remote metadata providers to fill gaps after a compendium match (legacy behavior)"));
+
     addActionOption(QCommandLineOption("match", "Match scanned files with metadata (M3 intelligent matching)"));
     addOption(
         QCommandLineOption(Constants::Cli::Options::MIN_CONFIDENCE, "Minimum confidence threshold for matches (0-100)",
@@ -193,6 +199,8 @@ void registerAllOptions(QCommandLineParser &parser, QSet<QString> &actionOptions
         "preset"));
 
     addActionOption(QCommandLineOption("build-compendium", "Build a canonical compendium database from a manifest"));
+    addActionOption(QCommandLineOption(
+        "init-compendium", "Bootstrap schema (if needed) and run scripts/init_compendium.sh full build"));
     addOption(QCommandLineOption("force-full-rebuild",
         "Force a full compendium rebuild even when incremental or enrichment-only refresh is possible"));
     addOption(QCommandLineOption(

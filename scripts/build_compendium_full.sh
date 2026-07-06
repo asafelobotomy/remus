@@ -113,6 +113,7 @@ run_consolidate_artwork() {
     local consolidate_args=(
         --consolidate-thumbnails
         --compendium-output "$db_path"
+        --ingest-remote-artwork
     )
     if $SNAP_LOSSLESS; then
         consolidate_args+=(--thumbnail-snap-lossless)
@@ -353,21 +354,27 @@ echo "    disc_set_coverage_report=$DISC_SET_COVERAGE_REPORT"
 echo "    lock=$LOCK_PATH"
 echo "    heartbeat_seconds=$HEARTBEAT_SECONDS"
 
+write_wrapper_progress "$PROGRESS_FILE" "starting" "in_progress" 0 "Full compendium pipeline starting"
+
 if ! $SKIP_UPDATE; then
     echo "==> Updating offline compendium sources"
+    write_wrapper_progress "$PROGRESS_FILE" "dat_update" "in_progress" 0 "Updating offline DAT and mirror sources"
     offline_args=()
     if $STRICT_OFFLINE; then
         offline_args+=(--strict-offline)
     fi
     bash "$ROOT_DIR/scripts/update_compendium_offline_sources.sh" "${offline_args[@]}"
+    write_wrapper_progress "$PROGRESS_FILE" "dat_update" "complete" 2 "Offline source refresh complete"
 else
     echo "==> Skipping offline source refresh (--skip-update)"
 fi
 
 echo "==> Generating manifest"
+write_wrapper_progress "$PROGRESS_FILE" "manifest" "in_progress" 3 "Generating compendium manifest"
 "$ROOT_DIR/scripts/generate_compendium_manifest.sh" \
     --dat-dir "$DAT_DIR" \
     --output "$MANIFEST_PATH"
+write_wrapper_progress "$PROGRESS_FILE" "manifest" "complete" 5 "Manifest generation complete"
 
 CRED_TARGET="$(dirname "$OUTPUT_DB")/enrichment-credentials.json"
 if [[ -x "$ROOT_DIR/scripts/sync_enrichment_credentials.sh" ]]; then
@@ -389,6 +396,7 @@ elif [[ ! -f "$CRED_TARGET" ]]; then
         echo "    Copy $CRED_EXAMPLE to $CRED_TARGET or run scripts/sync_enrichment_credentials.sh"
     fi
 fi
+write_wrapper_progress "$PROGRESS_FILE" "credentials" "complete" 5 "Enrichment credentials synced"
 
 compendium_backup_if_populated "$OUTPUT_DB" "pre-refresh"
 
@@ -474,6 +482,7 @@ else
 fi
 
 if ! $SKIP_CONSOLIDATE; then
+    write_wrapper_progress "$PROGRESS_FILE" "artwork" "in_progress" 96 "Consolidating artwork and thumbnails"
     run_consolidate_artwork "$OUTPUT_DB"
     persist_artwork_complete_phase "$OUTPUT_DB"
     echo "==> Post-consolidate remus-thumbnails enrichment"
@@ -482,12 +491,14 @@ if ! $SKIP_CONSOLIDATE; then
         --compendium-output "$OUTPUT_DB" \
         --enrich-source remus-thumbnails \
         2>&1 | tee -a "$BUILD_LOG" || echo "warning: post-consolidate thumbnail enrich failed" >&2
+    write_wrapper_progress "$PROGRESS_FILE" "artwork" "complete" 97 "Artwork consolidate complete"
 else
     echo "==> Skipping artwork consolidate (--skip-consolidate)"
 fi
 
 if ! $SKIP_VALIDATION; then
     echo "==> Artwork coverage validation (warn-only)"
+    write_wrapper_progress "$PROGRESS_FILE" "validate" "in_progress" 98 "Running validation tiers"
     bash "$ROOT_DIR/scripts/validate_compendium_tier.sh" artwork "$OUTPUT_DB" \
         || echo "warning: artwork coverage checks reported issues (see above)" >&2
 fi
@@ -574,6 +585,7 @@ if [ -n "$empty_systems" ]; then
 fi
 
 echo "==> Build log: $BUILD_LOG"
+write_wrapper_progress "$PROGRESS_FILE" "complete" "complete" 100 "Full compendium pipeline complete"
 if [[ "$build_rc" -eq 2 ]] && $ALLOW_UNRESOLVED_CONFLICTS; then
     exit 0
 fi

@@ -223,6 +223,33 @@ compendium_progress_build_phase() {
     fi
 }
 
+# write_wrapper_progress <progress_file> <build_phase> <status> <overall_pct> <description>
+write_wrapper_progress() {
+    local progress_file="$1"
+    local build_phase="$2"
+    local status="$3"
+    local overall_pct="$4"
+    local description="$5"
+
+    mkdir -p "$(dirname "$progress_file")"
+    if command -v jq >/dev/null 2>&1; then
+        local tmp
+        tmp="$(mktemp)"
+        if [[ -f "$progress_file" ]]; then
+            jq --arg phase "$build_phase" --arg status "$status" --argjson pct "$overall_pct" --arg desc "$description" \
+                '.build_phase = $phase | .status = $status | .overall_pct = $pct | .description = $desc' \
+                "$progress_file" >"$tmp" 2>/dev/null || echo '{}' >"$tmp"
+        else
+            jq -n --arg phase "$build_phase" --arg status "$status" --argjson pct "$overall_pct" --arg desc "$description" \
+                '{build_phase: $phase, status: $status, overall_pct: $pct, description: $desc}' >"$tmp"
+        fi
+        mv "$tmp" "$progress_file"
+    else
+        printf '{"build_phase":"%s","status":"%s","overall_pct":%s,"description":"%s"}\n' \
+            "$build_phase" "$status" "$overall_pct" "$description" >"$progress_file"
+    fi
+}
+
 compendium_full_build_lock_holder() {
     local lock_path="$1"
     if [[ ! -f "$lock_path" ]]; then

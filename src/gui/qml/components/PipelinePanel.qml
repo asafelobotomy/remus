@@ -112,10 +112,9 @@ Item {
             spacing: 10
 
             Label {
-                text: "The following actions will be applied to <b>all</b> matched ROMs:"
+                text: "The following actions will be applied to all matched ROMs:"
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
-                textFormat: Text.RichText
             }
 
             Rectangle {
@@ -133,18 +132,16 @@ Item {
             }
 
             Label {
-                text: "\u2022 Bundle & Rename using template: <i>" + root.namingTemplate + "</i>"
+                text: "\u2022 Bundle & Rename using template: " + root.namingTemplate
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
-                textFormat: Text.RichText
             }
 
             Label {
-                text: "\u2022 Organize ROMs into: <i>" + root.organizeLibraryPath + "</i>"
+                text: "\u2022 Organize ROMs into: " + root.organizeLibraryPath
                 visible: root.organizeDest.length > 0
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
-                textFormat: Text.RichText
             }
 
             Label {

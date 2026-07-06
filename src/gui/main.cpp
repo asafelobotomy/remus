@@ -19,6 +19,7 @@
 #include "controllers/organize_controller.h"
 #include "controllers/patch_controller.h"
 #include "controllers/scan_controller.h"
+#include "controllers/compendium_build_controller.h"
 #include "controllers/settings_controller.h"
 #include "controllers/verification_controller.h"
 #include "controllers/workflow_controller.h"
@@ -51,6 +52,7 @@ int main(int argc, char *argv[]) {
 
     Remus::AppController appController;
     Remus::SettingsController settingsController;
+    Remus::CompendiumBuildController compendiumBuildController(&appController, &settingsController);
     Remus::VerificationResultModel verificationResultModel;
     Remus::ModListModel modListModel;
 
@@ -100,6 +102,7 @@ int main(int argc, char *argv[]) {
 
     engine.rootContext()->setContextProperty(QStringLiteral("appController"), &appController);
     engine.rootContext()->setContextProperty(QStringLiteral("settingsController"), &settingsController);
+    engine.rootContext()->setContextProperty(QStringLiteral("compendiumBuildController"), &compendiumBuildController);
     engine.rootContext()->setContextProperty(QStringLiteral("verificationResultModel"), &verificationResultModel);
     engine.rootContext()->setContextProperty(QStringLiteral("modListModel"), &modListModel);
     engine.rootContext()->setContextProperty(QStringLiteral("scanController"), &scanController);

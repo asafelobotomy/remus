@@ -75,6 +75,7 @@ public:
     Q_INVOKABLE QVariantMap selectedFile();
     Q_INVOKABLE QVariantMap selectedMatch();
     Q_INVOKABLE QString systemName(int systemId);
+    Q_INVOKABLE void reloadCompendiumOrchestrator();
 
 public slots:
     void setCurrentView(int view);

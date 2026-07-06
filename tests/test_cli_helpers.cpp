@@ -390,11 +390,12 @@ void CliHelpersTest::testBuildOrchestratorSkipsIgdbWithoutCredentials() {
     }
 
     QCommandLineParser parser;
+    parser.addOption(QCommandLineOption("online-fallback"));
     parser.addOption(QCommandLineOption("ss-user", "", "username"));
     parser.addOption(QCommandLineOption("ss-pass", "", "password"));
     parser.addOption(QCommandLineOption("igdb-client-id", "", "clientId"));
     parser.addOption(QCommandLineOption("igdb-client-secret", "", "clientSecret"));
-    parser.process(QStringList { QStringLiteral("test") });
+    parser.process(QStringList { QStringLiteral("test"), QStringLiteral("--online-fallback") });
 
     auto orchestrator = buildOrchestrator(parser);
 
@@ -421,17 +422,13 @@ void CliHelpersTest::testBuildOrchestratorLoadsCompendiumProviderFromDataDir() {
     CurrentDirGuard currentDir(dir.path());
 
     QCommandLineParser parser;
-    parser.addOption(QCommandLineOption("ss-user", "", "username"));
-    parser.addOption(QCommandLineOption("ss-pass", "", "password"));
-    parser.addOption(QCommandLineOption("igdb-client-id", "", "clientId"));
-    parser.addOption(QCommandLineOption("igdb-client-secret", "", "clientSecret"));
     parser.process(QStringList { QStringLiteral("test") });
 
     auto orchestrator = buildOrchestrator(parser);
     const QStringList providers = orchestrator->getEnabledProviders();
 
     QVERIFY(providers.contains(QStringLiteral("compendium")));
-    QCOMPARE(providers.first(), QStringLiteral("compendium"));
+    QCOMPARE(providers.size(), 1);
     QVERIFY(orchestrator->providerSupportsHash(QStringLiteral("compendium")));
 
     QSignalSpy trySpy(orchestrator.get(), &ProviderOrchestrator::tryingProvider);
@@ -620,13 +617,14 @@ void CliHelpersTest::testBuildOrchestratorWithArgvFlagEmitsSecurityWarning() {
     QTest::ignoreMessage(QtWarningMsg, QRegularExpression(QStringLiteral("Security: --igdb-client-secret.*argv")));
 
     QCommandLineParser parser;
+    parser.addOption(QCommandLineOption("online-fallback"));
     parser.addOption(QCommandLineOption(QStringLiteral("ss-user"), QString(), QStringLiteral("username")));
     parser.addOption(QCommandLineOption(QStringLiteral("ss-pass"), QString(), QStringLiteral("password")));
     parser.addOption(QCommandLineOption(QStringLiteral("igdb-client-id"), QString(), QStringLiteral("clientId")));
     parser.addOption(
         QCommandLineOption(QStringLiteral("igdb-client-secret"), QString(), QStringLiteral("clientSecret")));
-    parser.process(QStringList { QStringLiteral("test"), QStringLiteral("--igdb-client-id=id_from_argv"),
-        QStringLiteral("--igdb-client-secret=secret_from_argv") });
+    parser.process(QStringList { QStringLiteral("test"), QStringLiteral("--online-fallback"),
+        QStringLiteral("--igdb-client-id=id_from_argv"), QStringLiteral("--igdb-client-secret=secret_from_argv") });
 
     auto orchestrator = buildOrchestrator(parser);
 

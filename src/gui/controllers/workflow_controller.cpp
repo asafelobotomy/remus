@@ -293,7 +293,11 @@ void WorkflowController::refreshQueueFiles() {
     }
 
     if (!q.exec(sql)) {
-        qWarning() << "WorkflowController::reloadQueue query failed:" << q.lastError().text();
+        const QString err = q.lastError().text();
+        qWarning() << "WorkflowController::reloadQueue query failed:" << err;
+        if (m_appController != nullptr) {
+            m_appController->showError(QStringLiteral("Failed to load workflow queue: %1").arg(err));
+        }
         emit queueFilesChanged();
         return;
     }

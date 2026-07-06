@@ -2,8 +2,12 @@
 #include "cli_helpers.h"
 #include <QDateTime>
 #include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QTextStream>
 #include <QtConcurrent>
+#include "../core/compendium_disc_bridge.h"
 #include "../metadata/provider_orchestrator.h"
 #include "../core/constants/constants.h"
 #include "../core/disc_magic_detector.h"
@@ -59,6 +63,21 @@ int handleMatchCommand(CliContext &ctx) {
     qInfo() << "=== Intelligent Metadata Matching (M3) ===";
     qInfo() << "";
 
+    const bool jsonOutput = ctx.parser.isSet(QStringLiteral("json"));
+    const QString compendiumPath = resolveBundledCompendiumDbPath();
+    if (!compendiumPath.isEmpty()) {
+        const qint64 signatureCount = countCompendiumSignatures(compendiumPath);
+        if (signatureCount == 0) {
+            qWarning().noquote() << QStringLiteral(
+                "Compendium database has no hash signatures (game_signatures is empty). "
+                "Matching cannot identify games offline — run: bash scripts/init_compendium.sh");
+            return 1;
+        }
+        if (signatureCount < 0) {
+            qWarning() << "Could not read compendium signature count from:" << compendiumPath;
+        }
+    }
+
     auto orchestrator = buildOrchestrator(ctx.parser, &ctx.db);
 
     QObject::connect(orchestrator.get(), &ProviderOrchestrator::tryingProvider,
@@ -69,6 +88,10 @@ int handleMatchCommand(CliContext &ctx) {
         });
     QObject::connect(orchestrator.get(), &ProviderOrchestrator::providerFailed,
         [](const QString &name, const QString &error) { qInfo() << "  [FAILED]" << name << "-" << error; });
+
+    QStringList lastCompendiumGaps;
+    QObject::connect(orchestrator.get(), &ProviderOrchestrator::compendiumGapsRemaining,
+        [&lastCompendiumGaps](const QStringList &gaps) { lastCompendiumGaps = gaps; });
 
     QList<FileRecord> files = getHashedFiles(ctx.db, ctx.processFileScopeIds);
     int minConfidence = ctx.parser.value(Cli::Options::MIN_CONFIDENCE).toInt();
@@ -106,11 +129,14 @@ int handleMatchCommand(CliContext &ctx) {
     // its owning (main) thread; searchWithFallback() and persistMetadata() must
     // not be dispatched to worker threads.
     int matched = 0, failed = 0;
+    QJsonArray jsonResults;
 
     for (const MatchTask &task : tasks) {
         const FileRecord &file = task.file;
         const QString displayName = getMatchingDisplayName(file);
         const QString systemName = getMatchingSystemName(file);
+
+        lastCompendiumGaps.clear();
 
         qInfo() << "Matching:" << displayName;
         if (!task.discSerial.isEmpty())
@@ -131,13 +157,50 @@ int handleMatchCommand(CliContext &ctx) {
                 qInfo() << "    System:" << metadata.system;
                 qInfo() << "    Game ID:" << gameId;
                 matched++;
+                if (jsonOutput) {
+                    QJsonObject row;
+                    row.insert(QStringLiteral("file_id"), file.id);
+                    row.insert(QStringLiteral("filename"), file.filename);
+                    row.insert(QStringLiteral("status"), QStringLiteral("matched"));
+                    row.insert(QStringLiteral("title"), metadata.title);
+                    row.insert(QStringLiteral("confidence"), confidence);
+                    row.insert(QStringLiteral("provider"), metadata.providerId);
+                    if (!lastCompendiumGaps.isEmpty()) {
+                        QJsonArray gaps;
+                        for (const QString &gap : lastCompendiumGaps)
+                            gaps.append(gap);
+                        row.insert(QStringLiteral("compendium_gaps"), gaps);
+                    }
+                    jsonResults.append(row);
+                }
             } else {
                 qInfo() << "  ⚠ Low confidence:" << confidence << "% (threshold:" << minConfidence << "%)";
                 failed++;
+                if (jsonOutput) {
+                    QJsonObject row;
+                    row.insert(QStringLiteral("file_id"), file.id);
+                    row.insert(QStringLiteral("filename"), file.filename);
+                    row.insert(QStringLiteral("status"), QStringLiteral("low_confidence"));
+                    row.insert(QStringLiteral("confidence"), confidence);
+                    jsonResults.append(row);
+                }
             }
         } else {
             qInfo() << "  ✗ No match found";
             failed++;
+            if (jsonOutput) {
+                QJsonObject row;
+                row.insert(QStringLiteral("file_id"), file.id);
+                row.insert(QStringLiteral("filename"), file.filename);
+                row.insert(QStringLiteral("status"), QStringLiteral("no_match"));
+                if (!lastCompendiumGaps.isEmpty()) {
+                    QJsonArray gaps;
+                    for (const QString &gap : lastCompendiumGaps)
+                        gaps.append(gap);
+                    row.insert(QStringLiteral("compendium_gaps"), gaps);
+                }
+                jsonResults.append(row);
+            }
         }
         qInfo() << "";
     }
@@ -147,6 +210,14 @@ int handleMatchCommand(CliContext &ctx) {
     qInfo() << "Failed:" << failed;
     if (matched + failed > 0) {
         qInfo() << "Success rate:" << QString::number((matched * 100.0) / (matched + failed), 'f', 1) + "%";
+    }
+
+    if (jsonOutput) {
+        QJsonObject summary;
+        summary.insert(QStringLiteral("matched"), matched);
+        summary.insert(QStringLiteral("failed"), failed);
+        summary.insert(QStringLiteral("results"), jsonResults);
+        QTextStream(stdout) << QJsonDocument(summary).toJson(QJsonDocument::Compact) << Qt::endl;
     }
     return 0;
 }

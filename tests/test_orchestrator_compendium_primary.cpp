@@ -1,4 +1,5 @@
 #include <QtTest>
+#include <QUrl>
 
 #include "metadata/provider_orchestrator.h"
 #include "../core/constants/match_methods.h"
@@ -62,10 +63,13 @@ private slots:
     void artworkGapFill_RatingMerged();
     void externalIdGapFill_HasheousMerged();
     void compendiumMiss_FallsThrough();
+    void compendiumOnly_usesLocalArtworkNotRemote();
+    void compendiumOnly_skipsRemoteGapFill();
 };
 
 void CompendiumPrimaryOrchestratorTest::twoPassRouting_CompendiumTitleOnly() {
     ProviderOrchestrator orchestrator;
+    orchestrator.setMode(ProviderOrchestrator::OrchestratorMode::CompendiumPreferred);
 
     auto *compendium = new StubProvider(QStringLiteral("compendium"));
     compendium->m_hashMetadata.title = QStringLiteral("Canonical Title");
@@ -92,6 +96,7 @@ void CompendiumPrimaryOrchestratorTest::twoPassRouting_CompendiumTitleOnly() {
 
 void CompendiumPrimaryOrchestratorTest::identityLock_CompendiumWins() {
     ProviderOrchestrator orchestrator;
+    orchestrator.setMode(ProviderOrchestrator::OrchestratorMode::CompendiumPreferred);
 
     auto *compendium = new StubProvider(QStringLiteral("compendium"));
     compendium->m_hashMetadata.title = QStringLiteral("Sonic");
@@ -116,6 +121,7 @@ void CompendiumPrimaryOrchestratorTest::identityLock_CompendiumWins() {
 
 void CompendiumPrimaryOrchestratorTest::artworkGapFill_RatingMerged() {
     ProviderOrchestrator orchestrator;
+    orchestrator.setMode(ProviderOrchestrator::OrchestratorMode::CompendiumPreferred);
 
     auto *compendium = new StubProvider(QStringLiteral("compendium"));
     compendium->m_hashMetadata.title = QStringLiteral("Streets of Rage");
@@ -147,6 +153,7 @@ void CompendiumPrimaryOrchestratorTest::artworkGapFill_RatingMerged() {
 
 void CompendiumPrimaryOrchestratorTest::externalIdGapFill_HasheousMerged() {
     ProviderOrchestrator orchestrator;
+    orchestrator.setMode(ProviderOrchestrator::OrchestratorMode::CompendiumPreferred);
 
     auto *compendium = new StubProvider(QStringLiteral("compendium"));
     compendium->m_hashMetadata.title = QStringLiteral("Mega Man X");
@@ -178,6 +185,7 @@ void CompendiumPrimaryOrchestratorTest::externalIdGapFill_HasheousMerged() {
 
 void CompendiumPrimaryOrchestratorTest::compendiumMiss_FallsThrough() {
     ProviderOrchestrator orchestrator;
+    orchestrator.setMode(ProviderOrchestrator::OrchestratorMode::CompendiumPreferred);
 
     auto *compendium = new StubProvider(QStringLiteral("compendium"));
     auto *localDb = new StubProvider(QStringLiteral("localdatabase"));
@@ -197,6 +205,55 @@ void CompendiumPrimaryOrchestratorTest::compendiumMiss_FallsThrough() {
 
     QCOMPARE(result.title, QStringLiteral("Fallback Title"));
     QCOMPARE(localDb->m_hashCallCount, 1);
+    QCOMPARE(hasheous->m_hashCallCount, 0);
+}
+
+void CompendiumPrimaryOrchestratorTest::compendiumOnly_usesLocalArtworkNotRemote() {
+    ProviderOrchestrator orchestrator;
+    orchestrator.setMode(ProviderOrchestrator::OrchestratorMode::CompendiumOnly);
+
+    auto *compendium = new StubProvider(QStringLiteral("compendium"));
+    compendium->m_hashMetadata.title = QStringLiteral("Streets of Rage");
+    compendium->m_hashMetadata.id = QStringLiteral("42");
+    compendium->m_hashMetadata.matchScore = 1.0f;
+    compendium->m_hashMetadata.matchMethod = Constants::MatchMethods::HASH;
+    compendium->m_artwork.boxFront = QUrl(QStringLiteral("file:///data/remus-thumbnails/box.webp"));
+
+    auto *screenScraper = new StubProvider(QStringLiteral("screenscraper"));
+    screenScraper->m_hashMetadata.boxArtUrl = QStringLiteral("http://example.com/remote.jpg");
+
+    orchestrator.addProvider(QStringLiteral("compendium"), compendium, Constants::Providers::Priority::COMPENDIUM);
+    orchestrator.addProvider(
+        QStringLiteral("screenscraper"), screenScraper, Constants::Providers::Priority::SCREENSCRAPER);
+
+    const GameMetadata result = orchestrator.searchWithFallback(
+        QStringLiteral("DEADBEEF"), QStringLiteral("Streets of Rage"), QStringLiteral("Genesis"));
+
+    QCOMPARE(result.title, QStringLiteral("Streets of Rage"));
+    QCOMPARE(result.boxArtUrl, QStringLiteral("file:///data/remus-thumbnails/box.webp"));
+    QCOMPARE(screenScraper->m_hashCallCount, 0);
+}
+
+void CompendiumPrimaryOrchestratorTest::compendiumOnly_skipsRemoteGapFill() {
+    ProviderOrchestrator orchestrator;
+    orchestrator.setMode(ProviderOrchestrator::OrchestratorMode::CompendiumOnly);
+
+    auto *compendium = new StubProvider(QStringLiteral("compendium"));
+    compendium->m_hashMetadata.title = QStringLiteral("Mega Man X");
+    compendium->m_hashMetadata.matchScore = 1.0f;
+    compendium->m_hashMetadata.matchMethod = Constants::MatchMethods::HASH;
+
+    auto *hasheous = new StubProvider(QStringLiteral("hasheous"));
+    hasheous->m_hashMetadata.externalIds.insert(QStringLiteral("igdb"), QStringLiteral("98765"));
+
+    orchestrator.addProvider(QStringLiteral("compendium"), compendium, Constants::Providers::Priority::COMPENDIUM);
+    orchestrator.addProvider(QStringLiteral("hasheous"), hasheous, Constants::Providers::Priority::HASHEOUS);
+
+    const GameMetadata result = orchestrator.searchWithFallback(
+        QStringLiteral("CAFEBABE"), QStringLiteral("Mega Man X"), QStringLiteral("SNES"));
+
+    QCOMPARE(result.title, QStringLiteral("Mega Man X"));
+    QVERIFY(result.externalIds.isEmpty());
     QCOMPARE(hasheous->m_hashCallCount, 0);
 }
 

@@ -6,24 +6,24 @@ import Remus.Gui
 
 // Unified library home: filter sidebar + ROM table + inspector (TMM master–detail).
 Item {
-    Layout.fillWidth:  true
+    Layout.fillWidth: true
     Layout.fillHeight: true
 
     readonly property string romSourceDirectory: {
-        const fromSettings = settingsController.stringValue("gui/rom_source_directory", "")
+        const fromSettings = settingsController.stringValue("gui/rom_source_directory", "");
         if (fromSettings.length > 0)
-            return fromSettings
-        return scanController.lastDirectory
+            return fromSettings;
+        return scanController.lastDirectory;
     }
 
     FolderDialog {
         id: runAllOrganizeDialog
         title: "Organize destination for run all"
         onAccepted: {
-            const dest = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""))
-            settingsController.setValue("gui/organize_destination", dest)
-            runAllConfirmDialog.destDir = dest
-            runAllConfirmDialog.open()
+            const dest = decodeURIComponent(selectedFolder.toString().replace(/^file:\/\//, ""));
+            settingsController.setValue("gui/organize_destination", dest);
+            runAllConfirmDialog.destDir = dest;
+            runAllConfirmDialog.open();
         }
     }
 
@@ -48,20 +48,15 @@ Item {
                 visible: runAllConfirmDialog.destDir.length > 0
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
-                textFormat: Text.RichText
-                text: "Organize into: <i>" + runAllConfirmDialog.destDir + "/Remus Library</i>"
+                textFormat: Text.PlainText
+                text: "Organize into: " + runAllConfirmDialog.destDir + "/Remus Library"
             }
         }
 
         standardButtons: Dialog.Ok | Dialog.Cancel
 
         onAccepted: {
-            workflowController.runAll(
-                romSourceDirectory,
-                runAllConfirmDialog.destDir.length > 0
-                    ? runAllConfirmDialog.destDir + "/Remus Library"
-                    : "",
-                organizeController.namingTemplate)
+            workflowController.runAll(romSourceDirectory, runAllConfirmDialog.destDir.length > 0 ? runAllConfirmDialog.destDir + "/Remus Library" : "", organizeController.namingTemplate);
         }
     }
 
@@ -69,7 +64,7 @@ Item {
         id: editMetadataDialog
         title: "Edit Metadata"
         modal: true
-        width:  Math.min(560, Overlay.overlay.width * 0.9)
+        width: Math.min(560, Overlay.overlay.width * 0.9)
         height: Math.min(480, Overlay.overlay.height * 0.85)
         anchors.centerIn: Overlay.overlay
 
@@ -83,11 +78,11 @@ Item {
             standardButtons: DialogButtonBox.Save | DialogButtonBox.Cancel
             onAccepted: {
                 if (metadataEditorController.save())
-                    editMetadataDialog.close()
+                    editMetadataDialog.close();
             }
             onRejected: {
-                metadataEditorController.discard()
-                editMetadataDialog.close()
+                metadataEditorController.discard();
+                editMetadataDialog.close();
             }
         }
     }
@@ -134,9 +129,7 @@ Item {
                         wrapMode: Text.WordWrap
                         font.pixelSize: Theme.fontMd
                         color: romSourceDirectory.length > 0 ? Theme.textBody : Theme.warn
-                        text: romSourceDirectory.length > 0
-                              ? romSourceDirectory
-                              : "Not set \u2014 choose a folder in Settings or use Update library"
+                        text: romSourceDirectory.length > 0 ? romSourceDirectory : "Not set \u2014 choose a folder in Settings or use Update library"
                     }
                 }
 
@@ -186,8 +179,8 @@ Item {
 
             QueueSidebar {
                 SplitView.preferredWidth: 180
-                SplitView.minimumWidth:   140
-                SplitView.maximumWidth:   260
+                SplitView.minimumWidth: 140
+                SplitView.maximumWidth: 260
             }
 
             RomTable {
@@ -196,8 +189,8 @@ Item {
 
             InspectorPanel {
                 SplitView.preferredWidth: 280
-                SplitView.minimumWidth:   200
-                SplitView.maximumWidth:   400
+                SplitView.minimumWidth: 200
+                SplitView.maximumWidth: 400
                 onMatchSearchRequested: matchEnrichDialog.open()
             }
         }
@@ -205,27 +198,27 @@ Item {
 
     function requestRunAll() {
         if (workflowController.running) {
-            workflowController.cancel()
-            return
+            workflowController.cancel();
+            return;
         }
-        const dest = settingsController.stringValue("gui/organize_destination", "")
+        const dest = settingsController.stringValue("gui/organize_destination", "");
         if (dest.length === 0)
-            runAllOrganizeDialog.open()
+            runAllOrganizeDialog.open();
         else {
-            runAllConfirmDialog.destDir = dest
-            runAllConfirmDialog.open()
+            runAllConfirmDialog.destDir = dest;
+            runAllConfirmDialog.open();
         }
     }
 
     function openEditDialog() {
-        editMetadataDialog.open()
+        editMetadataDialog.open();
     }
 
     function openMatchEnrichDialog() {
-        matchEnrichDialog.open()
+        matchEnrichDialog.open();
     }
 
     function openRenameOrganizeDialog() {
-        renameOrganizeDialog.open()
+        renameOrganizeDialog.open();
     }
 }

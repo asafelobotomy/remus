@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Offline-first runtime:** compendium-only match/enrich by default when `remus_compendium.db` exists; `--compendium-only` / `--offline` and `--online-fallback` flags
+- `scripts/init_compendium.sh` and `remus-cli --init-compendium` for first-use compendium build
+- `docs/architecture/OFFLINE-FIRST-COMPENDIUM.md` and `docs/guides/SURFACE-PARITY.md`
+- Compendium local artwork wired into orchestrator gap-fill; `compendium_gap:` logging
+- `CredentialManager::migrateLegacySecrets()` on CLI/GUI startup
 - GUI `ErrorBanner` for global scan/hash/match errors; `AppController::showError()`
 - `docs/cli/EXIT-CODES.md` documenting CLI exit code contract
 - Settings note that compendium build/enrichment is CLI-only
@@ -16,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking:** Default match/enrich no longer calls remote providers when compendium DB is present (use `--online-fallback` for legacy behavior)
+- GUI Settings: compendium build/extend documented; provider credentials scoped to build phase
+- Patch create UI: removed unsupported UPS format from create combo
 - **Breaking:** Compendium modifier flags (`--force-full-rebuild`, enrichment toggles, thumbnail flags, etc.) are modifiers only and no longer satisfy the CLI action gate alone
 - **Breaking:** `--verify` and `--verify-set` exit `1` on mismatches or incomplete disc sets
 - **Breaking:** `--export` with no matched files and `--edit-metadata` without `--set-*` fields exit `1`

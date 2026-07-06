@@ -1,5 +1,6 @@
 #include "provider_orchestrator.h"
 
+#include "compendium_provider.h"
 #include "hasheous_provider.h"
 #include "metadata_cache.h"
 
@@ -55,6 +56,26 @@ ProviderOrchestrator::FieldSet ProviderOrchestrator::computeFieldGap(const GameM
     return gap;
 }
 
+namespace {
+
+    void fillArtworkFromProvider(GameMetadata &metadata, MetadataProvider *provider) {
+        if (provider == nullptr || metadata.id.isEmpty()) {
+            return;
+        }
+        const ArtworkUrls artwork = provider->getArtwork(metadata.id);
+        if (metadata.boxArtUrl.isEmpty() && !artwork.boxFront.isEmpty()) {
+            metadata.boxArtUrl = artwork.boxFront.toString();
+        }
+        if (metadata.screenshotUrls.isEmpty() && !artwork.screenshot.isEmpty()) {
+            metadata.screenshotUrls = { artwork.screenshot.toString() };
+        }
+        if (metadata.screenshotUrls.isEmpty() && !artwork.titleScreen.isEmpty()) {
+            metadata.screenshotUrls = { artwork.titleScreen.toString() };
+        }
+    }
+
+} // namespace
+
 GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, const GameMetadata &existing,
     const QString &hash, const QString &name, const QString &system, const QString &crc32, const QString &md5,
     const QString &sha1, const QString &serial, const QSet<QString> &excludeProviders, const QString &raMd5,
@@ -77,7 +98,34 @@ GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, 
         return caps;
     };
 
-    // Check cache first — a cached record may already fill all gaps.
+    GameMetadata accumulator = existing;
+    FieldSet gapSet = missing;
+
+    if (m_mode == OrchestratorMode::CompendiumOnly) {
+        const QString compendiumId = QString::fromLatin1(Constants::Providers::COMPENDIUM);
+        if (!excludeProviders.contains(compendiumId) && m_providers.contains(compendiumId)
+            && m_providers[compendiumId].enabled) {
+            queryProvider(
+                accumulator, compendiumId, hash, name, system, crc32, md5, sha1, serial, fileSize, raMd5, contentSha1);
+            fillArtworkFromProvider(accumulator, m_providers[compendiumId].provider);
+        }
+        gapSet = computeFieldGap(accumulator);
+        if (!gapSet.isEmpty()) {
+            const QStringList gapList(gapSet.constBegin(), gapSet.constEnd());
+            for (const QString &field : gapList) {
+                qInfo().noquote() << QStringLiteral("compendium_gap: %1").arg(field);
+            }
+            emit compendiumGapsRemaining(gapList);
+        }
+        if (accumulator.title.isEmpty()) {
+            qWarning() << "enrichMissingFields: compendium-only — no title for:" << name;
+            emit allProvidersFailed();
+            return existing;
+        }
+        return accumulator;
+    }
+
+    // Check cache first — a cached record may already fill all gaps (CompendiumPreferred only).
     if (!hash.isEmpty() && m_cache) {
         const GameMetadata cached = m_cache->getByHash(hash, system);
         if (!cached.title.isEmpty()) {
@@ -90,9 +138,6 @@ GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, 
             }
         }
     }
-
-    GameMetadata accumulator = existing;
-    FieldSet gapSet = missing;
 
     // LOCAL providers first (priority 200–150).
     const QStringList localProviders = getSortedLocalProviders();
@@ -109,8 +154,8 @@ GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, 
                     << "(no capability overlap with gap)";
             continue;
         }
-        queryProvider(accumulator, providerName, hash, name, system, crc32, md5, sha1, serial, fileSize, raMd5,
-            contentSha1);
+        queryProvider(
+            accumulator, providerName, hash, name, system, crc32, md5, sha1, serial, fileSize, raMd5, contentSha1);
         gapSet = computeFieldGap(accumulator);
         if (gapSet.isEmpty()) {
             qInfo() << "enrichMissingFields: all gaps filled after local provider" << providerName;
@@ -134,8 +179,8 @@ GameMetadata ProviderOrchestrator::enrichMissingFields(const FieldSet &missing, 
                         << "(no capability overlap with gap)";
                 continue;
             }
-            queryProvider(accumulator, providerName, hash, name, system, crc32, md5, sha1, serial, fileSize, raMd5,
-                contentSha1);
+            queryProvider(
+                accumulator, providerName, hash, name, system, crc32, md5, sha1, serial, fileSize, raMd5, contentSha1);
             gapSet = computeFieldGap(accumulator);
             if (gapSet.isEmpty()) {
                 qInfo() << "enrichMissingFields: all gaps filled after remote provider" << providerName;

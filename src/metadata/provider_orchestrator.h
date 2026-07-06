@@ -30,8 +30,21 @@ public:
     /** @brief Set of field name constants used to track enrichment gaps. */
     using FieldSet = QSet<QString>;
 
+    /**
+     * @brief Runtime provider routing mode.
+     *
+     * CompendiumOnly — match/enrich use remus_compendium.db only (default when DB exists).
+     * CompendiumPreferred — legacy waterfall with remote gap-fill after compendium identity.
+     */
+    enum class OrchestratorMode { CompendiumOnly, CompendiumPreferred };
+
     explicit ProviderOrchestrator(QObject *parent = nullptr);
     ~ProviderOrchestrator() override = default;
+
+    void setMode(OrchestratorMode mode);
+    OrchestratorMode mode() const {
+        return m_mode;
+    }
 
     /**
      * @brief Set the metadata cache for result caching
@@ -132,8 +145,8 @@ public:
      * @param providerName Preferred provider name
      * @return ArtworkUrls from successful provider
      */
-    ArtworkUrls getArtworkWithFallback(const QString &id, const QString &system, const QString &providerName = QString(),
-        const QMap<QString, QString> &externalIds = { });
+    ArtworkUrls getArtworkWithFallback(const QString &id, const QString &system,
+        const QString &providerName = QString(), const QMap<QString, QString> &externalIds = { });
 
     /**
      * @brief Compute which metadata fields are still empty in @p m.
@@ -196,6 +209,11 @@ signals:
      */
     void allProvidersFailed();
 
+    /**
+     * @brief Emitted in CompendiumOnly mode when metadata fields remain empty after compendium lookup.
+     */
+    void compendiumGapsRemaining(const QStringList &fieldNames);
+
 private:
     struct ProviderInfo {
         MetadataProvider *provider;
@@ -207,6 +225,7 @@ private:
 
     QMap<QString, ProviderInfo> m_providers;
     MetadataCache *m_cache = nullptr;
+    OrchestratorMode m_mode = OrchestratorMode::CompendiumOnly;
 
     mutable bool m_sortCacheDirty = true;
     mutable QStringList m_cachedSortedAll;

@@ -5,7 +5,16 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOG_FILE="${REMUS_COMPENDIUM_BUILD_LOG:-${TMPDIR:-/tmp}/remus_compendium_full_build.log}"
-OUTPUT_DB="$ROOT_DIR/data/compendium/remus_compendium.db"
+OUTPUT_DB="${REMUS_COMPENDIUM_DB:-$ROOT_DIR/data/compendium/remus_compendium.db}"
+
+# Allow caller to override output DB via first --output-db pair in forwarded args.
+forwarded_args=("$@")
+for ((i = 0; i < ${#forwarded_args[@]}; i++)); do
+    if [[ "${forwarded_args[$i]}" == "--output-db" && $((i + 1)) -lt ${#forwarded_args[@]} ]]; then
+        OUTPUT_DB="${forwarded_args[$((i + 1))]}"
+        break
+    fi
+done
 
 # shellcheck disable=SC1091
 source "$ROOT_DIR/scripts/compendium_db_guard.sh"

@@ -7,6 +7,9 @@
 #include <QFileInfo>
 
 #include "controllers/app_controller.h"
+#include "controllers/compendium_build_controller.h"
+#include "controllers/compendium_build_options.h"
+#include "controllers/settings_controller.h"
 #include "controllers/dat_manager_controller.h"
 #include "controllers/export_controller.h"
 #include "controllers/metadata_editor_controller.h"
@@ -32,6 +35,8 @@ private slots:
     void patchController_lastErrorOnInvalidPatch();
     void appController_showErrorAndDismiss();
     void modController_loadCatalogFromFixture();
+    void modController_emitsLoadingCatalogSignal();
+    void compendiumBuildController_preflightAndCredentialStatus();
 };
 
 void GuiExtraControllersTest::datManager_requiresOpenLibrary() {
@@ -172,6 +177,49 @@ void GuiExtraControllersTest::modController_loadCatalogFromFixture() {
 
     mod.loadCatalog(catalog);
     QVERIFY(mod.lastError().isEmpty());
+}
+
+void GuiExtraControllersTest::modController_emitsLoadingCatalogSignal() {
+    AppController app;
+    ModController mod(&app);
+
+    const QString catalog = QString(REMUS_SOURCE_DIR) + QStringLiteral("/tests/fixtures/test_mod_catalog.json");
+    if (!QFileInfo::exists(catalog)) {
+        QSKIP("Mod catalog fixture not found");
+    }
+
+    QSignalSpy loadingSpy(&mod, &ModController::loadingCatalogChanged);
+    mod.loadCatalog(catalog);
+    QVERIFY(loadingSpy.count() >= 1);
+    QVERIFY(!mod.isLoadingCatalog());
+}
+
+void GuiExtraControllersTest::compendiumBuildController_preflightAndCredentialStatus() {
+    AppController app;
+    SettingsController settings;
+    CompendiumBuildController build(&app, &settings);
+
+    build.refreshPreflight();
+    const QVariantList status = build.credentialStatus();
+    QVERIFY(status.size() >= 6);
+
+    for (const QVariant &row : status) {
+        const QVariantMap map = row.toMap();
+        QVERIFY(map.contains(QStringLiteral("groupKey")));
+        QVERIFY(map.contains(QStringLiteral("configured")));
+        QVERIFY(map.contains(QStringLiteral("runtimeOnly")));
+    }
+
+    const QStringList keys = build.enrichmentSourceKeys();
+    QVERIFY(keys.contains(QStringLiteral("igdb")));
+    QVERIFY(keys.contains(QStringLiteral("remus-thumbnails")));
+
+    CompendiumFullBuildOptions options;
+    options.strictOffline = true;
+    options.onlineEnrichmentAll = true;
+    normalizeFullBuildOptions(options);
+    QVERIFY(options.offlineOnly);
+    QVERIFY(!options.onlineEnrichmentAll);
 }
 
 QTEST_MAIN(GuiExtraControllersTest)

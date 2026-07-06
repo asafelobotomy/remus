@@ -112,5 +112,27 @@ namespace CredentialManager {
         return fromJsonFile(key, jsonFilePath);
     }
 
+    void migrateLegacySecrets() {
+        QSettings settings(QString::fromLatin1(Constants::SETTINGS_ORGANIZATION),
+            QString::fromLatin1(Constants::SETTINGS_APPLICATION));
+        bool changed = false;
+        for (const char *rawKey : Constants::Settings::Providers::ALL_SECRET_KEYS) {
+            const QString key = QString::fromLatin1(rawKey);
+            if (!SecretStore::read(key).trimmed().isEmpty())
+                continue;
+
+            const QString legacy = settings.value(key).toString().trimmed();
+            if (legacy.isEmpty())
+                continue;
+
+            if (SecretStore::write(key, legacy)) {
+                settings.remove(key);
+                changed = true;
+            }
+        }
+        if (changed)
+            settings.sync();
+    }
+
 } // namespace CredentialManager
 } // namespace Remus

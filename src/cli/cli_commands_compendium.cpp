@@ -25,6 +25,8 @@
 #include <QSqlQuery>
 #include <QStringList>
 #include <QUuid>
+#include <QProcess>
+#include <QCoreApplication>
 #include <algorithm>
 
 using namespace CompendiumSqlUtilities;
@@ -1163,4 +1165,42 @@ int handleBuildCompendiumCommand(CliContext &ctx) {
     stagedGuard.release();
     writeTerminalProgress(progressPath, QStringLiteral("complete"), timer.elapsed());
     return conflictsCount > 0 ? 2 : 0;
+}
+
+int handleInitCompendiumCommand(CliContext &ctx) {
+    if (!ctx.parser.isSet(QStringLiteral("init-compendium"))) {
+        return 0;
+    }
+
+    ctx.actionExecuted = true;
+    const QString scriptPath = QDir(QCoreApplication::applicationDirPath())
+                                   .absoluteFilePath(QStringLiteral("../../scripts/init_compendium.sh"));
+    QStringList candidates = {
+        QDir::currentPath() + QStringLiteral("/scripts/init_compendium.sh"),
+        scriptPath,
+    };
+    QString initScript;
+    for (const QString &candidate : candidates) {
+        if (QFileInfo::exists(candidate)) {
+            initScript = QDir::cleanPath(candidate);
+            break;
+        }
+    }
+    if (initScript.isEmpty()) {
+        qCritical() << "init_compendium.sh not found — run from repository root";
+        return 1;
+    }
+
+    QProcess process;
+    process.setProgram(QStringLiteral("bash"));
+    process.setArguments({ initScript });
+    process.setWorkingDirectory(QFileInfo(initScript).absolutePath() + QStringLiteral("/.."));
+    process.setProcessChannelMode(QProcess::ForwardedChannels);
+    process.start();
+    if (!process.waitForStarted()) {
+        qCritical() << "Failed to start init_compendium.sh";
+        return 1;
+    }
+    process.waitForFinished(-1);
+    return process.exitCode() == 0 ? 0 : 1;
 }

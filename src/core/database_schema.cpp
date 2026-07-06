@@ -95,30 +95,46 @@ bool Database::createSchema() {
         return false;
     }
 
-    // Migration: Add is_processed column if not exists (for existing databases)
-    query.exec("ALTER TABLE files ADD COLUMN is_processed BOOLEAN DEFAULT 0");
-    query.exec("ALTER TABLE files ADD COLUMN processing_status TEXT DEFAULT 'unprocessed'");
-    query.exec("ALTER TABLE files ADD COLUMN base_title TEXT");
-    query.exec("ALTER TABLE files ADD COLUMN file_type TEXT DEFAULT 'official'");
-    query.exec("ALTER TABLE files ADD COLUMN is_patched BOOLEAN DEFAULT 0");
-    query.exec("ALTER TABLE files ADD COLUMN patch_name TEXT");
-    query.exec("ALTER TABLE files ADD COLUMN is_converted BOOLEAN DEFAULT 0");
-    query.exec("ALTER TABLE files ADD COLUMN is_bundled BOOLEAN DEFAULT 0");
-    query.exec("ALTER TABLE files ADD COLUMN bundle_output_path TEXT");
-    query.exec("ALTER TABLE files ADD COLUMN has_local_artwork INTEGER DEFAULT 0");
-    query.exec("ALTER TABLE files ADD COLUMN chd_sha1 TEXT");
-    query.exec("ALTER TABLE files ADD COLUMN rvz_sha1 TEXT");
+    // Idempotent column migrations (duplicate column name is expected on re-run).
+    const auto execMigration = [&](const char *sql) {
+        if (!query.exec(sql)) {
+            const QString err = query.lastError().text();
+            if (err.contains(QStringLiteral("duplicate column"), Qt::CaseInsensitive)) {
+                return;
+            }
+            qWarning() << "Migration DDL warning:" << sql << "-" << err;
+        }
+    };
+    execMigration("ALTER TABLE files ADD COLUMN is_processed BOOLEAN DEFAULT 0");
+    execMigration("ALTER TABLE files ADD COLUMN processing_status TEXT DEFAULT 'unprocessed'");
+    execMigration("ALTER TABLE files ADD COLUMN base_title TEXT");
+    execMigration("ALTER TABLE files ADD COLUMN file_type TEXT DEFAULT 'official'");
+    execMigration("ALTER TABLE files ADD COLUMN is_patched BOOLEAN DEFAULT 0");
+    execMigration("ALTER TABLE files ADD COLUMN patch_name TEXT");
+    execMigration("ALTER TABLE files ADD COLUMN is_converted BOOLEAN DEFAULT 0");
+    execMigration("ALTER TABLE files ADD COLUMN is_bundled BOOLEAN DEFAULT 0");
+    execMigration("ALTER TABLE files ADD COLUMN bundle_output_path TEXT");
+    execMigration("ALTER TABLE files ADD COLUMN has_local_artwork INTEGER DEFAULT 0");
+    execMigration("ALTER TABLE files ADD COLUMN chd_sha1 TEXT");
+    execMigration("ALTER TABLE files ADD COLUMN rvz_sha1 TEXT");
 
-    // Create index for processed status
-    query.exec("CREATE INDEX IF NOT EXISTS idx_files_processed ON files(is_processed)");
-
-    // Create indexes
-    query.exec("CREATE INDEX IF NOT EXISTS idx_files_current_path ON files(current_path)");
-    query.exec("CREATE INDEX IF NOT EXISTS idx_files_system_id ON files(system_id)");
-    query.exec("CREATE INDEX IF NOT EXISTS idx_files_hashes ON files(crc32, md5, sha1)");
+    if (!query.exec("CREATE INDEX IF NOT EXISTS idx_files_processed ON files(is_processed)")) {
+        qWarning() << "Failed to create idx_files_processed:" << query.lastError().text();
+    }
+    if (!query.exec("CREATE INDEX IF NOT EXISTS idx_files_current_path ON files(current_path)")) {
+        qWarning() << "Failed to create idx_files_current_path:" << query.lastError().text();
+    }
+    if (!query.exec("CREATE INDEX IF NOT EXISTS idx_files_system_id ON files(system_id)")) {
+        qWarning() << "Failed to create idx_files_system_id:" << query.lastError().text();
+    }
+    if (!query.exec("CREATE INDEX IF NOT EXISTS idx_files_hashes ON files(crc32, md5, sha1)")) {
+        qWarning() << "Failed to create idx_files_hashes:" << query.lastError().text();
+    }
     query.exec("DROP INDEX IF EXISTS idx_files_original_path");
-    query.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_files_original_path "
-               "ON files(original_path, filename, COALESCE(archive_internal_path, ''))");
+    if (!query.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_files_original_path "
+                    "ON files(original_path, filename, COALESCE(archive_internal_path, ''))")) {
+        qWarning() << "Failed to create idx_files_original_path:" << query.lastError().text();
+    }
 
     // Create cache table for metadata
     QString createAppliedPatches = R"(

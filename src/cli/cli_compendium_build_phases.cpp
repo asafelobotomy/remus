@@ -121,7 +121,8 @@ bool hasGametdbGaps(QSqlDatabase &db, QString &error) {
 }
 
 // True when IGDB enrichment should run: any game still missing bulk-fillable fields.
-// Games with igdb_id from hash bridges still need the per-id metadata fetch.
+// Per-platform bulk catalog download is skipped when all gap games already have igdb_id
+// (see CompendiumEnrichment::enrichFromIGDB).
 bool hasIgdbBulkMetadataGaps(QSqlDatabase &db, QString &error) {
     return queryHasRows(db,
         QStringLiteral("SELECT 1 FROM games "

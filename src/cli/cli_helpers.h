@@ -28,14 +28,17 @@ QString selectBestHash(const FileRecord &file);
 HashResult hashFileRecord(const FileRecord &file, Hasher &hasher);
 
 // Construct a ProviderOrchestrator configured from parser credentials.
-// Adds Hasheous, TheGamesDB, and IGDB unconditionally; ScreenScraper only
-// when --ss-user / --ss-pass are both set.
-// When a database reference is provided, creates a MetadataCache and
-// attaches it to the orchestrator.
+// Default: compendium-only when remus_compendium.db exists; use --online-fallback for legacy remote gap-fill.
 std::unique_ptr<ProviderOrchestrator> buildOrchestrator(const QCommandLineParser &parser, Database *db = nullptr);
+
+ProviderOrchestrator::OrchestratorMode resolveOrchestratorMode(
+    const QCommandLineParser &parser, bool compendiumDatabaseAvailable);
 
 // Discover a data/<subdir>/ directory relative to cwd or app location.
 QString findDataSubdir(const QString &subdir);
+
+// Count hash signatures in a compendium database (-1 on open/query failure).
+qint64 countCompendiumSignatures(const QString &dbPath);
 
 // Convenience wrappers for common data subdirectories.
 inline QString findDatabaseDir() {

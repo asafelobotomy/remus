@@ -63,135 +63,158 @@ namespace {
         return providerInfo ? providerInfo->priority : fallback;
     }
 
+    ProviderOrchestrator::OrchestratorMode resolveGuiOrchestratorMode(bool compendiumAvailable) {
+        const QString mode = remusSettings()
+                                 .value(QStringLiteral("metadata/runtime_mode"), QStringLiteral("compendium-only"))
+                                 .toString()
+                                 .trimmed()
+                                 .toLower();
+        if (mode == QLatin1String("online-fallback") || mode == QLatin1String("compendium-preferred")) {
+            return ProviderOrchestrator::OrchestratorMode::CompendiumPreferred;
+        }
+        if (compendiumAvailable) {
+            return ProviderOrchestrator::OrchestratorMode::CompendiumOnly;
+        }
+        return ProviderOrchestrator::OrchestratorMode::CompendiumPreferred;
+    }
+
+    void registerGuiRemoteProviders(AppController *parent, ProviderOrchestrator *orchestrator) {
+        auto secretValue = [](const char *key) -> QString {
+            const SecretStore::ReadResult kr = SecretStore::readWithStatus(QString::fromLatin1(key));
+            if (kr.status == SecretStore::ReadResult::Status::Found)
+                return kr.value;
+            if (kr.status == SecretStore::ReadResult::Status::BackendError)
+                return { };
+            return remusSettings().value(QString::fromLatin1(key)).toString().trimmed();
+        };
+
+        {
+            auto *hasheousProvider = new HasheousProvider(orchestrator);
+            const QString hasheousKey = secretValue(Constants::Settings::Providers::HASHEOUS_CLIENT_API_KEY);
+            if (!hasheousKey.isEmpty())
+                hasheousProvider->setApiKey(hasheousKey);
+            orchestrator->addProvider(Constants::Providers::HASHEOUS, hasheousProvider,
+                providerPriorityOrDefault(Constants::Providers::HASHEOUS, Constants::Providers::Priority::HASHEOUS));
+        }
+
+        {
+            auto *playmatchProvider = new PlayMatchProvider(orchestrator);
+            orchestrator->addProvider(Constants::Providers::PLAYMATCH, playmatchProvider,
+                providerPriorityOrDefault(Constants::Providers::PLAYMATCH, Constants::Providers::Priority::PLAYMATCH));
+        }
+
+        const QString ssUser = secretValue(Constants::Settings::Providers::SCREENSCRAPER_USERNAME);
+        const QString ssPass = secretValue(Constants::Settings::Providers::SCREENSCRAPER_PASSWORD);
+        if (!ssUser.isEmpty() && !ssPass.isEmpty()) {
+            auto *provider = new ScreenScraperProvider(orchestrator);
+            provider->setCredentials(ssUser, ssPass);
+
+            const QString ssDevId = secretValue(Constants::Settings::Providers::SCREENSCRAPER_DEVID);
+            const QString ssDevPass = secretValue(Constants::Settings::Providers::SCREENSCRAPER_DEVPASSWORD);
+            if (!ssDevId.isEmpty() && !ssDevPass.isEmpty()) {
+                provider->setDeveloperCredentials(ssDevId, ssDevPass);
+            }
+
+            orchestrator->addProvider(Constants::Providers::SCREENSCRAPER, provider,
+                providerPriorityOrDefault(
+                    Constants::Providers::SCREENSCRAPER, Constants::Providers::Priority::SCREENSCRAPER));
+        }
+
+        const QString gametdbDir = findGameTdbDir();
+        if (!gametdbDir.isEmpty()) {
+            auto *provider = new GameTDBProvider(orchestrator);
+            if (provider->loadDatabases(gametdbDir) > 0) {
+                orchestrator->addProvider(Constants::Providers::GAMETDB, provider,
+                    providerPriorityOrDefault(Constants::Providers::GAMETDB, Constants::Providers::Priority::GAMETDB));
+            } else {
+                provider->deleteLater();
+            }
+        }
+
+        const QString tgdbApiKey = secretValue(Constants::Settings::Providers::THEGAMESDB_API_KEY);
+        if (!tgdbApiKey.isEmpty()) {
+            auto *tgdbProvider = new TheGamesDBProvider(orchestrator);
+            tgdbProvider->setApiKey(tgdbApiKey);
+            orchestrator->addProvider(Constants::Providers::THEGAMESDB, tgdbProvider,
+                providerPriorityOrDefault(
+                    Constants::Providers::THEGAMESDB, Constants::Providers::Priority::THEGAMESDB));
+        }
+
+        const QString igdbClientId = secretValue(Constants::Settings::Providers::IGDB_CLIENT_ID);
+        const QString igdbClientSecret = secretValue(Constants::Settings::Providers::IGDB_CLIENT_SECRET);
+        if (!igdbClientId.isEmpty() && !igdbClientSecret.isEmpty()) {
+            auto *igdbProvider = new IGDBProvider(orchestrator);
+            igdbProvider->setCredentials(igdbClientId, igdbClientSecret);
+            orchestrator->addProvider(Constants::Providers::IGDB, igdbProvider,
+                providerPriorityOrDefault(Constants::Providers::IGDB, Constants::Providers::Priority::IGDB));
+        }
+
+        const QString sgdbApiKey = secretValue(Constants::Settings::Providers::STEAMGRIDDB_API_KEY);
+        if (!sgdbApiKey.isEmpty()) {
+            auto *sgdbProvider = new SteamGridDBProvider(orchestrator);
+            sgdbProvider->setApiKey(sgdbApiKey);
+            orchestrator->addProvider(Constants::Providers::STEAMGRIDDB, sgdbProvider,
+                providerPriorityOrDefault(
+                    Constants::Providers::STEAMGRIDDB, Constants::Providers::Priority::STEAMGRIDDB));
+        }
+
+        const QString raUser = secretValue(Constants::Settings::Providers::RETROACHIEVEMENTS_USERNAME);
+        const QString raApiKey = secretValue(Constants::Settings::Providers::RETROACHIEVEMENTS_API_KEY);
+        if (!raUser.isEmpty() && !raApiKey.isEmpty()) {
+            auto *provider = new RetroAchievementsProvider(orchestrator);
+            provider->setCredentials(raUser, raApiKey);
+            orchestrator->addProvider(Constants::Providers::RETROACHIEVEMENTS, provider,
+                providerPriorityOrDefault(
+                    Constants::Providers::RETROACHIEVEMENTS, Constants::Providers::Priority::RETROACHIEVEMENTS));
+        }
+
+        orchestrator->addProvider(Constants::Providers::WIKIDATA, new WikidataProvider(orchestrator),
+            providerPriorityOrDefault(Constants::Providers::WIKIDATA, Constants::Providers::Priority::WIKIDATA));
+
+        Q_UNUSED(parent);
+    }
+
 } // namespace
 
 void AppController::rebuildOrchestrator() {
     m_cache.reset();
     m_orchestrator = std::make_unique<ProviderOrchestrator>(this);
     if (m_libraryOpen) {
-        // MetadataCache is owned by m_cache; parenting it to the orchestrator
-        // would make a second rebuild double-delete it during replacement.
         m_cache = std::make_unique<MetadataCache>(m_database.database());
         m_orchestrator->setCache(m_cache.get());
     }
 
+    bool compendiumAvailable = false;
     const QString compendiumDir = findDataSubdir(QStringLiteral("compendium"));
     if (!compendiumDir.isEmpty()) {
         const QString compendiumPath = QDir(compendiumDir).filePath(QStringLiteral("remus_compendium.db"));
         if (QFileInfo::exists(compendiumPath)) {
+            compendiumAvailable = true;
             m_database.setCompendiumDbPath(compendiumPath);
             auto *compendiumProvider = new CompendiumProvider(m_orchestrator.get());
             if (compendiumProvider->openDatabase(compendiumPath)) {
+                const auto mode = resolveGuiOrchestratorMode(true);
+                m_orchestrator->setMode(mode);
+                compendiumProvider->setStrictOffline(mode == ProviderOrchestrator::OrchestratorMode::CompendiumOnly);
                 m_orchestrator->addProvider(Constants::Providers::COMPENDIUM, compendiumProvider,
                     providerPriorityOrDefault(
                         Constants::Providers::COMPENDIUM, Constants::Providers::Priority::COMPENDIUM));
             } else {
                 compendiumProvider->deleteLater();
+                compendiumAvailable = false;
             }
         }
     }
 
-    // Read provider credentials through SecretStore so secrets are not
-    // fetched from plaintext QSettings now that the keychain migration is live.
-    // On BackendError the chain is halted — credentials are NOT silently
-    // downgraded to plaintext storage.  Only an explicit NotFound falls through
-    // to legacy QSettings (systems that haven't migrated yet).
-    auto secretValue = [](const char *key) -> QString {
-        const SecretStore::ReadResult kr = SecretStore::readWithStatus(QString::fromLatin1(key));
-        if (kr.status == SecretStore::ReadResult::Status::Found)
-            return kr.value;
-        if (kr.status == SecretStore::ReadResult::Status::BackendError)
-            return { }; // logged by SecretStore; do NOT fall back to plaintext
-        // NotFound: key may still live in plain QSettings (legacy migration path).
-        return remusSettings().value(QString::fromLatin1(key)).toString().trimmed();
-    };
+    const auto mode = resolveGuiOrchestratorMode(compendiumAvailable);
+    m_orchestrator->setMode(mode);
 
-    {
-        auto *hasheousProvider = new HasheousProvider(m_orchestrator.get());
-        const QString hasheousKey = secretValue(Constants::Settings::Providers::HASHEOUS_CLIENT_API_KEY);
-        if (!hasheousKey.isEmpty())
-            hasheousProvider->setApiKey(hasheousKey);
-        m_orchestrator->addProvider(Constants::Providers::HASHEOUS, hasheousProvider,
-            providerPriorityOrDefault(Constants::Providers::HASHEOUS, Constants::Providers::Priority::HASHEOUS));
+    if (mode == ProviderOrchestrator::OrchestratorMode::CompendiumOnly) {
+        emit orchestratorChanged();
+        return;
     }
 
-    {
-        auto *playmatchProvider = new PlayMatchProvider(m_orchestrator.get());
-        m_orchestrator->addProvider(Constants::Providers::PLAYMATCH, playmatchProvider,
-            providerPriorityOrDefault(Constants::Providers::PLAYMATCH, Constants::Providers::Priority::PLAYMATCH));
-    }
-
-    const QString ssUser = secretValue(Constants::Settings::Providers::SCREENSCRAPER_USERNAME);
-    const QString ssPass = secretValue(Constants::Settings::Providers::SCREENSCRAPER_PASSWORD);
-    if (!ssUser.isEmpty() && !ssPass.isEmpty()) {
-        auto *provider = new ScreenScraperProvider(m_orchestrator.get());
-        provider->setCredentials(ssUser, ssPass);
-
-        const QString ssDevId = secretValue(Constants::Settings::Providers::SCREENSCRAPER_DEVID);
-        const QString ssDevPass = secretValue(Constants::Settings::Providers::SCREENSCRAPER_DEVPASSWORD);
-        if (!ssDevId.isEmpty() && !ssDevPass.isEmpty()) {
-            provider->setDeveloperCredentials(ssDevId, ssDevPass);
-        }
-
-        m_orchestrator->addProvider(Constants::Providers::SCREENSCRAPER, provider,
-            providerPriorityOrDefault(
-                Constants::Providers::SCREENSCRAPER, Constants::Providers::Priority::SCREENSCRAPER));
-    }
-
-    const QString gametdbDir = findGameTdbDir();
-    if (!gametdbDir.isEmpty()) {
-        auto *provider = new GameTDBProvider(m_orchestrator.get());
-        if (provider->loadDatabases(gametdbDir) > 0) {
-            m_orchestrator->addProvider(Constants::Providers::GAMETDB, provider,
-                providerPriorityOrDefault(Constants::Providers::GAMETDB, Constants::Providers::Priority::GAMETDB));
-        } else {
-            provider->deleteLater();
-        }
-    }
-
-    const QString tgdbApiKey = secretValue(Constants::Settings::Providers::THEGAMESDB_API_KEY);
-    if (!tgdbApiKey.isEmpty()) {
-        auto *tgdbProvider = new TheGamesDBProvider(m_orchestrator.get());
-        tgdbProvider->setApiKey(tgdbApiKey);
-        m_orchestrator->addProvider(Constants::Providers::THEGAMESDB, tgdbProvider,
-            providerPriorityOrDefault(Constants::Providers::THEGAMESDB, Constants::Providers::Priority::THEGAMESDB));
-    } else {
-        qInfo() << "TheGamesDB: skipped (no API key configured)";
-    }
-
-    const QString igdbClientId = secretValue(Constants::Settings::Providers::IGDB_CLIENT_ID);
-    const QString igdbClientSecret = secretValue(Constants::Settings::Providers::IGDB_CLIENT_SECRET);
-    if (!igdbClientId.isEmpty() && !igdbClientSecret.isEmpty()) {
-        auto *igdbProvider = new IGDBProvider(m_orchestrator.get());
-        igdbProvider->setCredentials(igdbClientId, igdbClientSecret);
-        m_orchestrator->addProvider(Constants::Providers::IGDB, igdbProvider,
-            providerPriorityOrDefault(Constants::Providers::IGDB, Constants::Providers::Priority::IGDB));
-    }
-
-    const QString sgdbApiKey = secretValue(Constants::Settings::Providers::STEAMGRIDDB_API_KEY);
-    if (!sgdbApiKey.isEmpty()) {
-        auto *sgdbProvider = new SteamGridDBProvider(m_orchestrator.get());
-        sgdbProvider->setApiKey(sgdbApiKey);
-        m_orchestrator->addProvider(Constants::Providers::STEAMGRIDDB, sgdbProvider,
-            providerPriorityOrDefault(
-                Constants::Providers::STEAMGRIDDB, Constants::Providers::Priority::STEAMGRIDDB));
-    } else {
-        qInfo() << "SteamGridDB: skipped (no API key configured)";
-    }
-
-    const QString raUser = secretValue(Constants::Settings::Providers::RETROACHIEVEMENTS_USERNAME);
-    const QString raApiKey = secretValue(Constants::Settings::Providers::RETROACHIEVEMENTS_API_KEY);
-    if (!raUser.isEmpty() && !raApiKey.isEmpty()) {
-        auto *provider = new RetroAchievementsProvider(m_orchestrator.get());
-        provider->setCredentials(raUser, raApiKey);
-        m_orchestrator->addProvider(Constants::Providers::RETROACHIEVEMENTS, provider,
-            providerPriorityOrDefault(
-                Constants::Providers::RETROACHIEVEMENTS, Constants::Providers::Priority::RETROACHIEVEMENTS));
-    }
-
-    m_orchestrator->addProvider(Constants::Providers::WIKIDATA, new WikidataProvider(m_orchestrator.get()),
-        providerPriorityOrDefault(Constants::Providers::WIKIDATA, Constants::Providers::Priority::WIKIDATA));
-
+    registerGuiRemoteProviders(this, m_orchestrator.get());
     emit orchestratorChanged();
 }
 

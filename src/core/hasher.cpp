@@ -65,39 +65,6 @@ QString Hasher::calculateHash(const QString &filePath, const QString &algorithm,
     return QString();
 }
 
-QByteArray Hasher::readFileData(const QString &filePath, bool stripHeader, int headerSize) {
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qWarning() << "Failed to open file for hashing:" << filePath;
-        return QByteArray();
-    }
-
-    if (stripHeader && headerSize > 0) {
-        file.seek(headerSize);
-    }
-
-    QByteArray data = file.readAll();
-    file.close();
-
-    return data;
-}
-
-QString Hasher::calculateCRC32(const QByteArray &data) {
-    uLong crc = crc32(0L, Z_NULL, 0);
-    crc = crc32(crc, reinterpret_cast<const Bytef *>(data.constData()), data.size());
-    return QString("%1").arg(crc, 8, 16, QChar('0')).toLower();
-}
-
-QString Hasher::calculateMD5(const QByteArray &data) {
-    QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Md5);
-    return QString(hash.toHex()).toLower();
-}
-
-QString Hasher::calculateSHA1(const QByteArray &data) {
-    QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Sha1);
-    return QString(hash.toHex()).toLower();
-}
-
 int Hasher::detectHeaderSize(const QString &filePath, const QString &extension) {
     if (extension == ".nes") {
         // iNES header detection

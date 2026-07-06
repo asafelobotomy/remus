@@ -1,6 +1,10 @@
 #include "settings_controller.h"
 
+#include <QFileInfo>
+#include <QRegularExpression>
+
 #include "../../core/constants/constants.h"
+#include "services/credential_manager.h"
 #include "services/secret_store.h"
 
 namespace Remus {
@@ -13,34 +17,57 @@ namespace {
         }
         return false;
     }
+
+    static bool isExecutableToolKey(const QString &key) {
+        return key == QString::fromLatin1(GuiSettings::CHDMAN_PATH)
+            || key == QString::fromLatin1(GuiSettings::DOLPHIN_TOOL_PATH)
+            || key == QString::fromLatin1(GuiSettings::MAXCSO_PATH) || key == QString::fromLatin1(GuiSettings::WIT_PATH)
+            || key == QString::fromLatin1(GuiSettings::PSXPACKAGER_PATH)
+            || key == QString::fromLatin1(GuiSettings::FLIPS_PATH)
+            || key == QString::fromLatin1(GuiSettings::XDELTA3_PATH)
+            || key == QString::fromLatin1(GuiSettings::PPF_PATH);
+    }
+
+    static QString validateToolPath(const QString &path, bool isDirectory) {
+        const QString trimmed = path.trimmed();
+        if (trimmed.isEmpty()) {
+            return QString();
+        }
+
+        static const QRegularExpression invalidChars(QStringLiteral("[;&|$`<>]"));
+        if (invalidChars.match(trimmed).hasMatch()) {
+            return QStringLiteral("Path contains invalid characters.");
+        }
+
+        const QFileInfo info(trimmed);
+        if (!info.isAbsolute()) {
+            return QStringLiteral("Path must be absolute.");
+        }
+        if (!info.exists()) {
+            return QStringLiteral("Path does not exist.");
+        }
+        if (isDirectory) {
+            if (!info.isDir()) {
+                return QStringLiteral("Path is not a directory.");
+            }
+        } else if (!info.isFile()) {
+            return QStringLiteral("Path is not a file.");
+        } else if (!info.isExecutable()) {
+            return QStringLiteral("File is not executable.");
+        }
+        return QString();
+    }
 } // namespace
 
 SettingsController::SettingsController(QObject *parent)
     : QObject(parent)
     , m_settings(
           QString::fromLatin1(Constants::SETTINGS_ORGANIZATION), QString::fromLatin1(Constants::SETTINGS_APPLICATION)) {
-    migrateLegacySecrets();
+    CredentialManager::migrateLegacySecrets();
 }
 
 void SettingsController::migrateLegacySecrets() {
-    bool changed = false;
-    for (const char *rawKey : Constants::Settings::Providers::ALL_SECRET_KEYS) {
-        const QString key = QString::fromLatin1(rawKey);
-        if (!SecretStore::read(key).trimmed().isEmpty())
-            continue;
-
-        const QString legacy = m_settings.value(key).toString().trimmed();
-        if (legacy.isEmpty())
-            continue;
-
-        if (SecretStore::write(key, legacy)) {
-            m_settings.remove(key);
-            changed = true;
-        }
-    }
-
-    if (changed)
-        m_settings.sync();
+    CredentialManager::migrateLegacySecrets();
 }
 
 QVariantList SettingsController::providerFields() const {
@@ -167,7 +194,7 @@ QString SettingsController::authenticateProvider(const QString &groupKey) {
             return QStringLiteral("Missing credentials — fill in all fields first.");
     }
 
-    return QStringLiteral("Credentials saved.");
+    return QStringLiteral("Credentials saved for compendium build.");
 }
 
 QString SettingsController::stringValue(const QString &key, const QString &defaultValue) const {
@@ -195,6 +222,20 @@ QVariant SettingsController::value(const QString &key, const QVariant &defaultVa
 }
 
 void SettingsController::setValue(const QString &key, const QVariant &value) {
+    if (isExecutableToolKey(key)) {
+        const QString validationError = validateToolPath(value.toString(), false);
+        if (!validationError.isEmpty()) {
+            emit settingsError(validationError);
+            return;
+        }
+    } else if (key == QString::fromLatin1(GuiSettings::ARTWORK_CACHE_DIR)) {
+        const QString validationError = validateToolPath(value.toString(), true);
+        if (!validationError.isEmpty()) {
+            emit settingsError(validationError);
+            return;
+        }
+    }
+
     if (isSecretKey(key)) {
         const bool ok = SecretStore::write(key, value.toString());
         if (!ok) {

@@ -15,6 +15,7 @@
 #include "cli_primary_actions.h"
 #include "../core/constants/constants.h"
 #include "../core/compendium_disc_bridge.h"
+#include "../services/credential_manager.h"
 #include "cli_logging.h"
 
 using namespace Remus;
@@ -110,6 +111,7 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName(Constants::Cli::APPLICATION_NAME);
     QCoreApplication::setOrganizationName(Constants::SETTINGS_ORGANIZATION);
     QCoreApplication::setApplicationVersion(Constants::APP_VERSION);
+    CredentialManager::migrateLegacySecrets();
 
     // Tighten config-directory permissions (defence in depth — credentials live in
     // the OS keychain, but the config dir should not be world-readable).
@@ -339,6 +341,8 @@ int main(int argc, char *argv[]) {
     if (int rc = handleModCommands(ctx))
         return rc;
     if (int rc = handleModCatalogBuildCommand(ctx))
+        return rc;
+    if (int rc = handleInitCompendiumCommand(ctx))
         return rc;
     if (int rc = handleBuildCompendiumCommand(ctx))
         return rc;

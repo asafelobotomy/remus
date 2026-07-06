@@ -169,19 +169,22 @@ QMap<QString, DatHeader> VerificationEngine::getImportedDats() {
     if (!m_compendiumConnectionName.isEmpty()) {
         QSqlDatabase cdb = QSqlDatabase::database(m_compendiumConnectionName);
         QSqlQuery q(cdb);
-        q.exec(R"(
+        if (!q.exec(R"(
             SELECT DISTINCT s.internal_name, s.display_name, s.preferred_hash
             FROM systems s
             JOIN games g ON g.system_id = s.system_id
             JOIN game_signatures gs ON gs.game_id = g.game_id
             ORDER BY s.internal_name
-        )");
-        while (q.next()) {
-            DatHeader header;
-            const QString sysName = q.value(0).toString();
-            header.name = q.value(1).toString();
-            header.category = q.value(2).toString(); // preferred_hash in category slot
-            dats.insert(sysName, header);
+        )")) {
+            qWarning() << "VerificationEngine::getImportedDats compendium query failed:" << q.lastError().text();
+        } else {
+            while (q.next()) {
+                DatHeader header;
+                const QString sysName = q.value(0).toString();
+                header.name = q.value(1).toString();
+                header.category = q.value(2).toString(); // preferred_hash in category slot
+                dats.insert(sysName, header);
+            }
         }
         if (!dats.isEmpty())
             return dats;
@@ -189,7 +192,9 @@ QMap<QString, DatHeader> VerificationEngine::getImportedDats() {
 
     // ── Runtime-import fallback ────────────────────────────────────────────
     QSqlQuery query(m_database->database());
-    query.exec("SELECT system_name, dat_name, dat_version, dat_source, dat_description FROM verification_dats");
+    if (!query.exec("SELECT system_name, dat_name, dat_version, dat_source, dat_description FROM verification_dats")) {
+        qWarning() << "VerificationEngine::getImportedDats runtime query failed:" << query.lastError().text();
+    }
     while (query.next()) {
         DatHeader header;
         const QString systemName = query.value(0).toString();

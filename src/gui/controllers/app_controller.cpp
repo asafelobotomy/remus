@@ -333,6 +333,10 @@ QString AppController::systemName(int systemId) {
     return m_database.getSystemDisplayName(systemId);
 }
 
+void AppController::reloadCompendiumOrchestrator() {
+    rebuildOrchestrator();
+}
+
 void AppController::setCurrentView(int view) {
     const int clamped = qBound(static_cast<int>(LibraryView), view, static_cast<int>(SettingsView));
     if (m_currentView == clamped) {

@@ -1327,6 +1327,7 @@ private slots:
         QTemporaryDir dir;
         QVERIFY(dir.isValid());
 
+        m_skipBundledCompendium = true;
         const QString dbPath = dir.filePath(QStringLiteral("match-empty.db"));
         QString output;
         runCliCapture(
@@ -1347,7 +1348,9 @@ private slots:
     }
 
     void testCoverageReportRequiresCompendiumOutput() {
-        runCli({ QStringLiteral("--coverage-report") }, 1);
+        runCli({ QStringLiteral("--coverage-report"), QStringLiteral("--compendium-output"),
+                   QStringLiteral("/nonexistent/remus_compendium.db") },
+            1);
     }
 
     void testCoverageReportEmitsSummaryRow() {

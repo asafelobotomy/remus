@@ -32,7 +32,7 @@ GameMetadata MetadataCache::getByHash(const QString &hash, const QString &system
 
     QSqlQuery query(m_db);
     query.prepare(R"(
-        SELECT cache_value FROM cache 
+        SELECT cache_value FROM cache
         WHERE cache_key = ? AND expiry > datetime('now')
     )");
 
@@ -94,7 +94,7 @@ GameMetadata MetadataCache::getByProviderId(const QString &providerId, const QSt
 
     QSqlQuery query(m_db);
     query.prepare(R"(
-        SELECT cache_value FROM cache 
+        SELECT cache_value FROM cache
         WHERE cache_key = ? AND expiry > datetime('now')
     )");
 
@@ -273,7 +273,7 @@ ArtworkUrls MetadataCache::getArtwork(const QString &gameId) {
 
     QSqlQuery query(m_db);
     query.prepare(R"(
-        SELECT cache_value FROM cache 
+        SELECT cache_value FROM cache
         WHERE cache_key = ? AND expiry > datetime('now')
     )");
 
@@ -301,7 +301,7 @@ ArtworkUrls MetadataCache::getArtwork(const QString &gameId) {
 int MetadataCache::clearOldCache(int days) {
     QSqlQuery query(m_db);
     query.prepare(R"(
-        DELETE FROM cache 
+        DELETE FROM cache
         WHERE expiry < datetime('now', ? || ' days')
     )");
     query.addBindValue(-days);
@@ -319,24 +319,27 @@ MetadataCache::CacheStats MetadataCache::getStats() {
     QSqlQuery query(m_db);
 
     // Total entries
-    query.exec("SELECT COUNT(*) FROM cache WHERE cache_key LIKE 'metadata:%'");
-    if (query.next()) {
+    if (!query.exec("SELECT COUNT(*) FROM cache WHERE cache_key LIKE 'metadata:%'")) {
+        qWarning() << "MetadataCache::getStats total count failed:" << query.lastError().text();
+    } else if (query.next()) {
         stats.totalEntries = query.value(0).toInt();
     }
 
     // Entries this week
-    query.exec(R"(
-        SELECT COUNT(*) FROM cache 
-        WHERE cache_key LIKE 'metadata:%' 
+    if (!query.exec(R"(
+        SELECT COUNT(*) FROM cache
+        WHERE cache_key LIKE 'metadata:%'
         AND created_at > datetime('now', '-7 days')
-    )");
-    if (query.next()) {
+    )")) {
+        qWarning() << "MetadataCache::getStats weekly count failed:" << query.lastError().text();
+    } else if (query.next()) {
         stats.entriesThisWeek = query.value(0).toInt();
     }
 
     // Total size
-    query.exec("SELECT SUM(LENGTH(cache_value)) FROM cache WHERE cache_key LIKE 'metadata:%'");
-    if (query.next()) {
+    if (!query.exec("SELECT SUM(LENGTH(cache_value)) FROM cache WHERE cache_key LIKE 'metadata:%'")) {
+        qWarning() << "MetadataCache::getStats size query failed:" << query.lastError().text();
+    } else if (query.next()) {
         stats.totalSizeBytes = query.value(0).toLongLong();
     }
 
