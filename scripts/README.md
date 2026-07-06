@@ -7,6 +7,9 @@ Shell helpers for build, compendium, packaging, testing, and workspace hygiene. 
 | Script | Purpose |
 |--------|---------|
 | [`clean-workspace.sh`](clean-workspace.sh) | Remove audit build trees (`build-coverage`, `build-asan`, `build-tidy`), local `*.db` files, and prune `test_output/` |
+| [`bootstrap-dev-environment.sh`](bootstrap-dev-environment.sh) | **Fresh machine setup** — OS packages, Cursor extensions (Remus profile), compendium bootstrap, CMake debug preset, profile editor/SQLTools config |
+| [`configure-workspace-extensions.sh`](configure-workspace-extensions.sh) | Resolve tool paths and merge extension settings into the Remus Cursor profile |
+| [`resolve_compendium_db.sh`](resolve_compendium_db.sh) | Locate (or bootstrap) `remus_compendium.db` and emit an absolute path for SQLTools |
 | [`run-local-audit.sh`](run-local-audit.sh) | Full local CI mirror: Release build, tests, clang-format, shellcheck, qmllint, compendium bootstrap, coverage, clang-tidy spot-check, ASan tests |
 | [`prune_test_output.sh`](prune_test_output.sh) | Drop transient files under `test_output/` (keeps `README.md` and `attention.log` by default) |
 | [`verify_credentials.sh`](verify_credentials.sh) | Check that `.env.local` provider credentials are loadable |

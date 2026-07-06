@@ -11,14 +11,6 @@
   "cmake.configureSettings": {
     "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
   },
-  "cmake.debugConfig": {
-    "type": "lldb",
-    "request": "launch",
-    "cwd": "${workspaceFolder}",
-    "env": {
-      "PATH": "/usr/lib/qt6/bin:${env:PATH}"
-    }
-  },
   "cmakeExplorer.cmakeIntegration": true,
   "cmakeExplorer.buildDir": "${buildDirectory}",
   "cmakeExplorer.buildConfig": "${buildType}",
@@ -31,11 +23,8 @@
     "--clang-tidy",
     "--header-insertion=iwyu"
   ],
-  // ── Formatting (.clang-format: WebKit, 4-space indent, 120 cols) ────────────
-  // Linux: use clang-format on PATH (Arch/CachyOS: /usr/bin/clang-format v22).
-  // Do not use ${workspaceFolder} here — xaver.clang-format resolves it only when
-  // a tab is focused. CI/tasks use .github/scripts/clang-format-bin.sh instead.
-  "clang-format.executable.linux": "/usr/bin/clang-format",
+  // Machine-specific paths (clang-format, clangd, shellcheck, qmlls, Qt PATH)
+  // are written to the Remus Cursor profile by scripts/configure-workspace-extensions.sh
   "clang-format.fallbackStyle": "WebKit",
   "editor.formatOnSave": true,
   "editor.rulers": [
@@ -57,14 +46,13 @@
     "editor.insertSpaces": true
   },
   "qt-qml.qmlls.enabled": true,
-  "qt-qml.qmlls.customExePath": "/usr/lib/qt6/bin/qmlls",
-  // SQLTools SQLite resolves relative paths from the workspace root (not ${workspaceFolder}).
-  "sqltools.connections": [
-    {
-      "name": "Compendium",
-      "driver": "SQLite",
-      "database": "./data/compendium/remus_compendium.db"
-    }
+  "qt-qml.qmlls.additionalImportPaths": [
+    "${workspaceFolder}/src/gui/qml"
+  ],
+  // SQLTools SQLite requires an absolute database path (set in the Remus profile by
+  // scripts/configure-workspace-extensions.sh via scripts/resolve_compendium_db.sh).
+  "sqltools.autoConnectTo": [
+    "Compendium"
   ],
   "[sql]": {
     "editor.tabSize": 2,
@@ -72,7 +60,10 @@
   },
   // ── Shell scripts (CI shellcheck on scripts/ and .github/scripts/) ──────────
   "shellcheck.enable": true,
-  "shellcheck.executablePath": "/usr/bin/shellcheck",
+  "shellcheck.run": "onSave",
+  "shellcheck.exclude": [
+    "SC1091"
+  ],
   "[shellscript]": {
     "editor.tabSize": 4,
     "editor.insertSpaces": true
@@ -98,6 +89,15 @@
   "[yaml]": {
     "editor.tabSize": 2,
     "editor.insertSpaces": true
+  },
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.{yml,yaml}",
+    "https://json.schemastore.org/CMakePresets.json": "CMakePresets.json"
+  },
+  "markdownlint.config": {
+    "MD013": false,
+    "MD033": false,
+    "MD041": false
   },
   // ── File associations ───────────────────────────────────────────────────────
   "files.associations": {
@@ -151,15 +151,13 @@
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
-  // ── Terminal: Qt tools on PATH (Arch/CachyOS + Debian layouts) ────────────
-  "terminal.integrated.env.linux": {
-    "PATH": "/usr/lib/qt6/bin:${env:PATH}"
-  },
+  // Qt bin dir on PATH is set in the Remus profile by configure-workspace-extensions.sh
   // Tasks use bash (CMake/shell scripts); interactive terminal may stay fish.
   "terminal.integrated.automationProfile.linux": {
     "path": "/bin/bash"
   },
   "terminal.integrated.shellIntegration.enabled": false,
-  "clang-format.executable": "/usr/bin/clang-format",
-  "sqltools.useNodeRuntime": true
+  "sqltools.useNodeRuntime": true,
+  "clangd.checkUpdates": false,
+  "cmake.showConfigureWithDebuggerNotification": false
 }

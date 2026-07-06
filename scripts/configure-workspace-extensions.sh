@@ -1,0 +1,247 @@
+#!/usr/bin/env bash
+# Configure Cursor/VS Code extensions for the Remus workspace.
+#
+# - Merges machine-specific tool paths into the active editor profile settings
+# - Resolves compendium SQLite path (bootstrap if missing) for SQLTools
+# - Writes .vscode/.env.debug for LLDB launch configs (Qt tools on PATH)
+# - Verifies recommended extensions are present in the target profile
+#
+# Usage:
+#   bash scripts/configure-workspace-extensions.sh
+#   CURSOR_PROFILE=Remus bash scripts/configure-workspace-extensions.sh
+#
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+CURSOR_PROFILE="${CURSOR_PROFILE:-Remus}"
+CURSOR_USER_DIR="${CURSOR_USER_DIR:-${HOME}/.config/Cursor/User}"
+VSCODE_USER_DIR="${VSCODE_USER_DIR:-${HOME}/.config/Code/User}"
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+info() { echo -e "${BLUE}INFO${NC}  $*"; }
+ok() { echo -e "${GREEN}OK${NC}    $*"; }
+warn() { echo -e "${YELLOW}WARN${NC}  $*"; }
+die() { echo -e "${RED}ERROR${NC} $*" >&2; exit 1; }
+section() { echo -e "\n${BOLD}== $* ==${NC}"; }
+
+find_editor_cmd() {
+    if [[ -n "${EDITOR_CMD:-}" ]] && command -v "$EDITOR_CMD" >/dev/null 2>&1; then
+        echo "$EDITOR_CMD"
+        return
+    fi
+    for candidate in cursor code; do
+        if command -v "$candidate" >/dev/null 2>&1; then
+            echo "$candidate"
+            return
+        fi
+    done
+    return 1
+}
+
+editor_user_dir() {
+    local editor_cmd="$1"
+    case "$editor_cmd" in
+        cursor) echo "$CURSOR_USER_DIR" ;;
+        code) echo "$VSCODE_USER_DIR" ;;
+        *) die "Unsupported editor command: ${editor_cmd}" ;;
+    esac
+}
+
+resolve_profile_location() {
+    local user_dir="$1"
+    local profile_name="$2"
+    local storage="${user_dir}/globalStorage/storage.json"
+
+    if [[ ! -f "$storage" ]]; then
+        return 1
+    fi
+
+    if command -v jq >/dev/null 2>&1; then
+        jq -r --arg name "$profile_name" '
+            .userDataProfiles[]? | select(.name == $name) | .location
+        ' "$storage" | head -1
+        return
+    fi
+
+    warn "jq not found; cannot resolve profile location from storage.json"
+    return 1
+}
+
+read_extension_ids() {
+    local extensions_file="$ROOT_DIR/.vscode/extensions.json"
+    [[ -f "$extensions_file" ]] || die "Missing ${extensions_file}"
+
+    if command -v jq >/dev/null 2>&1; then
+        jq -r '.recommendations[]' "$extensions_file"
+        return
+    fi
+
+    die "jq is required to read .vscode/extensions.json"
+}
+
+verify_extensions() {
+    local editor_cmd="$1"
+    local missing=() ext
+
+    section "Extension verification (profile: ${CURSOR_PROFILE})"
+    mapfile -t installed < <("$editor_cmd" --profile "$CURSOR_PROFILE" --list-extensions 2>/dev/null | sort)
+
+    while IFS= read -r ext; do
+        [[ -n "$ext" ]] || continue
+        if printf '%s\n' "${installed[@]}" | grep -qx "$ext"; then
+            info "installed: ${ext}"
+        else
+            missing+=("$ext")
+            warn "missing: ${ext}"
+        fi
+    done < <(read_extension_ids)
+
+    # Optional helper installed by bootstrap
+    if printf '%s\n' "${installed[@]}" | grep -qx 'davidanson.vscode-markdownlint'; then
+        info "installed: davidanson.vscode-markdownlint (optional docs helper)"
+    else
+        warn "missing: davidanson.vscode-markdownlint (optional docs helper)"
+    fi
+
+    if [[ ${#missing[@]} -gt 0 ]]; then
+        die "Missing extensions in profile '${CURSOR_PROFILE}': ${missing[*]}. Run: bash scripts/bootstrap-dev-environment.sh --skip-packages --skip-compendium --skip-cmake"
+    fi
+    ok "All recommended extensions present"
+}
+
+merge_profile_settings() {
+    local profile_settings="$1"
+    shift
+    local extra_json_files=("$@")
+
+    mkdir -p "$(dirname "$profile_settings")"
+    if [[ ! -f "$profile_settings" ]]; then
+        echo '{}' >"$profile_settings"
+    fi
+
+    if ! command -v jq >/dev/null 2>&1; then
+        die "jq is required to merge profile settings"
+    fi
+
+    local merged="$profile_settings"
+    local json_file
+    for json_file in "${extra_json_files[@]}"; do
+        merged="$(jq -s '.[0] * .[1]' "$merged" "$json_file")"
+    done
+    printf '%s\n' "$merged" >"$profile_settings"
+}
+
+build_profile_settings_json() {
+    local tool_paths_json="$1"
+    local compendium_db="$2"
+
+    jq -n \
+        --argjson tools "$tool_paths_json" \
+        --arg db "$compendium_db" \
+        '$tools + {
+            "sqltools.connections": [
+                {
+                    "name": "Compendium",
+                    "driver": "SQLite",
+                    "database": $db
+                }
+            ]
+        }'
+}
+
+write_debug_env_file() {
+    local qt_bin_dir="$1"
+    local env_file="$ROOT_DIR/.vscode/.env.debug"
+
+    mkdir -p "$(dirname "$env_file")"
+    cat >"$env_file" <<EOF
+# Generated by scripts/configure-workspace-extensions.sh — do not commit.
+PATH=${qt_bin_dir}:\${PATH}
+EOF
+    ok "Wrote ${env_file#"$ROOT_DIR"/}"
+}
+
+associate_workspace_profile() {
+    local user_dir="$1"
+    local profile_location="$2"
+    local storage="${user_dir}/globalStorage/storage.json"
+    local workspace_uri="file://${ROOT_DIR}"
+
+    [[ -f "$storage" ]] || return 0
+    command -v jq >/dev/null 2>&1 || return 0
+
+    local current
+    current="$(jq -r --arg ws "$workspace_uri" '.profileAssociations.workspaces[$ws] // empty' "$storage")"
+    if [[ "$current" == "$profile_location" ]]; then
+        info "Workspace already associated with profile location ${profile_location}"
+        return 0
+    fi
+
+    local tmp
+    tmp="$(mktemp)"
+    jq --arg ws "$workspace_uri" --arg loc "$profile_location" \
+        '.profileAssociations.workspaces[$ws] = $loc' "$storage" >"$tmp"
+    mv "$tmp" "$storage"
+    ok "Associated workspace with profile location ${profile_location}"
+}
+
+main() {
+    section "Configure workspace extensions"
+    info "Repository: ${ROOT_DIR}"
+    info "Profile: ${CURSOR_PROFILE}"
+
+    local editor_cmd user_dir profile_location profile_settings tool_paths_json qt_bin_dir
+    editor_cmd="$(find_editor_cmd)" || die "No cursor or code CLI on PATH"
+
+    verify_extensions "$editor_cmd"
+
+    section "Resolve tool paths"
+    tool_paths_json="$(bash "$ROOT_DIR/.github/scripts/resolve-editor-tool-paths.sh")"
+    qt_bin_dir="$(printf '%s' "$tool_paths_json" | jq -r '.["terminal.integrated.env.linux"].PATH' | sed 's/:${env:PATH}//')"
+    info "clang-format → $(printf '%s' "$tool_paths_json" | jq -r '.["clang-format.executable"]')"
+    info "clangd       → $(printf '%s' "$tool_paths_json" | jq -r '.["clangd.path"]')"
+    info "shellcheck   → $(printf '%s' "$tool_paths_json" | jq -r '.["shellcheck.executablePath"]')"
+    info "qmlls        → $(printf '%s' "$tool_paths_json" | jq -r '."qt-qml.qmlls.customExePath"')"
+    info "Qt bin dir   → ${qt_bin_dir}"
+
+    section "Resolve compendium database"
+    local compendium_db profile_overlay_json tmp_overlay
+    compendium_db="$(bash "$ROOT_DIR/scripts/resolve_compendium_db.sh" --ensure)"
+    info "compendium   → ${compendium_db}"
+    profile_overlay_json="$(build_profile_settings_json "$tool_paths_json" "$compendium_db")"
+    tmp_overlay="$(mktemp)"
+    printf '%s\n' "$profile_overlay_json" >"$tmp_overlay"
+
+    user_dir="$(editor_user_dir "$editor_cmd")"
+    profile_location="$(resolve_profile_location "$user_dir" "$CURSOR_PROFILE" || true)"
+    if [[ -z "$profile_location" ]]; then
+        rm -f "$tmp_overlay"
+        warn "Profile '${CURSOR_PROFILE}' not found in ${user_dir}/globalStorage/storage.json"
+        warn "Open the workspace once with: ${editor_cmd} --profile ${CURSOR_PROFILE} ${ROOT_DIR}"
+        warn "Then re-run this script to write profile-specific tool paths and SQLTools settings."
+    else
+        profile_settings="${user_dir}/profiles/${profile_location}/settings.json"
+        section "Profile settings (${CURSOR_PROFILE})"
+        merge_profile_settings "$profile_settings" "$tmp_overlay"
+        rm -f "$tmp_overlay"
+        ok "Merged tool paths and SQLTools connection into ${profile_settings}"
+        associate_workspace_profile "$user_dir" "$profile_location"
+    fi
+
+    section "Debug environment"
+    write_debug_env_file "$qt_bin_dir"
+
+    section "Done"
+    ok "Extension configuration applied."
+    info "Reload the window if Cursor is already open."
+}
+
+main "$@"
