@@ -4,7 +4,7 @@
 # - Merges machine-specific tool paths into the active editor profile settings
 # - Resolves compendium SQLite path (bootstrap if missing) for SQLTools
 # - Writes .vscode/.env.debug for LLDB launch configs (Qt tools on PATH)
-# - Verifies recommended extensions are present in the target profile
+# - Ensures the Remus Cursor profile exists and is bound to this workspace folder
 #
 # Usage:
 #   bash scripts/configure-workspace-extensions.sh
@@ -18,6 +18,9 @@ cd "$ROOT_DIR"
 CURSOR_PROFILE="${CURSOR_PROFILE:-Remus}"
 CURSOR_USER_DIR="${CURSOR_USER_DIR:-${HOME}/.config/Cursor/User}"
 VSCODE_USER_DIR="${VSCODE_USER_DIR:-${HOME}/.config/Code/User}"
+
+# shellcheck source=lib/cursor-remus-profile.sh
+source "$ROOT_DIR/scripts/lib/cursor-remus-profile.sh"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -53,26 +56,6 @@ editor_user_dir() {
         code) echo "$VSCODE_USER_DIR" ;;
         *) die "Unsupported editor command: ${editor_cmd}" ;;
     esac
-}
-
-resolve_profile_location() {
-    local user_dir="$1"
-    local profile_name="$2"
-    local storage="${user_dir}/globalStorage/storage.json"
-
-    if [[ ! -f "$storage" ]]; then
-        return 1
-    fi
-
-    if command -v jq >/dev/null 2>&1; then
-        jq -r --arg name "$profile_name" '
-            .userDataProfiles[]? | select(.name == $name) | .location
-        ' "$storage" | head -1
-        return
-    fi
-
-    warn "jq not found; cannot resolve profile location from storage.json"
-    return 1
 }
 
 read_extension_ids() {
@@ -169,28 +152,35 @@ EOF
     ok "Wrote ${env_file#"$ROOT_DIR"/}"
 }
 
-associate_workspace_profile() {
-    local user_dir="$1"
-    local profile_location="$2"
-    local storage="${user_dir}/globalStorage/storage.json"
-    local workspace_uri="file://${ROOT_DIR}"
+ensure_workspace_profile_binding() {
+    local editor_cmd="$1"
+    local user_dir
+    user_dir="$(editor_user_dir "$editor_cmd")"
 
-    [[ -f "$storage" ]] || return 0
-    command -v jq >/dev/null 2>&1 || return 0
+    section "Cursor profile binding (${CURSOR_PROFILE})"
+    local binding profile_location binding_result workspace_uri
+    binding="$(cursor_profile__ensure_workspace_binding "$editor_cmd" "$user_dir" "$ROOT_DIR" "$CURSOR_PROFILE")"
+    profile_location="${binding%%|*}"
+    binding_result="${binding#*|}"
+    workspace_uri="$(cursor_profile__workspace_uri "$ROOT_DIR")"
 
-    local current
-    current="$(jq -r --arg ws "$workspace_uri" '.profileAssociations.workspaces[$ws] // empty' "$storage")"
-    if [[ "$current" == "$profile_location" ]]; then
-        info "Workspace already associated with profile location ${profile_location}"
-        return 0
-    fi
+    info "profile id  → ${profile_location}"
+    info "workspace   → ${workspace_uri}"
 
-    local tmp
-    tmp="$(mktemp)"
-    jq --arg ws "$workspace_uri" --arg loc "$profile_location" \
-        '.profileAssociations.workspaces[$ws] = $loc' "$storage" >"$tmp"
-    mv "$tmp" "$storage"
-    ok "Associated workspace with profile location ${profile_location}"
+    case "$binding_result" in
+        already:*)
+            ok "Workspace already uses profile '${CURSOR_PROFILE}'"
+            ;;
+        associated:*)
+            ok "Bound workspace to profile '${CURSOR_PROFILE}'"
+            info "Reload this Cursor window (Developer: Reload Window) to apply the profile."
+            ;;
+        *)
+            warn "Could not confirm workspace/profile binding"
+            ;;
+    esac
+
+    printf '%s\n' "$profile_location"
 }
 
 main() {
@@ -221,20 +211,12 @@ main() {
     printf '%s\n' "$profile_overlay_json" >"$tmp_overlay"
 
     user_dir="$(editor_user_dir "$editor_cmd")"
-    profile_location="$(resolve_profile_location "$user_dir" "$CURSOR_PROFILE" || true)"
-    if [[ -z "$profile_location" ]]; then
-        rm -f "$tmp_overlay"
-        warn "Profile '${CURSOR_PROFILE}' not found in ${user_dir}/globalStorage/storage.json"
-        warn "Open the workspace once with: ${editor_cmd} --profile ${CURSOR_PROFILE} ${ROOT_DIR}"
-        warn "Then re-run this script to write profile-specific tool paths and SQLTools settings."
-    else
-        profile_settings="${user_dir}/profiles/${profile_location}/settings.json"
-        section "Profile settings (${CURSOR_PROFILE})"
-        merge_profile_settings "$profile_settings" "$tmp_overlay"
-        rm -f "$tmp_overlay"
-        ok "Merged tool paths and SQLTools connection into ${profile_settings}"
-        associate_workspace_profile "$user_dir" "$profile_location"
-    fi
+    profile_location="$(ensure_workspace_profile_binding "$editor_cmd")"
+    profile_settings="${user_dir}/profiles/${profile_location}/settings.json"
+    section "Profile settings (${CURSOR_PROFILE})"
+    merge_profile_settings "$profile_settings" "$tmp_overlay"
+    rm -f "$tmp_overlay"
+    ok "Merged tool paths and SQLTools connection into ${profile_settings}"
 
     section "Debug environment"
     write_debug_env_file "$qt_bin_dir"

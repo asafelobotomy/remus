@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 # One-shot developer environment bootstrap for the Remus workspace.
 #
-# Installs system packages, Cursor/VS Code extensions (Remus profile by default),
-# bootstraps the compendium schema, configures the debug CMake preset, and writes
-# profile-specific editor settings (tool paths, SQLTools absolute DB path).
-#
-# Usage:
-#   bash scripts/bootstrap-dev-environment.sh
+# Primary use: run inside an open Cursor workspace terminal:
 #   bash scripts/bootstrap-dev-environment.sh --build
-#   bash scripts/bootstrap-dev-environment.sh --clean --build
-#   CURSOR_PROFILE=Remus bash scripts/bootstrap-dev-environment.sh --skip-packages
+#
+# Greenfield (clone + bootstrap):
+#   bash scripts/bootstrap-dev-environment.sh --clone-into ~/Cursor/Repos --build
+#
+# Installs system packages, Cursor/VS Code extensions (Remus profile by default),
+# binds this folder to the Remus profile, bootstraps compendium, configures CMake,
+# and writes profile-specific editor settings (tool paths, SQLTools absolute DB path).
 #
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-cd "$ROOT_DIR"
+_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+INITIAL_ROOT="$(cd "${_SCRIPT_DIR}/.." && pwd)"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -36,43 +36,55 @@ SKIP_CMAKE=0
 SKIP_EDITOR_CONFIG=0
 DO_BUILD=0
 DO_CLEAN=0
+CLONE_INTO=""
+REPO_URL="${REMUS_REPO_URL:-}"
 CURSOR_PROFILE="${CURSOR_PROFILE:-Remus}"
 
 usage() {
     cat <<'EOF'
 bootstrap-dev-environment.sh — prepare a fresh machine for Remus development.
 
+Primary use (Cursor workspace terminal):
+  bash scripts/bootstrap-dev-environment.sh --build
+
+Greenfield (clone repository, then bootstrap):
+  bash scripts/bootstrap-dev-environment.sh --clone-into ~/Cursor/Repos --build
+
 Steps (in order):
+  0. Optional git clone into <parent>/remus
   1. Optional workspace cleanup (audit build trees)
   2. OS packages (CMake, Qt 6, clang, shellcheck, lldb, …)
   3. Cursor/VS Code extensions into the Remus profile
-  4. Compendium bootstrap DB (create only if missing)
-  5. CMake debug preset + compile_commands.json
-  6. Profile editor settings (clangd, clang-format, qmlls, SQLTools path)
-  7. Optional remus-cli build
+  4. Bind this workspace folder to the Remus profile
+  5. Compendium bootstrap DB (create only if missing)
+  6. CMake debug preset + compile_commands.json
+  7. Profile editor settings (clangd, clang-format, qmlls, SQLTools path)
+  8. Optional remus-cli build
 
 Options:
+  --clone-into DIR    Clone into DIR/remus before setup (skip when already in repo)
+  --repo-url URL      Git remote for clone (default: origin or github.com/asafelobotomy/remus)
   --clean             Remove stale audit build trees before setup
   --skip-packages     Skip OS package installation
   --skip-extensions   Skip Cursor/VS Code extension installation
   --skip-compendium   Skip compendium DB bootstrap
   --skip-cmake        Skip CMake debug preset configure
-  --skip-editor-config  Skip extension/tool-path/SQLTools configuration
+  --skip-editor-config  Skip extension/tool-path/SQLTools/profile configuration
   --build             Build remus-cli after configure
   --profile NAME      Cursor profile for extensions (default: Remus)
   -h, --help          Show this help
 
 Environment:
   CURSOR_PROFILE      Same as --profile (default: Remus)
+  REMUS_REPO_URL      Same as --repo-url
   EDITOR_CMD          Editor CLI on PATH (default: cursor, then code)
 
 Examples:
-  bash scripts/bootstrap-dev-environment.sh
   bash scripts/bootstrap-dev-environment.sh --build
+  bash scripts/bootstrap-dev-environment.sh --clone-into ~/projects --build
   bash scripts/bootstrap-dev-environment.sh --skip-packages --profile Remus
 
-After bootstrap, open the workspace with the matching profile:
-  cursor --profile Remus /path/to/remus
+After bootstrap in Cursor: Developer → Reload Window so the Remus profile binding applies.
 
 Optional packages (not installed by default):
   mame      — DAT/listxml refresh scripts
@@ -89,6 +101,16 @@ while [[ $# -gt 0 ]]; do
         --skip-cmake) SKIP_CMAKE=1 ;;
         --skip-editor-config) SKIP_EDITOR_CONFIG=1 ;;
         --clean) DO_CLEAN=1 ;;
+        --clone-into)
+            [[ $# -ge 2 ]] || die "--clone-into requires a parent directory"
+            CLONE_INTO="$2"
+            shift
+            ;;
+        --repo-url)
+            [[ $# -ge 2 ]] || die "--repo-url requires a URL"
+            REPO_URL="$2"
+            shift
+            ;;
         --build) DO_BUILD=1 ;;
         --profile)
             [[ $# -ge 2 ]] || die "--profile requires a name"
@@ -105,6 +127,75 @@ while [[ $# -gt 0 ]]; do
     esac
     shift
 done
+
+is_remus_repo() {
+    local root="$1"
+    [[ -f "${root}/CMakeLists.txt" && -f "${root}/scripts/bootstrap-dev-environment.sh" ]] \
+        && grep -q 'project(Remus' "${root}/CMakeLists.txt" 2>/dev/null
+}
+
+default_repo_url() {
+    if [[ -n "$REPO_URL" ]]; then
+        printf '%s\n' "$REPO_URL"
+        return 0
+    fi
+    if git -C "$INITIAL_ROOT" remote get-url origin >/dev/null 2>&1; then
+        git -C "$INITIAL_ROOT" remote get-url origin
+        return 0
+    fi
+    printf '%s\n' 'https://github.com/asafelobotomy/remus.git'
+}
+
+build_forwarded_args() {
+    local args=()
+    [[ $DO_CLEAN -eq 1 ]] && args+=(--clean)
+    [[ $SKIP_PACKAGES -eq 1 ]] && args+=(--skip-packages)
+    [[ $SKIP_EXTENSIONS -eq 1 ]] && args+=(--skip-extensions)
+    [[ $SKIP_COMPENDIUM -eq 1 ]] && args+=(--skip-compendium)
+    [[ $SKIP_CMAKE -eq 1 ]] && args+=(--skip-cmake)
+    [[ $SKIP_EDITOR_CONFIG -eq 1 ]] && args+=(--skip-editor-config)
+    [[ $DO_BUILD -eq 1 ]] && args+=(--build)
+    if [[ "$CURSOR_PROFILE" != "Remus" ]]; then
+        args+=(--profile "$CURSOR_PROFILE")
+    fi
+    printf '%s\0' "${args[@]}"
+}
+
+clone_and_reexec() {
+    local parent target repo_url
+    parent="$(realpath "$CLONE_INTO")"
+    target="${parent}/remus"
+    repo_url="$(default_repo_url)"
+
+    section "Clone repository"
+    info "Parent directory: ${parent}"
+    info "Clone target:     ${target}"
+    info "Repository URL:   ${repo_url}"
+
+    command -v git >/dev/null 2>&1 || die "git is required for --clone-into"
+
+    mkdir -p "$parent"
+    if [[ -d "${target}/.git" ]]; then
+        ok "Using existing clone at ${target}"
+    else
+        git clone "$repo_url" "$target"
+        ok "Cloned into ${target}"
+    fi
+
+    mapfile -d '' -t forwarded < <(build_forwarded_args)
+    exec bash "${target}/scripts/bootstrap-dev-environment.sh" "${forwarded[@]}"
+}
+
+if [[ -n "$CLONE_INTO" ]]; then
+    clone_and_reexec
+fi
+
+ROOT_DIR="$INITIAL_ROOT"
+cd "$ROOT_DIR"
+
+if ! is_remus_repo "$ROOT_DIR"; then
+    die "Not inside a Remus repository. Use --clone-into <parent-dir> or open the remus workspace first."
+fi
 
 detect_distro() {
     if [[ -f /etc/os-release ]]; then
@@ -343,10 +434,12 @@ main() {
     cat <<EOF
 
 Next steps:
-  1. Open: $(find_editor_cmd 2>/dev/null || echo cursor) --profile ${CURSOR_PROFILE} ${ROOT_DIR}
+  1. In Cursor: Developer → Reload Window (applies Remus profile binding)
   2. Build:  cmake --build build-debug -j\$(nproc)
   3. Test:   ctest --test-dir build-debug --output-on-failure
   4. Audit:  bash scripts/run-local-audit.sh
+
+Open elsewhere: $(find_editor_cmd 2>/dev/null || echo cursor) --profile ${CURSOR_PROFILE} ${ROOT_DIR}
 
 EOF
 }
